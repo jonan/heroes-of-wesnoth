@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007  Jon Ander PeÃ±alba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -35,10 +35,10 @@ class image {
 
       // Returns a pointer to the image that needs to be
       // load if there's no error. Otherwise, exits the program.
-      SDL_Surface* loadImage(const char *imageName, const int alpha);
+      void loadImage(const char *imageName, const int alpha);
 
    public:
-      /// @param[in] imageName The image's name, without the img/...png
+      /// @param[in] imageName The image's name, without the "img/" and the ".png".
       /// @param[in] alpha Alpha value of the image. 0 transparent, 255 opaque.
       /// @param[in] next The next image in the list.
       image(const char *imageName, const int alpha, image *next); // Constructor

@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007  Jon Ander PeÃ±alba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -21,50 +21,49 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // Returns a pointer to the image that needs to be
 // load if there's no error. Otherwise, exits the program.
-SDL_Surface* image::loadImage(const char *imageName, const int alpha) {
-   SDL_Surface *image;
-   std::string *imageDir;
+void image::loadImage(const char *imageName, const int alpha) {
+   SDL_Surface *image = NULL;
 
-   imageDir = new std::string(imageName);
    // Create a string with the fisical location of the image
-   //  "img/" + imageName + ".png"
-   imageDir->insert(0, "img/");
-   imageDir->insert( strlen(imageName)+4 , ".png");
+   // "img/" + imageName + ".png"
+   std::string img = "img/";
+   std::string name(imageName);
+   std::string png = ".png";
+   std::string imageDir = img + name + png;
 
    printf("Loading \"%s\"...\t\t", imageName);
    // If the image name is to sort leave more space
    if ( strlen(imageName)<11 ) printf("\t");
-   image = IMG_Load( imageDir->c_str() );
+   image = IMG_Load( imageDir.c_str() );
    if ( image==NULL ) {
       printf("[fail]\n\n%s\n\n", SDL_GetError ());
       exit(EXIT_FAILURE);
    } else {
       /// @todo Improve alpha display.
-      //SDL_SetAlpha(image, SDL_SRCALPHA|SDL_RLEACCEL, alpha);
-      if (alpha != 255) { // Image transparent
+      if (alpha != SDL_ALPHA_OPAQUE) { // Image transparent
          SDL_SetColorKey(image, SDL_SRCCOLORKEY|SDL_RLEACCEL, SDL_MapRGB(image->format,0,0,0));
-         SDL_SetAlpha(image, SDL_SRCALPHA, alpha);
+         SDL_SetAlpha(image, SDL_SRCALPHA|SDL_RLEACCEL, alpha);
       }
-      image = SDL_DisplayFormatAlpha(image);
+      this->img = SDL_DisplayFormatAlpha(image);
+      if (this->img) SDL_FreeSurface(image);
+      else this->img = image;
       printf("[ ok ]\n");
-      return image;
    }
-   delete imageDir;
 }
 
 // Constructor
 image::image(const char *imageName, const int alpha, image *next) {
-   name = new char [strlen(imageName)];
+   name = new char [strlen(imageName)+1];
 
    strcpy(name, imageName);
    this->next=next;
-   img = this->loadImage(name, alpha);
+   loadImage(name, alpha);
 }
 
 // Destructor
 image::~image(void) {
    printf("Freeing \"%s\"...\n", name);
-   delete name;
+   delete [] name;
    SDL_FreeSurface(img);
 }
 
@@ -130,7 +129,7 @@ image* imageList::findImage(const char *imageName) {
       while ( strcmp(temp->getName(), imageName) != 0 )
          temp = temp->getNext();
    if (temp==NULL) {
-         printf("\nSearch for file \"%s\" failed.\n\n", imageName);
+         printf("\nSearch for file \"%s\" failed.\n\n", *imageName);
          exit(EXIT_FAILURE);
          }
    else return temp;

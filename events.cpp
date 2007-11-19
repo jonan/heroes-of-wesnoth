@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007  Jon Ander PeÃ±alba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -22,7 +22,7 @@ events::events(void) {
    type = NO_EVENT;
 
    // Set all keys to false
-   for (int i = 0; i < 323; i++)
+   for (int i = 0; i < NUM_KEYS; i++)
       keys[i] = false;
    // Clear mouse info
    for (int j = 0; j < 5; j++)
@@ -77,7 +77,7 @@ void events::readInput(void) {
       }
 }
 
-// Returns an array of the 323 keys with their
+// Returns an array of the keyboard keys with their
 // pressed value, TRUE or FALSE.
 bool* events::getKeyboard(void) {
       return keys;

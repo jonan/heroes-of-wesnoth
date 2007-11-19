@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007  Jon Ander PeÃ±alba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -54,6 +54,7 @@ void loop() {
 
 Uint32 drawBattle(Uint32 interval, void *param){
    //printf("Draw Battle\n");
+   battle.moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[LEFT_BUTTON]);
    battle.draw(screen);
    screen->update();
 
@@ -74,10 +75,10 @@ Uint32 drawMenu(Uint32 interval, void *param) {
 
 // Provisional function to use the classes
 void map() {
-   //screen->endExecution();
+   screen->endExecution();
    screen->newImage("grand-knight");
    screen->newImage("grassland-r1");
-   screen->newImage("alpha", 30);
+   screen->newImage("alpha", 50);
    player.setAllAtributes(1, 1, 1, 1, 1, 1, 3);
    player.setImage("grand-knight");
    battle.setTerrain("grassland-r1", screen);
@@ -125,12 +126,12 @@ int main(int argc, char *argv[]) {
    background_pos.w = 108;
    background_pos.h = 22;
    mainMenu = new menu(screen, background_pos, &map, 1);
-   intro();
-   //map();
+   //intro();
+   map();
    delete screen;
    delete mainMenu;
 
-   return 0;
+   return EXIT_SUCCESS;
 }
 
 /* Last Version: Jonan */

@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007  Jon Ander PeÃ±alba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -22,21 +22,21 @@ void graphics::init(void) {
    printf("Starting SDL...\t\t\t\t");
    if ( SDL_Init (SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0 ) { // SDL_INIT_AUDIO not yet needed
       printf("[fail]\n\n%s\n\n", SDL_GetError ());
-      exit(0);
+      exit(EXIT_FAILURE);
    }
    atexit(SDL_Quit);
    printf("[ ok ]\n");
    printf("Starting SDL_ttf...\t\t\t");
    if ( TTF_Init() < 0 ) {
       printf("[fail]\n\n%s\n\n", SDL_GetError ());
-      exit(0);
+      exit(EXIT_FAILURE);
    }
    atexit(TTF_Quit);
    printf("[ ok ]\n");
    printf("Starting SDL_mixer...\t\t\t");
    if ( Mix_OpenAudio(22050, AUDIO_S16, 2, 4096) ) {
       printf("[fail]\n\n%s\n\n", SDL_GetError ());
-      exit(0);
+      exit(EXIT_FAILURE);
    }
    atexit(Mix_CloseAudio);
    printf("[ ok ]\n");
@@ -51,7 +51,7 @@ void graphics::createWindow(void) {
    screen = SDL_SetVideoMode (SCREEN_WIDTH, SCREEN_HEIGHT, BPP, SDL_DOUBLEBUF | SDL_ANYFORMAT);// | SDL_FULLSCREEN);
    if (screen == NULL) {
       printf ("[fail]\n\n%s\n\n", SDL_GetError ());
-      exit(0);
+      exit(EXIT_FAILURE);
    }
    printf("[ ok ]\n");
 }

@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007  Jon Ander PeÃ±alba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -20,6 +20,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include <SDL/SDL.h>
 
+/// Number of keys in a keyboard
+#define NUM_KEYS 323
 /// Types of events
 #define NO_EVENT    0
 #define KEYBOARD    1
@@ -43,7 +45,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 class events {
    private:
       SDL_Event event;
-      bool keys[323];
+      bool keys[NUM_KEYS];
       int mouse[5];
       int type; // Can be KEYBOARD, MOUSE, SYSTEM or NO_EVENT
       int systemType; // Can be QUIT or VIDEOEXPOSE
@@ -58,7 +60,7 @@ class events {
       void readInput(void);
       /// Returns the keyboard layout.
       ///
-      /// Returns an array of the 323 keys with their
+      /// Returns an array of the keyboard keys with their
       /// pressed value, TRUE or FALSE.
       bool* getKeyboard(void);
       /// Returns the mouse state and position.

@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007  Jon Ander PeÃ±alba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -21,6 +21,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
 
+/*#include <cstdio>
+#include <cstdlib>*/
+
 #include "image.hpp"
 #include "ttf.hpp"
 
@@ -31,8 +34,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// Complete screen control.
 ///
 /// This class gives you all the control you need over the screen.
-/// As it actually represents the screen, an the game is played in
-/// one screen, there should only be one object of this type.
+/// The game is played in one screen so there should
+/// only be one object of this type.
 class graphics {
    private:
       SDL_Surface *screen;
@@ -59,7 +62,7 @@ class graphics {
       ///
       /// @param[in] imageName The image's name, without the img/...png
       /// @param[in] alpha Alpha value of the image. 0 transparent, 255 opaque.
-      void newImage(const char *imageName, const int alpha = 255);
+      void newImage(const char *imageName, const int alpha = SDL_ALPHA_OPAQUE);
       /// Returns the surface of a preveously loaded image.
       ///
       /// -no detailed description-

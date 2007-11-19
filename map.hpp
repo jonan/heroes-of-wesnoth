@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007  Jon Ander PeÃ±alba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -63,10 +63,11 @@ class cell {
       /// @param[in] screen -no detailed description-
       int draw(graphics *screen);
 
-      //void putMouse();
-      //void removeMouse();
-      //void select();
-      //void unselect();
+      void putMouse(void);
+      void removeMouse(void);
+      void select(void);
+      void unselect(void);
+      void conectCell(const int position, cell* conectedCell);
 };
 
 /// Controls all the attributes of a map.
@@ -94,8 +95,8 @@ class map {
       /// @param[in] screen -no detailed description-
       void draw(graphics *screen);
 
+      void moveMouse(int x, int y, int button);
       //void selectMove(int x, int y, int move, graphics *screen);
-      //void mousePos(int x, int y, int button, graphics *screen);
 };
 
 #endif

@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007  Jon Ander PeÃ±alba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -53,16 +53,17 @@ unit* cell::getCreature(void) {
 // movement, else returns 0
 int cell::draw(graphics *screen) {
    screen->draw(terrain, &position);
+   if (selected) screen->draw("alpha", &position);
    if (mouseOver) screen->draw("alpha", &position);
    if (creature) creature->draw(screen, &position);
 
-   if (selected) 
+   if (selected && creature)
       return creature->getMovement();
    else
       return 0;
 }
 
-/*void cell::putMouse() {
+void cell::putMouse() {
    mouseOver = true;
 }
 
@@ -76,7 +77,11 @@ void cell::select() {
 
 void cell::unselect() {
    selected = false;
-}*/
+}
+
+void cell::conectCell(const int position, cell* conectedCell){
+   this->conectedCell[position] = conectedCell;
+}
 
 // ---End---
 
@@ -102,11 +107,32 @@ map::map(void) {
          battleMap[x][y].setCreature(NULL);
          terrainPos.y+=72;
       }
-      if ( (x%2)==1 ) {terrainPos.y=41;}
+      if ( (x%2)==1 ) {terrainPos.y=41;} // x is an odd number
       else {terrainPos.y=77;}
       terrainPos.x+=54;
    }
+//-----------------------------------------------------------------------------------------------------------------------------------------//
+   // Conected cells
 
+   /*for (int coor1=0; coor1<18; coor1++) {
+      for (int coor2=0; coor2<9; coor2++) {
+            if (coor2==0){
+               battleMap[coor1][coor2].conectCell(S, &battleMap[coor1][coor2+1]);
+            } else if (coor2==8) {
+               battleMap[coor1][coor2].conectCell(S, &battleMap[coor1][coor2-1]);
+            } else {
+               battleMap[coor1][coor2].conectCell(S, &battleMap[coor1][coor2+1]);
+               battleMap[coor1][coor2].conectCell(S, &battleMap[coor1][coor2-1]);
+            }
+      }
+   }
+
+   for (int coor1=0; coor1<18; coor1++) {
+      for (int coor2=0; coor2<9; coor2++) {
+            if ( (coor2%2)==1 )
+      }
+   }*/
+//-----------------------------------------------------------------------------------------------------------------------------------------//
    selectedCell=NULL;
 }
 
@@ -116,13 +142,12 @@ void map::setTerrain(const char terrainImgName[20], graphics *screen) {
    for (int x=0; x<18; x++)
       for (int y=0; y<9; y++) {
          battleMap[x][y].setTerrain(terrainBase);
-         //battle_map[x][y].removeMouse();
-         //battle_map[x][y].unselect();
       }
 }
 
 void map::setHero(unit *player) {
    battleMap[0][4].setCreature(player);
+   battleMap[0][4].select();
 }
 
 // Draws the map in the screen.
@@ -131,6 +156,38 @@ void map::draw(graphics *screen) {
       for (int y=0; y<9; y++) {
          battleMap[x][y].draw(screen);
       }
+   }
+}
+
+void map::moveMouse(int x, int y, int button) {
+   SDL_Rect cellPosition;
+   int i=0, j=0, move;
+
+   cellPosition = battleMap[i][j].getPos();
+
+   while (x > cellPosition.x){
+      i++;
+      cellPosition = battleMap[i][j].getPos();
+   }
+   i--;
+
+   while (y > cellPosition.y){
+      j++;
+      cellPosition = battleMap[i][j].getPos();
+   }
+   j--;
+
+   if (selectedCell) {
+      selectedCell->removeMouse();
+   }
+
+   if ( i>=0 && i<18 && j>=0 && j<9) {
+      battleMap[i][j].putMouse();
+      if (button==1 && battleMap[i][j].getCreature()!=NULL) {
+         battleMap[i][j].select();
+      } else battleMap[i][j].unselect();
+      //if (move!=0) selectMove(i, j, move, screen);
+      selectedCell = &battleMap[i][j];
    }
 }
 
@@ -146,37 +203,6 @@ void map::draw(graphics *screen) {
       selectMove(x+1, y, move-1, screen);
       selectMove(x, y+1, move-1, screen);
       selectMove(x+1, y+1, move-1, screen);
-   }
-}
-
-void map::mousePos(int x, int y, int button, graphics *screen) {
-   SDL_Rect cell_position;
-   int i=0, j=0, move;
-
-   do {
-      cell_position = battle_map[i][j].getPos();
-      i++;
-   } while (x > cell_position.x);
-   do {
-      cell_position = battle_map[i][j].getPos();
-      j++;
-   } while (y > cell_position.y);
-   i-=2;
-   j-=2;
-   if (selectedCell) {
-      selectedCell->removeMouse();
-      selectedCell->draw(screen);
-   }
-   if (i<0) i=0;
-   if (j<0) j=0;
-   if ( i<18 && j<9 ) {
-      battle_map[i][j].putMouse();
-      if (button==1 && battle_map[i][j].getCreature()!=NULL) {
-         battle_map[i][j].select();
-      } else battle_map[i][j].unselect();
-      move=battle_map[i][j].draw(screen);
-      if (move!=0) selectMove(i, j, move, screen);
-      selectedCell = &battle_map[i][j];
    }
 }*/
 

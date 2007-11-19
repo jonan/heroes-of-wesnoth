@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007  Jon Ander PeÃ±alba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -18,40 +18,47 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "menu.hpp"
 
 // class button
-button::button(void (*function)()) {
-   this->function = function;
-   char text[] = "Menu";
+
+// Constructor
+button::button(const char *text, void (*function)()) {
    this->text = new char [strlen(text)];
+
+   this->function = function;
+   state = NORMAL;
    strcpy(this->text, text);
 
-   //this->function = function;
-
-   active = pressed = false;
-   state = NORMAL;
+   next = NULL;
 }
 
+// Destructor
 button::~button(void) {
    delete text;
 }
 
+// Returns the button's state.
 int button::getState(void) {
    return state;
 }
 
-void button::setState(int state) {
+// Changes the button state.
+void button::setState(const int state) {
    this->state=state;
 }
 
+// Returns the button's text.
 char *button::getText(void) {
    return text;
 }
 
+// Returns the button's function.
 void button::getFunction(void) {
    function();
 }
+
 // ---End---
 
 // class menu
+
 menu::menu(graphics *screen, SDL_Rect position, void (*function)(), int numberButtons, bool backgroud) {
    this->screen = screen;
    this->position = position;
@@ -62,10 +69,13 @@ menu::menu(graphics *screen, SDL_Rect position, void (*function)(), int numberBu
    buttonSurface[ACTIVE] = this->screen->getImage("button-active");
    buttonSurface[PRESSED] = this->screen->getImage("button-pressed");
 
-   buttons[numberButtons-1] = new button(function);
+   buttons[numberButtons-1] = new button("Battle", function);
+   for (int i=1; i<numberButtons; i++) {
+      
+   }
    distance = 30;
    activeButton = -1; //  The mouse is over no button.
-   pressedButton = -1; //  The mouse is over no button.
+   pressedButton = -1; //  No button is being pressed.
 }
 
 menu::~menu(void) {
@@ -73,20 +83,9 @@ menu::~menu(void) {
       delete buttons[i];
 }
 
-void menu::draw(graphics *screen) {
-   for (int i=0; i<numberButtons; i++) {
-      screen->draw( buttonSurface[ buttons[i]->getState() ], &position );
-      if (buttons[i]->getState() != PRESSED)
-         screen->write(buttons[i]->getText() , position.x+32, position.y+3);
-      else
-         screen->write(buttons[i]->getText() , position.x+34, position.y+4);
-      position.y += distance; // Set the position of the next button
-   }
-   // Put the position back to normal
-   position.y -= (distance * numberButtons);
-}
-
-void menu::moveMouse(int x, int y, bool pressed) {
+// Every time the mouse's position or the mouse's buttons change, this
+// function should be called so the menu knows which button is being pressed.
+void menu::moveMouse(int x, int y, int pressed) {
    if // Mouse over button
    (
    x>position.x                &&
@@ -94,7 +93,7 @@ void menu::moveMouse(int x, int y, bool pressed) {
    y>position.y                &&
    y < (position.y+position.h)
    ) {
-      if (pressed && activeButton==0 ) {
+      if (pressed==1 && activeButton==0 ) {
       buttons[0]->setState(PRESSED);
       pressedButton = 0;
       }
@@ -111,6 +110,30 @@ void menu::moveMouse(int x, int y, bool pressed) {
          pressedButton=-1;
       }
 }
+
+// Draws the menu
+void menu::draw(graphics *screen) {
+   for (int i=0; i<numberButtons; i++) {
+      screen->draw( buttonSurface[ buttons[i]->getState() ], &position );
+      if (buttons[i]->getState() != PRESSED)
+         screen->write(buttons[i]->getText() , position.x+32, position.y+3);
+      else
+         screen->write(buttons[i]->getText() , position.x+34, position.y+4);
+      position.y += distance; // Set the position of the next button
+   }
+   // Put the position back to normal
+   position.y -= (distance * numberButtons);
+}
+
+/// @todo Create the function
+// Every time the function is called, sets the attributes
+// to each button until all button classes have been set.
+// (Should be called immediately after the constructor and
+// as may times as button classes are there in the menu)
+void menu::setButton(const char *text, void (*function)()) {
+
+}
+
 // ---End---
 
 /* Last Version: Jonan */
