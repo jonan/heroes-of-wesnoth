@@ -17,53 +17,59 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "unit.hpp"
 
-/*
-unit::unit(char tipe[20]) {
-
+// Constructor
+unit::unit(void) {
+   imageName = NULL;
 }
 
-unit::~unit() {
-   delete image;
+// Destructor
+unit::~unit(void) {
+   delete imageName;
 }
-*/
 
-// Sets all the unit's atributes
-void unit::setAllAtributes(int live, int magic, int fis_def, int fis_attack, int mag_def, int mag_attack, int movement) {
+// Sets all the unit's atributes.
+void unit::setAllAtributes(int live, int magic, int physicalDefence,
+                           int magicalDefence, int physicalAttack,
+                           int magicalAttack, int movement) {
    this->live = live;
-   live_max = live;
+   liveMax = live;
    this->magic = magic;
-   magic_max = magic;
-   this->fis_def = fis_def;
-   this->fis_attack = fis_attack;
-   this->mag_def = mag_def;
-   this->mag_attack = mag_attack;
+   magicMax = magic;
+   this->physicalDefence = physicalDefence;
+   this->physicalAttack = physicalAttack;
+   this->magicalDefence = magicalDefence;
+   this->magicalAttack = magicalAttack;
    this->movement = movement;
 }
-/* ----------------------------------------------------------------------------------------------------------------------- */
+
+// Sets the creature's image.
 void unit::setImage(const char *imageName) {
-   image = new char [strlen(imageName)];
-
-   strcpy(image, imageName);
+   this->imageName = strdup(imageName);
 }
 
-void unit::draw(graphics *screen, SDL_Rect *position) {
-   screen->draw(image, position);
+// Returns the unit's movement.
+int unit::getMovement(void) {
+   return movement;
 }
 
-bool unit::isSelected() {
+// Selects the unit.
+void unit::select(void) {
+   selected = true;
+}
+
+// Unselects the unit.
+void unit::unselect(void) {
+   selected = false;
+}
+
+// Indicates if the unit is selected (true) or not (false).
+bool unit::isSelected(void) {
    return selected;
 }
 
-void unit::select() {
-   selected=true;
-}
-
-void unit::unselect() {
-   selected=false;
-}
-
-int unit::getMovement() {
-   return movement;
+// Draws the creature in the given position.
+void unit::draw(graphics *screen, SDL_Rect *position) {
+   screen->draw(imageName, position);
 }
 
 /* Last Version: Jonan */

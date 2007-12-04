@@ -59,6 +59,7 @@ void button::getFunction(void) {
 
 // class menu
 
+// Constructor
 menu::menu(graphics *screen, SDL_Rect position, void (*function)(), int numberButtons, bool backgroud) {
    this->screen = screen;
    this->position = position;
@@ -78,6 +79,7 @@ menu::menu(graphics *screen, SDL_Rect position, void (*function)(), int numberBu
    pressedButton = -1; //  No button is being pressed.
 }
 
+// Destructor
 menu::~menu(void) {
    for (int i=0; i<numberButtons; i++)
       delete buttons[i];
@@ -111,7 +113,7 @@ void menu::moveMouse(int x, int y, int pressed) {
       }
 }
 
-// Draws the menu
+// Draws the menu.
 void menu::draw(graphics *screen) {
    for (int i=0; i<numberButtons; i++) {
       screen->draw( buttonSurface[ buttons[i]->getState() ], &position );

@@ -22,27 +22,68 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 class unit {
    protected:
-      int live, live_max;
-      int magic, magic_max;
+      int live, liveMax; // Actual and maximun live
+      int magic, magicMax; // Actual and maximun magic power
 
-      int fis_def, fis_attack;
-      int mag_def, mag_attack;
+      int physicalDefence, physicalAttack;
+      int magicalDefence, magicalAttack;
 
-      int movement;
+      int movement; // The creatures speed
 
-      char *image;
-      bool selected;
+      char *imageName; // The name of the unit's image
+      bool selected; // Indicates if the unit is selected
 
    public:
-      //unit(char tipe[20]);
-      void setAllAtributes(int live, int magic, int des_fis, int def_mag, int attack_fis, int attack_mag, int movement);
-/* ----------------------------------------------------------------------------------------------------------------------- */
+      unit(void); // Constructor
+      ~unit(void); // Destructor
+
+      /// Sets all the unit's atributes.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param [in] live Maximum live.
+      /// @param [in] magic Maximum magic power.
+      /// @param [in] physicalDefence Defence against physical attacks.
+      /// @param [in] magicalDefence Defence against magical attacks.
+      /// @param [in] physicalAttack Power of the physical attack.
+      /// @param [in] magicalAttack Power of the magical attack.
+      /// @param [in] movement Speed of the creature.
+      void setAllAtributes(int live, int magic, int physicalDefence,
+                           int magicalDefence, int physicalAttack,
+                           int magicalAttack, int movement);
+      /// Sets the creature's image.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param [in] imageName The image's name, without the "img/" or the ".png".
       void setImage(const char *imageName);
+      /// Returns the unit's movement.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return Unit's movement.
+      int getMovement(void);
+      /// Selects the unit.
+      ///
+      /// -no detailed description-
+      void select(void);
+      /// Unselects the unit.
+      ///
+      /// -no detailed description-
+      void unselect(void);
+      /// Indicates if the unit is selected (true) or not (false).
+      ///
+      /// -no detailed description-
+      ///
+      /// @return If unit is selected, true, else, false.
+      bool isSelected(void);
+      /// Draws the creature in the given position.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param [in] screen -no detailed description-
+      /// @param [in] position The position where the creature should be drawn.
       void draw(graphics *screen, SDL_Rect *position);
-      bool isSelected();
-      void select();
-      void unselect();
-      int getMovement();
 };
 
 #endif

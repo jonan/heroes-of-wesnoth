@@ -29,24 +29,67 @@ cell::cell(void) {
    }
 }
 
-void cell::setPos(SDL_Rect position) {
+// Constructor
+cell::cell(SDL_Rect position, SDL_Surface *terrain, unit *creature) {
+   this->position = position;
+   this->terrain = terrain;
+   this->creature = creature;
+   mouseOver = false;
+   selected = false;
+   for (int i=0; i<6; i++) {
+      conectedCell[i] = NULL;
+   }
+}
+
+// Sets the cell's position.
+void cell::setPosition(SDL_Rect position) {
    this->position = position;
 }
 
+// Sets the cell's terrain.
 void cell::setTerrain(SDL_Surface *terrain) {
    this->terrain = terrain;
 }
 
+// Puts a creature in the cell.
 void cell::setCreature(unit *creature) {
    this->creature = creature;
 }
 
-SDL_Rect cell::getPos(void) {
+// Returns the cell's position.
+SDL_Rect cell::getPosition(void) {
    return position;
 }
 
+// Returns the creature in the cell.
 unit* cell::getCreature(void) {
    return creature;
+}
+
+// Indicates that the mouse is over the cell.
+void cell::putMouse(void) {
+   mouseOver = true;
+}
+
+// The mouse is no longer over the cell.
+void cell::removeMouse(void) {
+   mouseOver = false;
+}
+
+// Indicates that the cell is now selected.
+void cell::select(void) {
+   selected = true;
+}
+
+// The cell is no longer selected.
+void cell::unselect(void) {
+   selected = false;
+}
+
+// Indicates which are the cells next to this one
+// in any direction (N, NE, SE, S, SW or NW).
+void cell::conectCell(const int position, cell* conectedCell){
+   this->conectedCell[position] = conectedCell;
 }
 
 // If the creature in the cell is selected, returns the
@@ -61,26 +104,6 @@ int cell::draw(graphics *screen) {
       return creature->getMovement();
    else
       return 0;
-}
-
-void cell::putMouse() {
-   mouseOver = true;
-}
-
-void cell::removeMouse() {
-   mouseOver = false;
-}
-
-void cell::select() {
-   selected = true;
-}
-
-void cell::unselect() {
-   selected = false;
-}
-
-void cell::conectCell(const int position, cell* conectedCell){
-   this->conectedCell[position] = conectedCell;
 }
 
 // ---End---
@@ -103,7 +126,7 @@ map::map(void) {
    // Bottom Right..17, 8
    for (int x=0; x<18; x++) {
       for (int y=0; y<9; y++) {
-         battleMap[x][y].setPos(terrainPos);
+         battleMap[x][y].setPosition(terrainPos);
          battleMap[x][y].setCreature(NULL);
          terrainPos.y+=72;
       }
@@ -111,9 +134,8 @@ map::map(void) {
       else {terrainPos.y=77;}
       terrainPos.x+=54;
    }
-//-----------------------------------------------------------------------------------------------------------------------------------------//
    // Conected cells
-
+   /// @todo Conect all the cells.
    /*for (int coor1=0; coor1<18; coor1++) {
       for (int coor2=0; coor2<9; coor2++) {
             if (coor2==0){
@@ -126,17 +148,17 @@ map::map(void) {
             }
       }
    }
-
    for (int coor1=0; coor1<18; coor1++) {
       for (int coor2=0; coor2<9; coor2++) {
             if ( (coor2%2)==1 )
       }
    }*/
-//-----------------------------------------------------------------------------------------------------------------------------------------//
+
    selectedCell=NULL;
 }
 
-void map::setTerrain(const char terrainImgName[20], graphics *screen) {
+// Indicates the terrain image of the map.
+void map::setTerrain(const char *terrainImgName, graphics *screen) {
    terrainBase = screen->getImage(terrainImgName);
 
    for (int x=0; x<18; x++)
@@ -145,35 +167,29 @@ void map::setTerrain(const char terrainImgName[20], graphics *screen) {
       }
 }
 
+// Puts the hero in the map.
 void map::setHero(unit *player) {
    battleMap[0][4].setCreature(player);
    battleMap[0][4].select();
 }
 
-// Draws the map in the screen.
-void map::draw(graphics *screen) {
-   for (int x=0; x<18; x++) {
-      for (int y=0; y<9; y++) {
-         battleMap[x][y].draw(screen);
-      }
-   }
-}
-
+// Every time the mouse's position or the mouse's buttons
+// change, this function should be called.
 void map::moveMouse(int x, int y, int button) {
    SDL_Rect cellPosition;
    int i=0, j=0, move;
 
-   cellPosition = battleMap[i][j].getPos();
+   cellPosition = battleMap[i][j].getPosition();
 
    while (x > cellPosition.x){
       i++;
-      cellPosition = battleMap[i][j].getPos();
+      cellPosition = battleMap[i][j].getPosition();
    }
    i--;
 
    while (y > cellPosition.y){
       j++;
-      cellPosition = battleMap[i][j].getPos();
+      cellPosition = battleMap[i][j].getPosition();
    }
    j--;
 
@@ -205,6 +221,15 @@ void map::moveMouse(int x, int y, int button) {
       selectMove(x+1, y+1, move-1, screen);
    }
 }*/
+
+// Draws the map in the screen.
+void map::draw(graphics *screen) {
+   for (int x=0; x<18; x++) {
+      for (int y=0; y<9; y++) {
+         battleMap[x][y].draw(screen);
+      }
+   }
+}
 
 // ---End---
 

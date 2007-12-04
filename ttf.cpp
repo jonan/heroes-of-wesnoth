@@ -40,11 +40,12 @@ ttf::ttf(SDL_Surface *screen) {
 
 // Destructor
 ttf::~ttf(void) {
-   printf("Freeing font...\n");
+   printf("Freeing font...\t\t\t\t");
    TTF_CloseFont(font);
+   printf("[ ok ]\n");
 }
 
-// Writes a text into the screen
+// Writes a text into the screen.
 void ttf::write(const char *text,  const int x, const int y) {
    textSurface = TTF_RenderText_Solid(font, text, color);
 

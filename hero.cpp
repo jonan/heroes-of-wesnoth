@@ -18,10 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "hero.hpp"
 
 // Constructor
-hero::hero(const char type[20]) {
+hero::hero(const char *type) {
    // The hero starts controling no creatures
    for (int i=0; i<MAX_UNITS; i++) {
-   creature[i]=NULL;
+      creature[i]=NULL;
    }
    numCreatures=0;
 }

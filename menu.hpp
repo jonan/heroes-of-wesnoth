@@ -94,14 +94,14 @@ class menu {
       menu(graphics *screen, SDL_Rect position, void (*function)(), int numberButtons, bool backgroud = true); // Constructor
       ~menu(void); // Destructor
 
-      /// Tells the menu when the mouse position.
+      /// Tells the menu the mouse's position.
       ///
       /// Every time the mouse's position or the mouse's buttons change, this
       /// function should be called so the menu knows which button is being pressed.
       ///
       /// @param[in] x The x coordinate of the mouse's position
       /// @param[in] y The y coordinate of the mouse's position
-      /// @param[in] pressed If the mouse is pressed or not
+      /// @param[in] pressed If the mouse left button is pressed or not
       void moveMouse(int x, int y, int pressed);
       /// Draws the menu.
       ///

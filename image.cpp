@@ -19,21 +19,21 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // class image
 
-// Returns a pointer to the image that needs to be
-// load if there's no error. Otherwise, exits the program.
-void image::loadImage(const char *imageName, const int alpha) {
+// Loads an image with the alpha value indicated,
+// if ther's an error, exits the program.
+void image::loadImage(const int alpha) {
    SDL_Surface *image = NULL;
 
    // Create a string with the fisical location of the image
-   // "img/" + imageName + ".png"
+   // "img/" + name + ".png"
    std::string img = "img/";
-   std::string name(imageName);
+   std::string imageName(name);
    std::string png = ".png";
-   std::string imageDir = img + name + png;
+   std::string imageDir = img + imageName + png;
 
-   printf("Loading \"%s\"...\t\t", imageName);
+   printf("Loading \"%s\"...\t\t", name);
    // If the image name is to sort leave more space
-   if ( strlen(imageName)<11 ) printf("\t");
+   if ( strlen(name)<11 ) printf("\t");
    image = IMG_Load( imageDir.c_str() );
    if ( image==NULL ) {
       printf("[fail]\n\n%s\n\n", SDL_GetError ());
@@ -53,18 +53,19 @@ void image::loadImage(const char *imageName, const int alpha) {
 
 // Constructor
 image::image(const char *imageName, const int alpha, image *next) {
-   name = new char [strlen(imageName)+1];
-
-   strcpy(name, imageName);
+   name = strdup(imageName);
    this->next=next;
-   loadImage(name, alpha);
+   loadImage(alpha);
 }
 
 // Destructor
 image::~image(void) {
-   printf("Freeing \"%s\"...\n", name);
+   printf("Freeing \"%s\"...\t\t", name);
+   // If the image name is to sort leave more space
+   if ( strlen(name)<11 ) printf("\t");
    delete [] name;
    SDL_FreeSurface(img);
+   printf("[ ok ]\n");
 }
 
 // Returns the image name.
@@ -77,14 +78,9 @@ image* image::getNext(void) {
    return next;
 }
 
-/// @todo get getSurface() working.
-/* Don't know why it doesn't work
-
-SDL_Surface* getSurface(void) {
+SDL_Surface* image::getSurface(void) {
    return img;
 }
-
-*/
 
 // ---End---
 
@@ -133,6 +129,11 @@ image* imageList::findImage(const char *imageName) {
          exit(EXIT_FAILURE);
          }
    else return temp;
+}
+
+// Returns the surface of an image in the list.
+SDL_Surface* imageList::getSurface(const char *imageName) {
+   return findImage(imageName)->getSurface();
 }
 
 // ---End---

@@ -38,10 +38,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// only be one object of this type.
 class graphics {
    private:
-      SDL_Surface *screen;
+      SDL_Surface *screen; // The surface that represents the screen
       imageList *image; // List with all the images used
-      ttf *text;
-      SDL_TimerID timerID;
+      ttf *text; // Used to write text into the screen
+      SDL_TimerID timerID; // Unique timer identifier
 
       /// Initializes SDL, SDL_ttf and SDL_mixer.
       ///
@@ -60,24 +60,24 @@ class graphics {
       ///
       /// Adds a new image to the list
       ///
-      /// @param[in] imageName The image's name, without the img/...png
-      /// @param[in] alpha Alpha value of the image. 0 transparent, 255 opaque.
+      /// @param[in] imageName The image's name, without the "img/" or the ".png".
+      /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
       void newImage(const char *imageName, const int alpha = SDL_ALPHA_OPAQUE);
       /// Returns the surface of a preveously loaded image.
       ///
       /// -no detailed description-
       ///
-      /// @param[in] imageName The image's name, without the img/...png
-      /// @return Surface of the image
-      SDL_Surface* getImage(const char imageName[20]);
+      /// @param[in] imageName The image's name, without the "img/" or the ".png".
+      /// @return Surface of the image.
+      SDL_Surface* getImage(const char *imageName);
 
       /// Draws an image previously loaded to the indicated position.
       ///
       /// -no detailed description-
       ///
-      /// @param[in] imageName The image's name.
+      /// @param[in] imageName The image's name, without the "img/" or the ".png".
       /// @param[in] position Position where the image will be drawn.
-      void draw(const char imageName[20], SDL_Rect *position);
+      void draw(const char *imageName, SDL_Rect *position);
       /// Draws a surface to the indicated position.
       ///
       /// -no detailed description-
@@ -89,9 +89,9 @@ class graphics {
       ///
       /// -no detailed description-
       ///
-      /// @param[in] text Text to be writen
-      /// @param[in] x The x coordinate of the top left corner of the text
-      /// @param[in] y The y coordinate of the top left corner of the text
+      /// @param[in] text Text to be writen.
+      /// @param[in] x The x coordinate of the top left corner of the text.
+      /// @param[in] y The y coordinate of the top left corner of the text.
       void write(const char *text,  int x, int y);
 
       /// Refreshes the screen.

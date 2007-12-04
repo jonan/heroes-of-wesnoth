@@ -68,10 +68,10 @@ graphics::graphics(void) {
 // Destructor
 graphics::~graphics(void) {
    printf("Freeing screen...\n");
-   SDL_FreeSurface(screen);
+   if (timerID != 0) SDL_RemoveTimer(timerID);
    delete image;
    delete text;
-   if (timerID !=0) SDL_RemoveTimer(timerID);
+   SDL_FreeSurface(screen);
 }
 
 // Adds a new image to the list
@@ -80,31 +80,18 @@ void graphics::newImage(const char *imageName, const int alpha) {
 }
 
 // Returns the surface of a preveously loaded image.
-SDL_Surface* graphics::getImage(const char imageName[20]) {
+SDL_Surface* graphics::getImage(const char *imageName) {
    SDL_Surface *temp;
 
-   temp = image->findImage(imageName)->img;
+   temp = image->getSurface(imageName);
    return temp;
 }
 
-/// @todo Check this
-/*
-
-Don't know why doesn't this work... I'll check back sortly
-
-SDL_Surface* graphics::getImage(char imageName[20]) {
-   image *temp;
-
-   temp = image->findImage(imageName);
-   return temp->img;
-}
-*/
-
 // Draws an image previously loaded to the indicated position.
-void graphics::draw(const char imageName[20], SDL_Rect *position) {
+void graphics::draw(const char *imageName, SDL_Rect *position) {
    SDL_Surface *temp;
 
-   temp = image->findImage(imageName)->img;
+   temp = image->getSurface(imageName);
    SDL_BlitSurface(temp, NULL, screen, position);
 }
 
@@ -127,12 +114,14 @@ void graphics::update(void) {
 void graphics::execute(Uint32 (*function)(Uint32, void*)) {
    if (timerID == 0) {
       printf("Creating new timer...\n");
-      timerID = SDL_AddTimer(10, function, NULL);
+      timerID = SDL_AddTimer(50, function, NULL);
    } else {
-      printf("Deleting timer...\n");
-      SDL_RemoveTimer(timerID);
-      printf("Creating new timer...\n");
-      timerID = SDL_AddTimer(10, function, NULL);
+      printf("Deleting timer...\t\t\t");
+      if ( SDL_RemoveTimer(timerID)==SDL_TRUE ) {
+         printf("[ ok ]\n");
+         printf("Creating new timer...\n");
+         timerID = SDL_AddTimer(50, function, NULL);
+      }
    }
 }
 

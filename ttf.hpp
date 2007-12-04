@@ -25,7 +25,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 /// Represents text on the screen.
 ///
-/// This class is only meant to be used by graphics, witch
+/// This class is only meant to be used by graphics, which
 /// controls every single thing represented on the screen.
 class ttf{
    private:
@@ -36,7 +36,7 @@ class ttf{
       SDL_Color color;
 
    public:
-      /// @param[in] screen The pointer to the screen surface.
+      /// @param[in] screen A pointer to the screen surface.
       ttf(SDL_Surface *screen); // Constructor
       ~ttf(void); // Destrucor
 

@@ -28,8 +28,8 @@ class hero : public unit{
       int numCreatures; // The number of creatures that the hero actualy controls
 
    public:
-      /// @param[in] type Type of hero
-      hero(const char type[20]); // Constructor
+      /// @param[in] type Type of hero.
+      hero(const char *type); // Constructor
 
       /// Assings a new creature to the hero.
       ///

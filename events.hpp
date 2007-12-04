@@ -45,8 +45,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 class events {
    private:
       SDL_Event event;
-      bool keys[NUM_KEYS];
-      int mouse[5];
+      bool keys[NUM_KEYS]; // Stores the state of each keyboard key
+      int mouse[5]; // Mouse info
       int type; // Can be KEYBOARD, MOUSE, SYSTEM or NO_EVENT
       int systemType; // Can be QUIT or VIDEOEXPOSE
 

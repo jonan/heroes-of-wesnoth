@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-/*********************************************************************************
- * This is just a experimental file used to make sure things work as they should *
- *********************************************************************************/
+/*!*************************************************************************************
+ * @file This is just a experimental file used to make sure things work as they should *
+ *!*************************************************************************************/
 
 #include "events.hpp"
 #include "hero.hpp"
@@ -45,7 +45,7 @@ void loop() {
       input.readInput();
       mouse = input.getMouse();
       key = input.getKeyboard();
-      if (key[SDLK_ESCAPE]) {done = 1; SDL_Delay(1000);}
+      if (key[SDLK_ESCAPE]) {done = 1;}
       if (input.getType() == SYSTEM)
          if (input.getSystemType() == QUIT)
             done = 1;
@@ -53,7 +53,7 @@ void loop() {
 }
 
 Uint32 drawBattle(Uint32 interval, void *param){
-   //printf("Draw Battle\n");
+   printf("Draw Battle\n");
    battle.moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[LEFT_BUTTON]);
    battle.draw(screen);
    screen->update();
@@ -62,8 +62,8 @@ Uint32 drawBattle(Uint32 interval, void *param){
 }
 
 Uint32 drawMenu(Uint32 interval, void *param) {
-   /*printf("Draw Menu\n");
-   screen->draw("wesnoth", &background_pos);
+   //printf("Draw Menu\n");
+   /*screen->draw("wesnoth", &background_pos);
    screen->draw("heroes-logo", &logo_pos);
    screen->write("XXXXXXXXXX", mouse[POSITION_X], mouse[POSITION_Y]);*/
    mainMenu->moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[LEFT_BUTTON]);
@@ -75,7 +75,6 @@ Uint32 drawMenu(Uint32 interval, void *param) {
 
 // Provisional function to use the classes
 void map() {
-   screen->endExecution();
    screen->newImage("grand-knight");
    screen->newImage("grassland-r1");
    screen->newImage("alpha", 50);

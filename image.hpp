@@ -31,15 +31,16 @@ class image {
    private:
       image *next; // Next image in the list
       char *name; // Unique name of each image (the fisical image name)
+      SDL_Surface *img; // Image's surface
       //SDL_Rect position; // Position of the image on the screen
 
-      // Returns a pointer to the image that needs to be
-      // load if there's no error. Otherwise, exits the program.
-      void loadImage(const char *imageName, const int alpha);
+      // Loads an image with the alpha value indicated,
+      // if ther's an error, exits the program.
+      void loadImage(const int alpha);
 
    public:
-      /// @param[in] imageName The image's name, without the "img/" and the ".png".
-      /// @param[in] alpha Alpha value of the image. 0 transparent, 255 opaque.
+      /// @param[in] imageName The image's name, without the "img/" or the ".png".
+      /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
       /// @param[in] next The next image in the list.
       image(const char *imageName, const int alpha, image *next); // Constructor
       ~image(void); // Destructor
@@ -56,11 +57,13 @@ class image {
       ///
       /// @return next image in the imageList.
       image* getNext(void);
-      //SDL_Surface* getSurface(void); Don't know why it doesn't work
+      /// Returns the image's surface.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return image's surface.
+      SDL_Surface* getSurface(void);
 
-      /// @todo make img private. First need to get getSurface() working.
-      // It's really private. Put here just until I get getSurface() working
-      SDL_Surface *img;
 };
 
 /// A list of image classes.
@@ -80,16 +83,22 @@ class imageList {
       /// Loads the image and then places it at
       /// the beginning or the list.
       ///
-      /// @param[in] imageName  The image's name, without the img/...png
-      /// @param[in] alpha Alpha value of the image. 0 transparent, 255 opaque.
+      /// @param[in] imageName  The image's name, without the "img/" or the ".png".
+      /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
       void addImage(const char *imageName, const int alpha);
       /// Looks for an image in the list.
       ///
       /// If the image doesn't exist, exits the program and
       /// prints an error message.
       ///
-      /// @param[in] imageName  The image's name, without the img/...png
+      /// @param[in] imageName  The image's name, without the "img/" or the ".png".
       image* findImage(const char *imageName);
+      /// Returns the surface of an image in the list.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return surface of an image in the list.
+      SDL_Surface* getSurface(const char *imageName);
 };
 
 #endif

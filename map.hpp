@@ -37,7 +37,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 class cell {
    private:
       SDL_Rect position; // Position where to draw the cell
-      SDL_Surface *terrain; // Type of terrain
+      SDL_Surface *terrain; // Surface of the terrain
       unit *creature; // Creature in the cell
       cell *conectedCell[6]; // The six cells that are next to it
 
@@ -46,14 +46,66 @@ class cell {
 
    public:
       cell(void); // Constructor
-      //~cell(void); // Destructor
+      /// @param [in] position Position where to draw the cell
+      /// @param [in] terrain Surface of the terrain
+      /// @param [in] creature Creature in the cell
+      cell(SDL_Rect position, SDL_Surface *terrain = NULL, unit *creature = NULL); // Constructor
 
-      void setPos(SDL_Rect position);
+      /// Sets the cell's position.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param [in] position Position where to draw the cell
+      void setPosition(SDL_Rect position);
+      /// Sets the cell's terrain.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param [in] terrain Surface of the terrain
       void setTerrain(SDL_Surface *imageName);
+      /// Puts a creature in the cell.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param [in] creature Creature to put in the cell
       void setCreature(unit *creature);
-
-      SDL_Rect getPos(void);
+      /// Returns the cell's position.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return Cell's position
+      SDL_Rect getPosition(void);
+      /// Returns the creature in the cell.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return Pointer to the unit in the cell.
       unit *getCreature(void);
+
+      /// Indicates that the mouse is over the cell.
+      ///
+      /// -no detailed description-
+      void putMouse(void);
+      /// The mouse is no longer over the cell.
+      ///
+      /// -no detailed description-
+      void removeMouse(void);
+      /// Indicates that the cell is now selected.
+      ///
+      /// -no detailed description-
+      void select(void);
+      /// The cell is no longer selected.
+      ///
+      /// -no detailed description-
+      void unselect(void);
+      /// Conects a cell to this one.
+      ///
+      /// Indicates which are the cells next to this one
+      /// in any direction (N, NE, SE, S, SW or NW).
+      ///
+      /// @param [in] position Relative position of the cell (N, NE, SE, S, SW or NW).
+      /// @param [in] conectedCell The cell to conect.
+      void conectCell(const int position, cell* conectedCell);
 
       /// Draws the cell in the screen.
       ///
@@ -62,12 +114,6 @@ class cell {
       ///
       /// @param[in] screen -no detailed description-
       int draw(graphics *screen);
-
-      void putMouse(void);
-      void removeMouse(void);
-      void select(void);
-      void unselect(void);
-      void conectCell(const int position, cell* conectedCell);
 };
 
 /// Controls all the attributes of a map.
@@ -83,10 +129,30 @@ class map {
    public:
       map(void); // Constructor
 
-      /// @param[in] terrainImgName Name of the terrain's image
+      /// Indicates the terrain image of the map.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] terrainImgName Name of the terrain's image, without the "img/" or the ".png".
       /// @param[in] screen -no detailed description-
-      void setTerrain(const char terrainImgName[20], graphics *screen);
+      void setTerrain(const char *terrainImgName, graphics *screen);
+      /// Puts the hero in the map.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param [in] player The player's hero.
       void setHero(unit *player);
+
+      /// Tells the map the mouse's position.
+      ///
+      /// Every time the mouse's position or the mouse's buttons
+      /// change, this function should be called.
+      ///
+      /// @param[in] x The x coordinate of the mouse's position
+      /// @param[in] y The y coordinate of the mouse's position
+      /// @param[in] pressed If the mouse left button is pressed or not
+      void moveMouse(int x, int y, int pressed);
+      //void selectMove(int x, int y, int move, graphics *screen);
 
       /// Draws the map in the screen.
       ///
@@ -94,9 +160,6 @@ class map {
       ///
       /// @param[in] screen -no detailed description-
       void draw(graphics *screen);
-
-      void moveMouse(int x, int y, int button);
-      //void selectMove(int x, int y, int move, graphics *screen);
 };
 
 #endif
