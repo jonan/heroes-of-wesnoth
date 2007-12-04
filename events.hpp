@@ -33,9 +33,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// Mouse info
 #define POSITION_X    0
 #define POSITION_Y    1
-#define LEFT_BUTTON   2
-#define MIDDLE_BUTTON 3
-#define RIGHT_BUTTON  4
+#define BUTTON        2
+/// Mouse buttons
+#define NO_BUTTON     0
+#define LEFT_BUTTON   1
+#define MIDDLE_BUTTON 2
+#define RIGHT_BUTTON  3
 
 /// Event control.
 ///
@@ -46,7 +49,7 @@ class events {
    private:
       SDL_Event event;
       bool keys[NUM_KEYS]; // Stores the state of each keyboard key
-      int mouse[5]; // Mouse info
+      int mouse[3]; // Mouse info
       int type; // Can be KEYBOARD, MOUSE, SYSTEM or NO_EVENT
       int systemType; // Can be QUIT or VIDEOEXPOSE
 

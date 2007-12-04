@@ -88,14 +88,9 @@ menu::~menu(void) {
 // Every time the mouse's position or the mouse's buttons change, this
 // function should be called so the menu knows which button is being pressed.
 void menu::moveMouse(int x, int y, int pressed) {
-   if // Mouse over button
-   (
-   x>position.x                &&
-   x < (position.x+position.w) &&
-   y>position.y                &&
-   y < (position.y+position.h)
-   ) {
-      if (pressed==1 && activeButton==0 ) {
+   if ( x>position.x && x < (position.x+position.w) &&
+        y>position.y && y < (position.y+position.h)) { // Mouse over button
+      if ( pressed==SDL_BUTTON_LEFT && activeButton==0 ) {
       buttons[0]->setState(PRESSED);
       pressedButton = 0;
       }

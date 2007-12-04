@@ -27,6 +27,9 @@ events::events(void) {
    // Clear mouse info
    for (int j = 0; j < 5; j++)
       mouse[j] = 0;
+
+   // Mouse motion events won't go to the SDL queue
+   SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
 }
 
 // Gets the input and stores the information obtained
@@ -34,27 +37,22 @@ events::events(void) {
 void events::readInput(void) {
    SDL_WaitEvent(&event);
       // MOUSE
-      if (event.type == SDL_MOUSEMOTION) {
-         mouse[POSITION_X] = event.motion.x;
-         mouse[POSITION_Y] = event.motion.y;
-         type = MOUSE;
-      }
-      else if (event.type == SDL_MOUSEBUTTONDOWN) {
+      if (event.type == SDL_MOUSEBUTTONDOWN) {
          if (event.button.button == SDL_BUTTON_LEFT)
-            mouse[LEFT_BUTTON] = 1;
+            mouse[BUTTON] = LEFT_BUTTON;
          else if (event.button.button == SDL_BUTTON_MIDDLE)
-            mouse[MIDDLE_BUTTON] = 1;
+            mouse[BUTTON] = MIDDLE_BUTTON;
          else if (event.button.button == SDL_BUTTON_RIGHT)
-            mouse[RIGHT_BUTTON] = 1;
+            mouse[BUTTON] = RIGHT_BUTTON;
          type = MOUSE;
       }
       else if (event.type == SDL_MOUSEBUTTONUP) {
          if (event.button.button == SDL_BUTTON_LEFT)
-            mouse[LEFT_BUTTON] = 0;
+            mouse[BUTTON] = NO_BUTTON;
          else if (event.button.button == SDL_BUTTON_MIDDLE)
-            mouse[MIDDLE_BUTTON] = 0;
+            mouse[BUTTON] = NO_BUTTON;
          else if (event.button.button == SDL_BUTTON_RIGHT)
-            mouse[RIGHT_BUTTON] = 0;
+            mouse[BUTTON] = NO_BUTTON;
          type = MOUSE;
       }
       // KEYBOARD
@@ -87,6 +85,7 @@ bool* events::getKeyboard(void) {
 // POSITION_Y, LEFT_BUTTON, MIDDLE_BUTTON and RIGHT_BUTTON.
 // The button referred infos may be 1 (pressed) or 0 (not pressed).
 int* events::getMouse(void) {
+      SDL_GetMouseState(&mouse[0], &mouse[1]);
       return mouse;
 }
 

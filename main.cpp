@@ -54,7 +54,7 @@ void loop() {
 
 Uint32 drawBattle(Uint32 interval, void *param){
    printf("Draw Battle\n");
-   battle.moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[LEFT_BUTTON]);
+   battle.moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
    battle.draw(screen);
    screen->update();
 
@@ -66,7 +66,7 @@ Uint32 drawMenu(Uint32 interval, void *param) {
    /*screen->draw("wesnoth", &background_pos);
    screen->draw("heroes-logo", &logo_pos);
    screen->write("XXXXXXXXXX", mouse[POSITION_X], mouse[POSITION_Y]);*/
-   mainMenu->moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[LEFT_BUTTON]);
+   mainMenu->moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
    mainMenu->draw(screen);
    screen->update();
 
