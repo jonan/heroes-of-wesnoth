@@ -85,6 +85,10 @@ class graphics {
       /// @param[in] img The images's surface.
       /// @param[in] position Position where the image will be drawn.
       void draw(SDL_Surface *img, SDL_Rect *position);
+      /// Puts the screen in black.
+      ///
+      /// -no detailed description-
+      void erase(void);
       /// Writes text in the screen.
       ///
       /// -no detailed description-
@@ -98,27 +102,6 @@ class graphics {
       ///
       /// -no detailed description-
       void update(void);
-
-      /// Executes a function every 50 ms.
-      ///
-      /// This function is used to refresh the screen every 50 ms.
-      ///
-      /// The parameter is a little bit special function like this one:
-      ///
-      /// \code
-      /// Uint32 function(Uint32 interval, void *param) {
-      ///    //your code
-      ///
-      ///    return interval;
-      /// }
-      /// \endcode
-      ///
-      /// Your code should be the one that has to be execute to refresh the screen.
-      void execute(Uint32 (*function)(Uint32, void*));
-      /// Ends a execution started with execute(Uint32 (*function)(Uint32, void*)).
-      ///
-      ///  -no detailed description-
-      void endExecution(void);
 };
 
 #endif

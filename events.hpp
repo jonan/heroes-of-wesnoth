@@ -35,10 +35,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #define POSITION_Y    1
 #define BUTTON        2
 /// Mouse buttons
-#define NO_BUTTON     0
-#define LEFT_BUTTON   1
-#define MIDDLE_BUTTON 2
-#define RIGHT_BUTTON  3
+#define NONE          0
+#define LEFT          1
+#define MIDDLE        2
+#define RIGHT         3
 
 /// Event control.
 ///
@@ -68,9 +68,9 @@ class events {
       bool* getKeyboard(void);
       /// Returns the mouse state and position.
       ///
-      /// Returns a size 5 array with the mouse info: POSITION_X,
-      /// POSITION_Y, LEFT_BUTTON, MIDDLE_BUTTON and RIGHT_BUTTON.
-      /// The button referred infos may be 1 (pressed) or 0 (not pressed).
+      /// Returns a size 3 array with the mouse info: POSITION_X,
+      /// POSITION_Y and BUTTON. The BUTTON may be: NONE, LEFT,
+      /// MIDDLE or RIGHT.
       int* getMouse(void);
       /// Returns the type of event occurred.
       ///

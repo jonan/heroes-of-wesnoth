@@ -35,24 +35,24 @@ events::events(void) {
 // Gets the input and stores the information obtained
 // (must be called before any other events function).
 void events::readInput(void) {
-   SDL_WaitEvent(&event);
+   while (SDL_PollEvent(&event)) {
       // MOUSE
       if (event.type == SDL_MOUSEBUTTONDOWN) {
          if (event.button.button == SDL_BUTTON_LEFT)
-            mouse[BUTTON] = LEFT_BUTTON;
+            mouse[BUTTON] = LEFT;
          else if (event.button.button == SDL_BUTTON_MIDDLE)
-            mouse[BUTTON] = MIDDLE_BUTTON;
+            mouse[BUTTON] = MIDDLE;
          else if (event.button.button == SDL_BUTTON_RIGHT)
-            mouse[BUTTON] = RIGHT_BUTTON;
+            mouse[BUTTON] = RIGHT;
          type = MOUSE;
       }
       else if (event.type == SDL_MOUSEBUTTONUP) {
          if (event.button.button == SDL_BUTTON_LEFT)
-            mouse[BUTTON] = NO_BUTTON;
+            mouse[BUTTON] = NONE;
          else if (event.button.button == SDL_BUTTON_MIDDLE)
-            mouse[BUTTON] = NO_BUTTON;
+            mouse[BUTTON] = NONE;
          else if (event.button.button == SDL_BUTTON_RIGHT)
-            mouse[BUTTON] = NO_BUTTON;
+            mouse[BUTTON] = NONE;
          type = MOUSE;
       }
       // KEYBOARD
@@ -73,6 +73,7 @@ void events::readInput(void) {
          systemType = QUIT;
          type = SYSTEM;
       }
+   }
 }
 
 // Returns an array of the keyboard keys with their
@@ -81,9 +82,9 @@ bool* events::getKeyboard(void) {
       return keys;
 }
 
-// Returns a size 5 array with the mouse info: POSITION_X,
-// POSITION_Y, LEFT_BUTTON, MIDDLE_BUTTON and RIGHT_BUTTON.
-// The button referred infos may be 1 (pressed) or 0 (not pressed).
+// Returns a size 3 array with the mouse info: POSITION_X,
+// POSITION_Y and BUTTON. The BUTTON may be: NONE, LEFT,
+// MIDDLE or RIGHT.
 int* events::getMouse(void) {
       SDL_GetMouseState(&mouse[0], &mouse[1]);
       return mouse;

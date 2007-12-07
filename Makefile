@@ -1,4 +1,4 @@
-OBJECTS = events.o graphics.o hero.o image.o main.o map.o menu.o ttf.o unit.o
+OBJECTS = events.o graphics.o hero.o image.o main.o map.o menu.o timer.o ttf.o unit.o
 SDL_LIBS = -lSDL -lSDL_mixer -lSDL_ttf -lSDL_image
 CFLAGS = -c -g
 CC = g++
@@ -26,6 +26,9 @@ map.o : map.hpp map.cpp unit.o
 
 menu.o : menu.hpp menu.cpp graphics.o
 	$(CC) $(CFLAGS) menu.cpp
+
+timer.o : timer.hpp timer.cpp
+	$(CC) $(CFLAGS) timer.cpp
 
 ttf.o : ttf.hpp ttf.cpp
 	$(CC) $(CFLAGS) ttf.cpp

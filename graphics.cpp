@@ -100,6 +100,11 @@ void graphics::draw(SDL_Surface *img, SDL_Rect *position) {
    SDL_BlitSurface(img, NULL, screen, position);
 }
 
+// Puts the screen in black.
+void graphics::erase(void) {
+   SDL_FillRect(screen, NULL, 0);
+}
+
 // Writes text in the screen.
 void graphics::write(const char *text,  int x, int y) {
    this->text->write(text,  x, y);
@@ -108,27 +113,6 @@ void graphics::write(const char *text,  int x, int y) {
 // Refreshes the screen.
 void graphics::update(void) {
    SDL_Flip(screen);
-}
-
-// This function is used to refresh the screen every 50 ms.
-void graphics::execute(Uint32 (*function)(Uint32, void*)) {
-   if (timerID == 0) {
-      printf("Creating new timer...\n");
-      timerID = SDL_AddTimer(50, function, NULL);
-   } else {
-      printf("Deleting timer...\t\t\t");
-      if ( SDL_RemoveTimer(timerID)==SDL_TRUE ) {
-         printf("[ ok ]\n");
-         printf("Creating new timer...\n");
-         timerID = SDL_AddTimer(50, function, NULL);
-      }
-   }
-}
-
-// Ends a execution started with execute(Uint32 (*function)(Uint32, void*)).
-void graphics::endExecution(void) {
-   SDL_RemoveTimer(timerID);
-   timerID=0;
 }
 
 /* Last Version: Jonan */

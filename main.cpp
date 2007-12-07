@@ -23,6 +23,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "hero.hpp"
 #include "map.hpp"
 #include "menu.hpp"
+#include "timer.hpp"
 
 SDL_Rect background_pos;
 SDL_Rect logo_pos;
@@ -33,15 +34,16 @@ hero player("magician");
 menu *mainMenu;
 map battle;
 graphics *screen;
+timer refresh;
 events input;
 bool* key;
 int* mouse;
-int done;
 
-void loop() {
-   done=0;
+void loop(void (*function)()) {
+   int done=0;
 
    while (done == 0) {
+      refresh.start();
       input.readInput();
       mouse = input.getMouse();
       key = input.getKeyboard();
@@ -49,42 +51,34 @@ void loop() {
       if (input.getType() == SYSTEM)
          if (input.getSystemType() == QUIT)
             done = 1;
+      function();
+      refresh.end(50);
    }
 }
 
-Uint32 drawBattle(Uint32 interval, void *param){
-   printf("Draw Battle\n");
-   battle.moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
-   battle.draw(screen);
-   screen->update();
-
-   return interval;
-}
-
-Uint32 drawMenu(Uint32 interval, void *param) {
-   //printf("Draw Menu\n");
-   /*screen->draw("wesnoth", &background_pos);
-   screen->draw("heroes-logo", &logo_pos);
-   screen->write("XXXXXXXXXX", mouse[POSITION_X], mouse[POSITION_Y]);*/
+void drawMenu(){
    mainMenu->moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
    mainMenu->draw(screen);
    screen->update();
+}
 
-   return interval;
+void drawMap(){
+   battle.moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
+   battle.draw(screen);
+   screen->update();
 }
 
 // Provisional function to use the classes
 void map() {
-   screen->newImage("grand-knight");
-   screen->newImage("grassland-r1");
-   screen->newImage("alpha", 50);
+   screen->erase();
    player.setAllAtributes(1, 1, 1, 1, 1, 1, 3);
    player.setImage("grand-knight");
    battle.setTerrain("grassland-r1", screen);
    battle.setHero(&player);
-   screen->execute(drawBattle);
-   loop();
-   screen->execute(drawMenu);
+   loop(&drawMap);
+   screen->draw("wesnoth", &background_pos);
+   screen->draw("heroes-logo", &logo_pos);
+   key[SDLK_ESCAPE] = 0;
 }
 
 void intro() {
@@ -102,15 +96,11 @@ void intro() {
    screen->draw("heroes-logo", &logo_pos);
    mainMenu->draw(screen);
    screen->update();
-   SDL_Delay(100);
 
-   done=0;
    input.readInput();
    mouse = input.getMouse();
    key = input.getKeyboard();
-   screen->execute(drawMenu);
-
-   loop();
+   loop(&drawMenu);
 }
 
 int main(int argc, char *argv[]) {
@@ -120,13 +110,15 @@ int main(int argc, char *argv[]) {
    screen->newImage("button");
    screen->newImage("button-active");
    screen->newImage("button-pressed");
+   screen->newImage("grand-knight");
+   screen->newImage("grassland-r1");
+   screen->newImage("alpha", 50);
    background_pos.x = 500;
    background_pos.y = 500;
    background_pos.w = 108;
    background_pos.h = 22;
    mainMenu = new menu(screen, background_pos, &map, 1);
-   //intro();
-   map();
+   intro();
    delete screen;
    delete mainMenu;
 
