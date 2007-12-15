@@ -25,7 +25,7 @@ cell::cell(void) {
    mouseOver = false;
    selected = false;
    for (int i=0; i<6; i++) {
-      conectedCell[i] = NULL;
+      connectedCell[i] = NULL;
    }
 }
 
@@ -37,7 +37,7 @@ cell::cell(SDL_Rect position, SDL_Surface *terrain, unit *creature) {
    mouseOver = false;
    selected = false;
    for (int i=0; i<6; i++) {
-      conectedCell[i] = NULL;
+      connectedCell[i] = NULL;
    }
 }
 
@@ -56,14 +56,14 @@ void cell::setCreature(unit *creature) {
    this->creature = creature;
 }
 
-// Returns the cell's position.
-SDL_Rect cell::getPosition(void) {
-   return position;
-}
-
 // Returns the creature in the cell.
 unit* cell::getCreature(void) {
    return creature;
+}
+
+// Returns the cell's position.
+SDL_Rect cell::getPosition(void) {
+   return position;
 }
 
 // Indicates that the mouse is over the cell.
@@ -77,8 +77,12 @@ void cell::removeMouse(void) {
 }
 
 // Indicates that the cell is now selected.
-void cell::select(void) {
-   selected = true;
+cell* cell::select(void) {
+   if (creature!=NULL) {
+      selected = true;
+      return this;
+   } else
+      return NULL;
 }
 
 // The cell is no longer selected.
@@ -88,30 +92,131 @@ void cell::unselect(void) {
 
 // Indicates which are the cells next to this one
 // in any direction (N, NE, SE, S, SW or NW).
-void cell::conectCell(const int position, cell* conectedCell){
-   this->conectedCell[position] = conectedCell;
+void cell::connectCell(const int position, cell* connectedCell){
+   this->connectedCell[position] = connectedCell;
 }
 
 // If the creature in the cell is selected, returns the
 // movement, else returns 0
-int cell::draw(graphics *screen) {
+void cell::draw(graphics *screen) {
    screen->draw(terrain, &position);
    if (selected) screen->draw("alpha", &position);
    if (mouseOver) screen->draw("alpha", &position);
    if (creature) creature->draw(screen, &position);
-
-   if (selected && creature)
-      return creature->getMovement();
-   else
-      return 0;
 }
 
 // ---End---
 
 // class map
 
+// connects all the cells in the map
+void map::connectCells(void) {
+   for (int coor1=0; coor1<sizeX; coor1++) {
+      for (int coor2=0; coor2<sizeY; coor2++) {
+         if ( (coor1%2)==1 ) { // coor1 is an odd number
+            if (coor1 == sizeX-1) { // The last colum of the map
+               if (coor2 == 0) {
+                  battleMap[coor1][coor2].connectCell(N, NULL);
+                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+                  battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2+1]);
+               } else if (coor2 == sizeY-1) {
+                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+                  battleMap[coor1][coor2].connectCell(S, NULL);
+                  battleMap[coor1][coor2].connectCell(SW, NULL);
+               } else {
+                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+                  battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2+1]);
+               }
+               battleMap[coor1][coor2].connectCell(NE, NULL);
+               battleMap[coor1][coor2].connectCell(SE, NULL);
+               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2]);
+            } else if (coor2 == 0) { // The first row of the map
+               battleMap[coor1][coor2].connectCell(N, NULL);
+               battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2]);
+               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2+1]);
+               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2]);
+               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2+1]);
+            } else if (coor2 == sizeY-1) { // Last row of the map
+               battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(S, NULL);
+               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2]);
+               battleMap[coor1][coor2].connectCell(SE, NULL);
+               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2]);
+               battleMap[coor1][coor2].connectCell(SW, NULL);
+            } else {
+               battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2]);
+               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2+1]);
+               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2]);
+               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2+1]);
+            }
+         } else { // coor1 is an even number
+            if (coor1 == 0) { // The first colum of the map
+               if (coor2 == 0) {
+                  battleMap[coor1][coor2].connectCell(N, NULL);
+                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+                  battleMap[coor1][coor2].connectCell(NE, NULL);
+               } else if (coor2 == sizeY-1) {
+                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+                  battleMap[coor1][coor2].connectCell(S, NULL);
+                  battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2-1]);
+               } else {
+                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+                  battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2-1]);
+               }
+               battleMap[coor1][coor2].connectCell(NW, NULL);
+               battleMap[coor1][coor2].connectCell(SW, NULL);
+               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2]);
+            } else if (coor1 == sizeX-1) { // The last colum of the map
+               if (coor2 == 0) {
+                  battleMap[coor1][coor2].connectCell(N, NULL);
+                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+                  battleMap[coor1][coor2].connectCell(NW, NULL);
+               } else if (coor2 == sizeY-1) {
+                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+                  battleMap[coor1][coor2].connectCell(S, NULL);
+                  battleMap[coor1][coor2].connectCell(NW,&battleMap[coor1-1][coor2-1]);
+               } else {
+                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+                  battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2-1]);
+               }
+               battleMap[coor1][coor2].connectCell(NE, NULL);
+               battleMap[coor1][coor2].connectCell(SE, NULL);
+               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2]);
+            } else if (coor2 == 0) { // The first row of the map
+               battleMap[coor1][coor2].connectCell(N, NULL);
+               battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2]);
+               battleMap[coor1][coor2].connectCell(NW, NULL);
+               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2]);
+            } else if (coor2 == sizeY-1) { // Last row of the map
+               battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(S, NULL);
+               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2]);
+               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2]);
+            } else {
+               battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2]);
+               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2]);
+            }
+         }
+      }
+   }
+}
+
 // Constructor
-map::map(void) {
+map::map(const int sizeX, const int sizeY) {
    SDL_Rect terrainPos;
 
    terrainPos.x = 17;
@@ -119,13 +224,20 @@ map::map(void) {
    terrainPos.w = 72;
    terrainPos.h = 72;
 
+   this->sizeX = sizeX;
+   this->sizeY = sizeY;
+
+   battleMap = new cell*[sizeX];
+   for (int i=0; i<sizeX; i++)
+      battleMap[i] = new cell[sizeY];
+
    // For creating a battle map grid
-   // Top Left.......0, 0
-   // Top Right.....17, 0
-   // Bottom Left....0, 8
-   // Bottom Right..17, 8
-   for (int x=0; x<18; x++) {
-      for (int y=0; y<9; y++) {
+   // Top Left     -       0,       0
+   // Top Right    - sizeX-1,       0
+   // Bottom Left  -       0, sizeY-1
+   // Bottom Right - sizeX-1, sizeY-1
+   for (int x=0; x<sizeX; x++) {
+      for (int y=0; y<sizeY; y++) {
          battleMap[x][y].setPosition(terrainPos);
          battleMap[x][y].setCreature(NULL);
          terrainPos.y+=72;
@@ -134,35 +246,25 @@ map::map(void) {
       else {terrainPos.y=77;}
       terrainPos.x+=54;
    }
-   // Conected cells
-   /// @todo Conect all the cells.
-   /*for (int coor1=0; coor1<18; coor1++) {
-      for (int coor2=0; coor2<9; coor2++) {
-            if (coor2==0){
-               battleMap[coor1][coor2].conectCell(S, &battleMap[coor1][coor2+1]);
-            } else if (coor2==8) {
-               battleMap[coor1][coor2].conectCell(S, &battleMap[coor1][coor2-1]);
-            } else {
-               battleMap[coor1][coor2].conectCell(S, &battleMap[coor1][coor2+1]);
-               battleMap[coor1][coor2].conectCell(S, &battleMap[coor1][coor2-1]);
-            }
-      }
-   }
-   for (int coor1=0; coor1<18; coor1++) {
-      for (int coor2=0; coor2<9; coor2++) {
-            if ( (coor2%2)==1 )
-      }
-   }*/
 
+   connectCells();
    selectedCell=NULL;
+   mouseOverCell=NULL;
+}
+
+// Destructor
+map::~map(void) {
+   for (int i=0; i<sizeX; i++)
+      delete [] battleMap[i];
+   delete [] battleMap;
 }
 
 // Indicates the terrain image of the map.
 void map::setTerrain(const char *terrainImgName, graphics *screen) {
    terrainBase = screen->getImage(terrainImgName);
 
-   for (int x=0; x<18; x++)
-      for (int y=0; y<9; y++) {
+   for (int x=0; x<sizeX; x++)
+      for (int y=0; y<sizeY; y++) {
          battleMap[x][y].setTerrain(terrainBase);
       }
 }
@@ -170,40 +272,40 @@ void map::setTerrain(const char *terrainImgName, graphics *screen) {
 // Puts the hero in the map.
 void map::setHero(unit *player) {
    battleMap[0][4].setCreature(player);
-   battleMap[0][4].select();
 }
 
 // Every time the mouse's position or the mouse's buttons
 // change, this function should be called.
 void map::moveMouse(int x, int y, int button) {
-   SDL_Rect cellPosition;
-   int i=0, j=0, move;
+   int i=0, j=0;
+   SDL_Rect cellPosition = battleMap[i][j].getPosition();
 
-   cellPosition = battleMap[i][j].getPosition();
+   if (mouseOverCell) {
+      mouseOverCell->removeMouse();
+   }
 
+   // Find out which cell is the mouse over
    while (x > cellPosition.x){
+      cellPosition.x += 54;
       i++;
-      cellPosition = battleMap[i][j].getPosition();
    }
    i--;
-
-   while (y > cellPosition.y){
-      j++;
+   if (i>=0 && i<sizeX) {
       cellPosition = battleMap[i][j].getPosition();
-   }
-   j--;
-
-   if (selectedCell) {
-      selectedCell->removeMouse();
-   }
-
-   if ( i>=0 && i<18 && j>=0 && j<9) {
-      battleMap[i][j].putMouse();
-      if (button==1 && battleMap[i][j].getCreature()!=NULL) {
-         battleMap[i][j].select();
-      } else battleMap[i][j].unselect();
-      //if (move!=0) selectMove(i, j, move, screen);
-      selectedCell = &battleMap[i][j];
+      while (y > cellPosition.y){
+         cellPosition.y += 72;
+         j++;
+      }
+      j--;
+      if (j>=0 && j<sizeY) {
+         battleMap[i][j].putMouse();
+         mouseOverCell = &battleMap[i][j];
+         if (button==1) {
+            if (selectedCell!=NULL)
+               selectedCell->unselect();
+            selectedCell = battleMap[i][j].select();
+         }
+      }
    }
 }
 
@@ -224,8 +326,8 @@ void map::moveMouse(int x, int y, int button) {
 
 // Draws the map in the screen.
 void map::draw(graphics *screen) {
-   for (int x=0; x<18; x++) {
-      for (int y=0; y<9; y++) {
+   for (int x=0; x<sizeX; x++) {
+      for (int y=0; y<sizeY; y++) {
          battleMap[x][y].draw(screen);
       }
    }

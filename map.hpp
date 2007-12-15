@@ -39,7 +39,7 @@ class cell {
       SDL_Rect position; // Position where to draw the cell
       SDL_Surface *terrain; // Surface of the terrain
       unit *creature; // Creature in the cell
-      cell *conectedCell[6]; // The six cells that are next to it
+      cell *connectedCell[6]; // The six cells that are next to it
 
       bool mouseOver; // Indicates if the mouse is over the cell or not
       bool selected; // Indicates if the unit in that cell is selected
@@ -69,18 +69,18 @@ class cell {
       ///
       /// @param [in] creature Creature to put in the cell
       void setCreature(unit *creature);
-      /// Returns the cell's position.
-      ///
-      /// -no detailed description-
-      ///
-      /// @return Cell's position
-      SDL_Rect getPosition(void);
       /// Returns the creature in the cell.
       ///
       /// -no detailed description-
       ///
       /// @return Pointer to the unit in the cell.
       unit *getCreature(void);
+      /// Returns the cell's position.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return Cell's position
+      SDL_Rect getPosition(void);
 
       /// Indicates that the mouse is over the cell.
       ///
@@ -93,27 +93,26 @@ class cell {
       /// Indicates that the cell is now selected.
       ///
       /// -no detailed description-
-      void select(void);
+      cell* select(void);
       /// The cell is no longer selected.
       ///
       /// -no detailed description-
       void unselect(void);
-      /// Conects a cell to this one.
+      /// Connects a cell to this one.
       ///
       /// Indicates which are the cells next to this one
       /// in any direction (N, NE, SE, S, SW or NW).
       ///
       /// @param [in] position Relative position of the cell (N, NE, SE, S, SW or NW).
-      /// @param [in] conectedCell The cell to conect.
-      void conectCell(const int position, cell* conectedCell);
+      /// @param [in] connectedCell The cell to conect.
+      void connectCell(const int position, cell* connectedCell);
 
       /// Draws the cell in the screen.
       ///
-      /// If the creature in the cell is selected, returns the
-      /// movement, else returns 0
+      /// -no detailed description-
       ///
       /// @param[in] screen -no detailed description-
-      int draw(graphics *screen);
+      void draw(graphics *screen);
 };
 
 /// Controls all the attributes of a map.
@@ -122,12 +121,20 @@ class cell {
 /// together to create a map an to be able to use it.
 class map {
    private:
+      int sizeX, sizeY; // The map's size
       SDL_Surface *terrainBase; // The most used terrain in the map
-      cell battleMap[18][9];
-      cell *selectedCell;
+      cell **battleMap;
+      cell *selectedCell; // The cell that's selected
+      cell *mouseOverCell; // The cell where the mouse is
+
+      // Connects all the cells in the map
+      void connectCells(void);
 
    public:
-      map(void); // Constructor
+      /// @param [in] sizeX
+      /// @param [in] sizeY
+      map(const int sizeX = 18, const int sizeY = 9); // Constructor
+      ~map(void); // Destructor
 
       /// Indicates the terrain image of the map.
       ///
