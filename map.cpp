@@ -19,11 +19,34 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // class cell
 
+// Calculates to what cells can a creature move.
+void cell::creatureMovement(const int movement) {
+   if (movement>0) {
+      canMove = true;
+      for (int i=0; i<6; i++) {
+            if (connectedCell[i]!=NULL)
+               connectedCell[i]->creatureMovement(movement-1);
+      }
+   }
+}
+
+// Erases previos calculations about a creatures movement.
+void cell::eraseMovement(const int movement) {
+   if (movement>0) {
+      canMove = false;
+      for (int i=0; i<6; i++) {
+            if (connectedCell[i]!=NULL)
+         connectedCell[i]->eraseMovement(movement-1);
+      }
+   }
+}
+
 // Constructor
 cell::cell(void) {
    creature = NULL;
    mouseOver = false;
    selected = false;
+   canMove = false;
    for (int i=0; i<6; i++) {
       connectedCell[i] = NULL;
    }
@@ -36,6 +59,7 @@ cell::cell(SDL_Rect position, SDL_Surface *terrain, unit *creature) {
    this->creature = creature;
    mouseOver = false;
    selected = false;
+   canMove = false;
    for (int i=0; i<6; i++) {
       connectedCell[i] = NULL;
    }
@@ -80,6 +104,7 @@ void cell::removeMouse(void) {
 cell* cell::select(void) {
    if (creature!=NULL) {
       selected = true;
+      creatureMovement( creature->getMovement()+1 );
       return this;
    } else
       return NULL;
@@ -88,6 +113,7 @@ cell* cell::select(void) {
 // The cell is no longer selected.
 void cell::unselect(void) {
    selected = false;
+   eraseMovement( creature->getMovement()+1 );
 }
 
 // Indicates which are the cells next to this one
@@ -100,9 +126,15 @@ void cell::connectCell(const int position, cell* connectedCell){
 // movement, else returns 0
 void cell::draw(graphics *screen) {
    screen->draw(terrain, &position);
-   if (selected) screen->draw("alpha", &position);
    if (mouseOver) screen->draw("alpha", &position);
+   if (selected) screen->draw("alpha", &position);
+   if (canMove) screen->draw("alpha", &position);
    if (creature) creature->draw(screen, &position);
+}
+
+// Indicates if the selected creature can move to this cell.
+bool cell::canMoveHere(void) {
+   return canMove;
 }
 
 // ---End---
@@ -280,9 +312,8 @@ void map::moveMouse(int x, int y, int button) {
    int i=0, j=0;
    SDL_Rect cellPosition = battleMap[i][j].getPosition();
 
-   if (mouseOverCell) {
+   if (mouseOverCell)
       mouseOverCell->removeMouse();
-   }
 
    // Find out which cell is the mouse over
    while (x > cellPosition.x){
@@ -297,32 +328,23 @@ void map::moveMouse(int x, int y, int button) {
          j++;
       }
       j--;
-      if (j>=0 && j<sizeY) {
+      if (j>=0 && j<sizeY) { // battleMap[i][j] is a valid cell and the mouse is over it
          battleMap[i][j].putMouse();
          mouseOverCell = &battleMap[i][j];
-         if (button==1) {
-            if (selectedCell!=NULL)
-               selectedCell->unselect();
+         if ( button == 1  &&  selectedCell != &battleMap[i][j] ) {
+            if (selectedCell!=NULL) {
+               if ( battleMap[i][j].canMoveHere() ) {
+                  battleMap[i][j].setCreature( selectedCell->getCreature() );
+                  selectedCell->unselect();
+                  selectedCell->setCreature(NULL);
+               } else
+                  selectedCell->unselect();
+            }
             selectedCell = battleMap[i][j].select();
          }
       }
    }
 }
-
-/*void map::selectMove(int x, int y, int move, graphics *screen) {
-   if (x<18 && y<9 && x>=0 && y>=0) {
-      battle_map[x][y].putMouse();
-      battle_map[x][y].draw(screen);
-   }
-   if (move!=0) {
-      selectMove(x-1, y, move-1, screen);
-      selectMove(x, y-1, move-1, screen);
-      selectMove(x-1, y-1, move-1, screen);
-      selectMove(x+1, y, move-1, screen);
-      selectMove(x, y+1, move-1, screen);
-      selectMove(x+1, y+1, move-1, screen);
-   }
-}*/
 
 // Draws the map in the screen.
 void map::draw(graphics *screen) {

@@ -43,6 +43,12 @@ class cell {
 
       bool mouseOver; // Indicates if the mouse is over the cell or not
       bool selected; // Indicates if the unit in that cell is selected
+      bool canMove; // Indicates if the selected creature can move to this cell
+
+      // Calculates to what cells can a creature move.
+      void creatureMovement(const int movement);
+      // Erases previos calculations about a creatures movement.
+      void eraseMovement(const int movement);
 
    public:
       cell(void); // Constructor
@@ -81,7 +87,6 @@ class cell {
       ///
       /// @return Cell's position
       SDL_Rect getPosition(void);
-
       /// Indicates that the mouse is over the cell.
       ///
       /// -no detailed description-
@@ -98,6 +103,7 @@ class cell {
       ///
       /// -no detailed description-
       void unselect(void);
+
       /// Connects a cell to this one.
       ///
       /// Indicates which are the cells next to this one
@@ -113,6 +119,13 @@ class cell {
       ///
       /// @param[in] screen -no detailed description-
       void draw(graphics *screen);
+
+      /// Indicates if the selected creature can move to this cell.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return true if the selected creature can move to this cell, false if not.
+      bool canMoveHere(void);
 };
 
 /// Controls all the attributes of a map.
@@ -159,7 +172,6 @@ class map {
       /// @param[in] y The y coordinate of the mouse's position
       /// @param[in] pressed If the mouse left button is pressed or not
       void moveMouse(int x, int y, int pressed);
-      //void selectMove(int x, int y, int move, graphics *screen);
 
       /// Draws the map in the screen.
       ///
