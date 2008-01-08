@@ -20,19 +20,20 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 // class button
 
 // Constructor
-button::button(const char *text, void (*function)()) {
-   this->text = new char [strlen(text)];
-
-   this->function = function;
+button::button(void) {
    state = NORMAL;
-   strcpy(this->text, text);
-
-   next = NULL;
 }
 
 // Destructor
 button::~button(void) {
-   delete text;
+   delete [] text;
+}
+
+// Constructor
+void button::setAtributes(const char *text, void (*function)()) {
+   this->text = strdup(text);
+   this->function = function;
+   state = NORMAL;
 }
 
 // Returns the button's state.
@@ -60,20 +61,22 @@ void button::getFunction(void) {
 // class menu
 
 // Constructor
-menu::menu(graphics *screen, SDL_Rect position, void (*function)(), int numberButtons, bool backgroud) {
+menu::menu(graphics *screen, SDL_Rect position, int numberButtons) {
    this->screen = screen;
    this->position = position;
+
+   // make sure the width and height are correct
+   this->position.w = BUTTON_WIDTH;
+   this->position.h = BUTTON_HEIGHT;
+
    this->numberButtons = numberButtons;
-   this->background = background;
+   buttonsCreated = 0;
 
    buttonSurface[NORMAL] = this->screen->getImage("button");
    buttonSurface[ACTIVE] = this->screen->getImage("button-active");
    buttonSurface[PRESSED] = this->screen->getImage("button-pressed");
 
-   buttons[numberButtons-1] = new button("Battle", function);
-   for (int i=1; i<numberButtons; i++) {
-      
-   }
+   buttons = new button[numberButtons];
    distance = 30;
    activeButton = -1; //  The mouse is over no button.
    pressedButton = -1; //  No button is being pressed.
@@ -81,54 +84,75 @@ menu::menu(graphics *screen, SDL_Rect position, void (*function)(), int numberBu
 
 // Destructor
 menu::~menu(void) {
-   for (int i=0; i<numberButtons; i++)
-      delete buttons[i];
+   delete [] buttons;
 }
 
 // Every time the mouse's position or the mouse's buttons change, this
 // function should be called so the menu knows which button is being pressed.
 void menu::moveMouse(int x, int y, int pressed) {
-   if ( x>position.x && x < (position.x+position.w) &&
-        y>position.y && y < (position.y+position.h)) { // Mouse over button
-      if ( pressed==SDL_BUTTON_LEFT && activeButton==0 ) {
-      buttons[0]->setState(PRESSED);
-      pressedButton = 0;
-      }
-      else {
-         if (pressedButton==0) buttons[0]->getFunction();
-         buttons[0]->setState(ACTIVE);
-         activeButton = 0;
+   bool mouseOver = false; // Indicates if the mouse is over a button
+
+   if ( x>position.x && x < ( position.x + position.w ) ) { // Mouse in button's column
+      int i = 0;
+      while ( i<numberButtons && !mouseOver ) {
+         if ( y>position.y && y < (position.y+position.h) ) { // Mouse over the button
+            if (i != activeButton && activeButton != -1) {
+               buttons[activeButton].setState(NORMAL);
+               activeButton=-1;
+               pressedButton=-1;
+            }
+            mouseOver = true;
+            if ( pressed==SDL_BUTTON_LEFT && activeButton==i ) {
+               buttons[i].setState(PRESSED);
+               pressedButton = i;
+            }
+            else {
+               if (pressedButton==i) buttons[i].getFunction();
+                  buttons[i].setState(ACTIVE);
+                  activeButton = i;
+               }
+         }
+         else {
+            position.y += distance;
+            i++;
          }
       }
-   else // Mouse not over button
+      // put position back to normal
+      position.y -= (distance*i);
+   }
+
+   if (!mouseOver) { // Mouse over no button
       if (activeButton != -1) {
-         buttons[activeButton]->setState(NORMAL);
+         buttons[activeButton].setState(NORMAL);
          activeButton=-1;
          pressedButton=-1;
       }
+   }
 }
 
 // Draws the menu.
 void menu::draw(graphics *screen) {
    for (int i=0; i<numberButtons; i++) {
-      screen->draw( buttonSurface[ buttons[i]->getState() ], &position );
-      if (buttons[i]->getState() != PRESSED)
-         screen->write(buttons[i]->getText() , position.x+32, position.y+3);
+      screen->draw( buttonSurface[ buttons[i].getState() ], &position );
+      if (buttons[i].getState() != PRESSED)
+         screen->write(buttons[i].getText() , position.x+32, position.y+3);
       else
-         screen->write(buttons[i]->getText() , position.x+34, position.y+4);
+         screen->write(buttons[i].getText() , position.x+34, position.y+4);
       position.y += distance; // Set the position of the next button
    }
    // Put the position back to normal
    position.y -= (distance * numberButtons);
 }
 
-/// @todo Create the function
 // Every time the function is called, sets the attributes
 // to each button until all button classes have been set.
 // (Should be called immediately after the constructor and
 // as may times as button classes are there in the menu)
 void menu::setButton(const char *text, void (*function)()) {
-
+   if (buttonsCreated < numberButtons) {
+      buttons[buttonsCreated].setAtributes(text, function);
+      buttonsCreated++;
+   }
 }
 
 // ---End---

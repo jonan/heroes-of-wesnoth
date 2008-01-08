@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-/*!*************************************************************************************
- * @file This is just a experimental file used to make sure things work as they should *
- *!*************************************************************************************/
+/*!*****************************************************************************************
+ * @file main.cpp Just a experimental file used to make sure things work as they should *
+ *!*****************************************************************************************/
 
 #include "events.hpp"
 #include "hero.hpp"
@@ -33,11 +33,12 @@ SDL_Surface *logo;
 hero player("magician");
 menu *mainMenu;
 map battle;
+//map *battle2;
 graphics *screen;
 timer refresh;
 events input;
-bool* key;
-int* mouse;
+bool *key;
+int *mouse;
 
 void loop(void (*function)()) {
    int done=0;
@@ -103,6 +104,11 @@ void intro() {
    loop(&drawMenu);
 }
 
+void quit() {
+   delete screen;
+   delete mainMenu;
+}
+
 int main(int argc, char *argv[]) {
    screen = new graphics;
    screen->newImage("wesnoth");
@@ -117,11 +123,13 @@ int main(int argc, char *argv[]) {
    background_pos.y = 500;
    background_pos.w = 108;
    background_pos.h = 22;
-   mainMenu = new menu(screen, background_pos, &map, 1);
+   // Don't know why this produces an error
+   //battle2 = new map(18, 9);
+   mainMenu = new menu(screen, background_pos, 2);
+   mainMenu->setButton("Battle", &map);
+   mainMenu->setButton("Quit", &quit);
    intro();
-   delete screen;
-   delete mainMenu;
-
+   quit();
    return EXIT_SUCCESS;
 }
 
