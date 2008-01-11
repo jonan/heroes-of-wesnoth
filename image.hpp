@@ -18,11 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef IMAGE_HPP
 #define IMAGE_HPP
 
-#include <SDL/SDL_image.h>
-
-/*#include <cstdio>
-#include <cstdlib>*/
-#include <string>
+#include <SDL/SDL.h>
 
 /// A class to control images.
 ///
@@ -39,9 +35,9 @@ class image {
       void loadImage(const int alpha);
 
    public:
-      /// @param[in] imageName The image's name, without the "img/" or the ".png".
-      /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
-      /// @param[in] next The next image in the list.
+      /// @param[in] imageName The image's name, without the "img/" or the ".png"
+      /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque)
+      /// @param[in] next The next image in the list
       image(const char *imageName, const int alpha, image *next); // Constructor
       ~image(void); // Destructor
 

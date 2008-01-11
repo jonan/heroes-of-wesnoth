@@ -18,8 +18,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef UNIT_HPP
 #define UNIT_HPP
 
-#include "graphics.hpp"
+#include <SDL/SDL.h>
 
+/// Stores the unit's atributes.
+///
+/// -no detailed description-
 class unit {
    protected:
       int live, liveMax; // Actual and maximun live
@@ -37,7 +40,7 @@ class unit {
       unit(void); // Constructor
       ~unit(void); // Destructor
 
-      /// Sets all the unit's atributes.
+      /// Sets all the unit's attributes.
       ///
       /// -no detailed description-
       ///
@@ -48,7 +51,7 @@ class unit {
       /// @param [in] physicalAttack Power of the physical attack.
       /// @param [in] magicalAttack Power of the magical attack.
       /// @param [in] movement Speed of the creature.
-      void setAllAtributes(int live, int magic, int physicalDefence,
+      void setAllAttributes(int live, int magic, int physicalDefence,
                            int magicalDefence, int physicalAttack,
                            int magicalAttack, int movement);
       /// Sets the creature's image.
@@ -81,9 +84,8 @@ class unit {
       ///
       /// -no detailed description-
       ///
-      /// @param [in] screen -no detailed description-
       /// @param [in] position The position where the creature should be drawn.
-      void draw(graphics *screen, SDL_Rect *position);
+      void draw(SDL_Rect *position);
 };
 
 #endif

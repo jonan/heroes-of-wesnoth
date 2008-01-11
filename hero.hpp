@@ -22,6 +22,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #define MAX_UNITS 9
 
+/// Stores the hero's atributes.
+///
+/// -no detailed description-
 class hero : public unit{
    private:
       unit *creature[MAX_UNITS]; // The nine creatures a hero can control

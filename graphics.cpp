@@ -15,7 +15,11 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include <SDL/SDL_mixer.h>
+
 #include "graphics.hpp"
+
+graphics *screen = NULL;
 
 // Initializes SDL, SDL_ttf and SDL_mixer
 void graphics::init(void) {
@@ -61,7 +65,7 @@ graphics::graphics(void) {
    init();
    createWindow();
    image = new imageList;
-   text = new ttf(screen);
+   text = new ttf();
    timerID = 0;
 }
 
@@ -107,7 +111,7 @@ void graphics::erase(void) {
 
 // Writes text in the screen.
 void graphics::write(const char *text,  int x, int y) {
-   this->text->write(text,  x, y);
+   this->text->write(text, screen, x, y);
 }
 
 // Refreshes the screen.

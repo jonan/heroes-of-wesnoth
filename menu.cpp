@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include "graphics.hpp"
 #include "menu.hpp"
 
 // class button
@@ -29,8 +30,8 @@ button::~button(void) {
    delete [] text;
 }
 
-// Constructor
-void button::setAtributes(const char *text, void (*function)()) {
+// Changes all the button's attributes.
+void button::setAttributes(const char *text, void (*function)()) {
    this->text = strdup(text);
    this->function = function;
    state = NORMAL;
@@ -61,23 +62,21 @@ void button::getFunction(void) {
 // class menu
 
 // Constructor
-menu::menu(graphics *screen, SDL_Rect position, int numberButtons) {
-   this->screen = screen;
+menu::menu(SDL_Rect position, int numberButtons) {
    this->position = position;
+   buttons = new button[numberButtons];
+   this->numberButtons = numberButtons;
 
    // make sure the width and height are correct
    this->position.w = BUTTON_WIDTH;
    this->position.h = BUTTON_HEIGHT;
 
-   this->numberButtons = numberButtons;
-   buttonsCreated = 0;
+   buttonSurface[NORMAL] = screen->getImage("button");
+   buttonSurface[ACTIVE] = screen->getImage("button-active");
+   buttonSurface[PRESSED] = screen->getImage("button-pressed");
 
-   buttonSurface[NORMAL] = this->screen->getImage("button");
-   buttonSurface[ACTIVE] = this->screen->getImage("button-active");
-   buttonSurface[PRESSED] = this->screen->getImage("button-pressed");
-
-   buttons = new button[numberButtons];
    distance = 30;
+   buttonsCreated = 0;
    activeButton = -1; //  The mouse is over no button.
    pressedButton = -1; //  No button is being pressed.
 }
@@ -131,7 +130,7 @@ void menu::moveMouse(int x, int y, int pressed) {
 }
 
 // Draws the menu.
-void menu::draw(graphics *screen) {
+void menu::draw(void) {
    for (int i=0; i<numberButtons; i++) {
       screen->draw( buttonSurface[ buttons[i].getState() ], &position );
       if (buttons[i].getState() != PRESSED)
@@ -150,7 +149,7 @@ void menu::draw(graphics *screen) {
 // as may times as button classes are there in the menu)
 void menu::setButton(const char *text, void (*function)()) {
    if (buttonsCreated < numberButtons) {
-      buttons[buttonsCreated].setAtributes(text, function);
+      buttons[buttonsCreated].setAttributes(text, function);
       buttonsCreated++;
    }
 }

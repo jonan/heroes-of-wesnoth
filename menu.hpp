@@ -18,7 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef MENU_HPP
 #define MENU_HPP
 
-#include "graphics.hpp"
+#include <SDL/SDL.h>
 
 #define NORMAL  0
 #define ACTIVE  1
@@ -41,9 +41,13 @@ class button {
       button(void); // Constructor
       ~button(void); // Destructor
 
+      /// Changes all the button's attributes.
+      ///
+      /// -no detailed description-
+      ///
       /// @param[in] text Text to be writen in the button.
       /// @param[in] function The function to execute when the button is pressed.
-      void setAtributes(const char *text, void (*function)());
+      void setAttributes(const char *text, void (*function)());
       /// Returns the button's state.
       ///
       /// -no detailed description-
@@ -70,8 +74,6 @@ class button {
       void getFunction(void);
 };
 
-/// @todo Make the menu control more than one button.
-
 /// Collection of related button classes.
 ///
 /// Controls a set of various button classes as a group.
@@ -81,7 +83,6 @@ class menu {
       SDL_Rect position;
       SDL_Surface *buttonSurface[3]; // The three button images.
       button *buttons; // The buttons in the menu.
-      graphics *screen;
       int numberButtons; // Number of buttons in the menu.
       int distance; // Distance between the buttons.
       int activeButton; // Number of the button with the mouse over.
@@ -90,10 +91,9 @@ class menu {
 
 
    public:
-      /// @param[in] screen -no detailed description-
       /// @param[in] position Top left hand corner of the menu
       /// @param[in] numberButtons Number of button classes in the menu
-      menu(graphics *screen, SDL_Rect position, int numberButtons); // Constructor
+      menu(SDL_Rect position, int numberButtons); // Constructor
       ~menu(void); // Destructor
 
       /// Tells the menu the mouse's position.
@@ -110,7 +110,7 @@ class menu {
       /// -no detailed description-
       ///
       /// @param[in] screen -no detailed description-
-      void draw(graphics *screen);
+      void draw(void);
       /// Sets each button class's attributes.
       ///
       /// Every time the function is called, sets the attributes

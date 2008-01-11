@@ -15,12 +15,11 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include "graphics.hpp"
 #include "ttf.hpp"
 
 // Constructor
-ttf::ttf(SDL_Surface *screen) {
-   this->screen = screen;
-
+ttf::ttf(void) {
    printf("Loading font...\t\t\t\t");
    font = TTF_OpenFont("font/DejaVuSans.ttf", 14);
    if (font == NULL) {
@@ -46,7 +45,7 @@ ttf::~ttf(void) {
 }
 
 // Writes a text into the screen.
-void ttf::write(const char *text,  const int x, const int y) {
+void ttf::write(const char *text, SDL_Surface *surface, const int x, const int y) {
    textSurface = TTF_RenderText_Solid(font, text, color);
 
    position.x = x;
@@ -54,7 +53,7 @@ void ttf::write(const char *text,  const int x, const int y) {
    position.w = textSurface->w;
    position.h = textSurface->h;
 
-   SDL_BlitSurface(textSurface, NULL, screen, &position);
+   SDL_BlitSurface(textSurface, NULL, surface, &position);
    // After being used, free the surface
    SDL_FreeSurface(textSurface);
 }

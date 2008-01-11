@@ -18,7 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef MAP_HPP
 #define MAP_HPP
 
-#include <string.h>
+#include <SDL/SDL.h>
 
 #include "unit.hpp"
 
@@ -67,7 +67,7 @@ class cell {
       ///
       /// -no detailed description-
       ///
-      /// @param [in] terrain Surface of the terrain
+      /// @param [in] imageName Name of the image, without the "img/" or the ".png".
       void setTerrain(SDL_Surface *imageName);
       /// Puts a creature in the cell.
       ///
@@ -116,9 +116,7 @@ class cell {
       /// Draws the cell in the screen.
       ///
       /// -no detailed description-
-      ///
-      /// @param[in] screen -no detailed description-
-      void draw(graphics *screen);
+      void draw(void);
 
       /// Indicates if the selected creature can move to this cell.
       ///
@@ -144,9 +142,9 @@ class map {
       void connectCells(void);
 
    public:
-      /// @param [in] sizeX
-      /// @param [in] sizeY
-      map(const int sizeX = 18, const int sizeY = 9); // Constructor
+      /// @param [in] sizeX Number of cell rows in the map
+      /// @param [in] sizeY Number of cell columns in the map
+      map(const int sizeX, const int sizeY); // Constructor
       ~map(void); // Destructor
 
       /// Indicates the terrain image of the map.
@@ -154,8 +152,7 @@ class map {
       /// -no detailed description-
       ///
       /// @param[in] terrainImgName Name of the terrain's image, without the "img/" or the ".png".
-      /// @param[in] screen -no detailed description-
-      void setTerrain(const char *terrainImgName, graphics *screen);
+      void setTerrain(const char *terrainImgName);
       /// Puts the hero in the map.
       ///
       /// -no detailed description-
@@ -176,9 +173,7 @@ class map {
       /// Draws the map in the screen.
       ///
       /// -no detailed description-
-      ///
-      /// @param[in] screen -no detailed description-
-      void draw(graphics *screen);
+      void draw(void);
 };
 
 #endif

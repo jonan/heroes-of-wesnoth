@@ -30,14 +30,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 class ttf{
    private:
       TTF_Font *font;
-      SDL_Surface *screen;
       SDL_Surface *textSurface;
       SDL_Rect position;
       SDL_Color color;
 
    public:
-      /// @param[in] screen A pointer to the screen surface.
-      ttf(SDL_Surface *screen); // Constructor
+      ttf(void); // Constructor
       ~ttf(void); // Destrucor
 
       /// Writes a text into the screen.
@@ -45,9 +43,10 @@ class ttf{
       /// -no detailed description-
       ///
       /// @param[in] text A string with the text to write
+      /// @param[in] surface The surface where to draw the text
       /// @param[in] x The x coordinate of the top left corner of the text
       /// @param[in] y The y coordinate of the top left corner of the text
-      void write(const char *text,  const int x, const int y);
+      void write(const char *text, SDL_Surface *surface, const int x, const int y);
 };
 
 #endif

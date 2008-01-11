@@ -19,10 +19,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #define GRAPHICS_HPP
 
 #include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
-
-/*#include <cstdio>
-#include <cstdlib>*/
 
 #include "image.hpp"
 #include "ttf.hpp"
@@ -43,13 +39,9 @@ class graphics {
       ttf *text; // Used to write text into the screen
       SDL_TimerID timerID; // Unique timer identifier
 
-      /// Initializes SDL, SDL_ttf and SDL_mixer.
-      ///
-      /// -no detailed description-
+      // Initializes SDL, SDL_ttf and SDL_mixer.
       void init(void);
-      /// Creates the surface that will be drawn directly to the screen.
-      ///
-      /// -no detailed description-
+      // Creates the surface that will be drawn directly to the screen.
       void createWindow(void);
 
    public:
@@ -103,6 +95,8 @@ class graphics {
       /// -no detailed description-
       void update(void);
 };
+
+extern graphics *screen;
 
 #endif
 

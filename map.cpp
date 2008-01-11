@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include "graphics.hpp"
 #include "map.hpp"
 
 // class cell
@@ -124,12 +125,12 @@ void cell::connectCell(const int position, cell* connectedCell){
 
 // If the creature in the cell is selected, returns the
 // movement, else returns 0
-void cell::draw(graphics *screen) {
+void cell::draw(void) {
    screen->draw(terrain, &position);
    if (mouseOver) screen->draw("alpha", &position);
    if (selected) screen->draw("alpha", &position);
    if (canMove) screen->draw("alpha", &position);
-   if (creature) creature->draw(screen, &position);
+   if (creature) creature->draw(&position);
 }
 
 // Indicates if the selected creature can move to this cell.
@@ -292,7 +293,7 @@ map::~map(void) {
 }
 
 // Indicates the terrain image of the map.
-void map::setTerrain(const char *terrainImgName, graphics *screen) {
+void map::setTerrain(const char *terrainImgName) {
    terrainBase = screen->getImage(terrainImgName);
 
    for (int x=0; x<sizeX; x++)
@@ -347,10 +348,10 @@ void map::moveMouse(int x, int y, int button) {
 }
 
 // Draws the map in the screen.
-void map::draw(graphics *screen) {
+void map::draw(void) {
    for (int x=0; x<sizeX; x++) {
       for (int y=0; y<sizeY; y++) {
-         battleMap[x][y].draw(screen);
+         battleMap[x][y].draw();
       }
    }
 }

@@ -16,10 +16,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /*!*****************************************************************************************
- * @file main.cpp Just a experimental file used to make sure things work as they should *
+ * @file main.cpp Just a experimental file used to make sure things work as they should    *
  *!*****************************************************************************************/
 
 #include "events.hpp"
+#include "graphics.hpp"
 #include "hero.hpp"
 #include "map.hpp"
 #include "menu.hpp"
@@ -32,9 +33,7 @@ SDL_Surface *logo;
 
 hero player("magician");
 menu *mainMenu;
-map battle;
-//map *battle2;
-graphics *screen;
+map *battle;
 timer refresh;
 events input;
 bool *key;
@@ -59,24 +58,26 @@ void loop(void (*function)()) {
 
 void drawMenu(){
    mainMenu->moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
-   mainMenu->draw(screen);
+   mainMenu->draw();
    screen->update();
 }
 
 void drawMap(){
-   battle.moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
-   battle.draw(screen);
+   battle->moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
+   battle->draw();
    screen->update();
 }
 
 // Provisional function to use the classes
-void map() {
+void war() {
+   battle = new map(18, 9);
    screen->erase();
-   player.setAllAtributes(1, 1, 1, 1, 1, 1, 3);
+   player.setAllAttributes(1, 1, 1, 1, 1, 1, 3);
    player.setImage("grand-knight");
-   battle.setTerrain("grassland-r1", screen);
-   battle.setHero(&player);
+   battle->setTerrain("grassland-r1");
+   battle->setHero(&player);
    loop(&drawMap);
+   delete battle;
    screen->draw("wesnoth", &background_pos);
    screen->draw("heroes-logo", &logo_pos);
    key[SDLK_ESCAPE] = 0;
@@ -95,7 +96,7 @@ void intro() {
 
    screen->draw("wesnoth", &background_pos);
    screen->draw("heroes-logo", &logo_pos);
-   mainMenu->draw(screen);
+   mainMenu->draw();
    screen->update();
 
    input.readInput();
@@ -125,9 +126,9 @@ int main(int argc, char *argv[]) {
    background_pos.h = 22;
    // Don't know why this produces an error
    //battle2 = new map(18, 9);
-   mainMenu = new menu(screen, background_pos, 2);
-   mainMenu->setButton("Battle", &map);
-   mainMenu->setButton("Quit", &quit);
+   mainMenu = new menu(background_pos, 2);
+   mainMenu->setButton("Battle", war);
+   mainMenu->setButton("Quit", quit);
    intro();
    quit();
    return EXIT_SUCCESS;

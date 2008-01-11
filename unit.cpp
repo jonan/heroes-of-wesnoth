@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include "graphics.hpp"
 #include "unit.hpp"
 
 // Constructor
@@ -27,8 +28,8 @@ unit::~unit(void) {
    delete imageName;
 }
 
-// Sets all the unit's atributes.
-void unit::setAllAtributes(int live, int magic, int physicalDefence,
+// Sets all the unit's attributes.
+void unit::setAllAttributes(int live, int magic, int physicalDefence,
                            int magicalDefence, int physicalAttack,
                            int magicalAttack, int movement) {
    this->live = live;
@@ -68,7 +69,7 @@ bool unit::isSelected(void) {
 }
 
 // Draws the creature in the given position.
-void unit::draw(graphics *screen, SDL_Rect *position) {
+void unit::draw(SDL_Rect *position) {
    screen->draw(imageName, position);
 }
 
