@@ -15,6 +15,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+/// @file
+/// The unit class.
+/// @author Jonan
+
 #ifndef UNIT_HPP
 #define UNIT_HPP
 
@@ -88,6 +92,4 @@ class unit {
       void draw(SDL_Rect *position);
 };
 
-#endif
-
-/* Last Version: Jonan */
+#endif // UNIT_HPP

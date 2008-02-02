@@ -21,6 +21,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 events::events(void) {
    type = NO_EVENT;
 
+   keys = new bool[NUM_KEYS];
+   mouse = new int[3];
+
    // Set all keys to false
    for (int i = 0; i < NUM_KEYS; i++)
       keys[i] = false;
@@ -35,6 +38,7 @@ events::events(void) {
 // Gets the input and stores the information obtained
 // (must be called before any other events function).
 void events::readInput(void) {
+   SDL_GetMouseState(&mouse[0], &mouse[1]);
    while (SDL_PollEvent(&event)) {
       // MOUSE
       if (event.type == SDL_MOUSEBUTTONDOWN) {
@@ -76,20 +80,6 @@ void events::readInput(void) {
    }
 }
 
-// Returns an array of the keyboard keys with their
-// pressed value, TRUE or FALSE.
-bool* events::getKeyboard(void) {
-      return keys;
-}
-
-// Returns a size 3 array with the mouse info: POSITION_X,
-// POSITION_Y and BUTTON. The BUTTON may be: NONE, LEFT,
-// MIDDLE or RIGHT.
-int* events::getMouse(void) {
-      SDL_GetMouseState(&mouse[0], &mouse[1]);
-      return mouse;
-}
-
 // Returns KEYBOARD, MOUSE, SYSTEM or NO_EVENT.
 int events::getType(void) {
       return type;
@@ -101,4 +91,6 @@ int events::getSystemType(void) {
       return systemType;
 }
 
-/* Last Version: Jonan */
+events *input = NULL;
+bool *keys = NULL;
+int *mouse = NULL;

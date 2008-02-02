@@ -15,11 +15,14 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-#include <SDL/SDL_image.h>
-
+#include <iostream>
 #include <string>
 
+#include <SDL/SDL_image.h>
+
 #include "image.hpp"
+
+using namespace std;
 
 // class image
 
@@ -30,17 +33,17 @@ void image::loadImage(const int alpha) {
 
    // Create a string with the fisical location of the image
    // "img/" + name + ".png"
-   std::string img = "img/";
-   std::string imageName(name);
-   std::string png = ".png";
-   std::string imageDir = img + imageName + png;
+   string img = "img/";
+   string imageName(name);
+   string png = ".png";
+   string imageDir = img + imageName + png;
 
-   printf("Loading \"%s\"...\t\t", name);
+   cout << "Loading \"" << name << "\"...\t\t";
    // If the image name is to sort leave more space
-   if ( strlen(name)<11 ) printf("\t");
+   if ( strlen(name)<11 ) cout << "\t";
    image = IMG_Load( imageDir.c_str() );
    if ( image==NULL ) {
-      printf("[fail]\n\n%s\n\n", SDL_GetError ());
+      cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
       exit(EXIT_FAILURE);
    } else {
       /// @todo Improve alpha display.
@@ -51,7 +54,7 @@ void image::loadImage(const int alpha) {
       this->img = SDL_DisplayFormatAlpha(image);
       if (this->img) SDL_FreeSurface(image);
       else this->img = image;
-      printf("[ ok ]\n");
+      cout << "[ ok ]\n";
    }
 }
 
@@ -64,12 +67,12 @@ image::image(const char *imageName, const int alpha, image *next) {
 
 // Destructor
 image::~image(void) {
-   printf("Freeing \"%s\"...\t\t", name);
+   cout << "Freeing \"" << name << "\"...\t\t";
    // If the image name is to sort leave more space
-   if ( strlen(name)<11 ) printf("\t");
+   if ( strlen(name)<11 ) cout << "\t";
    delete [] name;
    SDL_FreeSurface(img);
-   printf("[ ok ]\n");
+   cout << "[ ok ]\n";
 }
 
 // Returns the image name.
@@ -98,7 +101,7 @@ imageList::~imageList(void) {
    /// @todo Check if everything is deleted.
    image *temp, *next;
 
-   printf("Deleting imageList...\n");
+   cout << "Deleting imageList...\n";
    temp=first;
    next=temp->getNext();
    while (next!=NULL) {
@@ -129,7 +132,7 @@ image* imageList::findImage(const char *imageName) {
       while ( strcmp(temp->getName(), imageName) != 0 )
          temp = temp->getNext();
    if (temp==NULL) {
-         printf("\nSearch for file \"%s\" failed.\n\n", *imageName);
+         cout << "\nSearch for file \"" << *imageName << "\" failed.\n\n";
          exit(EXIT_FAILURE);
          }
    else return temp;
@@ -141,5 +144,3 @@ SDL_Surface* imageList::getSurface(const char *imageName) {
 }
 
 // ---End---
-
-/* Last Version: Jonan */

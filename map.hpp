@@ -15,6 +15,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+/// @file
+/// The cell and map classes.
+/// @author Jonan
+
 #ifndef MAP_HPP
 #define MAP_HPP
 
@@ -176,6 +180,4 @@ class map {
       void draw(void);
 };
 
-#endif
-
-/* Last Version: Jonan */
+#endif // MAP_HPP

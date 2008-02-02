@@ -15,23 +15,20 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-#include <iostream>
+/// @file
+/// Functions to boot and quit the game.
+/// @author Jonan
 
-#include "timer.hpp"
+#ifndef BOOT_HPP
+#define BOOT_HPP
 
-using namespace std;
+/// Starts the engine and loads the main images.
+///
+/// -no detailed description-
+void boot(void);
+/// Exits the game.
+///
+/// -no detailed description-
+void quit(void);
 
-// The moment from which to start counting time. Make
-// sure you call endFPS(int) one time every time you use it.
-void timer::start(void) {
-   now = before = SDL_GetTicks();
-}
-
-// Indicates the ending point.
-void timer::end(int ms) {
-   now = SDL_GetTicks();
-
-   if ( (now-before) > ms ) {
-      cout << (now - before - ms) << " ms slow\n";
-   } else SDL_Delay( ms - (now - before) );
-}
+#endif // BOOT_HPP

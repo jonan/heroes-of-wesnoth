@@ -15,123 +15,31 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-/*!*****************************************************************************************
- * @file main.cpp Just a experimental file used to make sure things work as they should    *
- *!*****************************************************************************************/
+/// @file
+/// The main function.
+/// @author Jonan
 
-#include "events.hpp"
-#include "graphics.hpp"
-#include "hero.hpp"
-#include "map.hpp"
-#include "menu.hpp"
-#include "timer.hpp"
+#include <iostream>
 
-SDL_Rect background_pos;
-SDL_Rect logo_pos;
-SDL_Surface *wesnoth;
-SDL_Surface *logo;
+#include "boot.hpp"
+#include "menu_main.hpp"
 
-hero player("magician");
-menu *mainMenu;
-map *battle;
-timer refresh;
-events input;
-bool *key;
-int *mouse;
-
-void loop(void (*function)()) {
-   int done=0;
-
-   while (done == 0) {
-      refresh.start();
-      input.readInput();
-      mouse = input.getMouse();
-      key = input.getKeyboard();
-      if (key[SDLK_ESCAPE]) {done = 1;}
-      if (input.getType() == SYSTEM)
-         if (input.getSystemType() == QUIT)
-            done = 1;
-      function();
-      refresh.end(50);
-   }
-}
-
-void drawMenu(){
-   mainMenu->moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
-   mainMenu->draw();
-   screen->update();
-}
-
-void drawMap(){
-   battle->moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
-   battle->draw();
-   screen->update();
-}
-
-// Provisional function to use the classes
-void war() {
-   battle = new map(18, 9);
-   screen->erase();
-   player.setAllAttributes(1, 1, 1, 1, 1, 1, 3);
-   player.setImage("grand-knight");
-   battle->setTerrain("grassland-r1");
-   battle->setHero(&player);
-   loop(&drawMap);
-   delete battle;
-   screen->draw("wesnoth", &background_pos);
-   screen->draw("heroes-logo", &logo_pos);
-   key[SDLK_ESCAPE] = 0;
-}
-
-void intro() {
-   background_pos.x = 0;
-   background_pos.y = 0;
-   background_pos.w = 1024;
-   background_pos.h = 768;
-
-   logo_pos.x = 120;
-   logo_pos.y = 120;
-   logo_pos.w = 777;
-   logo_pos.h = 385;
-
-   screen->draw("wesnoth", &background_pos);
-   screen->draw("heroes-logo", &logo_pos);
-   mainMenu->draw();
-   screen->update();
-
-   input.readInput();
-   mouse = input.getMouse();
-   key = input.getKeyboard();
-   loop(&drawMenu);
-}
-
-void quit() {
-   delete screen;
-   delete mainMenu;
-}
+using namespace std;
 
 int main(int argc, char *argv[]) {
-   screen = new graphics;
-   screen->newImage("wesnoth");
-   screen->newImage("heroes-logo");
-   screen->newImage("button");
-   screen->newImage("button-active");
-   screen->newImage("button-pressed");
-   screen->newImage("grand-knight");
-   screen->newImage("grassland-r1");
-   screen->newImage("alpha", 50);
-   background_pos.x = 500;
-   background_pos.y = 500;
-   background_pos.w = 108;
-   background_pos.h = 22;
-   // Don't know why this produces an error
-   //battle2 = new map(18, 9);
-   mainMenu = new menu(background_pos, 2);
-   mainMenu->setButton("Battle", war);
-   mainMenu->setButton("Quit", quit);
-   intro();
+   // Check the programs arguments
+   for (int i=1; i<argc; i++) {
+      const string val(argv[i]);
+      if (val == "-h" || val == "--help") {
+         cout << "Heroes of Wesnoth v0.0.1\n"
+         << "\nusage: heroes [OPTIONS]\n"
+         << "  -h, --help       prints this message and exits.\n";
+         return 0;
+      }
+   }
+   // Start the game
+   boot();
+   startMainMenu();
    quit();
-   return EXIT_SUCCESS;
+   return 0;
 }
-
-/* Last Version: Jonan */

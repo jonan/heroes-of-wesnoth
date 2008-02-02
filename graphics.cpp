@@ -15,49 +15,42 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-#include <SDL/SDL_mixer.h>
+#include <iostream>
 
 #include "graphics.hpp"
 
-graphics *screen = NULL;
+using namespace std;
 
 // Initializes SDL, SDL_ttf and SDL_mixer
 void graphics::init(void) {
-   printf("Starting SDL...\t\t\t\t");
+   cout << "Starting SDL...\t\t\t\t";
    if ( SDL_Init (SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0 ) { // SDL_INIT_AUDIO not yet needed
-      printf("[fail]\n\n%s\n\n", SDL_GetError ());
+      cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
       exit(EXIT_FAILURE);
    }
    atexit(SDL_Quit);
-   printf("[ ok ]\n");
-   printf("Starting SDL_ttf...\t\t\t");
+   cout << "[ ok ]\n";
+   cout << "Starting SDL_ttf...\t\t\t";
    if ( TTF_Init() < 0 ) {
-      printf("[fail]\n\n%s\n\n", SDL_GetError ());
+      cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
       exit(EXIT_FAILURE);
    }
    atexit(TTF_Quit);
-   printf("[ ok ]\n");
-   printf("Starting SDL_mixer...\t\t\t");
-   if ( Mix_OpenAudio(22050, AUDIO_S16, 2, 4096) ) {
-      printf("[fail]\n\n%s\n\n", SDL_GetError ());
-      exit(EXIT_FAILURE);
-   }
-   atexit(Mix_CloseAudio);
-   printf("[ ok ]\n");
+   cout << "[ ok ]\n";
 }
 
 // Creates the surface that will be drawn directly to the screen
 void graphics::createWindow(void) {
-   printf("Opening %ix%i window...\t\t", SCREEN_WIDTH, SCREEN_HEIGHT);
+   cout << "Opening " << SCREEN_WIDTH << "x" << SCREEN_HEIGHT << " window...\t\t";
    SDL_WM_SetCaption ("Heroes of Wesnoth", NULL);
    // Not using fullscreen to prevent reseting computer after program crash.
    // This will change in final version.
    screen = SDL_SetVideoMode (SCREEN_WIDTH, SCREEN_HEIGHT, BPP, SDL_DOUBLEBUF | SDL_ANYFORMAT);// | SDL_FULLSCREEN);
    if (screen == NULL) {
-      printf ("[fail]\n\n%s\n\n", SDL_GetError ());
+      cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
       exit(EXIT_FAILURE);
    }
-   printf("[ ok ]\n");
+   cout << "[ ok ]\n";
 }
 
 // Constructor
@@ -71,7 +64,7 @@ graphics::graphics(void) {
 
 // Destructor
 graphics::~graphics(void) {
-   printf("Freeing screen...\n");
+   cout << "Freeing screen...\n";
    if (timerID != 0) SDL_RemoveTimer(timerID);
    delete image;
    delete text;
@@ -119,4 +112,4 @@ void graphics::update(void) {
    SDL_Flip(screen);
 }
 
-/* Last Version: Jonan */
+graphics *screen = NULL;

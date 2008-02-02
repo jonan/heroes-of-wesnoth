@@ -15,18 +15,21 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-#include "graphics.hpp"
+#include <iostream>
+
 #include "ttf.hpp"
+
+using namespace std;
 
 // Constructor
 ttf::ttf(void) {
-   printf("Loading font...\t\t\t\t");
+   cout << "Loading font...\t\t\t\t";
    font = TTF_OpenFont("font/DejaVuSans.ttf", 14);
    if (font == NULL) {
-      printf("[fail]\n\n%s\n\n", SDL_GetError ());
+      cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
       exit(EXIT_FAILURE);
    } else
-      printf("[ ok ]\n");
+      cout << "[ ok ]\n";
 
    // Initialize position
    position.x = 0;
@@ -39,9 +42,9 @@ ttf::ttf(void) {
 
 // Destructor
 ttf::~ttf(void) {
-   printf("Freeing font...\t\t\t\t");
+   cout << "Freeing font...\t\t\t\t";
    TTF_CloseFont(font);
-   printf("[ ok ]\n");
+   cout << "[ ok ]\n";
 }
 
 // Writes a text into the screen.
@@ -57,5 +60,3 @@ void ttf::write(const char *text, SDL_Surface *surface, const int x, const int y
    // After being used, free the surface
    SDL_FreeSurface(textSurface);
 }
-
-/* Last Version: Jonan */

@@ -72,5 +72,3 @@ bool unit::isSelected(void) {
 void unit::draw(SDL_Rect *position) {
    screen->draw(imageName, position);
 }
-
-/* Last Version: Jonan */

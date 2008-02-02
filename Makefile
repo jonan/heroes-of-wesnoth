@@ -1,10 +1,16 @@
-OBJECTS = events.o graphics.o hero.o image.o main.o map.o menu.o timer.o ttf.o unit.o
-SDL_LIBS = -lSDL -lSDL_mixer -lSDL_ttf -lSDL_image
+OBJECTS = battle.o boot.o events.o graphics.o hero.o image.o loop.o main.o map.o menu.o menu_main.o timer.o ttf.o unit.o
+SDL_LIBS = -lSDL -lSDL_ttf -lSDL_image
 CFLAGS = -c -g
 CC = g++
 
 heroes : $(OBJECTS)
 	$(CC) -g $(SDL_LIBS) -o heroes $(OBJECTS)
+
+battle.o : battle.cpp battle.hpp events.hpp graphics.hpp hero.hpp map.hpp timer.hpp
+	$(CC) $(CFLAGS) battle.cpp
+
+boot.o : boot.cpp boot.hpp events.hpp graphics.hpp
+	$(CC) $(CFLAGS) boot.cpp
 
 events.o : events.cpp events.hpp
 	$(CC) $(CFLAGS) events.cpp
@@ -15,25 +21,31 @@ graphics.o : graphics.cpp graphics.hpp image.hpp ttf.hpp
 hero.o : hero.cpp hero.hpp unit.hpp
 	$(CC) $(CFLAGS) hero.cpp
 
-image.o : image.hpp image.cpp
+image.o : image.cpp image.hpp
 	$(CC) $(CFLAGS) image.cpp
 
-main.o : main.cpp events.hpp graphics.hpp hero.hpp map.hpp menu.hpp timer.hpp
+loop.o : loop.cpp loop.hpp events.hpp graphics.hpp timer.hpp
+	$(CC) $(CFLAGS) loop.cpp
+
+main.o : main.cpp boot.hpp menu_main.hpp
 	$(CC) $(CFLAGS) main.cpp
 
-map.o : map.hpp map.cpp graphics.hpp unit.hpp
+map.o : map.cpp map.hpp graphics.hpp unit.hpp
 	$(CC) $(CFLAGS) map.cpp
 
-menu.o : menu.hpp menu.cpp graphics.hpp
+menu.o : menu.cpp menu.hpp graphics.hpp
 	$(CC) $(CFLAGS) menu.cpp
 
-timer.o : timer.hpp timer.cpp
+menu_main.o : menu_main.cpp menu_main.hpp battle.hpp boot.hpp events.hpp graphics.hpp loop.hpp menu.hpp
+	$(CC) $(CFLAGS) menu_main.cpp
+
+timer.o : timer.cpp timer.hpp
 	$(CC) $(CFLAGS) timer.cpp
 
-ttf.o : ttf.hpp ttf.cpp graphics.hpp
+ttf.o : ttf.cpp ttf.hpp
 	$(CC) $(CFLAGS) ttf.cpp
 
-unit.o : unit.hpp unit.cpp graphics.hpp
+unit.o : unit.cpp unit.hpp graphics.hpp
 	$(CC) $(CFLAGS) unit.cpp
 
 .PHONY : clean

@@ -16,35 +16,41 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// The timer class.
+/// The battle class and a function to create battles.
 /// @author Jonan
 
-#ifndef TIMER_HPP
-#define TIMER_HPP
+#ifndef BATTLE_HPP
+#define BATTLE_HPP
 
-#include <SDL/SDL.h>
+#include "hero.hpp"
+#include "map.hpp"
 
-/// Controls the game's speed.
+/// Controls all the aspects of a battle.
 ///
-/// This class alows you to control the time
-/// that passes bettwen to points of the program.
-class timer {
+/// -no detailed description-
+class battle {
    private:
-      Uint32 now; // Actual time.
-      Uint32 before; // The time it was the last time it looked.
+      map *battleMap;
+      hero *player;
+
+      /// Funtion to call in every frame.
+      ///
+      /// Processes the new input and draws
+      /// everything in the screen.
+      int frame(void);
 
    public:
-      /// Indicates the starting point.
-      ///
-      /// The moment from which to start counting time. Make
-      /// sure you call end(int) one time every time you use it.
-      void start(void);
-      /// Indicates the ending point.
+      battle(void); // Constructor
+
+      /// Starts the battle.
       ///
       /// -no detailed description-
-      ///
-      /// @param [in] ms milliseconds that should pass bettwen the two points.
-      void end(int ms);
+      void start(void);
 };
 
-#endif // TIMER_HPP
+/// Creates and starts a battle.
+///
+/// -no detailed description-
+void createBattle(void);
+
+#endif // BATTLE_HPP

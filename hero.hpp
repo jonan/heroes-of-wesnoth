@@ -15,6 +15,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+/// @file
+/// The hero class.
+/// @author Jonan
+
 #ifndef HERO_HPP
 #define HERO_HPP
 
@@ -43,6 +47,4 @@ class hero : public unit{
       bool recruitCreature(unit *creature);
 };
 
-#endif
-
-/* Last Version: Jonan */
+#endif // HERO_HPP

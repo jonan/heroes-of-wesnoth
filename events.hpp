@@ -15,6 +15,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+/// @file
+/// The events class and global events variables.
+/// @author Jonan
+
 #ifndef EVENTS_HPP
 #define EVENTS_HPP
 
@@ -22,23 +26,35 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 /// Number of keys in a keyboard
 #define NUM_KEYS 323
+
+// @{
 /// Types of events
 #define NO_EVENT    0
 #define KEYBOARD    1
 #define MOUSE       2
 #define SYSTEM      3
+// @}
+
+// @{
 /// Types of system events
 #define QUIT        0
 #define VIDEOEXPOSE 1
+// @}
+
+// @{
 /// Mouse info
 #define POSITION_X    0
 #define POSITION_Y    1
 #define BUTTON        2
+// @}
+
+// @{
 /// Mouse buttons
 #define NONE          0
 #define LEFT          1
 #define MIDDLE        2
 #define RIGHT         3
+// @}
 
 /// Event control.
 ///
@@ -48,8 +64,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 class events {
    private:
       SDL_Event event;
-      bool keys[NUM_KEYS]; // Stores the state of each keyboard key
-      int mouse[3]; // Mouse info
       int type; // Can be KEYBOARD, MOUSE, SYSTEM or NO_EVENT
       int systemType; // Can be QUIT or VIDEOEXPOSE
 
@@ -61,17 +75,6 @@ class events {
       /// Gets the input and stores the information obtained
       /// (must be called before any other events function).
       void readInput(void);
-      /// Returns the keyboard layout.
-      ///
-      /// Returns an array of the keyboard keys with their
-      /// pressed value, TRUE or FALSE.
-      bool* getKeyboard(void);
-      /// Returns the mouse state and position.
-      ///
-      /// Returns a size 3 array with the mouse info: POSITION_X,
-      /// POSITION_Y and BUTTON. The BUTTON may be: NONE, LEFT,
-      /// MIDDLE or RIGHT.
-      int* getMouse(void);
       /// Returns the type of event occurred.
       ///
       /// Returns the type of event: KEYBOARD, MOUSE, SYSTEM or NO_EVENT.
@@ -83,6 +86,8 @@ class events {
       int getSystemType(void);
 };
 
-#endif
+extern events *input;
+extern bool *keys; // Stores the state of each keyboard key
+extern int *mouse; // Mouse info
 
-/* Last Version: Jonan */
+#endif // EVENTS_HPP

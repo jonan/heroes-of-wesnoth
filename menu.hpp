@@ -15,6 +15,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+/// @file
+/// The button and menu classes.
+/// @author Jonan
+
 #ifndef MENU_HPP
 #define MENU_HPP
 
@@ -33,7 +37,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// it do. It should only be used by the menu class.
 class button {
    private:
-      void (*function)(); // Function to execute when the button is pressed.
+      void (*function)(void); // Function to execute when the button is pressed.
       char *text; // Text to be writen in the button.
       int state; // Can be NORMAL, ACTIVE or PRESSED.
 
@@ -47,18 +51,18 @@ class button {
       ///
       /// @param[in] text Text to be writen in the button.
       /// @param[in] function The function to execute when the button is pressed.
-      void setAttributes(const char *text, void (*function)());
+      void setAttributes(const char *text, void (*function)(void));
       /// Returns the button's state.
       ///
       /// -no detailed description-
       ///
-      /// @return Button's state (NORMAL, ACTIVE or PRESSED)
+      /// @return Button's state (NORMAL, ACTIVE or PRESSED).
       int getState(void);
       /// Changes the button state.
       ///
       /// -no detailed description-
       ///
-      /// @param[in] state New state of the button (NORMAL, ACTIVE or PRESSED)
+      /// @param[in] state New state of the button (NORMAL, ACTIVE or PRESSED).
       void setState(const int state);
       /// Returns the button's text.
       ///
@@ -77,7 +81,6 @@ class button {
 /// Collection of related button classes.
 ///
 /// Controls a set of various button classes as a group.
-/// At the moment it can only control one button.
 class menu {
    private:
       SDL_Rect position;
@@ -88,29 +91,17 @@ class menu {
       int activeButton; // Number of the button with the mouse over.
       int pressedButton; // Number of the button pressed.
       int buttonsCreated; // Number of buttons which already have atreibutes.
+      bool background; // Indicates if the menu has a background.
+      bool drawBackground; // Indicates if drawing the background is needed.
+      void (*drawBackgroundFunction)(void); // Function that draws the background.
 
 
    public:
-      /// @param[in] position Top left hand corner of the menu
-      /// @param[in] numberButtons Number of button classes in the menu
+      /// @param[in] position Top left hand corner of the menu.
+      /// @param[in] numberButtons Number of button classes in the menu.
       menu(SDL_Rect position, int numberButtons); // Constructor
       ~menu(void); // Destructor
 
-      /// Tells the menu the mouse's position.
-      ///
-      /// Every time the mouse's position or the mouse's buttons change, this
-      /// function should be called so the menu knows which button is being pressed.
-      ///
-      /// @param[in] x The x coordinate of the mouse's position
-      /// @param[in] y The y coordinate of the mouse's position
-      /// @param[in] pressed If the mouse left button is pressed or not
-      void moveMouse(int x, int y, int pressed);
-      /// Draws the menu.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] screen -no detailed description-
-      void draw(void);
       /// Sets each button class's attributes.
       ///
       /// Every time the function is called, sets the attributes
@@ -120,9 +111,31 @@ class menu {
       ///
       /// @param[in] text Text to be writen in the button.
       /// @param[in] function Function to execute when the button is pressed.
-      void setButton(const char *text, void (*function)());
+      void setButton(const char *text, void (*function)(void));
+      /// Adds a background to the menu.
+      ///
+      /// From now on, the menu will call drawBackgroundFuntion()
+      /// for drawing the menu every time this is needed.
+      ///
+      /// @param[in] drawBackgroundFuntion Funtion that draws the background.
+      void addBackground(void (*drawBackgroundFunction)(void));
+
+      /// Tells the menu the mouse's position.
+      ///
+      /// Every time the mouse's position or the mouse's buttons change, this
+      /// function should be called so the menu knows which button is being pressed.
+      ///
+      /// @param[in] x The x coordinate of the mouse's position.
+      /// @param[in] y The y coordinate of the mouse's position.
+      /// @param[in] pressed If the mouse left button is pressed or not.
+      void moveMouse(int x, int y, int pressed);
+
+      /// Draws the menu.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] screen -no detailed description-
+      void draw(void);
 };
 
-#endif
-
-/* Last Version: Jonan */
+#endif // MENU_HPP

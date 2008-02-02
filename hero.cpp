@@ -36,5 +36,3 @@ bool hero::recruitCreature(unit *creature) {
       return true;
    }
 }
-
-/* Last Version: Jonan */

@@ -15,6 +15,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+/// @file
+/// The image and imageList classes.
+/// @author Jonan
+
 #ifndef IMAGE_HPP
 #define IMAGE_HPP
 
@@ -97,6 +101,4 @@ class imageList {
       SDL_Surface* getSurface(const char *imageName);
 };
 
-#endif
-
-/* Last Version: Jonan */
+#endif // IMAGE_HPP

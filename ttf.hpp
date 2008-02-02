@@ -15,13 +15,17 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+/// @file
+/// The ttf class.
+/// @author Jonan
+
 #ifndef TTF_HPP
 #define TTF_HPP
 
-#include <SDL/SDL_ttf.h>
-
 /*#include <cstdio>
 #include <cstdlib>*/
+
+#include <SDL/SDL_ttf.h>
 
 /// Represents text on the screen.
 ///
@@ -49,6 +53,4 @@ class ttf{
       void write(const char *text, SDL_Surface *surface, const int x, const int y);
 };
 
-#endif
-
-/* Last Version: Jonan */
+#endif // TTF_HPP

@@ -15,23 +15,24 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-#include <iostream>
-
+#include "events.hpp"
+#include "graphics.hpp"
+#include "loop.hpp"
 #include "timer.hpp"
 
-using namespace std;
+// Controls a general game loop.
+void loop(int (*function)(void)) {
+   int done=0;
+   timer fps;
 
-// The moment from which to start counting time. Make
-// sure you call endFPS(int) one time every time you use it.
-void timer::start(void) {
-   now = before = SDL_GetTicks();
-}
-
-// Indicates the ending point.
-void timer::end(int ms) {
-   now = SDL_GetTicks();
-
-   if ( (now-before) > ms ) {
-      cout << (now - before - ms) << " ms slow\n";
-   } else SDL_Delay( ms - (now - before) );
+   while (done == 0) {
+      fps.start();
+      input->readInput();
+      if (input->getType() == SYSTEM)
+         if (input->getSystemType() == QUIT)
+            done = 1;
+      done = function();
+      screen->update();
+      fps.end(50);
+   }
 }

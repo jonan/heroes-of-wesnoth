@@ -357,5 +357,3 @@ void map::draw(void) {
 }
 
 // ---End---
-
-/* Last Version: Jonan */

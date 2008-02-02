@@ -15,23 +15,16 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-#include <iostream>
+/// @file
+/// Function to start the main menu.
+/// @author Jonan
 
-#include "timer.hpp"
+#ifndef MENU_MAIN_HPP
+#define MENU_MAIN_HPP
 
-using namespace std;
+/// Creates and starts the main menu.
+///
+/// -no detailed description-
+void startMainMenu(void);
 
-// The moment from which to start counting time. Make
-// sure you call endFPS(int) one time every time you use it.
-void timer::start(void) {
-   now = before = SDL_GetTicks();
-}
-
-// Indicates the ending point.
-void timer::end(int ms) {
-   now = SDL_GetTicks();
-
-   if ( (now-before) > ms ) {
-      cout << (now - before - ms) << " ms slow\n";
-   } else SDL_Delay( ms - (now - before) );
-}
+#endif // MENU_MAIN_HPP

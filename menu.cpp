@@ -31,7 +31,7 @@ button::~button(void) {
 }
 
 // Changes all the button's attributes.
-void button::setAttributes(const char *text, void (*function)()) {
+void button::setAttributes(const char *text, void (*function)(void)) {
    this->text = strdup(text);
    this->function = function;
    state = NORMAL;
@@ -79,11 +79,31 @@ menu::menu(SDL_Rect position, int numberButtons) {
    buttonsCreated = 0;
    activeButton = -1; //  The mouse is over no button.
    pressedButton = -1; //  No button is being pressed.
+   background = false;
+   drawBackground = false;
+   drawBackgroundFunction = NULL;
 }
 
 // Destructor
 menu::~menu(void) {
    delete [] buttons;
+}
+
+// Every time the function is called, sets the attributes
+// to each button until all button classes have been set.
+// (Should be called immediately after the constructor and
+// as may times as button classes are there in the menu)
+void menu::setButton(const char *text, void (*function)(void)) {
+   if (buttonsCreated < numberButtons) {
+      buttons[buttonsCreated].setAttributes(text, function);
+      buttonsCreated++;
+   }
+}
+
+void menu::addBackground(void (*drawBackgroundFunction)(void)) {
+   background = true;
+   drawBackground = true;
+   this->drawBackgroundFunction = drawBackgroundFunction;
 }
 
 // Every time the mouse's position or the mouse's buttons change, this
@@ -95,21 +115,28 @@ void menu::moveMouse(int x, int y, int pressed) {
       int i = 0;
       while ( i<numberButtons && !mouseOver ) {
          if ( y>position.y && y < (position.y+position.h) ) { // Mouse over the button
-            if (i != activeButton && activeButton != -1) {
-               buttons[activeButton].setState(NORMAL);
-               activeButton=-1;
-               pressedButton=-1;
-            }
             mouseOver = true;
+            if (i != activeButton && activeButton != -1 && pressed!=SDL_BUTTON_LEFT) {
+               buttons[activeButton].setState(NORMAL);
+               activeButton = -1;
+               pressedButton = -1;
+            }
             if ( pressed==SDL_BUTTON_LEFT && activeButton==i ) {
                buttons[i].setState(PRESSED);
                pressedButton = i;
-            }
-            else {
-               if (pressedButton==i) buttons[i].getFunction();
-                  buttons[i].setState(ACTIVE);
-                  activeButton = i;
+            } else {
+               buttons[i].setState(ACTIVE);
+               activeButton = i;
+               if (pressedButton==i) {
+                  // Make sure the next time the menu is drawn, the background is drawn with it.
+                  if (background) {drawBackground = true;}
+                  buttons[i].getFunction();
+                  // Reset the menu after calling function
+                  buttons[i].setState(NORMAL);
+                  activeButton=-1;
+                  pressedButton=-1;
                }
+            }
          }
          else {
             position.y += distance;
@@ -131,6 +158,10 @@ void menu::moveMouse(int x, int y, int pressed) {
 
 // Draws the menu.
 void menu::draw(void) {
+   if (drawBackground) {
+      drawBackgroundFunction();
+      drawBackground = false;
+   }
    for (int i=0; i<numberButtons; i++) {
       screen->draw( buttonSurface[ buttons[i].getState() ], &position );
       if (buttons[i].getState() != PRESSED)
@@ -143,17 +174,4 @@ void menu::draw(void) {
    position.y -= (distance * numberButtons);
 }
 
-// Every time the function is called, sets the attributes
-// to each button until all button classes have been set.
-// (Should be called immediately after the constructor and
-// as may times as button classes are there in the menu)
-void menu::setButton(const char *text, void (*function)()) {
-   if (buttonsCreated < numberButtons) {
-      buttons[buttonsCreated].setAttributes(text, function);
-      buttonsCreated++;
-   }
-}
-
 // ---End---
-
-/* Last Version: Jonan */
