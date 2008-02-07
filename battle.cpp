@@ -22,7 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // Processes the new input and draws
 // everything in the screen.
-int battle::frame(void) {
+bool battle::frame(void) {
    if (keys[SDLK_ESCAPE]) return 1;
    battleMap->moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
    battleMap->draw();
@@ -44,15 +44,15 @@ void battle::start(void) {
    screen->erase();
 
    /// @todo use the loop function in loop.hpp
-   int done=0;
+   bool done = false;
    timer fps;
 
-   while (done == 0) {
+   while (!done) {
       fps.start();
       input->readInput();
       if (input->getType() == SYSTEM)
          if (input->getSystemType() == QUIT)
-            done = 1;
+            done = true;
       done = frame();
       screen->update();
       fps.end(50);

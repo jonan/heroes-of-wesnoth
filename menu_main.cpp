@@ -51,10 +51,10 @@ void drawBackground(void) {
 }
 
 // Draws the menu.
-int drawMenu(void) {
+bool drawMenu(void) {
    mainMenu->moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
    mainMenu->draw();
-   return 0;
+   return false; // To continue in the loop.
 }
 
 // Creates the menu.

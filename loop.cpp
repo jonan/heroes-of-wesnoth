@@ -21,16 +21,16 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "timer.hpp"
 
 // Controls a general game loop.
-void loop(int (*function)(void)) {
-   int done=0;
+void loop(bool (*function)(void)) {
+   bool done = false;
    timer fps;
 
-   while (done == 0) {
+   while (!done) {
       fps.start();
       input->readInput();
       if (input->getType() == SYSTEM)
          if (input->getSystemType() == QUIT)
-            done = 1;
+            done = true;
       done = function();
       screen->update();
       fps.end(50);

@@ -27,6 +27,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// -no detailed description-
 ///
 /// @param[in] function Funtion to execute in the loop.
-void loop(int (*function)(void));
+///            This function should return false to
+///            continue in the loop or true to exit.
+void loop(bool (*function)(void));
 
 #endif // LOOP_HPP

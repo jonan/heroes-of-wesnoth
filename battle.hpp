@@ -37,7 +37,9 @@ class battle {
       ///
       /// Processes the new input and draws
       /// everything in the screen.
-      int frame(void);
+      ///
+      /// @return false to continue in the loop or true to exit.
+      bool frame(void);
 
    public:
       battle(void); // Constructor
