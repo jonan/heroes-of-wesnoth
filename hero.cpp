@@ -18,7 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "hero.hpp"
 
 // Constructor
-hero::hero(const char *type) {
+hero::hero(const char *type) : unit(NULL) {
+   this->type = strdup(type);
    // The hero starts controling no creatures
    for (int i=0; i<MAX_UNITS; i++) {
       creature[i]=NULL;

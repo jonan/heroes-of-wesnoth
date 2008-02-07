@@ -33,7 +33,7 @@ int battle::frame(void) {
 battle::battle(void) {
    battleMap = new map(18, 9);
    player = new hero("fighter");
-   player->setAllAttributes(1, 1, 1, 1, 1, 1, 3);
+   player->setAllAttributes(1, 1, 1, 1, 1, 1, 2, 3);
    player->setImage("grand-knight");
    battleMap->setTerrain("grassland-r1");
    battleMap->setHero(player);
