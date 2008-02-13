@@ -56,28 +56,28 @@ class cell {
 
    public:
       cell(void); // Constructor
-      /// @param [in] position Position where to draw the cell
-      /// @param [in] terrain Surface of the terrain
-      /// @param [in] creature Creature in the cell
+      /// @param[in] position Position where to draw the cell
+      /// @param[in] terrain Surface of the terrain
+      /// @param[in] creature Creature in the cell
       cell(SDL_Rect position, SDL_Surface *terrain = NULL, unit *creature = NULL); // Constructor
 
       /// Sets the cell's position.
       ///
       /// -no detailed description-
       ///
-      /// @param [in] position Position where to draw the cell
+      /// @param[in] position Position where to draw the cell
       void setPosition(SDL_Rect position);
       /// Sets the cell's terrain.
       ///
       /// -no detailed description-
       ///
-      /// @param [in] imageName Name of the image, without the "img/" or the ".png".
+      /// @param[in] imageName Name of the image, without the "img/" or the ".png".
       void setTerrain(SDL_Surface *imageName);
       /// Puts a creature in the cell.
       ///
       /// -no detailed description-
       ///
-      /// @param [in] creature Creature to put in the cell
+      /// @param[in] creature Creature to put in the cell
       void setCreature(unit *creature);
       /// Returns the creature in the cell.
       ///
@@ -101,11 +101,15 @@ class cell {
       void removeMouse(void);
       /// Indicates that the cell is now selected.
       ///
-      /// -no detailed description-
+      /// The cell is selected and the cell where
+      /// the unit can move are marked.
+      ///
+      /// @return If everything was correct, this else NULL.
       cell* select(void);
       /// The cell is no longer selected.
       ///
-      /// -no detailed description-
+      /// Marks the cell as not being selected and tells all the cells
+      /// where the unit could move that now it can not move there.
       void unselect(void);
 
       /// Connects a cell to this one.
@@ -113,8 +117,8 @@ class cell {
       /// Indicates which are the cells next to this one
       /// in any direction (N, NE, SE, S, SW or NW).
       ///
-      /// @param [in] position Relative position of the cell (N, NE, SE, S, SW or NW).
-      /// @param [in] connectedCell The cell to conect.
+      /// @param[in] position Relative position of the cell (N, NE, SE, S, SW or NW).
+      /// @param[in] connectedCell The cell to conect.
       void connectCell(const int position, cell* connectedCell);
 
       /// Draws the cell in the screen.
@@ -146,8 +150,8 @@ class map {
       void connectCells(void);
 
    public:
-      /// @param [in] sizeX Number of cell rows in the map
-      /// @param [in] sizeY Number of cell columns in the map
+      /// @param[in] sizeX Number of cell rows in the map
+      /// @param[in] sizeY Number of cell columns in the map
       map(const int sizeX, const int sizeY); // Constructor
       ~map(void); // Destructor
 
@@ -161,8 +165,15 @@ class map {
       ///
       /// -no detailed description-
       ///
-      /// @param [in] player The player's hero.
+      /// @param[in] player The player's hero.
       void setHero(unit *player);
+      /// Puts the enemy creatures in the map.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] creaturesArray An array with all the creatures.
+      /// @param[in] number number of creatures in the array.
+      void setCreatures(unit **creaturesArray, int number);
 
       /// Tells the map the mouse's position.
       ///

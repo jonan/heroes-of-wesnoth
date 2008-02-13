@@ -24,8 +24,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 void cell::creatureMovement(const int movement) {
    if (movement>0) {
       canMove = true;
-      for (int i=0; i<6; i++) {
-            if (connectedCell[i]!=NULL)
+      for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
+            if (connectedCell[i])
                connectedCell[i]->creatureMovement(movement-1);
       }
    }
@@ -35,9 +35,9 @@ void cell::creatureMovement(const int movement) {
 void cell::eraseMovement(const int movement) {
    if (movement>0) {
       canMove = false;
-      for (int i=0; i<6; i++) {
-            if (connectedCell[i]!=NULL)
-         connectedCell[i]->eraseMovement(movement-1);
+      for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
+            if (connectedCell[i])
+               connectedCell[i]->eraseMovement(movement-1);
       }
    }
 }
@@ -101,7 +101,8 @@ void cell::removeMouse(void) {
    mouseOver = false;
 }
 
-// Indicates that the cell is now selected.
+// The cell is selected and the cell where
+// the unit can move are marked.
 cell* cell::select(void) {
    if (creature!=NULL) {
       selected = true;
@@ -111,7 +112,8 @@ cell* cell::select(void) {
       return NULL;
 }
 
-// The cell is no longer selected.
+// Marks the cell as not being selected and tells all the cells
+// where the unit could move that now it can not move there.
 void cell::unselect(void) {
    selected = false;
    eraseMovement( creature->getMovement()+1 );
@@ -224,7 +226,7 @@ void map::connectCells(void) {
             } else if (coor2 == 0) { // The first row of the map
                battleMap[coor1][coor2].connectCell(N, NULL);
                battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
-               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(NE, NULL);
                battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2]);
                battleMap[coor1][coor2].connectCell(NW, NULL);
                battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2]);
@@ -307,6 +309,13 @@ void map::setHero(unit *player) {
    battleMap[0][4].setCreature(player);
 }
 
+// Puts the enemy creatures in the map.
+void map::setCreatures(unit **creaturesArray, int number) {
+   for (int i=0; i<number; i++) {
+      battleMap[sizeX][i].setCreature(creaturesArray[i]);
+   }
+}
+
 // Every time the mouse's position or the mouse's buttons
 // change, this function should be called.
 void map::moveMouse(int x, int y, int button) {
@@ -333,7 +342,7 @@ void map::moveMouse(int x, int y, int button) {
          battleMap[i][j].putMouse();
          mouseOverCell = &battleMap[i][j];
          if ( button == 1  &&  selectedCell != &battleMap[i][j] ) {
-            if (selectedCell!=NULL) {
+            if (selectedCell) {
                if ( battleMap[i][j].canMoveHere() ) {
                   battleMap[i][j].setCreature( selectedCell->getCreature() );
                   selectedCell->unselect();
