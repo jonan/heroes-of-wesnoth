@@ -22,10 +22,10 @@ void setCreaturesAttributes(unit* creature) {
    char *type;
    type = creature->getType();
 
-   if (type == "skeleton") {
+   if ( strcmp(type, "skeleton") == 0 ) {
       creature->setImage("skeleton");
       creature->setAllAttributes(50, 0, 10, 5, 15, 0, 2, 2);
-   } else if (type == "orc") {
+   } else if ( strcmp(type, "orc") == 0 ) {
       /// @todo Add more types of units
    }
 }
