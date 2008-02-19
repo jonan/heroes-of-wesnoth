@@ -50,7 +50,7 @@ class cell {
       bool canMove; // Indicates if the selected creature can move to this cell
 
       // Calculates to what cells can a creature move.
-      void creatureMovement(const int movement);
+      void creatureMovement(const int movement, int call = 0);
       // Erases previos calculations about a creatures movement.
       void eraseMovement(const int movement);
 
@@ -139,15 +139,17 @@ class cell {
 /// Basically consist of lots of cell classes working
 /// together to create a map an to be able to use it.
 class map {
-   private:
+   protected:
       int sizeX, sizeY; // The map's size
       SDL_Surface *terrainBase; // The most used terrain in the map
       cell **battleMap;
       cell *selectedCell; // The cell that's selected
       cell *mouseOverCell; // The cell where the mouse is
 
-      // Connects all the cells in the map
+      // Connects all the cells in the map.
       void connectCells(void);
+      // Function to execute when the cell where the mouse is over is detected.
+      virtual void mouseOver(int x, int y, int button);
 
    public:
       /// @param[in] sizeX Number of cell rows in the map
@@ -167,13 +169,6 @@ class map {
       ///
       /// @param[in] player The player's hero.
       void setHero(unit *player);
-      /// Puts the enemy creatures in the map.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] creaturesArray An array with all the creatures.
-      /// @param[in] number number of creatures in the array.
-      void setCreatures(unit **creaturesArray, int number);
 
       /// Tells the map the mouse's position.
       ///

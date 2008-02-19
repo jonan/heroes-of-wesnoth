@@ -28,17 +28,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// Controls all the aspects of a battle.
 ///
 /// -no detailed description-
-class battle {
+class battle : public map {
    private:
-      map *battleMap;
       hero *player;
+      unit *creature;
 
-      /// Funtion to call in every frame.
-      ///
-      /// Processes the new input and draws
-      /// everything in the screen.
-      ///
-      /// @return false to continue in the loop or true to exit.
+      // This function is executed in the main loop. If
+      // it returns true, the loop ends, else it continues.
       bool frame(void);
 
    public:
@@ -48,6 +44,13 @@ class battle {
       ///
       /// -no detailed description-
       void start(void);
+      /// Puts the enemy creatures in the map.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] creaturesArray An array with all the creatures.
+      /// @param[in] number number of creatures in the array.
+      void setCreatures(unit **creaturesArray, int number);
 };
 
 /// Creates and starts a battle.

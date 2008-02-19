@@ -19,24 +19,48 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "events.hpp"
 #include "graphics.hpp"
 #include "timer.hpp"
+#include "unit.hpp"
 
-// Processes the new input and draws
-// everything in the screen.
+// Function to execute when the cell where the mouse is over is detected.
+void battle::map::mouseOver(int x, int y, int button) {
+   battleMap[x][y].putMouse();
+   mouseOverCell = &battleMap[x][y];
+   if ( button == 1  &&  selectedCell != &battleMap[x][y] ) {
+      if (selectedCell) {
+         if ( battleMap[x][y].canMoveHere() ) {
+            battleMap[x][y].setCreature( selectedCell->getCreature() );
+            selectedCell->unselect();
+            selectedCell->setCreature(NULL);
+         } else
+            selectedCell->unselect();
+      }
+      selectedCell = battleMap[x][y].select();
+   }
+}
+
+// This function is executed in the main loop. If
+// it returns true, the loop ends, else it continues.
 bool battle::frame(void) {
-   if (keys[SDLK_ESCAPE]) return 1;
-   battleMap->moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
-   battleMap->draw();
-   return 0;
+   if (keys[SDLK_ESCAPE]) return true;
+   moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
+   draw();
+   return false;
 }
 
 // Constructor
-battle::battle(void) {
-   battleMap = new map(18, 9);
+battle::battle(void) : map(18, 9) {
    player = new hero("fighter");
+   creature = new unit("skeleton");
    player->setAllAttributes(1, 1, 1, 1, 1, 1, 2, 3);
    player->setImage("grand-knight");
-   battleMap->setTerrain("grassland-r1");
-   battleMap->setHero(player);
+   setTerrain("grassland-r1");
+   setHero(player);
+   battleMap[sizeX-1][4].setCreature(creature);
+   /*battleMap[sizeX-1][0].setCreature(creature);
+   battleMap[sizeX-1][1].setCreature(creature);
+   battleMap[sizeX-1][2].setCreature(creature);
+   battleMap[sizeX-1][3].setCreature(creature);
+   battleMap[sizeX-1][5].setCreature(creature);*/
 }
 
 // Starts the battle.
@@ -63,4 +87,13 @@ void battle::start(void) {
 void createBattle(void) {
    battle war;
    war.start();
+}
+
+// Puts the enemy creatures in the map.
+void battle::setCreatures(unit **creaturesArray, int number) {
+   if ( number <= 9 ) {
+      for (int i=0; i<number; i++) {
+         battleMap[sizeX][i].setCreature(creaturesArray[i]);
+      }
+   }
 }

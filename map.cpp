@@ -21,8 +21,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 // class cell
 
 // Calculates to what cells can a creature move.
-void cell::creatureMovement(const int movement) {
-   if (movement>0) {
+void cell::creatureMovement(const int movement, int call) {
+   if (call == 1) { // It's the first call to this funtion so the creature is over this cell.
+      for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
+            if (connectedCell[i])
+               connectedCell[i]->creatureMovement(movement);
+      }
+   } else if (movement>0 && creature==NULL) {
       canMove = true;
       for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
             if (connectedCell[i])
@@ -106,7 +111,7 @@ void cell::removeMouse(void) {
 cell* cell::select(void) {
    if (creature!=NULL) {
       selected = true;
-      creatureMovement( creature->getMovement()+1 );
+      creatureMovement(creature->getMovement(), 1 );
       return this;
    } else
       return NULL;
@@ -144,7 +149,7 @@ bool cell::canMoveHere(void) {
 
 // class map
 
-// connects all the cells in the map
+// connects all the cells in the map.
 void map::connectCells(void) {
    for (int coor1=0; coor1<sizeX; coor1++) {
       for (int coor2=0; coor2<sizeY; coor2++) {
@@ -254,6 +259,7 @@ void map::connectCells(void) {
 map::map(const int sizeX, const int sizeY) {
    SDL_Rect terrainPos;
 
+   // Position of the firts cell (top-left)
    terrainPos.x = 17;
    terrainPos.y = 41;
    terrainPos.w = 72;
@@ -309,13 +315,6 @@ void map::setHero(unit *player) {
    battleMap[0][4].setCreature(player);
 }
 
-// Puts the enemy creatures in the map.
-void map::setCreatures(unit **creaturesArray, int number) {
-   for (int i=0; i<number; i++) {
-      battleMap[sizeX][i].setCreature(creaturesArray[i]);
-   }
-}
-
 // Every time the mouse's position or the mouse's buttons
 // change, this function should be called.
 void map::moveMouse(int x, int y, int button) {
@@ -339,19 +338,7 @@ void map::moveMouse(int x, int y, int button) {
       }
       j--;
       if (j>=0 && j<sizeY) { // battleMap[i][j] is a valid cell and the mouse is over it
-         battleMap[i][j].putMouse();
-         mouseOverCell = &battleMap[i][j];
-         if ( button == 1  &&  selectedCell != &battleMap[i][j] ) {
-            if (selectedCell) {
-               if ( battleMap[i][j].canMoveHere() ) {
-                  battleMap[i][j].setCreature( selectedCell->getCreature() );
-                  selectedCell->unselect();
-                  selectedCell->setCreature(NULL);
-               } else
-                  selectedCell->unselect();
-            }
-            selectedCell = battleMap[i][j].select();
-         }
+         mouseOver(i, j, button);
       }
    }
 }
