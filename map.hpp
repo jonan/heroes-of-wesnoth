@@ -24,7 +24,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include <SDL/SDL.h>
 
-#include "unit.hpp"
+class unit;
 
 /// The six relative positions to a cell
 #define N  0
@@ -36,7 +36,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 /// Cells of the map.
 ///
-/// An class to control all the independent
+/// A class to control all the independent
 /// cells in any type of map.
 class cell {
    private:

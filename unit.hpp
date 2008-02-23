@@ -24,6 +24,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include <SDL/SDL.h>
 
+class cell;
+
 /// Stores the unit's atributes.
 ///
 /// -no detailed description-
@@ -44,6 +46,8 @@ class unit {
 
       SDL_Surface *image; // The unit's image
       bool selected; // Indicates if the unit is selected
+
+      cell *position; // The cell where the unit is
 
    public:
       /// @param[in] type Type of unit.
@@ -78,6 +82,12 @@ class unit {
       ///
       /// @param[in] imageName The image's name, without the "img/" or the ".png".
       void setImage(const char *imageName);
+      /// Changes the unit's position.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] position The cell where the unit is.
+      void setPosition(cell *position);
       /// Returns the unit's movement.
       ///
       /// -no detailed description-

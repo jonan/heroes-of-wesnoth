@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "graphics.hpp"
 #include "map.hpp"
+#include "unit.hpp"
 
 // class cell
 
@@ -83,6 +84,7 @@ void cell::setTerrain(SDL_Surface *terrain) {
 
 // Puts a creature in the cell.
 void cell::setCreature(unit *creature) {
+   if (creature) creature->setPosition(this);
    this->creature = creature;
 }
 

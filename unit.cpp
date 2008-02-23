@@ -26,6 +26,7 @@ unit::unit(const char *type, const int number) {
       this->type = strdup(type);
       setCreaturesAttributes(this);
    }
+   position = NULL;
 }
 
 // Destructor
@@ -60,6 +61,11 @@ void unit::setImage(const char *imageName) {
    image = screen->getImage(imageName);
 }
 
+// Changes the unit's position.
+void unit::setPosition(cell *position) {
+   this->position = position;
+}
+
 // Returns the unit's movement.
 int unit::getMovement(void) {
    return movement;
@@ -87,5 +93,9 @@ bool unit::isSelected(void) {
 
 // Draws the creature in the given position.
 void unit::draw(SDL_Rect *position) {
+   char text[3];
+
    screen->draw(image, position);
+   sprintf(text, "%i", number);
+   screen->write(text, position->x+17, position->y+52);
 }
