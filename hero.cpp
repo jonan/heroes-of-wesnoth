@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include "graphics.hpp"
 #include "hero.hpp"
 
 // Constructor
@@ -36,4 +37,9 @@ bool hero::recruitCreature(unit *creature) {
       numCreatures+=1;
       return true;
    }
+}
+
+// Draws the hero in the given position.
+void hero::draw(SDL_Rect *position) {
+   screen->draw(image, position);
 }

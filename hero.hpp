@@ -29,7 +29,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// Stores the hero's atributes.
 ///
 /// -no detailed description-
-class hero : public unit{
+class hero : public unit {
    private:
       unit *creature[MAX_UNITS]; // The nine creatures a hero can control
       int numCreatures; // The number of creatures that the hero actualy controls
@@ -44,7 +44,14 @@ class hero : public unit{
       /// controls 9) returns false, else returns true.
       ///
       /// @param[in] creature The new unit the hero can control.
+      /// @return If the recruitment was successful or not.
       bool recruitCreature(unit *creature);
+      /// Draws the hero in the given position.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] position The position where the hero should be drawn.
+      void draw(SDL_Rect *position);
 };
 
 #endif // HERO_HPP

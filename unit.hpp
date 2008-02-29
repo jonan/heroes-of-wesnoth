@@ -119,7 +119,7 @@ class unit {
       /// -no detailed description-
       ///
       /// @param[in] position The position where the creature should be drawn.
-      void draw(SDL_Rect *position);
+      virtual void draw(SDL_Rect *position);
 };
 
 #endif // UNIT_HPP
