@@ -1,4 +1,4 @@
-OBJECTS = battle.o boot.o events.o graphics.o hero.o image.o loop.o main.o map.o menu.o menu_main.o timer.o ttf.o unit.o unit_type.o
+OBJECTS = battle.o boot.o events.o graphics.o hero.o hero_type.o image.o loop.o main.o map.o menu.o menu_main.o timer.o ttf.o unit.o unit_type.o
 SDL_LIBS = -lSDL -lSDL_ttf -lSDL_image
 CFLAGS = -c -g
 CC = g++
@@ -18,8 +18,11 @@ events.o : events.cpp events.hpp
 graphics.o : graphics.cpp graphics.hpp image.hpp ttf.hpp
 	$(CC) $(CFLAGS) graphics.cpp
 
-hero.o : hero.cpp hero.hpp unit.hpp
+hero.o : hero.cpp hero.hpp graphics.hpp unit.hpp
 	$(CC) $(CFLAGS) hero.cpp
+
+hero_type.o : hero_type.cpp hero.hpp
+	$(CC) $(CFLAGS) hero_type.cpp
 
 image.o : image.cpp image.hpp
 	$(CC) $(CFLAGS) image.cpp
@@ -45,10 +48,10 @@ timer.o : timer.cpp timer.hpp
 ttf.o : ttf.cpp ttf.hpp
 	$(CC) $(CFLAGS) ttf.cpp
 
-unit.o : unit.cpp unit.hpp graphics.hpp
+unit.o : unit.cpp unit.hpp graphics.hpp map.hpp
 	$(CC) $(CFLAGS) unit.cpp
 
-unit_type.o : unit_type.cpp unit_type.hpp unit.hpp
+unit_type.o : unit_type.cpp unit.hpp
 	$(CC) $(CFLAGS) unit_type.cpp
 
 .PHONY : clean

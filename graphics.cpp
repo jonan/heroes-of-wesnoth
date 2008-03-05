@@ -28,14 +28,12 @@ void graphics::init(void) {
       cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
       exit(EXIT_FAILURE);
    }
-   atexit(SDL_Quit);
    cout << "[ ok ]\n";
    cout << "Starting SDL_ttf...\t\t\t";
    if ( TTF_Init() < 0 ) {
       cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
       exit(EXIT_FAILURE);
    }
-   atexit(TTF_Quit);
    cout << "[ ok ]\n";
 }
 
@@ -69,6 +67,10 @@ graphics::~graphics(void) {
    delete image;
    delete text;
    SDL_FreeSurface(screen);
+   /// @todo quit ttf
+   // Not quiting ttf because it some times crashes due to an error in SDL_ttf
+   // TTF_Quit();
+   SDL_Quit();
 }
 
 // Adds a new image to the list

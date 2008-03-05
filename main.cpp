@@ -40,6 +40,6 @@ int main(int argc, char *argv[]) {
    // Start the game
    boot();
    startMainMenu();
-   quit();
+   //quit();
    return 0;
 }

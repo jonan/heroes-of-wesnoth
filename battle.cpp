@@ -22,7 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "unit.hpp"
 
 // Function to execute when the cell where the mouse is over is detected.
-void battle::map::mouseOver(int x, int y, int button) {
+void battle::mouseOver(int x, int y, int button) {
    battleMap[x][y].putMouse();
    mouseOverCell = &battleMap[x][y];
    if ( button == 1  &&  selectedCell != &battleMap[x][y] ) {
@@ -47,20 +47,38 @@ bool battle::frame(void) {
    return false;
 }
 
+// Returns the creature that has the next turn.
+unit* battle::nextTurn(void) {
+
+}
+
+// Puts the enemy creatures in the map.
+void battle::setCreatures(unit **creatures, int number) {
+   if ( number <= 9 ) {
+      for (int i=0; i<number; i++) {
+         battleMap[sizeX-1][i].setCreature(creatures[i]);
+      }
+   }
+}
+
 // Constructor
-battle::battle(void) : map(18, 9) {
-   player = new hero("fighter");
-   creature = new unit("skeleton");
-   player->setAllAttributes(1, 1, 1, 1, 1, 1, 2, 3);
-   player->setImage("grand-knight");
-   setTerrain("grassland-r1");
+battle::battle(hero *player, unit **enemies, int numberEnemies) : map(18, 9) {
+   this->player = player;
+   creatures = enemies;
+   numberCreatures = numberEnemies;
+   totalUnits = numberEnemies + player->getNumberCreatures();
+   turns = new int[totalUnits];
+   // Set the turns
+   /*for (int i=0; i<totalUnits; i++) turns[i] = i;
+   for (int i=totalUnits; i>0; i++) {
+      for (int j=0; j<totalUnits; j++) {
+         if (true);
+      }
+   }*/
+
    setHero(player);
-   battleMap[sizeX-1][4].setCreature(creature);
-   /*battleMap[sizeX-1][0].setCreature(creature);
-   battleMap[sizeX-1][1].setCreature(creature);
-   battleMap[sizeX-1][2].setCreature(creature);
-   battleMap[sizeX-1][3].setCreature(creature);
-   battleMap[sizeX-1][5].setCreature(creature);*/
+   setCreatures(creatures, numberCreatures);
+   setTerrain("grassland-r1");
 }
 
 // Starts the battle.
@@ -74,26 +92,24 @@ void battle::start(void) {
    while (!done) {
       fps.start();
       input->readInput();
-      if (input->getType() == SYSTEM)
-         if (input->getSystemType() == QUIT)
-            done = true;
       done = frame();
+      /*if (input->getType() == SYSTEM)
+         if (input->getSystemType() == QUIT)
+            done = true;*/
       screen->update();
-      fps.end(50);
+      fps.end(30);
    }
 }
 
 // Creates and starts a battle.
 void createBattle(void) {
-   battle war;
-   war.start();
-}
+   hero player(FIGHTER);
+   unit *creature[9];
 
-// Puts the enemy creatures in the map.
-void battle::setCreatures(unit **creaturesArray, int number) {
-   if ( number <= 9 ) {
-      for (int i=0; i<number; i++) {
-         battleMap[sizeX][i].setCreature(creaturesArray[i]);
-      }
+   for (int i=0; i<9; i++) {
+      creature[i] = new unit(SKELETON, 5);
    }
+
+   battle war(&player, creature, 9);
+   war.start();
 }

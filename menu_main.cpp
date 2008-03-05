@@ -57,12 +57,18 @@ bool drawMenu(void) {
    return false; // To continue in the loop.
 }
 
+// Free main menu
+void deleteMenu(void) {
+   delete mainMenu;
+}
+
 // Creates the menu.
 void createMenu(void) {
    mainMenu = new menu(menu_pos, 2);
    mainMenu->setButton("Battle", createBattle);
    mainMenu->setButton("Quit", quit);
    mainMenu->addBackground(drawBackground);
+   atexit(deleteMenu);
 }
 
 // Creates and starts the main menu.

@@ -15,17 +15,14 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-#include "unit_type.hpp"
+#include "unit.hpp"
 
 // Sets the creatures attributes acording to his type.
-void setCreaturesAttributes(unit* creature) {
-   char *type;
-   type = creature->getType();
-
-   if ( strcmp(type, "skeleton") == 0 ) {
-      creature->setImage("skeleton");
-      creature->setAllAttributes(50, 0, 10, 5, 15, 0, 2, 2);
-   } else if ( strcmp(type, "orc") == 0 ) {
+void unit::setCreaturesAttributes(void) {
+   if (type == SKELETON) {
+      setImage("skeleton");
+      setAllAttributes(50, 0, 10, 5, 15, 0, 2, 2);
+   } else if (type == ORC) {
       /// @todo Add more types of units
    }
 }

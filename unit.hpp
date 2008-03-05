@@ -24,14 +24,21 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include <SDL/SDL.h>
 
+// @{
+/// Types of units
+#define SKELETON 0
+#define ORC      1
+// @}
+
 class cell;
+class hero;
 
 /// Stores the unit's atributes.
 ///
 /// -no detailed description-
 class unit {
    protected:
-      char *type;
+      int type;
 
       int number; // Number of units
 
@@ -49,27 +56,23 @@ class unit {
 
       cell *position; // The cell where the unit is
 
-   public:
-      /// @param[in] type Type of unit.
-      /// @param[in] number Number of units.
-      unit(const char *type, const int number = 1); // Constructor
-      ~unit(void); // Destructor
+      hero *master; // The hero that controls the unit.
 
-      /// Sets all the unit's attributes.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] live Maximum live.
-      /// @param[in] magic Maximum magic power.
-      /// @param[in] physicalDefence Defence against physical attacks.
-      /// @param[in] magicalDefence Defence against magical attacks.
-      /// @param[in] physicalAttack Power of the physical attack.
-      /// @param[in] magicalAttack Power of the magical attack.
-      /// @param[in] movement Speed of the creature.
+      // Sets all the unit's attributes.
       void setAllAttributes(int live, int magic, int physicalDefence,
                            int magicalDefence, int physicalAttack,
                            int magicalAttack, int agility,
                            int movement);
+      // Sets the creatures attributes acording to his type.
+      // (Implemented in unit_type.cpp)
+      virtual void setCreaturesAttributes(void);
+
+   public:
+      /// @param[in] type Type of unit.
+      /// @param[in] number Number of units.
+      unit(const int type, const int number = 1); // Constructor
+      ~unit(void) {} // Destructor
+
       /// Changes the number of units.
       ///
       /// -no detailed description-
@@ -88,18 +91,24 @@ class unit {
       ///
       /// @param[in] position The cell where the unit is.
       void setPosition(cell *position);
+      /// Changes the hero that controls the unit.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] master Hero that controls the unit.
+      void setMaster(hero *master);
       /// Returns the unit's movement.
       ///
       /// -no detailed description-
       ///
       /// @return Unit's movement.
       int getMovement(void);
-      /// Returns the unit's type.
+      /// Returns the hero that controls the unit.
       ///
       /// -no detailed description-
       ///
-      /// @return Unit's type.
-      char* getType(void);
+      /// @return The hero that controls the unit.
+      hero* getMaster(void);
       /// Selects the unit.
       ///
       /// -no detailed description-

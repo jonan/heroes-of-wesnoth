@@ -31,26 +31,28 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 class battle : public map {
    private:
       hero *player;
-      unit *creature;
+      unit **creatures;
+      int numberCreatures; // Number of enemy creatures
+      int totalUnits; // Total number of units in the battle
+      int *turns;
 
       // This function is executed in the main loop. If
       // it returns true, the loop ends, else it continues.
       bool frame(void);
+      // Returns the creatura that has the next turn.
+      unit* nextTurn(void);
+      // Puts the enemy creatures in the map.
+      void setCreatures(unit **creaturesArray, int number);
+      // Function to execute when the cell where the mouse is over is detected.
+      void mouseOver(int x, int y, int button);
 
    public:
-      battle(void); // Constructor
+      battle(hero *player, unit **enemies, int numberEnemies); // Constructor
 
       /// Starts the battle.
       ///
       /// -no detailed description-
       void start(void);
-      /// Puts the enemy creatures in the map.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] creaturesArray An array with all the creatures.
-      /// @param[in] number number of creatures in the array.
-      void setCreatures(unit **creaturesArray, int number);
 };
 
 /// Creates and starts a battle.

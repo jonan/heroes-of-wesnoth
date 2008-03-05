@@ -19,13 +19,25 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "hero.hpp"
 
 // Constructor
-hero::hero(const char *type) : unit(NULL) {
-   this->type = strdup(type);
+hero::hero(const int type) : unit(-1) {
+   this->type = type;
+   setCreaturesAttributes();
    // The hero starts controling no creatures
    for (int i=0; i<MAX_UNITS; i++) {
       creature[i]=NULL;
    }
    numCreatures=0;
+}
+
+// Returns the number of creatures the hero controls.
+int hero::getNumberCreatures(void) {
+   return numCreatures;
+}
+
+// Returns a creature controled by the hero.
+unit* hero::getCreature(int number) {
+   if (number < numCreatures) return creature[number];
+   else return NULL;
 }
 
 // If the hero can't control a new creature (he already
@@ -34,6 +46,7 @@ bool hero::recruitCreature(unit *creature) {
    if (numCreatures == MAX_UNITS) return false;
    else {
       this->creature[numCreatures]=creature;
+      this->creature[numCreatures]->setMaster(this);
       numCreatures+=1;
       return true;
    }

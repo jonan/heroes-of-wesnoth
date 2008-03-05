@@ -15,20 +15,14 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-/// @file
-/// Sets attributes to the diferent types of units.
-/// @author Jonan
+#include "hero.hpp"
 
-#ifndef UNIT_TYPE_HPP
-#define UNIT_TYPE_HPP
-
-#include "unit.hpp"
-
-/// Sets the creatures attributes acording to his type.
-///
-/// -no detailed description-
-///
-/// @param[in] creature Unit to set attributes.
-void setCreaturesAttributes(unit* creature);
-
-#endif // UNIT_TYPE_HPP
+// Sets the heros attributes acording to his type.
+void hero::setCreaturesAttributes(void) {
+   if (type == FIGHTER) {
+      setImage("grand-knight");
+      setAllAttributes(100, 10, 30, 10, 45, 5, 5, 3);
+   } else if (type == WIZARD) {
+      /// @todo Add more types of heroes
+   }
+}

@@ -93,12 +93,28 @@ SDL_Surface* image::getSurface(void) {
 
 // class imageList
 
+// Looks for an image in the list. If the
+// image doesn't exist, exits the program
+image* imageList::findImage(const char *imageName) {
+   image *temp;
+
+   temp = first;
+   if (temp!=NULL)
+      // Go through all the list until the image is found
+      while ( strcmp(temp->getName(), imageName) != 0 )
+         temp = temp->getNext();
+   if (temp==NULL) {
+         cout << "\nSearch for file \"" << *imageName << "\" failed.\n\n";
+         exit(EXIT_FAILURE);
+         }
+   else return temp;
+}
+
 // Constructor
 imageList::imageList(void) : first(NULL) {}
 
 // Destructor
 imageList::~imageList(void) {
-   /// @todo Check if everything is deleted.
    image *temp, *next;
 
    cout << "Deleting imageList...\n";
@@ -119,23 +135,6 @@ void imageList::addImage(const char *imageName, const int alpha) {
 
    temp = new image(imageName, alpha, first);
    first = temp;
-}
-
-// If the image doesn't exist, exits the program and
-// prints an error message.
-image* imageList::findImage(const char *imageName) {
-   image *temp;
-
-   temp = first;
-   if (temp!=NULL)
-      // Go through all the list until the image is found
-      while ( strcmp(temp->getName(), imageName) != 0 )
-         temp = temp->getNext();
-   if (temp==NULL) {
-         cout << "\nSearch for file \"" << *imageName << "\" failed.\n\n";
-         exit(EXIT_FAILURE);
-         }
-   else return temp;
 }
 
 // Returns the surface of an image in the list.

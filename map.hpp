@@ -149,7 +149,7 @@ class map {
       // Connects all the cells in the map.
       void connectCells(void);
       // Function to execute when the cell where the mouse is over is detected.
-      virtual void mouseOver(int x, int y, int button);
+      virtual void mouseOver(int x, int y, int button) = 0;
 
    public:
       /// @param[in] sizeX Number of cell rows in the map

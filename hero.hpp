@@ -26,6 +26,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #define MAX_UNITS 9
 
+// @{
+/// Types of heros
+#define FIGHTER 0
+#define WIZARD  1
+// @}
+
 /// Stores the hero's atributes.
 ///
 /// -no detailed description-
@@ -34,9 +40,27 @@ class hero : public unit {
       unit *creature[MAX_UNITS]; // The nine creatures a hero can control
       int numCreatures; // The number of creatures that the hero actualy controls
 
+      // Sets the heros attributes acording to his type.
+      // (Implemented in hero_type.cpp)
+      void setCreaturesAttributes(void);
+
    public:
       /// @param[in] type Type of hero.
-      hero(const char *type); // Constructor
+      hero(const int type); // Constructor
+
+      /// Returns the number of creatures the hero controls.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return The number of creatures the hero controls.
+      int getNumberCreatures(void);
+      /// Returns a creature controled by the hero.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] number Number of the creature to return.
+      /// @return A creature controled by the hero.
+      unit* getCreature(int number);
 
       /// Assings a new creature to the hero.
       ///

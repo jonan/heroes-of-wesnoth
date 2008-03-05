@@ -74,6 +74,10 @@ class imageList {
    private:
       image *first; // First image of the list
 
+      // Looks for an image in the list. If the
+      // image doesn't exist, exits the program
+      image* findImage(const char *imageName);
+
    public:
       imageList(void); // Constructor
       ~imageList(void); // Destructor
@@ -86,18 +90,12 @@ class imageList {
       /// @param[in] imageName  The image's name, without the "img/" or the ".png".
       /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
       void addImage(const char *imageName, const int alpha);
-      /// Looks for an image in the list.
-      ///
-      /// If the image doesn't exist, exits the program and
-      /// prints an error message.
-      ///
-      /// @param[in] imageName  The image's name, without the "img/" or the ".png".
-      image* findImage(const char *imageName);
       /// Returns the surface of an image in the list.
       ///
       /// -no detailed description-
       ///
-      /// @return surface of an image in the list.
+      /// @param[in] imageName  The image's name, without the "img/" or the ".png".
+      /// @return Surface of an image in the list.
       SDL_Surface* getSurface(const char *imageName);
 };
 

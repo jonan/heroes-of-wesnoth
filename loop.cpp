@@ -28,11 +28,11 @@ void loop(bool (*function)(void)) {
    while (!done) {
       fps.start();
       input->readInput();
-      if (input->getType() == SYSTEM)
-         if (input->getSystemType() == QUIT)
-            done = true;
       done = function();
+      /*if (input->getType() == SYSTEM)
+         if (input->getSystemType() == QUIT)
+            done = true;*/
       screen->update();
-      fps.end(50);
+      fps.end(30);
    }
 }

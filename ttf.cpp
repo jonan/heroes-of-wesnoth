@@ -43,7 +43,9 @@ ttf::ttf(void) {
 // Destructor
 ttf::~ttf(void) {
    cout << "Freeing font...\t\t\t\t";
-   TTF_CloseFont(font);
+   /// @todo free font
+   // Not freeing font because it some times crashes due to an error in SDL_ttf
+   // TTF_CloseFont(font);
    cout << "[ ok ]\n";
 }
 

@@ -17,21 +17,16 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "graphics.hpp"
 #include "unit.hpp"
-#include "unit_type.hpp"
 
 // Constructor
-unit::unit(const char *type, const int number) {
+unit::unit(const int type, const int number) {
    this->number = number;
-   if (type != NULL) { // It should only be NULL when the unit is a hero.
-      this->type = strdup(type);
-      setCreaturesAttributes(this);
+   if (type != -1) { // It should only be -1 when the unit is a hero.
+      this->type = type;
+      setCreaturesAttributes();
    }
    position = NULL;
-}
-
-// Destructor
-unit::~unit(void) {
-   delete [] type;
+   master = NULL;
 }
 
 // Sets all the unit's attributes.
@@ -66,14 +61,19 @@ void unit::setPosition(cell *position) {
    this->position = position;
 }
 
+// Changes the hero that controls the unit.
+void unit::setMaster(hero *master) {
+   this->master = master;
+}
+
 // Returns the unit's movement.
 int unit::getMovement(void) {
    return movement;
 }
 
 // Returns the unit's type.
-char* unit::getType(void) {
-   return type;
+hero* unit::getMaster(void) {
+   return master;
 }
 
 // Selects the unit.
