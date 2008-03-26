@@ -15,11 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-#include <iostream>
-
 #include "timer.hpp"
-
-using namespace std;
 
 // The moment from which to start counting time. Make
 // sure you call endFPS(int) one time every time you use it.
@@ -28,10 +24,9 @@ void timer::start(void) {
 }
 
 // Indicates the ending point.
-void timer::end(int ms) {
+void timer::end(const int ms) {
    now = SDL_GetTicks();
 
-   if ( (now-before) > ms ) {
-      cout << (now - before - ms) << " ms slow\n";
-   } else SDL_Delay( ms - (now - before) );
+   if ( (now-before) < ms )
+      SDL_Delay( ms - (now - before) );
 }

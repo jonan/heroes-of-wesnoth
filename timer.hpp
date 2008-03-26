@@ -43,8 +43,8 @@ class timer {
       ///
       /// -no detailed description-
       ///
-      /// @param [in] ms milliseconds that should pass bettwen the two points.
-      void end(int ms);
+      /// @param[in] ms milliseconds that should pass bettwen the two points.
+      void end(const int ms);
 };
 
 #endif // TIMER_HPP

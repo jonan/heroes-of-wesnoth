@@ -43,13 +43,11 @@ ttf::ttf(void) {
 // Destructor
 ttf::~ttf(void) {
    cout << "Freeing font...\t\t\t\t";
-   /// @todo free font
-   // Not freeing font because it some times crashes due to an error in SDL_ttf
-   // TTF_CloseFont(font);
+   TTF_CloseFont(font);
    cout << "[ ok ]\n";
 }
 
-// Writes a text into the screen.
+// Writes a text into a surface.
 void ttf::write(const char *text, SDL_Surface *surface, const int x, const int y) {
    textSurface = TTF_RenderText_Solid(font, text, color);
 

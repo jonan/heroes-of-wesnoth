@@ -33,6 +33,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 class cell;
 class hero;
 
+/// @todo Put more than one sprite for each unit.
+/*struct sprite {
+   int numberSprites;
+   SDL_Surface *image[];
+};*/
+
 /// Stores the unit's atributes.
 ///
 /// -no detailed description-
@@ -55,14 +61,13 @@ class unit {
       bool selected; // Indicates if the unit is selected
 
       cell *position; // The cell where the unit is
-
       hero *master; // The hero that controls the unit.
 
       // Sets all the unit's attributes.
-      void setAllAttributes(int live, int magic, int physicalDefence,
-                           int magicalDefence, int physicalAttack,
-                           int magicalAttack, int agility,
-                           int movement);
+      void setAllAttributes(const int live, const int magic, const int physicalDefence,
+                            const int magicalDefence, const int physicalAttack,
+                            const int magicalAttack, const int agility,
+                            const int movement);
       // Sets the creatures attributes acording to his type.
       // (Implemented in unit_type.cpp)
       virtual void setCreaturesAttributes(void);
@@ -90,45 +95,59 @@ class unit {
       /// -no detailed description-
       ///
       /// @param[in] position The cell where the unit is.
-      void setPosition(cell *position);
+      void setPosition(cell &position);
       /// Changes the hero that controls the unit.
       ///
       /// -no detailed description-
       ///
       /// @param[in] master Hero that controls the unit.
       void setMaster(hero *master);
+
+      /// Returns the number of units.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return Number of units.
+      int getNumber(void);
       /// Returns the unit's movement.
       ///
       /// -no detailed description-
       ///
       /// @return Unit's movement.
       int getMovement(void);
+      /// Returns the unit's agility.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return Unit's agility.
+      int getAgility(void);
+      /// Returns the cell where the unit is.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return The cell where the unit is.
+      cell* getPosition(void);
       /// Returns the hero that controls the unit.
       ///
       /// -no detailed description-
       ///
       /// @return The hero that controls the unit.
       hero* getMaster(void);
-      /// Selects the unit.
-      ///
-      /// -no detailed description-
-      void select(void);
-      /// Unselects the unit.
-      ///
-      /// -no detailed description-
-      void unselect(void);
-      /// Indicates if the unit is selected (true) or not (false).
+
+      /// Attacks a given unit.
       ///
       /// -no detailed description-
       ///
-      /// @return If unit is selected, true, else, false.
-      bool isSelected(void);
+      /// @param[in] creature Unit to attack.
+      /// @return The unit attacked.
+      unit* attack(unit &creature);
+
       /// Draws the creature in the given position.
       ///
       /// -no detailed description-
       ///
       /// @param[in] position The position where the creature should be drawn.
-      virtual void draw(SDL_Rect *position);
+      virtual void draw(SDL_Rect &position);
 };
 
 #endif // UNIT_HPP

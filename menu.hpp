@@ -31,6 +31,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #define BUTTON_WIDTH 108
 #define BUTTON_HEIGHT 22
 
+/// Distance between two buttons
+#define DISTANCE 30
+
 /// The characteristics of each menu button.
 ///
 /// All the information about a button and what can
@@ -45,37 +48,36 @@ class button {
       button(void); // Constructor
       ~button(void); // Destructor
 
-      /// Changes all the button's attributes.
+      /// Returns the button's text.
       ///
       /// -no detailed description-
       ///
-      /// @param[in] text Text to be writen in the button.
-      /// @param[in] function The function to execute when the button is pressed.
-      void setAttributes(const char *text, void (*function)(void));
+      /// @return Text to be writen in the button.
+      char* getText(void);
+      /// Executes the button's function.
+      ///
+      /// -no detailed description-
+      void getFunction(void);
       /// Returns the button's state.
       ///
       /// -no detailed description-
       ///
       /// @return Button's state (NORMAL, ACTIVE or PRESSED).
       int getState(void);
+
+      /// Changes all the button's attributes.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] text Text to be writen in the button.
+      /// @param[in] function The function to execute when the button is pressed.
+      void setAttributes(const char *text, void (&function)(void));
       /// Changes the button state.
       ///
       /// -no detailed description-
       ///
       /// @param[in] state New state of the button (NORMAL, ACTIVE or PRESSED).
       void setState(const int state);
-      /// Returns the button's text.
-      ///
-      /// -no detailed description-
-      ///
-      /// @return Text to be writen in the button.
-      char *getText(void);
-      /// Returns the button's function.
-      ///
-      /// -no detailed description-
-      ///
-      /// @return Function to execute when the button is pressed.
-      void getFunction(void);
 };
 
 /// Collection of related button classes.
@@ -83,14 +85,13 @@ class button {
 /// Controls a set of various button classes as a group.
 class menu {
    private:
-      SDL_Rect position;
+      SDL_Rect position; // Position of the top left hand corner of the menu.
       SDL_Surface *buttonSurface[3]; // The three button images.
       button *buttons; // The buttons in the menu.
       int numberButtons; // Number of buttons in the menu.
-      int distance; // Distance between the buttons.
       int activeButton; // Number of the button with the mouse over.
       int pressedButton; // Number of the button pressed.
-      int buttonsCreated; // Number of buttons which already have atreibutes.
+      int buttonsCreated; // Number of buttons which already have attributes.
       bool background; // Indicates if the menu has a background.
       bool drawBackground; // Indicates if drawing the background is needed.
       void (*drawBackgroundFunction)(void); // Function that draws the background.
@@ -111,14 +112,15 @@ class menu {
       ///
       /// @param[in] text Text to be writen in the button.
       /// @param[in] function Function to execute when the button is pressed.
-      void setButton(const char *text, void (*function)(void));
+      void setButton(const char *text, void (&function)(void));
+
       /// Adds a background to the menu.
       ///
       /// From now on, the menu will call drawBackgroundFuntion()
       /// for drawing the menu every time this is needed.
       ///
       /// @param[in] drawBackgroundFuntion Funtion that draws the background.
-      void addBackground(void (*drawBackgroundFunction)(void));
+      void addBackground(void (&drawBackgroundFunction)(void));
 
       /// Tells the menu the mouse's position.
       ///
@@ -128,13 +130,11 @@ class menu {
       /// @param[in] x The x coordinate of the mouse's position.
       /// @param[in] y The y coordinate of the mouse's position.
       /// @param[in] pressed If the mouse left button is pressed or not.
-      void moveMouse(int x, int y, int pressed);
+      void moveMouse(const int x, const int y, const int pressed);
 
       /// Draws the menu.
       ///
       /// -no detailed description-
-      ///
-      /// @param[in] screen -no detailed description-
       void draw(void);
 };
 

@@ -64,26 +64,16 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 class events {
    private:
       SDL_Event event;
-      int type; // Can be KEYBOARD, MOUSE, SYSTEM or NO_EVENT
-      int systemType; // Can be QUIT or VIDEOEXPOSE
 
    public:
       events(void); // Constructor
+      ~events(void); // Destructor
 
       /// Reads the input from mouse, keyboard and system.
       ///
       /// Gets the input and stores the information obtained
       /// (must be called before any other events function).
       void readInput(void);
-      /// Returns the type of event occurred.
-      ///
-      /// Returns the type of event: KEYBOARD, MOUSE, SYSTEM or NO_EVENT.
-      int getType(void);
-      /// Returns the system type of event occurred.
-      ///
-      /// When getType() returns SYSTEM check if it's QUIT or VIDEOEXPOSE.
-      /// Must only be called after getType() has returned SYSTEM.
-      int getSystemType(void);
 };
 
 extern events *input;

@@ -39,6 +39,7 @@ void graphics::init(void) {
 
 // Creates the surface that will be drawn directly to the screen
 void graphics::createWindow(void) {
+   /// @todo Add option to change width and height.
    cout << "Opening " << SCREEN_WIDTH << "x" << SCREEN_HEIGHT << " window...\t\t";
    SDL_WM_SetCaption ("Heroes of Wesnoth", NULL);
    // Not using fullscreen to prevent reseting computer after program crash.
@@ -57,25 +58,16 @@ graphics::graphics(void) {
    createWindow();
    image = new imageList;
    text = new ttf();
-   timerID = 0;
 }
 
 // Destructor
 graphics::~graphics(void) {
    cout << "Freeing screen...\n";
-   if (timerID != 0) SDL_RemoveTimer(timerID);
    delete image;
    delete text;
    SDL_FreeSurface(screen);
-   /// @todo quit ttf
-   // Not quiting ttf because it some times crashes due to an error in SDL_ttf
-   // TTF_Quit();
+   TTF_Quit();
    SDL_Quit();
-}
-
-// Adds a new image to the list
-void graphics::newImage(const char *imageName, const int alpha) {
-   image->addImage(imageName, alpha);
 }
 
 // Returns the surface of a preveously loaded image.
@@ -86,29 +78,34 @@ SDL_Surface* graphics::getImage(const char *imageName) {
    return temp;
 }
 
+// Adds a new image to the list
+void graphics::newImage(const char *imageName, const int alpha) {
+   image->addImage(imageName, alpha);
+}
+
 // Draws an image previously loaded to the indicated position.
-void graphics::draw(const char *imageName, SDL_Rect *position) {
+void graphics::draw(const char *imageName, SDL_Rect &position) {
    SDL_Surface *temp;
 
    temp = image->getSurface(imageName);
-   SDL_BlitSurface(temp, NULL, screen, position);
+   SDL_BlitSurface(temp, NULL, screen, &position);
 }
 
 // Draws a surface to the indicated position.
-void graphics::draw(SDL_Surface *img, SDL_Rect *position) {
-   SDL_BlitSurface(img, NULL, screen, position);
-}
-
-// Puts the screen in black.
-void graphics::erase(void) {
-   SDL_FillRect(screen, NULL, 0);
+void graphics::draw(SDL_Surface *img, SDL_Rect &position) {
+   SDL_BlitSurface(img, NULL, screen, &position);
 }
 
 // Writes text in the screen.
-void graphics::write(const char *text,  int x, int y) {
+void graphics::write(const char *text,  const int x, const int y) {
    this->text->write(text, screen, x, y);
 }
 
+
+// Puts the screen black.
+void graphics::erase(void) {
+   SDL_FillRect(screen, NULL, 0);
+}
 // Refreshes the screen.
 void graphics::update(void) {
    SDL_Flip(screen);

@@ -46,8 +46,8 @@ void setPositions(void) {
 
 // Draws the menu's background
 void drawBackground(void) {
-   screen->draw("wesnoth", &background_pos);
-   screen->draw("heroes-logo", &logo_pos);
+   screen->draw("wesnoth", background_pos);
+   screen->draw("heroes-logo", logo_pos);
 }
 
 // Draws the menu.

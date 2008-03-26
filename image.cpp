@@ -29,7 +29,7 @@ using namespace std;
 // Loads an image with the alpha value indicated,
 // if ther's an error, exits the program.
 void image::loadImage(const int alpha) {
-   SDL_Surface *image = NULL;
+   SDL_Surface *image;
 
    // Create a string with the fisical location of the image
    // "img/" + name + ".png"
@@ -61,7 +61,7 @@ void image::loadImage(const int alpha) {
 // Constructor
 image::image(const char *imageName, const int alpha, image *next) {
    name = strdup(imageName);
-   this->next=next;
+   this->next = next;
    loadImage(alpha);
 }
 
@@ -101,13 +101,14 @@ image* imageList::findImage(const char *imageName) {
    temp = first;
    if (temp!=NULL)
       // Go through all the list until the image is found
-      while ( strcmp(temp->getName(), imageName) != 0 )
+      while ( strcmp(temp->getName(), imageName) != 0 ) {
          temp = temp->getNext();
-   if (temp==NULL) {
-         cout << "\nSearch for file \"" << *imageName << "\" failed.\n\n";
-         exit(EXIT_FAILURE);
+         if (temp==NULL) {
+            cout << "\nSearch for file \"" << imageName << "\" failed.\n\n";
+            exit(EXIT_FAILURE);
          }
-   else return temp;
+      }
+   return temp;
 }
 
 // Constructor
@@ -117,13 +118,13 @@ imageList::imageList(void) : first(NULL) {}
 imageList::~imageList(void) {
    image *temp, *next;
 
-   cout << "Deleting imageList...\n";
-   temp=first;
-   next=temp->getNext();
+   cout << "Freeing imageList...\n";
+   temp = first;
+   next = temp->getNext();
    while (next!=NULL) {
       delete temp;
-      temp=next;
-      next=temp->getNext();
+      temp = next;
+      next = temp->getNext();
    }
    delete temp;
 }

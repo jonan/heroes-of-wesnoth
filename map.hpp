@@ -44,10 +44,12 @@ class cell {
       SDL_Surface *terrain; // Surface of the terrain
       unit *creature; // Creature in the cell
       cell *connectedCell[6]; // The six cells that are next to it
+      int mapX, mapY; // Map coordinates of the cell
 
       bool mouseOver; // Indicates if the mouse is over the cell or not
       bool selected; // Indicates if the unit in that cell is selected
       bool canMove; // Indicates if the selected creature can move to this cell
+      bool canAttack; // Indicates if the unit in the cell can be attacked
 
       // Calculates to what cells can a creature move.
       void creatureMovement(const int movement, int call = 0);
@@ -56,10 +58,6 @@ class cell {
 
    public:
       cell(void); // Constructor
-      /// @param[in] position Position where to draw the cell
-      /// @param[in] terrain Surface of the terrain
-      /// @param[in] creature Creature in the cell
-      cell(SDL_Rect position, SDL_Surface *terrain = NULL, unit *creature = NULL); // Constructor
 
       /// Sets the cell's position.
       ///
@@ -79,6 +77,13 @@ class cell {
       ///
       /// @param[in] creature Creature to put in the cell
       void setCreature(unit *creature);
+      /// Sets the cells map coordinates.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] x X coordinate in the map.
+      /// @param[in] y Y coordinate in the map.
+      void setCoordinates(int x, int y);
       /// Returns the creature in the cell.
       ///
       /// -no detailed description-
@@ -91,6 +96,13 @@ class cell {
       ///
       /// @return Cell's position
       SDL_Rect getPosition(void);
+      /// Returns the cells map coordinates.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[out] x X coordinate in the map.
+      /// @param[out] y Y coordinate in the map.
+      void getCoordinates(int &x, int &y);
       /// Indicates that the mouse is over the cell.
       ///
       /// -no detailed description-
@@ -132,6 +144,17 @@ class cell {
       ///
       /// @return true if the selected creature can move to this cell, false if not.
       bool canMoveHere(void);
+      /// Indicates if the selected creature can attack the unit in this cell.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return true if the selected creature can attack the unit in this cell, false if not.
+      bool canAttackHere(void);
+      /// Kills the unit in the cell.
+      ///
+      /// Puts the cell's unit to NULL and frees the memory assigned to
+      /// the unit. It should be called when the unit's number is 0.
+      void killCreature(void);
 };
 
 /// Controls all the attributes of a map.

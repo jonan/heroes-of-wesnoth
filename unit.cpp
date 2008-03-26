@@ -18,22 +18,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "graphics.hpp"
 #include "unit.hpp"
 
-// Constructor
-unit::unit(const int type, const int number) {
-   this->number = number;
-   if (type != -1) { // It should only be -1 when the unit is a hero.
-      this->type = type;
-      setCreaturesAttributes();
-   }
-   position = NULL;
-   master = NULL;
-}
-
 // Sets all the unit's attributes.
-void unit::setAllAttributes(int live, int magic, int physicalDefence,
-                           int magicalDefence, int physicalAttack,
-                           int magicalAttack, int agility,
-                           int movement) {
+void unit::setAllAttributes(const int live, const int magic, const int physicalDefence,
+                            const int magicalDefence, const int physicalAttack,
+                            const int magicalAttack, const int agility,
+                            const int movement) {
    this->live = live;
    liveMax = live;
    this->magic = magic;
@@ -46,7 +35,18 @@ void unit::setAllAttributes(int live, int magic, int physicalDefence,
    this->movement = movement;
 }
 
-// Sets the creature's image.
+// Constructor
+unit::unit(const int type, const int number) {
+   this->number = number;
+   if (type != -1) { // It should only be -1 when the unit is a hero.
+      this->type = type;
+      setCreaturesAttributes();
+   }
+   position = NULL;
+   master = NULL;
+}
+
+// Changes the number of units.
 void unit::setNumber(const int number) {
    this->number = number;
 }
@@ -57,8 +57,8 @@ void unit::setImage(const char *imageName) {
 }
 
 // Changes the unit's position.
-void unit::setPosition(cell *position) {
-   this->position = position;
+void unit::setPosition(cell &position) {
+   this->position = &position;
 }
 
 // Changes the hero that controls the unit.
@@ -66,36 +66,44 @@ void unit::setMaster(hero *master) {
    this->master = master;
 }
 
+// Returns the number of units.
+int unit::getNumber(void) {
+   return number;
+}
+
 // Returns the unit's movement.
 int unit::getMovement(void) {
    return movement;
 }
 
-// Returns the unit's type.
+// Returns the unit's agility.
+int unit::getAgility(void) {
+   return agility;
+}
+
+// Returns the cell where the unit is.
+cell* unit::getPosition(void) {
+   return position;
+}
+
+// Returns the hero that controls the unit.
 hero* unit::getMaster(void) {
    return master;
 }
 
-// Selects the unit.
-void unit::select(void) {
-   selected = true;
-}
-
-// Unselects the unit.
-void unit::unselect(void) {
-   selected = false;
-}
-
-// Indicates if the unit is selected (true) or not (false).
-bool unit::isSelected(void) {
-   return selected;
+// Attacks a given unit.
+unit* unit::attack(unit &creature) {
+   /// @todo improve attacks
+   if (creature.number > 0) creature.number--;
+   if (creature.number == 0) return NULL;
+   else return &creature;
 }
 
 // Draws the creature in the given position.
-void unit::draw(SDL_Rect *position) {
+void unit::draw(SDL_Rect &position) {
    char text[3];
 
    screen->draw(image, position);
    sprintf(text, "%i", number);
-   screen->write(text, position->x+17, position->y+52);
+   screen->write(text, position.x+17, position.y+52);
 }

@@ -21,7 +21,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "timer.hpp"
 
 // Controls a general game loop.
-void loop(bool (*function)(void)) {
+void loop(bool (&function)(void)) {
    bool done = false;
    timer fps;
 
@@ -29,9 +29,6 @@ void loop(bool (*function)(void)) {
       fps.start();
       input->readInput();
       done = function();
-      /*if (input->getType() == SYSTEM)
-         if (input->getSystemType() == QUIT)
-            done = true;*/
       screen->update();
       fps.end(30);
    }

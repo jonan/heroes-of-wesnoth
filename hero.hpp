@@ -32,12 +32,20 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #define WIZARD  1
 // @}
 
+// @{
+/// Types of AI
+#define HUMAN    0
+#define COMPUTER 1
+// @}
+
 /// Stores the hero's atributes.
 ///
 /// -no detailed description-
 class hero : public unit {
    private:
-      unit *creature[MAX_UNITS]; // The nine creatures a hero can control
+      int ai; // Type of Artificial Intelligence
+
+      unit *creature[MAX_UNITS]; // The creatures a hero can control
       int numCreatures; // The number of creatures that the hero actualy controls
 
       // Sets the heros attributes acording to his type.
@@ -46,8 +54,15 @@ class hero : public unit {
 
    public:
       /// @param[in] type Type of hero.
-      hero(const int type); // Constructor
+      /// @param[in] ai Type of AI.
+      hero(const int type, const int ai); // Constructor
 
+      /// Returns the hero's type of AI.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return The hero's type of AI
+      int getAI(void);
       /// Returns the number of creatures the hero controls.
       ///
       /// -no detailed description-
@@ -60,7 +75,7 @@ class hero : public unit {
       ///
       /// @param[in] number Number of the creature to return.
       /// @return A creature controled by the hero.
-      unit* getCreature(int number);
+      unit* getCreature(const int number);
 
       /// Assings a new creature to the hero.
       ///
@@ -69,13 +84,13 @@ class hero : public unit {
       ///
       /// @param[in] creature The new unit the hero can control.
       /// @return If the recruitment was successful or not.
-      bool recruitCreature(unit *creature);
+      bool recruitCreature(unit &creature);
       /// Draws the hero in the given position.
       ///
       /// -no detailed description-
       ///
       /// @param[in] position The position where the hero should be drawn.
-      void draw(SDL_Rect *position);
+      void draw(SDL_Rect &position);
 };
 
 #endif // HERO_HPP

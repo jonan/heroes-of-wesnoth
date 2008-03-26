@@ -31,15 +31,15 @@ int main(int argc, char *argv[]) {
    for (int i=1; i<argc; i++) {
       const string val(argv[i]);
       if (val == "-h" || val == "--help") {
+         /// @todo Change version
          cout << "Heroes of Wesnoth v0.0.1\n"
-         << "\nusage: heroes [OPTIONS]\n"
-         << "  -h, --help       prints this message and exits.\n";
-         return 0;
+              << "\nusage: heroes [OPTIONS]\n"
+              << "  -h, --help       prints this message and exits.\n";
+         return EXIT_SUCCESS;
       }
    }
    // Start the game
    boot();
    startMainMenu();
-   //quit();
-   return 0;
+   return EXIT_SUCCESS;
 }

@@ -32,7 +32,6 @@ class image {
       image *next; // Next image in the list
       char *name; // Unique name of each image (the fisical image name)
       SDL_Surface *img; // Image's surface
-      //SDL_Rect position; // Position of the image on the screen
 
       // Loads an image with the alpha value indicated,
       // if ther's an error, exits the program.
@@ -63,7 +62,6 @@ class image {
       ///
       /// @return image's surface.
       SDL_Surface* getSurface(void);
-
 };
 
 /// A list of image classes.

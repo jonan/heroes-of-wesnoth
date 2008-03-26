@@ -6,7 +6,7 @@ CC = g++
 heroes : $(OBJECTS)
 	$(CC) -g $(SDL_LIBS) -o heroes $(OBJECTS)
 
-battle.o : battle.cpp battle.hpp events.hpp graphics.hpp hero.hpp map.hpp timer.hpp
+battle.o : battle.cpp battle.hpp events.hpp graphics.hpp hero.hpp map.hpp timer.hpp unit.hpp
 	$(CC) $(CFLAGS) battle.cpp
 
 boot.o : boot.cpp boot.hpp events.hpp graphics.hpp
@@ -21,7 +21,7 @@ graphics.o : graphics.cpp graphics.hpp image.hpp ttf.hpp
 hero.o : hero.cpp hero.hpp graphics.hpp unit.hpp
 	$(CC) $(CFLAGS) hero.cpp
 
-hero_type.o : hero_type.cpp hero.hpp
+hero_type.o : hero_type.cpp hero.hpp unit.hpp
 	$(CC) $(CFLAGS) hero_type.cpp
 
 image.o : image.cpp image.hpp
@@ -48,7 +48,7 @@ timer.o : timer.cpp timer.hpp
 ttf.o : ttf.cpp ttf.hpp
 	$(CC) $(CFLAGS) ttf.cpp
 
-unit.o : unit.cpp unit.hpp graphics.hpp map.hpp
+unit.o : unit.cpp unit.hpp graphics.hpp
 	$(CC) $(CFLAGS) unit.cpp
 
 unit_type.o : unit_type.cpp unit.hpp

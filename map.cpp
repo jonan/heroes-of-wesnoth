@@ -28,17 +28,20 @@ void cell::creatureMovement(const int movement, int call) {
             if (connectedCell[i])
                connectedCell[i]->creatureMovement(movement);
       }
-   } else if (movement>0 && creature==NULL) {
-      canMove = true;
-      for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
+   } else if (movement>0) {
+      if (creature==NULL) {
+         canMove = true;
+         for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
             if (connectedCell[i])
                connectedCell[i]->creatureMovement(movement-1);
-      }
-   }
+         }
+      } else canAttack = true;
+   } else if (movement == 0 && creature!=NULL) canAttack = true;
 }
 
 // Erases previos calculations about a creatures movement.
 void cell::eraseMovement(const int movement) {
+   canAttack = false;
    if (movement>0) {
       canMove = false;
       for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
@@ -54,19 +57,7 @@ cell::cell(void) {
    mouseOver = false;
    selected = false;
    canMove = false;
-   for (int i=0; i<6; i++) {
-      connectedCell[i] = NULL;
-   }
-}
-
-// Constructor
-cell::cell(SDL_Rect position, SDL_Surface *terrain, unit *creature) {
-   this->position = position;
-   this->terrain = terrain;
-   this->creature = creature;
-   mouseOver = false;
-   selected = false;
-   canMove = false;
+   canAttack = false;
    for (int i=0; i<6; i++) {
       connectedCell[i] = NULL;
    }
@@ -84,8 +75,14 @@ void cell::setTerrain(SDL_Surface *terrain) {
 
 // Puts a creature in the cell.
 void cell::setCreature(unit *creature) {
-   if (creature) creature->setPosition(this);
    this->creature = creature;
+   if (creature) creature->setPosition(*this);
+}
+
+// Sets the cells map coordinates.
+void cell::setCoordinates(int x, int y) {
+   mapX = x;
+   mapY = y;
 }
 
 // Returns the creature in the cell.
@@ -96,6 +93,12 @@ unit* cell::getCreature(void) {
 // Returns the cell's position.
 SDL_Rect cell::getPosition(void) {
    return position;
+}
+
+// Returns the cells map coordinates.
+void cell::getCoordinates(int &x, int &y) {
+   x = mapX;
+   y = mapY;
 }
 
 // Indicates that the mouse is over the cell.
@@ -135,16 +138,29 @@ void cell::connectCell(const int position, cell* connectedCell){
 // If the creature in the cell is selected, returns the
 // movement, else returns 0
 void cell::draw(void) {
-   screen->draw(terrain, &position);
-   if (mouseOver) screen->draw("alpha", &position);
-   if (selected) screen->draw("alpha", &position);
-   if (canMove) screen->draw("alpha", &position);
-   if (creature) creature->draw(&position);
+   screen->draw(terrain, position);
+   if (mouseOver) screen->draw("alpha", position);
+   if (canMove) screen->draw("alpha", position);
+   if (canAttack && mouseOver) {screen->draw("alpha", position);screen->draw("alpha", position);screen->draw("alpha", position);}
+   if (creature) creature->draw(position);
+   if (selected) screen->draw("alpha", position);
 }
 
 // Indicates if the selected creature can move to this cell.
 bool cell::canMoveHere(void) {
    return canMove;
+}
+
+// Indicates if the selected creature can attack the unit in this cell.
+bool cell::canAttackHere(void) {
+   return canAttack;
+}
+
+// Puts the cell's unit to NULL and frees the memory assigned to
+// the unit. It should be called when the unit's number is 0.
+void cell::killCreature(void) {
+   delete creature;
+   creature = NULL;
 }
 
 // ---End---
@@ -283,6 +299,7 @@ map::map(const int sizeX, const int sizeY) {
       for (int y=0; y<sizeY; y++) {
          battleMap[x][y].setPosition(terrainPos);
          battleMap[x][y].setCreature(NULL);
+         battleMap[x][y].setCoordinates(x, y);
          terrainPos.y+=72;
       }
       if ( (x%2)==1 ) {terrainPos.y=41;} // x is an odd number

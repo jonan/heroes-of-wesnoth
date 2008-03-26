@@ -22,10 +22,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef TTF_HPP
 #define TTF_HPP
 
-/*#include <cstdio>
-#include <cstdlib>*/
-
 #include <SDL/SDL_ttf.h>
+
+/// @todo Add options to change color, size, etc.
 
 /// Represents text on the screen.
 ///
@@ -42,14 +41,14 @@ class ttf{
       ttf(void); // Constructor
       ~ttf(void); // Destrucor
 
-      /// Writes a text into the screen.
+      /// Writes a text into a surface.
       ///
       /// -no detailed description-
       ///
-      /// @param[in] text A string with the text to write
-      /// @param[in] surface The surface where to draw the text
-      /// @param[in] x The x coordinate of the top left corner of the text
-      /// @param[in] y The y coordinate of the top left corner of the text
+      /// @param[in] text A string with the text to write.
+      /// @param[in] surface The surface where to draw the text.
+      /// @param[in] x The x coordinate of the top left corner of the text.
+      /// @param[in] y The y coordinate of the top left corner of the text.
       void write(const char *text, SDL_Surface *surface, const int x, const int y);
 };
 

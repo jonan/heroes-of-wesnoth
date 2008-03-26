@@ -41,7 +41,6 @@ class graphics {
       SDL_Surface *screen; // The surface that represents the screen
       imageList *image; // List with all the images used
       ttf *text; // Used to write text into the screen
-      SDL_TimerID timerID; // Unique timer identifier
 
       // Initializes SDL, SDL_ttf and SDL_mixer.
       void init(void);
@@ -52,13 +51,6 @@ class graphics {
       graphics(void); // Constructor
       ~graphics(void); // Destructor
 
-      /// Loads an image for further use.
-      ///
-      /// Adds a new image to the list
-      ///
-      /// @param[in] imageName The image's name, without the "img/" or the ".png".
-      /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
-      void newImage(const char *imageName, const int alpha = SDL_ALPHA_OPAQUE);
       /// Returns the surface of a preveously loaded image.
       ///
       /// -no detailed description-
@@ -67,24 +59,28 @@ class graphics {
       /// @return Surface of the image.
       SDL_Surface* getImage(const char *imageName);
 
+      /// Loads an image for further use.
+      ///
+      /// Adds a new image to the list
+      ///
+      /// @param[in] imageName The image's name, without the "img/" or the ".png".
+      /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
+      void newImage(const char *imageName, const int alpha = SDL_ALPHA_OPAQUE);
+
       /// Draws an image previously loaded to the indicated position.
       ///
       /// -no detailed description-
       ///
       /// @param[in] imageName The image's name, without the "img/" or the ".png".
       /// @param[in] position Position where the image will be drawn.
-      void draw(const char *imageName, SDL_Rect *position);
+      void draw(const char *imageName, SDL_Rect &position);
       /// Draws a surface to the indicated position.
       ///
       /// -no detailed description-
       ///
       /// @param[in] img The images's surface.
       /// @param[in] position Position where the image will be drawn.
-      void draw(SDL_Surface *img, SDL_Rect *position);
-      /// Puts the screen in black.
-      ///
-      /// -no detailed description-
-      void erase(void);
+      void draw(SDL_Surface *img, SDL_Rect &position);
       /// Writes text in the screen.
       ///
       /// -no detailed description-
@@ -92,8 +88,12 @@ class graphics {
       /// @param[in] text Text to be writen.
       /// @param[in] x The x coordinate of the top left corner of the text.
       /// @param[in] y The y coordinate of the top left corner of the text.
-      void write(const char *text,  int x, int y);
+      void write(const char *text,  const int x, const int y);
 
+      /// Puts the screen black.
+      ///
+      /// -no detailed description-
+      void erase(void);
       /// Refreshes the screen.
       ///
       /// -no detailed description-
