@@ -43,17 +43,20 @@ class battle : public map {
       int turn;
       bool endBattle;
 
+      // Puts the enemy creatures in the map.
+      void setCreatures(void);
+
+      // Function to execute when the cell where the mouse is over is detected.
+      void mouseOver(const int x, const int y, const int button);
       // This function is executed in the main loop. If
       // it returns true, the loop ends, else it continues.
       bool frame(void);
-      // Puts the enemy creatures in the map.
-      void setCreatures(void);
-      // Function to execute when the cell where the mouse is over is detected.
-      void mouseOver(int x, int y, int button);
+
       // Returns the next unit.
       unit* nextTurn(void);
       // Function to call when a turn ends.
       void finishTurn(void);
+
       // Moves the selected creature to a given cell.
       void moveCreature(cell *endPosition);
       // Removes a unit from the battle.
@@ -64,7 +67,7 @@ class battle : public map {
       /// @param[in] player
       /// @param[in] enemies
       /// @param[in] numberEnemies
-      battle(hero *player, unit **enemies, int numberEnemies); // Constructor
+      battle(hero &player, unit **enemies, int numberEnemies); // Constructor
 
       /// Starts the battle.
       ///

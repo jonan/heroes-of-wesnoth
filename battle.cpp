@@ -21,15 +21,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "timer.hpp"
 #include "unit.hpp"
 
-// This function is executed in the main loop. If
-// it returns true, the loop ends, else it continues.
-bool battle::frame(void) {
-   if (keys[SDLK_ESCAPE]) endBattle = true;
-   moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
-   draw();
-   return endBattle;
-}
-
 // Puts the enemy creatures in the map.
 void battle::setCreatures(void) {
    for (int i=0; i<MAX_CREATURES; i++)
@@ -37,9 +28,7 @@ void battle::setCreatures(void) {
 }
 
 // Function to execute when the cell where the mouse is over is detected.
-void battle::mouseOver(int x, int y, int button) {
-   battleMap[x][y].putMouse();
-   mouseOverCell = &battleMap[x][y];
+void battle::mouseOver(const int x, const int y, const int button) {
    if ( button == 1  &&  selectedCell != &battleMap[x][y] ) {
       if ( battleMap[x][y].canMoveHere() ) {
          moveCreature(&battleMap[x][y]);
@@ -60,6 +49,15 @@ void battle::mouseOver(int x, int y, int button) {
          }
       }
    }
+}
+
+// This function is executed in the main loop. If
+// it returns true, the loop ends, else it continues.
+bool battle::frame(void) {
+   if (keys[SDLK_ESCAPE]) endBattle = true;
+   moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
+   draw();
+   return endBattle;
 }
 
 // Returns the next unit.
@@ -134,8 +132,8 @@ void battle::removeCreature(unit* creature) {
 }
 
 // Constructor
-battle::battle(hero *player, unit **enemies, int numberEnemies) : map(18, 9) {
-   this->player = player;
+battle::battle(hero &player, unit **enemies, int numberEnemies) : map(18, 9) {
+   this->player = &player;
    // Set enemy creatures
    for (int i=0; i<numberEnemies && i<MAX_CREATURES; i++) {
       creatures[i] = enemies[i];
@@ -176,13 +174,14 @@ void battle::start(void) {
 void createBattle(void) {
    hero *player;
    unit *creature[9];
+   unit *temp;
 
    player = new hero(FIGHTER, HUMAN);
    for (int i=0; i<9; i++) {
-      creature[i] = new unit(SKELETON, 1);
+      creature[i] = new unit(SKELETON, 5);
    }
 
-   battle war(player, creature, 9);
+   battle war(*player, creature, 9);
    war.start();
    //war.results(&player, &creature);
 

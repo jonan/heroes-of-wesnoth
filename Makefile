@@ -1,4 +1,4 @@
-OBJECTS = battle.o boot.o events.o graphics.o hero.o hero_type.o image.o loop.o main.o map.o menu.o menu_main.o timer.o ttf.o unit.o unit_type.o
+OBJECTS = battle.o boot.o cell.o events.o graphics.o hero.o hero_type.o image.o loop.o main.o map.o menu.o menu_main.o timer.o ttf.o unit.o unit_type.o
 SDL_LIBS = -lSDL -lSDL_ttf -lSDL_image
 CFLAGS = -c -g
 CC = g++
@@ -11,6 +11,9 @@ battle.o : battle.cpp battle.hpp events.hpp graphics.hpp hero.hpp map.hpp timer.
 
 boot.o : boot.cpp boot.hpp events.hpp graphics.hpp
 	$(CC) $(CFLAGS) boot.cpp
+
+cell.o : cell.cpp cell.hpp
+	$(CC) $(CFLAGS) cell.cpp
 
 events.o : events.cpp events.hpp
 	$(CC) $(CFLAGS) events.cpp

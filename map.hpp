@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// The cell and map classes.
+/// The map class.
 /// @author Jonan
 
 #ifndef MAP_HPP
@@ -24,138 +24,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include <SDL/SDL.h>
 
-class unit;
+#include "cell.hpp"
 
-/// The six relative positions to a cell
-#define N  0
-#define NE 1
-#define SE 2
-#define S  3
-#define SW 4
-#define NW 5
-
-/// Cells of the map.
-///
-/// A class to control all the independent
-/// cells in any type of map.
-class cell {
-   private:
-      SDL_Rect position; // Position where to draw the cell
-      SDL_Surface *terrain; // Surface of the terrain
-      unit *creature; // Creature in the cell
-      cell *connectedCell[6]; // The six cells that are next to it
-      int mapX, mapY; // Map coordinates of the cell
-
-      bool mouseOver; // Indicates if the mouse is over the cell or not
-      bool selected; // Indicates if the unit in that cell is selected
-      bool canMove; // Indicates if the selected creature can move to this cell
-      bool canAttack; // Indicates if the unit in the cell can be attacked
-
-      // Calculates to what cells can a creature move.
-      void creatureMovement(const int movement, int call = 0);
-      // Erases previos calculations about a creatures movement.
-      void eraseMovement(const int movement);
-
-   public:
-      cell(void); // Constructor
-
-      /// Sets the cell's position.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] position Position where to draw the cell
-      void setPosition(SDL_Rect position);
-      /// Sets the cell's terrain.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] imageName Name of the image, without the "img/" or the ".png".
-      void setTerrain(SDL_Surface *imageName);
-      /// Puts a creature in the cell.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] creature Creature to put in the cell
-      void setCreature(unit *creature);
-      /// Sets the cells map coordinates.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] x X coordinate in the map.
-      /// @param[in] y Y coordinate in the map.
-      void setCoordinates(int x, int y);
-      /// Returns the creature in the cell.
-      ///
-      /// -no detailed description-
-      ///
-      /// @return Pointer to the unit in the cell.
-      unit *getCreature(void);
-      /// Returns the cell's position.
-      ///
-      /// -no detailed description-
-      ///
-      /// @return Cell's position
-      SDL_Rect getPosition(void);
-      /// Returns the cells map coordinates.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[out] x X coordinate in the map.
-      /// @param[out] y Y coordinate in the map.
-      void getCoordinates(int &x, int &y);
-      /// Indicates that the mouse is over the cell.
-      ///
-      /// -no detailed description-
-      void putMouse(void);
-      /// The mouse is no longer over the cell.
-      ///
-      /// -no detailed description-
-      void removeMouse(void);
-      /// Indicates that the cell is now selected.
-      ///
-      /// The cell is selected and the cell where
-      /// the unit can move are marked.
-      ///
-      /// @return If everything was correct, this else NULL.
-      cell* select(void);
-      /// The cell is no longer selected.
-      ///
-      /// Marks the cell as not being selected and tells all the cells
-      /// where the unit could move that now it can not move there.
-      void unselect(void);
-
-      /// Connects a cell to this one.
-      ///
-      /// Indicates which are the cells next to this one
-      /// in any direction (N, NE, SE, S, SW or NW).
-      ///
-      /// @param[in] position Relative position of the cell (N, NE, SE, S, SW or NW).
-      /// @param[in] connectedCell The cell to conect.
-      void connectCell(const int position, cell* connectedCell);
-
-      /// Draws the cell in the screen.
-      ///
-      /// -no detailed description-
-      void draw(void);
-
-      /// Indicates if the selected creature can move to this cell.
-      ///
-      /// -no detailed description-
-      ///
-      /// @return true if the selected creature can move to this cell, false if not.
-      bool canMoveHere(void);
-      /// Indicates if the selected creature can attack the unit in this cell.
-      ///
-      /// -no detailed description-
-      ///
-      /// @return true if the selected creature can attack the unit in this cell, false if not.
-      bool canAttackHere(void);
-      /// Kills the unit in the cell.
-      ///
-      /// Puts the cell's unit to NULL and frees the memory assigned to
-      /// the unit. It should be called when the unit's number is 0.
-      void killCreature(void);
-};
+class hero;
 
 /// Controls all the attributes of a map.
 ///
@@ -164,7 +35,6 @@ class cell {
 class map {
    protected:
       int sizeX, sizeY; // The map's size
-      SDL_Surface *terrainBase; // The most used terrain in the map
       cell **battleMap;
       cell *selectedCell; // The cell that's selected
       cell *mouseOverCell; // The cell where the mouse is
@@ -172,7 +42,7 @@ class map {
       // Connects all the cells in the map.
       void connectCells(void);
       // Function to execute when the cell where the mouse is over is detected.
-      virtual void mouseOver(int x, int y, int button) = 0;
+      virtual void mouseOver(const int x, const int y, const int button) = 0;
 
    public:
       /// @param[in] sizeX Number of cell rows in the map
@@ -191,7 +61,7 @@ class map {
       /// -no detailed description-
       ///
       /// @param[in] player The player's hero.
-      void setHero(unit *player);
+      void setHero(hero &player);
 
       /// Tells the map the mouse's position.
       ///
@@ -201,7 +71,7 @@ class map {
       /// @param[in] x The x coordinate of the mouse's position
       /// @param[in] y The y coordinate of the mouse's position
       /// @param[in] pressed If the mouse left button is pressed or not
-      void moveMouse(int x, int y, int pressed);
+      void moveMouse(const int x, const int y, const int button);
 
       /// Draws the map in the screen.
       ///
