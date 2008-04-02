@@ -125,6 +125,22 @@ void map::connectCells(void) {
    }
 }
 
+// Moves a unit to a cell.
+void map::moveUnit(unit &creature, int* &path, const int movements) {
+   cell *temp;
+
+   /// @note This isn't too elegant
+   for (int i=0; i<movements; i++) {
+      creature.getPosition()->setCreature(NULL);
+      temp = creature.getPosition()->getConnectedCell(path[i]);
+      temp->setCreature(&creature);
+      creature.setPosition(*temp);
+      draw();
+      screen->update();
+      SDL_Delay(100);
+   }
+}
+
 // Constructor
 map::map(const int sizeX, const int sizeY) {
    SDL_Rect terrainPos;
@@ -159,7 +175,7 @@ map::map(const int sizeX, const int sizeY) {
    }
 
    connectCells();
-   selectedCell=NULL;
+   selectedUnit=NULL;
    mouseOverCell=NULL;
 }
 

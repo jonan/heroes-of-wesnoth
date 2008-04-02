@@ -27,6 +27,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "cell.hpp"
 
 class hero;
+class unit;
 
 /// Controls all the attributes of a map.
 ///
@@ -36,13 +37,16 @@ class map {
    protected:
       int sizeX, sizeY; // The map's size
       cell **battleMap;
-      cell *selectedCell; // The cell that's selected
       cell *mouseOverCell; // The cell where the mouse is
+      unit *selectedUnit; // The unit that's selected
 
       // Connects all the cells in the map.
       void connectCells(void);
       // Function to execute when the cell where the mouse is over is detected.
       virtual void mouseOver(const int x, const int y, const int button) = 0;
+
+      // Moves a unit to a cell.
+      void moveUnit(unit &creature, int* &path, const int movements);
 
    public:
       /// @param[in] sizeX Number of cell rows in the map

@@ -45,6 +45,8 @@ class cell {
       unit *creature; // Creature in the cell
       cell *connectedCell[6]; // The six cells that are next to it
       int mapX, mapY; // Map coordinates of the cell
+      int *path; // Path to follow in a units movement
+      int movements; // Number of cells to go through to follow the path
 
       bool mouseOver; // Indicates if the mouse is over the cell or not
       bool selected; // Indicates if the unit in the cell is selected
@@ -52,9 +54,9 @@ class cell {
       bool canAttack; // Indicates if the unit in the cell can be attacked
 
       // Calculates to what cells can a creature move.
-      void creatureMovement(const int movement, int call = 0);
+      void creatureMovement(const int movement, int *path, const int movements);
       // Erases previos calculations about a creatures movement.
-      void eraseMovement(const int movement);
+      void eraseMovement(const int movement, const int call = 1);
 
    public:
       cell(void); // Constructor
@@ -111,6 +113,14 @@ class cell {
       /// @param[in] place Can be N, NE, SE, S, SW or NW.
       /// @return The connected cell.
       cell* getConnectedCell(const int place);
+      /// Returns the information needed to move a unit.
+      ///
+      /// Returns the path that the unit has to follow to
+      /// reach this cell and how many movements are needed.
+      ///
+      /// @param[out] path The path that the unit has to follow.
+      /// @param[out] movements Movements needed to get to the cell.
+      void getPath(int* &path, int &movements);
 
       /// Indicates that the mouse is over the cell.
       ///
@@ -127,12 +137,20 @@ class cell {
       /// the unit can move are marked.
       ///
       /// @return If everything was correct, this, else NULL.
-      cell* select(void);
+      void select(void);
       /// The cell is no longer selected.
       ///
       /// Marks the cell as not being selected and tells all the cells
       /// where the unit could move that now it can not move there.
       void unselect(void);
+      /// The cell is no longer selected.
+      ///
+      /// Marks the cell as not being selected and tells all the cells
+      /// where the unit could move that now it can not move there.
+      /// (To use when the creature has been erased but you know the movement)
+      ///
+      /// @param[in] movement Movement of the creature.
+      void unselect(const int movement);
 
       /// Connects a cell to this one.
       ///

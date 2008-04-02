@@ -29,22 +29,23 @@ void battle::setCreatures(void) {
 
 // Function to execute when the cell where the mouse is over is detected.
 void battle::mouseOver(const int x, const int y, const int button) {
-   if ( button == 1  &&  selectedCell != &battleMap[x][y] ) {
+   if ( button == 1  &&  (selectedUnit->getPosition() != &battleMap[x][y]) ) {
       if ( battleMap[x][y].canMoveHere() ) {
          moveCreature(&battleMap[x][y]);
          finishTurn();
       } else if ( battleMap[x][y].canAttackHere() ) {
-         if ( battleMap[x][y].getCreature()->getMaster() != selectedCell->getCreature()->getMaster() ) {
-            selectedCell->getCreature()->attack( *battleMap[x][y].getCreature() );
+         if ( battleMap[x][y].getCreature()->getMaster() != selectedUnit->getMaster() ) {
+            moveCreature(&battleMap[x][y]);
+            selectedUnit->attack( *battleMap[x][y].getCreature() );
+            selectedUnit->getPosition()->unselect();
             if ( battleMap[x][y].getCreature()->getNumber() == 0 ) {
                removeCreature(battleMap[x][y].getCreature());
                battleMap[x][y].killCreature();
             }
-            if ( selectedCell->getCreature()->getNumber() == 0) {
+            if ( selectedUnit->getNumber() == 0) {
                removeCreature(battleMap[x][y].getCreature());
-               selectedCell->killCreature();
+               selectedUnit->getPosition()->killCreature();
             }
-            selectedCell->unselect();
             finishTurn();
          }
       }
@@ -98,16 +99,21 @@ unit* battle::nextTurn(void) {
 
 // Function to call when a turn ends.
 void battle::finishTurn(void) {
-   selectedCell = nextTurn()->getPosition()->select();
+   selectedUnit = nextTurn();
+   selectedUnit->getPosition()->select();
    // Wait until the mouse button is released.
    while (mouse[BUTTON]) input->readInput();
 }
 
 // Moves the selected creature to a given cell.
 void battle::moveCreature(cell *endPosition) {
-   endPosition->setCreature( selectedCell->getCreature() );
-   selectedCell->unselect();
-   selectedCell->setCreature(NULL);
+   int *path;
+   int movements;
+   cell *position = selectedUnit->getPosition();
+
+   endPosition->getPath(path, movements);
+   moveUnit(*selectedUnit, path, movements);
+   position->unselect(selectedUnit->getMovement());
 }
 
 // Removes a unit from the battle.
@@ -155,7 +161,8 @@ battle::battle(hero &player, unit **enemies, int numberEnemies) : map(18, 9) {
 void battle::start(void) {
    screen->erase();
    // Set first turn.
-   selectedCell = nextTurn()->getPosition()->select();
+   selectedUnit = nextTurn();
+   selectedUnit->getPosition()->select();
 
    /// @todo Use the loop function in loop.hpp
    bool done = false;

@@ -22,31 +22,74 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 // class cell
 
 // Calculates to what cells can a creature move.
-void cell::creatureMovement(const int movement, int call) {
-   if (call == 1) { // It's the first call to this funtion so the creature is over this cell.
+void cell::creatureMovement(const int movement, int *path, const int movements) {
+   /// @todo Free memory of paths
+   if (path == NULL) { // It's the first call to this funtion so the creature is over this cell.
       for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
-            if (connectedCell[i])
-               connectedCell[i]->creatureMovement(movement);
+         if (connectedCell[i]) {
+            int *tempPath = new int[1];
+            tempPath[0] = i;
+            connectedCell[i]->creatureMovement(movement, tempPath, 1);
+         }
       }
    } else if (movement>0) {
       if (creature==NULL) {
-         canMove = true;
-         for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
-            if (connectedCell[i])
-               connectedCell[i]->creatureMovement(movement-1);
+         if (this->path == NULL || this->movements > movements) {
+            canMove = true;
+            if (this->path != NULL) delete [] this->path;
+            this->path = path;
+            this->movements = movements;
+            for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
+               if (connectedCell[i]) {
+                  int *tempPath = new int[this->movements+1];
+                  for (int j=0; j<(this->movements); j++)
+                     tempPath[j] = this->path[j];
+                  tempPath[this->movements] = i;
+                  connectedCell[i]->creatureMovement(movement-1, tempPath, movements+1);
+               }
+            }
          }
-      } else canAttack = true;
-   } else if (movement == 0 && creature!=NULL) canAttack = true;
+      } else {
+         canAttack = true;
+         if (this->path == NULL || this->movements > movements-1) {
+            if (this->path != NULL) delete [] this->path;
+            this->movements = movements-1;
+            this->path = new int[this->movements];
+            for (int i=0; i<(this->movements); i++)
+               this->path[i] = path[i];
+         }
+      }
+   } else if (creature != NULL) {
+      canAttack = true;
+      if (this->path == NULL || this->movements > movements-1) {
+         if (this->path != NULL) delete [] this->path;
+         this->movements = movements-1;
+         this->path = new int[this->movements];
+         for (int i=0; i<(this->movements); i++)
+            this->path[i] = path[i];
+      }
+   }
 }
 
 // Erases previos calculations about a creatures movement.
-void cell::eraseMovement(const int movement) {
-   canAttack = false;
-   if (movement>0) {
+void cell::eraseMovement(const int movement, const int call) {
+   if (call == 0) { // It's the first call to this funtion so the creature is over this cell.
+      movements = 0;
+      canAttack = false;
       canMove = false;
       for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
-            if (connectedCell[i])
-               connectedCell[i]->eraseMovement(movement-1);
+         if (connectedCell[i])
+            connectedCell[i]->eraseMovement(movement);
+      }
+   } else if (path != NULL) {
+      delete [] path;
+      path = NULL;
+      movements = 0;
+      canAttack = false;
+      canMove = false;
+      for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
+         if (connectedCell[i])
+            connectedCell[i]->eraseMovement(movement-1);
       }
    }
 }
@@ -58,6 +101,8 @@ cell::cell(void) {
    for (int i=0; i<6; i++) {
       connectedCell[i] = NULL;
    }
+   path = NULL;
+   movements = 0;
    mouseOver = false;
    selected = false;
    canMove = false;
@@ -107,6 +152,13 @@ cell* cell::getConnectedCell(const int place) {
    return connectedCell[place];
 }
 
+// Returns the path that the unit has to follow to
+// reach this cell and how many movements are needed.
+void cell::getPath(int* &path, int &movements) {
+   path = this->path;
+   movements = this->movements;
+}
+
 // Indicates that the mouse is over the cell.
 void cell::putMouse(void) {
    mouseOver = true;
@@ -119,14 +171,11 @@ void cell::removeMouse(void) {
 
 // The cell is selected and the cell where
 // the unit can move are marked.
-cell* cell::select(void) {
-   /// @todo Make sure returning this is needed.
+void cell::select(void) {
    if (creature!=NULL) {
       selected = true;
-      creatureMovement(creature->getMovement(), 1 );
-      return this;
-   } else
-      return NULL;
+      creatureMovement(creature->getMovement(), NULL, 0);
+   }
 }
 
 // Marks the cell as not being selected and tells all the cells
@@ -134,7 +183,14 @@ cell* cell::select(void) {
 void cell::unselect(void) {
    /// @todo Look if the creature is still on the cell when it's unselected.
    selected = false;
-   eraseMovement( creature->getMovement()+1 );
+   eraseMovement(creature->getMovement(), 0);
+}
+
+// Marks the cell as not being selected and tells all the cells
+// where the unit could move that now it can not move there.
+void cell::unselect(const int movement) {
+   selected = false;
+   eraseMovement(movement, 0);
 }
 
 // Indicates which are the cells next to this one
