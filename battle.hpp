@@ -28,7 +28,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// Max creatures for each team (not counting the hero
 #define MAX_CREATURES 9
 /// Max units in all the battle
-#define MAX_BATTLE_UNITS 10
+#define MAX_BATTLE_UNITS 19
 /// Agility needed to get a turn
 #define TURN 10
 

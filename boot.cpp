@@ -36,6 +36,7 @@ void freeEngine(void) {
 void loadMainImages(void) {
    screen->newImage("wesnoth");
    screen->newImage("heroes-logo");
+   screen->newImage("sergeant");
    screen->newImage("skeleton");
    screen->newImage("button");
    screen->newImage("button-active");

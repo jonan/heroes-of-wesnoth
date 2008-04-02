@@ -26,8 +26,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // @{
 /// Types of units
-#define SKELETON 0
-#define ORC      1
+#define SERGEANT 0
+#define SKELETON 1
 // @}
 
 class cell;

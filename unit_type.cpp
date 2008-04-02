@@ -19,10 +19,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // Sets the creatures attributes acording to his type.
 void unit::setCreaturesAttributes(void) {
-   if (type == SKELETON) {
+   /// @todo Add more types of units
+   if (type == SERGEANT) {
+      setImage("sergeant");
+      setAllAttributes(50, 0, 10, 5, 15, 0, 2, 3);
+   } else if (type == SKELETON) {
       setImage("skeleton");
       setAllAttributes(50, 0, 10, 5, 15, 0, 2, 2);
-   } else if (type == ORC) {
-      /// @todo Add more types of units
    }
 }

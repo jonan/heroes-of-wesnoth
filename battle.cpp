@@ -77,10 +77,16 @@ unit* battle::nextTurn(void) {
                   return player;
                }
             } else if (i<MAX_CREATURES+1) {
-               if (creatures[i-1]) {
+               if (player->getCreature(i-1)) {
                   done = true;
                   turn = i;
-                  return creatures[i-1];
+                  return player->getCreature(i-1);
+               }
+            } else if ( i<(2*MAX_CREATURES+1) ) {
+               if (creatures[i-MAX_CREATURES-1]) {
+                  done = true;
+                  turn = i;
+                  return creatures[i-MAX_CREATURES-1];
                }
             }
          }
@@ -90,8 +96,11 @@ unit* battle::nextTurn(void) {
             if (player)
                turns[j] += player->getAgility();
          } else if (j<MAX_CREATURES+1) {
-            if (creatures[j-1])
-               turns[j] += creatures[j-1]->getAgility();
+            if (player->getCreature(j-1))
+               turns[j] += player->getCreature(j-1)->getAgility();
+         } else if ( j<(2*MAX_CREATURES+1) ) {
+            if (creatures[j-MAX_CREATURES-1])
+               turns[j] += creatures[j-MAX_CREATURES-1]->getAgility();
          }
       }
    }
@@ -186,6 +195,10 @@ void createBattle(void) {
    player = new hero(FIGHTER, HUMAN);
    for (int i=0; i<9; i++) {
       creature[i] = new unit(SKELETON, 5);
+   }
+   for (int j=0; j<9; j++) {
+      temp = new unit(SERGEANT, 3);
+      player->recruitCreature(*temp);
    }
 
    battle war(*player, creature, 9);

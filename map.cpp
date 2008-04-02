@@ -199,6 +199,8 @@ void map::setTerrain(const char *terrainImgName) {
 // Puts the hero in the map.
 void map::setHero(hero &player) {
    battleMap[0][4].setCreature(&player);
+   for (int i=0; i<9; i++)
+      battleMap[1][i].setCreature(player.getCreature(i));
 }
 
 // Every time the mouse's position or the mouse's buttons
