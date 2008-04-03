@@ -137,8 +137,13 @@ void battle::removeCreature(unit* creature) {
             found = true;
          }
       } else if (i<MAX_CREATURES+1) {
-         if (creatures[i-1] == creature) {
-            creatures[i-1] = NULL;
+         if (player->getCreature(i-1) == creature) {
+            player->recruitCreature(NULL, i-1);
+            found = true;
+         }
+      } else if (i<(2*MAX_CREATURES+1)) {
+         if (creatures[i-MAX_CREATURES-1] == creature) {
+            creatures[i-MAX_CREATURES-1] = NULL;
             found = true;
          }
       }
@@ -198,7 +203,7 @@ void createBattle(void) {
    }
    for (int j=0; j<9; j++) {
       temp = new unit(SERGEANT, 3);
-      player->recruitCreature(*temp);
+      player->recruitCreature(temp);
    }
 
    battle war(*player, creature, 9);

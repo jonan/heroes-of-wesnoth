@@ -84,7 +84,17 @@ class hero : public unit {
       ///
       /// @param[in] creature The new unit the hero can control.
       /// @return If the recruitment was successful or not.
-      bool recruitCreature(unit &creature);
+      bool recruitCreature(unit *creature);
+      /// Assings a new creature to the hero.
+      ///
+      /// If the hero can't control a new creature (he already
+      /// controls 9) returns false, else returns true.
+      ///
+      /// @param[in] creature The new unit the hero can control.
+      /// @param[in] position Position were the unit should be.
+      /// @return If the recruitment was successful or not.
+      bool recruitCreature(unit *creature, const int position);
+
       /// Draws the hero in the given position.
       ///
       /// -no detailed description-

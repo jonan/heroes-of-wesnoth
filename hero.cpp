@@ -49,14 +49,22 @@ unit* hero::getCreature(const int number) {
 
 // If the hero can't control a new creature (he already
 // controls 9) returns false, else returns true.
-bool hero::recruitCreature(unit &creature) {
+bool hero::recruitCreature(unit *creature) {
    if (numCreatures == MAX_UNITS) return false;
    else {
-      this->creature[numCreatures] = &creature;
+      this->creature[numCreatures] = creature;
       this->creature[numCreatures]->setMaster(this);
       numCreatures+=1;
       return true;
    }
+}
+
+// If the hero can't control a new creature (he already
+// controls 9) returns false, else returns true.
+bool hero::recruitCreature(unit *creature, const int position) {
+   if (position < MAX_UNITS) {
+      this->creature[position] = creature;
+   } else return false;
 }
 
 // Draws the hero in the given position.
