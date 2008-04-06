@@ -108,10 +108,21 @@ unit* battle::nextTurn(void) {
 
 // Function to call when a turn ends.
 void battle::finishTurn(void) {
-   selectedUnit = nextTurn();
-   selectedUnit->getPosition()->select();
-   // Wait until the mouse button is released.
-   while (mouse[BUTTON]) input->readInput();
+   // Check if the battle has ended
+   // Check if the hero is dead
+   if (player == NULL) endBattle = true;
+   // Check if all enemy creatures are dead
+   int counter = 0;
+   for (int i = 0; i<MAX_CREATURES; i++)
+      if (creatures[i] == NULL) counter++;
+   if (counter == MAX_CREATURES) endBattle = true;
+   // If the battle hasn't ended continue
+   if (!endBattle) {
+      selectedUnit = nextTurn();
+      selectedUnit->getPosition()->select();
+      // Wait until the mouse button is released.
+      while (mouse[BUTTON]) input->readInput();
+   }
 }
 
 // Moves the selected creature to a given cell.
