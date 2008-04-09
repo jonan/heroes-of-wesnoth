@@ -219,10 +219,3 @@ bool cell::canMoveHere(void) {
 bool cell::canAttackHere(void) {
    return canAttack;
 }
-
-// Puts the cell's unit to NULL and frees the memory assigned to
-// the unit. It should be called when the unit's number is 0.
-void cell::killCreature(void) {
-   delete creature;
-   creature = NULL;
-}

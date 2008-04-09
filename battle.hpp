@@ -60,7 +60,7 @@ class battle : public map {
       // Moves the selected creature to a given cell.
       void moveCreature(cell *endPosition);
       // Removes a unit from the battle.
-      void removeCreature(unit* creature);
+      void removeCreature(unit &creature);
 
    public:
       /// @todo Comment

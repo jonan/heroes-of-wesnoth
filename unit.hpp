@@ -25,19 +25,25 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include <SDL/SDL.h>
 
 // @{
-/// Types of units
-#define SERGEANT 0
-#define SKELETON 1
+/// Types of units.
+#define BAT      0
+#define SERGEANT 1
+#define SKELETON 2
 // @}
+
+/// Number of frames to wait before changing to the next sprite.
+#define NUM_FRAMES_FOR_SPRITE 3
 
 class cell;
 class hero;
 
 /// @todo Put more than one sprite for each unit.
-/*struct sprite {
+struct animation {
+   ~animation (void);
+
    int numberSprites;
-   SDL_Surface *image[];
-};*/
+   SDL_Surface **image;
+};
 
 /// Stores the unit's atributes.
 ///
@@ -57,7 +63,9 @@ class unit {
 
       int movement; // The creatures speed
 
-      SDL_Surface *image; // The unit's image
+      animation *standing;
+      int sprite; // Last sprite drawn
+
       bool selected; // Indicates if the unit is selected
 
       cell *position; // The cell where the unit is
@@ -68,6 +76,8 @@ class unit {
                             const int magicalDefence, const int physicalAttack,
                             const int magicalAttack, const int agility,
                             const int movement);
+      // Sets the creature's image.
+      void setImage(const char *imageName, const int sprite = 1);
       // Sets the creatures attributes acording to his type.
       // (Implemented in unit_type.cpp)
       virtual void setCreaturesAttributes(void);
@@ -76,7 +86,7 @@ class unit {
       /// @param[in] type Type of unit.
       /// @param[in] number Number of units.
       unit(const int type, const int number = 1); // Constructor
-      ~unit(void) {} // Destructor
+      ~unit(void); // Destructor
 
       /// Changes the number of units.
       ///
@@ -84,12 +94,6 @@ class unit {
       ///
       /// @param[in] number Number of units.
       void setNumber(const int number);
-      /// Sets the creature's image.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] imageName The image's name, without the "img/" or the ".png".
-      void setImage(const char *imageName);
       /// Changes the unit's position.
       ///
       /// -no detailed description-

@@ -69,5 +69,11 @@ bool hero::recruitCreature(unit *creature, const int position) {
 
 // Draws the hero in the given position.
 void hero::draw(SDL_Rect &position) {
-   screen->draw(image, position);
+   // Draw the corresponding sprite.
+   screen->draw(standing->image[sprite/NUM_FRAMES_FOR_SPRITE], position);
+   // Increase the sprite.
+   sprite++;
+   // Check if this was the last sprite and start again if it was.
+   if ( (sprite/NUM_FRAMES_FOR_SPRITE) == standing->numberSprites )
+      sprite = 0;
 }

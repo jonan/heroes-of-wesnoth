@@ -18,6 +18,17 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "graphics.hpp"
 #include "unit.hpp"
 
+// struct animation
+
+// Destructor
+animation::~animation(void) {
+   delete [] image;
+}
+
+// ---End---
+
+// class unit
+
 // Sets all the unit's attributes.
 void unit::setAllAttributes(const int live, const int magic, const int physicalDefence,
                             const int magicalDefence, const int physicalAttack,
@@ -35,25 +46,49 @@ void unit::setAllAttributes(const int live, const int magic, const int physicalD
    this->movement = movement;
 }
 
+// Sets the creature's image.
+void unit::setImage(const char *imageName, const int sprite) {
+   int actualSprite = 0;
+   animation *temp;
+
+   temp = new animation;
+   temp->numberSprites = sprite;
+   temp->image = new SDL_Surface*[sprite];
+
+   if (sprite != 1) {
+      for (actualSprite=0; actualSprite<sprite-1; actualSprite++)
+         temp->image[actualSprite] = standing->image[actualSprite];
+   }
+
+   temp->image[sprite-1] = screen->getImage(imageName);
+   if (standing) delete standing;
+   standing = temp;
+}
+
 // Constructor
 unit::unit(const int type, const int number) {
    this->number = number;
+
+   standing = NULL;
+   sprite = 0;
+
    if (type != -1) { // It should only be -1 when the unit is a hero.
       this->type = type;
       setCreaturesAttributes();
    }
+
    position = NULL;
    master = NULL;
+}
+
+// Destructor
+unit::~unit(void) {
+   delete standing;
 }
 
 // Changes the number of units.
 void unit::setNumber(const int number) {
    this->number = number;
-}
-
-// Sets the creature's image.
-void unit::setImage(const char *imageName) {
-   image = screen->getImage(imageName);
 }
 
 // Changes the unit's position.
@@ -103,7 +138,16 @@ unit* unit::attack(unit &creature) {
 void unit::draw(SDL_Rect &position) {
    char text[3];
 
-   screen->draw(image, position);
+   // Draw the corresponding sprite.
+   screen->draw(standing->image[sprite/NUM_FRAMES_FOR_SPRITE], position);
+   // Increase the sprite.
+   sprite++;
+   // Check if this was the last sprite and start again if it was.
+   if ( (sprite/NUM_FRAMES_FOR_SPRITE) == standing->numberSprites )
+      sprite = 0;
+
    sprintf(text, "%i", number);
    screen->write(text, position.x+17, position.y+52);
 }
+
+// ---End---

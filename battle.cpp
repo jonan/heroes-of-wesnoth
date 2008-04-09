@@ -39,12 +39,12 @@ void battle::mouseOver(const int x, const int y, const int button) {
             selectedUnit->attack( *battleMap[x][y].getCreature() );
             selectedUnit->getPosition()->unselect();
             if ( battleMap[x][y].getCreature()->getNumber() == 0 ) {
-               removeCreature(battleMap[x][y].getCreature());
-               battleMap[x][y].killCreature();
+               removeCreature(*battleMap[x][y].getCreature());
+               battleMap[x][y].setCreature(NULL);
             }
             if ( selectedUnit->getNumber() == 0) {
-               removeCreature(battleMap[x][y].getCreature());
-               selectedUnit->getPosition()->killCreature();
+               removeCreature(*battleMap[x][y].getCreature());
+               selectedUnit->getPosition()->setCreature(NULL);
             }
             finishTurn();
          }
@@ -137,29 +137,30 @@ void battle::moveCreature(cell *endPosition) {
 }
 
 // Removes a unit from the battle.
-void battle::removeCreature(unit* creature) {
+void battle::removeCreature(unit &creature) {
    bool found = false;
    int i = 0;
 
    while (i<MAX_BATTLE_UNITS && !found) {
       if (i==0) {
-         if (player == creature) {
+         if (player == &creature) {
             player = NULL;
             found = true;
          }
       } else if (i<MAX_CREATURES+1) {
-         if (player->getCreature(i-1) == creature) {
+         if (player->getCreature(i-1) == &creature) {
             player->recruitCreature(NULL, i-1);
             found = true;
          }
       } else if (i<(2*MAX_CREATURES+1)) {
-         if (creatures[i-MAX_CREATURES-1] == creature) {
+         if (creatures[i-MAX_CREATURES-1] == &creature) {
             creatures[i-MAX_CREATURES-1] = NULL;
             found = true;
          }
       }
       i++;
    }
+   delete &creature;
 }
 
 // Constructor
@@ -209,8 +210,11 @@ void createBattle(void) {
    unit *temp;
 
    player = new hero(FIGHTER, HUMAN);
-   for (int i=0; i<9; i++) {
+   for (int i=0; i<5; i++) {
       creature[i] = new unit(SKELETON, 5);
+   }
+   for (int t=5; t<9; t++) {
+      creature[t] = new unit(BAT, 1);
    }
    for (int j=0; j<9; j++) {
       temp = new unit(SERGEANT, 3);

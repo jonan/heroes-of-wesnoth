@@ -178,12 +178,6 @@ class cell {
       ///
       /// @return true if the selected creature can attack the unit in this cell, false if not.
       bool canAttackHere(void);
-
-      /// Kills the unit in the cell.
-      ///
-      /// Puts the cell's unit to NULL and frees the memory assigned to
-      /// the unit. It should be called when the unit's number is 0.
-      void killCreature(void);
 };
 
 #endif // CELL_HPP

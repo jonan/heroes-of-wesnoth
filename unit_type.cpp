@@ -20,7 +20,17 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 // Sets the creatures attributes acording to his type.
 void unit::setCreaturesAttributes(void) {
    /// @todo Add more types of units
-   if (type == SERGEANT) {
+   if (type == BAT) {
+      setImage("bat-se-1", 1);
+      setImage("bat-se-2", 2);
+      setImage("bat-se-3", 3);
+      setImage("bat-se-4", 4);
+      setImage("bat-se-5", 5);
+      setImage("bat-se-4", 6);
+      setImage("bat-se-3", 7);
+      setImage("bat-se-2", 8);
+      setAllAttributes(25, 5, 3, 2, 5, 1, 4, 4);
+   } else if (type == SERGEANT) {
       setImage("sergeant");
       setAllAttributes(50, 0, 10, 5, 15, 0, 2, 3);
    } else if (type == SKELETON) {

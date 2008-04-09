@@ -34,16 +34,21 @@ void freeEngine(void) {
 // Loads the images that will be used almost every
 // time the game is executed.
 void loadMainImages(void) {
-   screen->newImage("wesnoth");
-   screen->newImage("heroes-logo");
-   screen->newImage("sergeant");
-   screen->newImage("skeleton");
+   screen->newImage("alpha", 50);
+   screen->newImage("bat-se-1");
+   screen->newImage("bat-se-2");
+   screen->newImage("bat-se-3");
+   screen->newImage("bat-se-4");
+   screen->newImage("bat-se-5");
    screen->newImage("button");
    screen->newImage("button-active");
    screen->newImage("button-pressed");
    screen->newImage("grand-knight");
    screen->newImage("grassland-r1");
-   screen->newImage("alpha", 50);
+   screen->newImage("heroes-logo");
+   screen->newImage("sergeant");
+   screen->newImage("skeleton");
+   screen->newImage("wesnoth");
 }
 
 // Starts the engine and loads the main images.
