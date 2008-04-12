@@ -63,10 +63,9 @@ class battle : public map {
       void removeCreature(unit &creature);
 
    public:
-      /// @todo Comment
-      /// @param[in] player
-      /// @param[in] enemies
-      /// @param[in] numberEnemies
+      /// @param[in] player The player's hero.
+      /// @param[in] enemies Array with all the enemies.
+      /// @param[in] numberEnemies Number of enemies in the array.
       battle(hero &player, unit **enemies, int numberEnemies); // Constructor
 
       /// Starts the battle.

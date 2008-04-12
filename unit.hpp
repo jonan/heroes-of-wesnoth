@@ -37,7 +37,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 class cell;
 class hero;
 
-/// @todo Put more than one sprite for each unit.
 struct animation {
    ~animation (void);
 
