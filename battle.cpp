@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -56,7 +56,15 @@ void battle::mouseOver(const int x, const int y, const int button) {
 // it returns true, the loop ends, else it continues.
 bool battle::frame(void) {
    if (keys[SDLK_ESCAPE]) endBattle = true;
-   moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
+   if (keys[SDLK_SPACE]) {
+      while (keys[SDLK_SPACE]) input->readInput();
+      selectedUnit->getPosition()->unselect();
+      finishTurn();
+   }
+   if (selectedUnit->getMaster() == NULL)
+      ai();
+   else
+      moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
    draw();
    return endBattle;
 }
@@ -89,6 +97,7 @@ unit* battle::nextTurn(void) {
                   return creatures[i-MAX_CREATURES-1];
                }
             }
+
          }
       // Increase all the turns
       for (int j=0; j<MAX_BATTLE_UNITS; j++) {
@@ -161,6 +170,39 @@ void battle::removeCreature(unit &creature) {
       i++;
    }
    delete &creature;
+}
+
+// Controls the units not controled by the player.
+void battle::ai(void) {
+   cell *temp;
+   temp = getAttackCell();
+
+   if (temp) { // Attack a unit
+      moveCreature(temp);
+      selectedUnit->attack( *temp->getCreature() );
+      selectedUnit->getPosition()->unselect();
+      if ( temp->getCreature()->getNumber() == 0 ) {
+         removeCreature( *temp->getCreature() );
+         temp->setCreature(NULL);
+      }
+      if ( selectedUnit->getNumber() == 0) {
+         removeCreature( *temp->getCreature() );
+         selectedUnit->getPosition()->setCreature(NULL);
+      }
+      finishTurn();
+   } else { // Move the unit
+      int x, y;
+      selectedUnit->getPosition()->getCoordinates(x, y);
+      x=0;
+      while(!battleMap[x][y].canMoveHere() && x<sizeX) x++;
+      if (x!=sizeX) {
+         moveCreature(&battleMap[x][y]);
+         finishTurn();
+      } else {
+         selectedUnit->getPosition()->unselect();
+         finishTurn();
+      }
+   }
 }
 
 // Constructor

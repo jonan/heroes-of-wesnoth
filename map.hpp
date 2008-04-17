@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -21,8 +21,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #ifndef MAP_HPP
 #define MAP_HPP
-
-#include <SDL/SDL.h>
 
 #include "cell.hpp"
 
@@ -47,6 +45,9 @@ class map {
 
       // Moves a unit to a cell.
       void moveUnit(unit &creature, int* &path, const int movements);
+
+      // Returns a cell where the creature can attack.
+      cell* getAttackCell(void);
 
    public:
       /// @param[in] sizeX Number of cell rows in the map

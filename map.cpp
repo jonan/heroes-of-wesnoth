@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -137,8 +137,31 @@ void map::moveUnit(unit &creature, int* &path, const int movements) {
       creature.setPosition(*temp);
       draw();
       screen->update();
-      SDL_Delay(100);
+      screen->wait(100);
    }
+}
+
+// Returns a cell where the creature can attack.
+cell* map::getAttackCell(void) {
+   cell *temp = NULL;
+   int x, y;
+
+   x=0;
+   y=0;
+
+   while (!temp && x<sizeX) {
+      if (battleMap[x][y].canAttackHere() && battleMap[x][y].getCreature()->getMaster() != NULL)
+         temp = &battleMap[x][y];
+      else {
+         y++;
+         if (y == sizeY) {
+            y=0;
+            x++;
+         }
+      }
+   }
+
+   return temp;
 }
 
 // Constructor
