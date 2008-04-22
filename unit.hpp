@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -53,7 +53,8 @@ class unit {
 
       int number; // Number of units
 
-      int live, liveMax; // Actual and maximun live
+      double live; // Actual live
+      int liveMax; // Maximun live
       int magic, magicMax; // Actual and maximun magic power
 
       int physicalDefence, physicalAttack;
@@ -142,8 +143,7 @@ class unit {
       /// -no detailed description-
       ///
       /// @param[in] creature Unit to attack.
-      /// @return The unit attacked.
-      unit* attack(unit &creature);
+      void attack(unit &creature);
 
       /// Draws the creature in the given position.
       ///

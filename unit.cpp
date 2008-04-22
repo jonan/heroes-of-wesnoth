@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -14,6 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
+
+#include <cmath>
 
 #include "graphics.hpp"
 #include "unit.hpp"
@@ -127,11 +129,12 @@ hero* unit::getMaster(void) {
 }
 
 // Attacks a given unit.
-unit* unit::attack(unit &creature) {
-   /// @todo improve attacks
-   if (creature.number > 0) creature.number--;
-   if (creature.number == 0) return NULL;
-   else return &creature;
+void unit::attack(unit &creature) {
+   creature.live -= physicalAttack * ( log(number)+1 );
+   while (creature.live <= 0 && creature.number != 0) {
+      creature.live = creature.liveMax+creature.live;
+      creature.number--;
+   }
 }
 
 // Draws the creature in the given position.
