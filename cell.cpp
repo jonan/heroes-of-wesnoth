@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -24,32 +24,43 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 // Calculates to what cells can a creature move.
 void cell::creatureMovement(const int movement, int *path, const int movements) {
    /// @todo Free memory of paths
-   if (path == NULL) { // It's the first call to this funtion so the creature is over this cell.
-      for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
-         if (connectedCell[i]) {
-            int *tempPath = new int[1];
-            tempPath[0] = i;
-            connectedCell[i]->creatureMovement(movement, tempPath, 1);
-         }
-      }
-   } else if (movement>0) {
-      if (creature==NULL) {
-         if (this->path == NULL || this->movements > movements) {
-            canMove = true;
-            if (this->path != NULL) delete [] this->path;
-            this->path = path;
-            this->movements = movements;
-            for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
-               if (connectedCell[i]) {
-                  int *tempPath = new int[this->movements+1];
-                  for (int j=0; j<(this->movements); j++)
-                     tempPath[j] = this->path[j];
-                  tempPath[this->movements] = i;
-                  connectedCell[i]->creatureMovement(movement-1, tempPath, movements+1);
-               }
+   if (movementPenalty != 1000) { // A creature can move here
+      if (path == NULL) { // It's the first call to this funtion so the creature is over this cell.
+         for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
+            if (connectedCell[i]) {
+               int *tempPath = new int[1];
+               tempPath[0] = i;
+               connectedCell[i]->creatureMovement(movement, tempPath, 1);
             }
          }
-      } else {
+      } else if (movement>0) {
+         if (creature==NULL) {
+            if (this->path == NULL || this->movements > movements) {
+               canMove = true;
+               if (this->path != NULL) delete [] this->path;
+               this->path = path;
+               this->movements = movements;
+               for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
+                  if (connectedCell[i]) {
+                     int *tempPath = new int[this->movements+1];
+                     for (int j=0; j<(this->movements); j++)
+                        tempPath[j] = this->path[j];
+                     tempPath[this->movements] = i;
+                     connectedCell[i]->creatureMovement(movement-movementPenalty, tempPath, movements+1);
+                  }
+               }
+            }
+         } else {
+            canAttack = true;
+            if (this->path == NULL || this->movements > movements-1) {
+               if (this->path != NULL) delete [] this->path;
+               this->movements = movements-1;
+               this->path = new int[this->movements];
+               for (int i=0; i<(this->movements); i++)
+                  this->path[i] = path[i];
+            }
+         }
+      } else if (creature != NULL) {
          canAttack = true;
          if (this->path == NULL || this->movements > movements-1) {
             if (this->path != NULL) delete [] this->path;
@@ -58,15 +69,6 @@ void cell::creatureMovement(const int movement, int *path, const int movements) 
             for (int i=0; i<(this->movements); i++)
                this->path[i] = path[i];
          }
-      }
-   } else if (creature != NULL) {
-      canAttack = true;
-      if (this->path == NULL || this->movements > movements-1) {
-         if (this->path != NULL) delete [] this->path;
-         this->movements = movements-1;
-         this->path = new int[this->movements];
-         for (int i=0; i<(this->movements); i++)
-            this->path[i] = path[i];
       }
    }
 }
@@ -123,6 +125,12 @@ void cell::setTerrain(SDL_Surface &terrain) {
 void cell::setCreature(unit *creature) {
    this->creature = creature;
    if (creature) creature->setPosition(*this);
+}
+
+// If penalty is 1000 a creature
+// can never be over this cell.
+void cell::setMovementPenalty(const int penalty) {
+   movementPenalty = penalty;
 }
 
 // Sets the cells map coordinates.
@@ -205,7 +213,6 @@ void cell::draw(void) {
    screen->draw(terrain, position);
    if (mouseOver) screen->draw("alpha", position);
    if (canMove) screen->draw("alpha", position);
-   if (canAttack && mouseOver) {screen->draw("alpha", position);screen->draw("alpha", position);screen->draw("alpha", position);}
    if (creature) creature->draw(position);
    if (selected) screen->draw("alpha", position);
 }

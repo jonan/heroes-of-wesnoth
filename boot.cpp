@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -15,12 +15,16 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include <ctime>
+#include <cstdlib>
+
 #include "boot.hpp"
 #include "events.hpp"
 #include "graphics.hpp"
 
 // Loads the engine's global objects.
 void startEngine(void) {
+   srand( time(NULL) ); // Set seed for random numbers
    screen = new graphics;
    input = new events;
 }
@@ -44,7 +48,14 @@ void loadMainImages(void) {
    screen->newImage("button-active");
    screen->newImage("button-pressed");
    screen->newImage("grand-knight");
-   screen->newImage("grassland-r1");
+   screen->newImage("grass-r1");
+   screen->newImage("grass-r2");
+   screen->newImage("grass-r3");
+   screen->newImage("grass-r4");
+   screen->newImage("grass-r5");
+   screen->newImage("grass-r6");
+   screen->newImage("grass-r7");
+   screen->newImage("grass-r8");
    screen->newImage("heroes-logo");
    screen->newImage("sergeant");
    screen->newImage("skeleton");

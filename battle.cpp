@@ -38,6 +38,7 @@ void battle::mouseOver(const int x, const int y, const int button) {
             moveCreature(&battleMap[x][y]);
             selectedUnit->attack( *battleMap[x][y].getCreature() );
             selectedUnit->getPosition()->unselect();
+            // Check if any of the two creatures is dead.
             if ( battleMap[x][y].getCreature()->getNumber() == 0 ) {
                removeCreature(*battleMap[x][y].getCreature());
                battleMap[x][y].setCreature(NULL);
@@ -222,7 +223,7 @@ battle::battle(hero &player, unit **enemies, int numberEnemies) : map(18, 9) {
 
    setHero(player);
    setCreatures();
-   setTerrain("grassland-r1");
+   setTerrain(GRASS);
 }
 
 // Starts the battle.

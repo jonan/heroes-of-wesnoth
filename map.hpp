@@ -24,6 +24,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "cell.hpp"
 
+// @{
+/// Types of terrain.
+#define GRASS 0
+#define WATER 1
+// @}
+
 class hero;
 class unit;
 
@@ -59,8 +65,9 @@ class map {
       ///
       /// -no detailed description-
       ///
-      /// @param[in] terrainImgName Name of the terrain's image, without the "img/" or the ".png".
-      void setTerrain(const char *terrainImgName);
+      /// @param[in] terrainName Name of the terrain.
+      // (Implemented in unit_type.cpp)
+      void setTerrain(const int terrainName);
       /// Puts the hero in the map.
       ///
       /// -no detailed description-

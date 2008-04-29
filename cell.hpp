@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -47,6 +47,7 @@ class cell {
       int mapX, mapY; // Map coordinates of the cell
       int *path; // Path to follow in a units movement
       int movements; // Number of cells to go through to follow the path
+      int movementPenalty; // Amount of movement needed to go throw this cell
 
       bool mouseOver; // Indicates if the mouse is over the cell or not
       bool selected; // Indicates if the unit in the cell is selected
@@ -79,6 +80,13 @@ class cell {
       ///
       /// @param[in] creature Creature to put in the cell.
       void setCreature(unit *creature);
+      /// Sets the movement penalty for the cell.
+      ///
+      /// If penalty is 1000 a creature
+      /// can never be over this cell.
+      ///
+      /// @param[in] penalty Movement penalty for this cell.
+      void setMovementPenalty(const int penalty);
       /// Sets the cells map coordinates.
       ///
       /// -no detailed description-

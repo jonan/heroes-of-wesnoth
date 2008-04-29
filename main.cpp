@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -32,9 +32,10 @@ int main(int argc, char *argv[]) {
       const string val(argv[i]);
       if (val == "-h" || val == "--help") {
          /// @todo Change version
-         cout << "Heroes of Wesnoth SVN\n"
+         cout << "\nHeroes of Wesnoth SVN\n"
               << "\nusage: heroes [OPTIONS]\n"
-              << "  -h, --help       prints this message and exits.\n";
+              << "  -h, --help       prints this message and exits.\n"
+              << endl;
          return EXIT_SUCCESS;
       }
    }

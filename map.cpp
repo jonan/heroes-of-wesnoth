@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "hero.hpp"
 #include "map.hpp"
 
-// connects all the cells in the map.
+// Connects all the cells in the map.
 void map::connectCells(void) {
    for (int coor1=0; coor1<sizeX; coor1++) {
       for (int coor2=0; coor2<sizeY; coor2++) {
@@ -207,16 +207,6 @@ map::~map(void) {
    for (int i=0; i<sizeX; i++)
       delete [] battleMap[i];
    delete [] battleMap;
-}
-
-// Indicates the terrain image of the map.
-void map::setTerrain(const char *terrainImgName) {
-   SDL_Surface *terrain = screen->getImage(terrainImgName);
-
-   for (int x=0; x<sizeX; x++)
-      for (int y=0; y<sizeY; y++) {
-         battleMap[x][y].setTerrain(*terrain);
-      }
 }
 
 // Puts the hero in the map.

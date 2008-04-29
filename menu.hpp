@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -119,7 +119,7 @@ class menu {
       /// From now on, the menu will call drawBackgroundFuntion()
       /// for drawing the menu every time this is needed.
       ///
-      /// @param[in] drawBackgroundFuntion Funtion that draws the background.
+      /// @param[in] drawBackgroundFunction Funtion that draws the background.
       void addBackground(void (&drawBackgroundFunction)(void));
 
       /// Tells the menu the mouse's position.
