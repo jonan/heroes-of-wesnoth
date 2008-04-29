@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 // Sets the heros attributes acording to his type.
 void hero::setCreaturesAttributes(void) {
    if (type == FIGHTER) {
-      setImage("grand-knight");
+      addStandingImage("grand-knight");
       setAllAttributes(100, 10, 30, 10, 45, 5, 5, 5);
    } else if (type == WIZARD) {
       /// @todo Add more types of heroes

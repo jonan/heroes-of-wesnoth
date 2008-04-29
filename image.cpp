@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -59,9 +59,8 @@ void image::loadImage(const int alpha) {
 }
 
 // Constructor
-image::image(const char *imageName, const int alpha, image *next) {
+image::image(const char *imageName, const int alpha) {
    name = strdup(imageName);
-   this->next = next;
    loadImage(alpha);
 }
 
@@ -80,11 +79,6 @@ char* image::getName(void) {
    return name;
 }
 
-// Returns the next image in the imageList.
-image* image::getNext(void) {
-   return next;
-}
-
 SDL_Surface* image::getSurface(void) {
    return img;
 }
@@ -96,37 +90,29 @@ SDL_Surface* image::getSurface(void) {
 // Looks for an image in the list. If the
 // image doesn't exist, exits the program
 image* imageList::findImage(const char *imageName) {
-   image *temp;
+   int i=0;
+   bool found=false;
 
-   temp = first;
-   if (temp!=NULL)
-      // Go through all the list until the image is found
-      while ( strcmp(temp->getName(), imageName) != 0 ) {
-         temp = temp->getNext();
-         if (temp==NULL) {
-            cout << "\nSearch for file \"" << imageName << "\" failed.\n\n";
-            exit(EXIT_FAILURE);
-         }
-      }
-   return temp;
+   while (i<images.size() && !found) {
+      if ( strcmp(images[i]->getName(), imageName) == 0 )
+         found = true;
+      else i++;
+   }
+
+   if (!found) {
+      cout << "\nSearch for file \"" << imageName << "\" failed.\n\n";
+      exit(EXIT_FAILURE);
+   }
+
+   return images[i];
 }
-
-// Constructor
-imageList::imageList(void) : first(NULL) {}
 
 // Destructor
 imageList::~imageList(void) {
-   image *temp, *next;
-
    cout << "Freeing imageList...\n";
-   temp = first;
-   next = temp->getNext();
-   while (next!=NULL) {
-      delete temp;
-      temp = next;
-      next = temp->getNext();
+   for (int i=0; i<images.size(); i++) {
+      delete images[i];
    }
-   delete temp;
 }
 
 // Loads the image and then places it at
@@ -134,8 +120,8 @@ imageList::~imageList(void) {
 void imageList::addImage(const char *imageName, const int alpha) {
    image *temp;
 
-   temp = new image(imageName, alpha, first);
-   first = temp;
+   temp = new image(imageName, alpha);
+   images.push_back(temp);
 }
 
 // Returns the surface of an image in the list.

@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -70,10 +70,10 @@ bool hero::recruitCreature(unit *creature, const int position) {
 // Draws the hero in the given position.
 void hero::draw(SDL_Rect &position) {
    // Draw the corresponding sprite.
-   screen->draw(standing->image[sprite/NUM_FRAMES_FOR_SPRITE], position);
+   screen->draw(standing[sprite/NUM_FRAMES_FOR_SPRITE], position);
    // Increase the sprite.
    sprite++;
    // Check if this was the last sprite and start again if it was.
-   if ( (sprite/NUM_FRAMES_FOR_SPRITE) == standing->numberSprites )
+   if ( (sprite/NUM_FRAMES_FOR_SPRITE) == standing.size() )
       sprite = 0;
 }

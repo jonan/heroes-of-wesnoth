@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -22,14 +22,17 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef IMAGE_HPP
 #define IMAGE_HPP
 
+#include <deque>
+
 #include <SDL/SDL.h>
+
+using namespace std;
 
 /// A class to control images.
 ///
 /// It should only be used by the imageList class.
 class image {
    private:
-      image *next; // Next image in the list
       char *name; // Unique name of each image (the fisical image name)
       SDL_Surface *img; // Image's surface
 
@@ -40,8 +43,7 @@ class image {
    public:
       /// @param[in] imageName The image's name, without the "img/" or the ".png"
       /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque)
-      /// @param[in] next The next image in the list
-      image(const char *imageName, const int alpha, image *next); // Constructor
+      image(const char *imageName, const int alpha); // Constructor
       ~image(void); // Destructor
 
       /// Returns the image name.
@@ -50,12 +52,6 @@ class image {
       ///
       /// @return image name.
       char* getName(void);
-      /// Returns the next image in the imageList.
-      ///
-      /// -no detailed description-
-      ///
-      /// @return next image in the imageList.
-      image* getNext(void);
       /// Returns the image's surface.
       ///
       /// -no detailed description-
@@ -70,14 +66,14 @@ class image {
 /// stored. It should only be used by graphics.
 class imageList {
    private:
-      image *first; // First image of the list
+      deque<image*> images;
 
       // Looks for an image in the list. If the
       // image doesn't exist, exits the program
       image* findImage(const char *imageName);
 
    public:
-      imageList(void); // Constructor
+      imageList(void) {}; // Constructor
       ~imageList(void); // Destructor
 
       /// Adds the image to the list.

@@ -22,7 +22,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef UNIT_HPP
 #define UNIT_HPP
 
+#include <deque>
+
 #include <SDL/SDL.h>
+
+using namespace std;
 
 // @{
 /// Types of units.
@@ -36,13 +40,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 class cell;
 class hero;
-
-struct animation {
-   ~animation (void);
-
-   int numberSprites;
-   SDL_Surface **image;
-};
 
 /// Stores the unit's atributes.
 ///
@@ -63,7 +60,7 @@ class unit {
 
       int movement; // The creatures speed
 
-      animation *standing;
+      deque<SDL_Surface*> standing;
       int sprite; // Last sprite drawn
 
       bool selected; // Indicates if the unit is selected
@@ -76,8 +73,8 @@ class unit {
                             const int magicalDefence, const int physicalAttack,
                             const int magicalAttack, const int agility,
                             const int movement);
-      // Sets the creature's image.
-      void setImage(const char *imageName, const int sprite = 1);
+      // Adds an image to the standing animation.
+      void addStandingImage(const char *imageName);
       // Sets the creatures attributes acording to his type.
       // (Implemented in unit_type.cpp)
       virtual void setCreaturesAttributes(void);
@@ -86,7 +83,7 @@ class unit {
       /// @param[in] type Type of unit.
       /// @param[in] number Number of units.
       unit(const int type, const int number = 1); // Constructor
-      ~unit(void); // Destructor
+      ~unit(void) {}; // Destructor
 
       /// Changes the number of units.
       ///
