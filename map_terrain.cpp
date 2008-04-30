@@ -21,12 +21,16 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "map.hpp"
 
 // Indicates the terrain image of the map.
-void map::setTerrain(const int terrainName) {
+void map::setTerrain(const int terrainName, const int x, const int y) {
    SDL_Surface **terrain;
+   int images; // Number of different images of a terrain.
+   int movementPenalty;
    int randomNumber;
 
    if (terrainName == GRASS) {
-      terrain = new SDL_Surface*[8];
+      images = 8;
+      movementPenalty = 1;
+      terrain = new SDL_Surface*[images];
       terrain[0] = screen->getImage("grass-r1");
       terrain[1] = screen->getImage("grass-r2");
       terrain[2] = screen->getImage("grass-r3");
@@ -35,11 +39,19 @@ void map::setTerrain(const int terrainName) {
       terrain[5] = screen->getImage("grass-r6");
       terrain[6] = screen->getImage("grass-r7");
       terrain[7] = screen->getImage("grass-r8");
-      for (int x=0; x<sizeX; x++)
-         for (int y=0; y<sizeY; y++) {
-            randomNumber = rand() % 8;
-            battleMap[x][y].setTerrain(*terrain[randomNumber]);
-            battleMap[x][y].setMovementPenalty(1);
+   }
+
+   if (x == -1 && y ==-1) {
+      for (int i=0; i<sizeX; i++) {
+         for (int j=0; j<sizeY; j++) {
+            randomNumber = rand() % images;
+            battleMap[i][j].setTerrain(*terrain[randomNumber]);
+            battleMap[i][j].setMovementPenalty(movementPenalty);
          }
+      }
+   } else {
+      randomNumber = rand() % images;
+      battleMap[x][y].setTerrain(*terrain[randomNumber]);
+      battleMap[x][y].setMovementPenalty(movementPenalty);
    }
 }

@@ -67,7 +67,7 @@ class map {
       ///
       /// @param[in] terrainName Name of the terrain.
       // (Implemented in unit_type.cpp)
-      void setTerrain(const int terrainName);
+      void setTerrain(const int terrainName, const int x = -1, const int y = -1);
       /// Puts the hero in the map.
       ///
       /// -no detailed description-
