@@ -15,9 +15,11 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include "cell.hpp"
 #include "graphics.hpp"
 #include "hero.hpp"
 #include "map.hpp"
+#include "unit.hpp"
 
 // Connects all the cells in the map.
 void map::connectCells(void) {

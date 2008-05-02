@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include <iostream>
 
 #include "graphics.hpp"
+#include "image.hpp"
+#include "ttf.hpp"
 
 using namespace std;
 

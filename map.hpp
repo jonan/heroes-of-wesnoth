@@ -22,14 +22,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef MAP_HPP
 #define MAP_HPP
 
-#include "cell.hpp"
-
 // @{
 /// Types of terrain.
 #define GRASS 0
 #define WATER 1
 // @}
 
+class cell;
 class hero;
 class unit;
 

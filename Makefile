@@ -8,13 +8,13 @@ CC = g++
 heroes : $(OBJECTS)
 	$(CC) -g $(SDL_LIBS) -o heroes $(OBJECTS)
 
-battle.o : battle.cpp battle.hpp events.hpp graphics.hpp hero.hpp map.hpp timer.hpp unit.hpp
+battle.o : battle.cpp battle.hpp cell.hpp events.hpp graphics.hpp hero.hpp map.hpp timer.hpp unit.hpp
 	$(CC) $(CFLAGS) battle.cpp
 
 boot.o : boot.cpp boot.hpp events.hpp graphics.hpp
 	$(CC) $(CFLAGS) boot.cpp
 
-cell.o : cell.cpp cell.hpp
+cell.o : cell.cpp cell.hpp graphics.hpp unit.hpp
 	$(CC) $(CFLAGS) cell.cpp
 
 events.o : events.cpp events.hpp
@@ -38,10 +38,10 @@ loop.o : loop.cpp loop.hpp events.hpp graphics.hpp timer.hpp
 main.o : main.cpp boot.hpp menu_main.hpp
 	$(CC) $(CFLAGS) main.cpp
 
-map.o : map.cpp map.hpp graphics.hpp unit.hpp
+map.o : map.cpp map.hpp cell.hpp graphics.hpp hero.hpp unit.hpp
 	$(CC) $(CFLAGS) map.cpp
 
-map_terrain.o : map_terrain.cpp map.hpp
+map_terrain.o : map_terrain.cpp map.hpp cell.hpp graphics.hpp
 	$(CC) $(CFLAGS) map_terrain.cpp
 
 menu.o : menu.cpp menu.hpp graphics.hpp

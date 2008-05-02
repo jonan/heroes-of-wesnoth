@@ -22,7 +22,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef BATTLE_HPP
 #define BATTLE_HPP
 
-#include "hero.hpp"
 #include "map.hpp"
 
 /// Max creatures for each team (not counting the hero
@@ -31,6 +30,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #define MAX_BATTLE_UNITS 19
 /// Agility needed to get a turn
 #define TURN 10
+
+class cell;
+class hero;
+class unit;
 
 /// Controls all the aspects of a battle.
 ///

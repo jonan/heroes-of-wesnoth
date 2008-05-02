@@ -24,12 +24,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include <SDL/SDL.h>
 
-#include "image.hpp"
-#include "ttf.hpp"
-
 #define SCREEN_WIDTH  1024
 #define SCREEN_HEIGHT 768
 #define BPP           16
+
+class imageList;
+class ttf;
 
 /// Complete screen control.
 ///
