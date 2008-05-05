@@ -64,9 +64,9 @@ void deleteMenu(void) {
 
 // Creates the menu.
 void createMenu(void) {
-   mainMenu = new menu(menu_pos, 2);
-   mainMenu->setButton("Battle", createBattle);
-   mainMenu->setButton("Quit", quit);
+   mainMenu = new menu(menu_pos);
+   mainMenu->addButton("Battle", createBattle);
+   mainMenu->addButton("Quit", quit);
    mainMenu->addBackground(drawBackground);
    atexit(deleteMenu);
 }

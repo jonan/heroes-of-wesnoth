@@ -22,7 +22,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef MENU_HPP
 #define MENU_HPP
 
+#include <deque>
+
 #include <SDL/SDL.h>
+
+using namespace std;
 
 #define NORMAL  0
 #define ACTIVE  1
@@ -45,7 +49,9 @@ class button {
       int state; // Can be NORMAL, ACTIVE or PRESSED.
 
    public:
-      button(void); // Constructor
+      /// @param[in] text Text to be writen in the button.
+      /// @param[in] function The function to execute when the button is pressed.
+      button(const char *text, void (&function)(void)); // Constructor
       ~button(void); // Destructor
 
       /// Returns the button's text.
@@ -65,13 +71,6 @@ class button {
       /// @return Button's state (NORMAL, ACTIVE or PRESSED).
       int getState(void);
 
-      /// Changes all the button's attributes.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] text Text to be writen in the button.
-      /// @param[in] function The function to execute when the button is pressed.
-      void setAttributes(const char *text, void (&function)(void));
       /// Changes the button state.
       ///
       /// -no detailed description-
@@ -87,11 +86,9 @@ class menu {
    private:
       SDL_Rect position; // Position of the top left hand corner of the menu.
       SDL_Surface *buttonSurface[3]; // The three button images.
-      button *buttons; // The buttons in the menu.
-      int numberButtons; // Number of buttons in the menu.
+      deque<button*> buttons; // The buttons in the menu.
       int activeButton; // Number of the button with the mouse over.
       int pressedButton; // Number of the button pressed.
-      int buttonsCreated; // Number of buttons which already have attributes.
       bool background; // Indicates if the menu has a background.
       bool drawBackground; // Indicates if drawing the background is needed.
       void (*drawBackgroundFunction)(void); // Function that draws the background.
@@ -99,20 +96,16 @@ class menu {
 
    public:
       /// @param[in] position Top left hand corner of the menu.
-      /// @param[in] numberButtons Number of button classes in the menu.
-      menu(SDL_Rect position, int numberButtons); // Constructor
+      menu(SDL_Rect position); // Constructor
       ~menu(void); // Destructor
 
-      /// Sets each button class's attributes.
+      /// Adds a new button to the menu.
       ///
-      /// Every time the function is called, sets the attributes
-      /// to each button until all button classes have been set.
-      /// (Should be called immediately after the constructor and
-      /// as may times as button classes are there in the menu)
+      /// -no detailed description-
       ///
       /// @param[in] text Text to be writen in the button.
       /// @param[in] function Function to execute when the button is pressed.
-      void setButton(const char *text, void (&function)(void));
+      void addButton(const char *text, void (&function)(void));
 
       /// Adds a background to the menu.
       ///
