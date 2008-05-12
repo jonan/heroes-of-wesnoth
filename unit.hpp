@@ -30,9 +30,15 @@ using namespace std;
 
 // @{
 /// Types of units.
-#define BAT      0
-#define SERGEANT 1
-#define SKELETON 2
+#define ARMAGEDDON  0
+#define BAT         1
+#define BLADEMASTER 2
+#define CAVESPIDER  3
+#define FLANKER     4
+#define PILLAGER    5
+#define SERGEANT    6
+#define SKELETON    7
+#define WOLF_RIDER  8
 // @}
 
 /// Number of frames to wait before changing to the next sprite.

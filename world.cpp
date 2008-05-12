@@ -155,12 +155,12 @@ void world::setHero(hero &player, const int x, const int y) {
    battleMap[x][y].setCreature(&player);
 }
 
-// Creates and starts a world.
-void createWorld(void) {
+// Creates and starts mission 1.
+void mission1(void) {
    unit *temp;
 
    hero player(FIGHTER, HUMAN);
-   world war("map1", 30, 15);
+   world war("mission1", 30, 15);
 
    // Set the hero's units.
    for (int j=0; j<9; j++) {
@@ -168,7 +168,25 @@ void createWorld(void) {
       player.recruitCreature(temp);
    }
 
-   war.setEnemies("map1_creatures");
+   war.setEnemies("mission1_creatures");
+   war.setHero(player, 1, 1);
+   war.start();
+}
+
+// Creates and starts mission 1.
+void mission2(void) {
+   unit *temp;
+
+   hero player(FIGHTER, HUMAN);
+   world war("mission2", 30, 20);
+
+   // Set the hero's units.
+   for (int j=0; j<9; j++) {
+      temp = new unit(SERGEANT, 10);
+      player.recruitCreature(temp);
+   }
+
+   war.setEnemies("mission2_creatures");
    war.setHero(player, 3, 5);
    war.start();
 }

@@ -24,8 +24,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // @{
 /// Types of terrain.
-#define GRASS 0
-#define WATER 1
+#define CAVE  0
+#define GRASS 1
+#define WATER 2
 // @}
 
 class cell;

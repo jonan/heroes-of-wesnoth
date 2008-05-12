@@ -32,7 +32,17 @@ void map::setTerrain(const int terrainName, const int x, const int y) {
    int movementPenalty;
    int randomNumber;
    // Set the varibles depending of the tipe of terrain.
-   if (terrainName == GRASS) {
+   if (terrainName == CAVE) {
+      images = 6;
+      movementPenalty = 1;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("floor");
+      terrain[1] = screen->getImage("floor2");
+      terrain[2] = screen->getImage("floor3");
+      terrain[3] = screen->getImage("floor4");
+      terrain[4] = screen->getImage("floor5");
+      terrain[5] = screen->getImage("floor6");
+   } else if (terrainName == GRASS) {
       images = 8;
       movementPenalty = 1;
       terrain = new SDL_Surface*[images];

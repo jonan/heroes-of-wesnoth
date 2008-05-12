@@ -71,9 +71,13 @@ class world : public map {
       void setHero(hero &player, const int x, const int y);
 };
 
-/// Creates and starts a world.
+/// Creates and starts mission 1.
 ///
 /// -no detailed description-
-void createWorld(void);
+void mission1(void);
+/// Creates and starts mission 1.
+///
+/// -no detailed description-
+void mission2(void);
 
 #endif // WORLD_HPP

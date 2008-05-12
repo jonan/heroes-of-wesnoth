@@ -29,7 +29,7 @@ menu *mainMenu;
 
 // Set's all the position variables that the menu needs.
 void setPositions(void) {
-   menu_pos.x = 500;
+   menu_pos.x = 465;
    menu_pos.y = 500;
    menu_pos.w = 108;
    menu_pos.h = 22;
@@ -40,7 +40,7 @@ void setPositions(void) {
    background_pos.h = 768;
 
    logo_pos.x = 120;
-   logo_pos.y = 120;
+   logo_pos.y = 70;
    logo_pos.w = 777;
    logo_pos.h = 385;
 }
@@ -66,7 +66,8 @@ void deleteMenu(void) {
 // Creates the menu.
 void createMenu(void) {
    mainMenu = new menu(menu_pos);
-   mainMenu->addButton("World", createWorld);
+   mainMenu->addButton("Mission1", mission1);
+   mainMenu->addButton("Mission2", mission2);
    mainMenu->addButton("Battle", createBattle);
    mainMenu->addButton("Quit", quit);
    mainMenu->addBackground(drawBackground);
