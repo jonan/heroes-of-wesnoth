@@ -32,62 +32,64 @@ class cell;
 class hero;
 class unit;
 
+// Struct to store the coordinates of a cell.
+struct cellCoor {
+   int x;
+   int y;
+};
+
 /// Controls all the attributes of a map.
 ///
 /// Basically consist of lots of cell classes working
 /// together to create a map an to be able to use it.
+/// (This class is meant to be inherit, not to be used directly)
 class map {
-   protected:
-      int sizeX, sizeY; // The map's size
-      cell **battleMap;
-      cell *mouseOverCell; // The cell where the mouse is
-      unit *selectedUnit; // The unit that's selected
+   private:
+      cell *mouseOverCell; // The cell where the mouse is.
 
       // Connects all the cells in the map.
       void connectCells(void);
-      // Function to execute when the cell where the mouse is over is detected.
-      virtual void mouseOver(const int x, const int y, const int button) = 0;
 
-      // Moves a unit to a cell.
-      void moveUnit(unit &creature, int* &path, const int movements);
+   protected:
+      int sizeX, sizeY; // The map's size.
+      cell **battleMap;
+      unit *selectedUnit; // The unit that's selected.
+      cellCoor firstCell; // Coordinates of the top left cell.
+
+      map(const int sizeX, const int sizeY); // Constructor
+      ~map(void); // Destructor
+
+      // Indicates the terrain image of the map. Specify only the terrainName
+      // attribute to apply the terrain to all the cells of the map.
+      // (Implemented in map_terrain.cpp)
+      void setTerrain(const int terrainName, const int x = -1, const int y = -1);
 
       // Returns a cell where the creature can attack.
       cell* getAttackCell(void);
 
-   public:
-      /// @param[in] sizeX Number of cell rows in the map
-      /// @param[in] sizeY Number of cell columns in the map
-      map(const int sizeX, const int sizeY); // Constructor
-      ~map(void); // Destructor
-
-      /// Indicates the terrain image of the map.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] terrainName Name of the terrain.
-      // (Implemented in unit_type.cpp)
-      void setTerrain(const int terrainName, const int x = -1, const int y = -1);
-      /// Puts the hero in the map.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] player The player's hero.
-      void setHero(hero &player);
-
-      /// Tells the map the mouse's position.
-      ///
-      /// Every time the mouse's position or the mouse's buttons
-      /// change, this function should be called.
-      ///
-      /// @param[in] x The x coordinate of the mouse's position
-      /// @param[in] y The y coordinate of the mouse's position
-      /// @param[in] pressed If the mouse left button is pressed or not
+      // Tells the map the mouse's position.
       void moveMouse(const int x, const int y, const int button);
+      // Function to execute when the cell where the mouse is over is detected.
+      virtual void mouseOver(const int x, const int y, const int button) = 0;
 
-      /// Draws the map in the screen.
+      // Starts the next turn.
+      virtual void nextTurn(void) = 0;
+
+      // This function is executed in the main loop. If
+      // it returns true, the loop ends, else it continues.
+      virtual bool frame(void) = 0;
+
+      // Moves a unit to a cell.
+      void moveCreature(cell *endPosition);
+
+      // Draws the map in the screen.
+      void draw(void);
+
+   public:
+      /// Starts the map.
       ///
       /// -no detailed description-
-      void draw(void);
+      void start(void);
 };
 
 #endif // MAP_HPP

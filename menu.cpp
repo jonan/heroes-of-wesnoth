@@ -29,7 +29,7 @@ button::button(const char *text, void (&function)(void)) {
 
 // Destructor
 button::~button(void) {
-   delete [] text;
+   free(text);
 }
 
 // Returns the button's text.

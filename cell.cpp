@@ -23,7 +23,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // Calculates to what cells can a creature move.
 void cell::creatureMovement(const int movement, int *path, const int movements) {
-   /// @todo Free memory of paths
    if (movementPenalty != 1000) { // A creature can move here
       if (path == NULL) { // It's the first call to this funtion so the creature is over this cell.
          for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
@@ -35,7 +34,7 @@ void cell::creatureMovement(const int movement, int *path, const int movements) 
          }
       } else if (movement>0) {
          if (creature==NULL) {
-            if (this->path == NULL || this->movements > movements) {
+            if (this->path == NULL || this->movements > movements) { // Need to change path
                canMove = true;
                if (this->path != NULL) delete [] this->path;
                this->path = path;
@@ -52,12 +51,13 @@ void cell::creatureMovement(const int movement, int *path, const int movements) 
             }
          } else {
             canAttack = true;
-            if (this->path == NULL || this->movements > movements-1) {
+            if (this->path == NULL || this->movements > movements-1) { // Need to change path
                if (this->path != NULL) delete [] this->path;
                this->movements = movements-1;
                this->path = new int[this->movements];
                for (int i=0; i<(this->movements); i++)
                   this->path[i] = path[i];
+               delete [] path;
             }
          }
       } else if (creature != NULL) {
@@ -68,30 +68,33 @@ void cell::creatureMovement(const int movement, int *path, const int movements) 
             this->path = new int[this->movements];
             for (int i=0; i<(this->movements); i++)
                this->path[i] = path[i];
+            delete [] path;
          }
-      }
-   }
+      } else delete [] path;
+   } else delete [] path;
 }
 
 // Erases previos calculations about a creatures movement.
 void cell::eraseMovement(const int movement, const int call) {
-   if (call == 0) { // It's the first call to this funtion so the creature is over this cell.
-      movements = 0;
-      canAttack = false;
-      canMove = false;
-      for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
-         if (connectedCell[i])
-            connectedCell[i]->eraseMovement(movement);
-      }
-   } else if (path != NULL) {
-      delete [] path;
-      path = NULL;
-      movements = 0;
-      canAttack = false;
-      canMove = false;
-      for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
-         if (connectedCell[i])
-            connectedCell[i]->eraseMovement(movement-1);
+   if (movementPenalty != 1000) { // A creature can move here
+      if (call == 0) { // It's the first call to this funtion so the creature is over this cell.
+         movements = 0;
+         canAttack = false;
+         canMove = false;
+         for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
+            if (connectedCell[i])
+               connectedCell[i]->eraseMovement(movement);
+         }
+      } else if (path != NULL) {
+         delete [] path;
+         path = NULL;
+         movements = 0;
+         canAttack = false;
+         canMove = false;
+         for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
+            if (connectedCell[i])
+               connectedCell[i]->eraseMovement(movement-1);
+         }
       }
    }
 }
@@ -100,20 +103,13 @@ void cell::eraseMovement(const int movement, const int call) {
 cell::cell(void) {
    terrain = NULL;
    creature = NULL;
-   for (int i=0; i<6; i++) {
-      connectedCell[i] = NULL;
-   }
+
    path = NULL;
-   movements = 0;
+
    mouseOver = false;
    selected = false;
    canMove = false;
    canAttack = false;
-}
-
-// Sets the cell's position.
-void cell::setPosition(SDL_Rect position) {
-   this->position = position;
 }
 
 // Sets the cell's terrain.
@@ -137,11 +133,6 @@ void cell::setMovementPenalty(const int penalty) {
 void cell::setCoordinates(const int x, const int y) {
    mapX = x;
    mapY = y;
-}
-
-// Returns the cell's position.
-SDL_Rect cell::getPosition(void) {
-   return position;
 }
 
 // Returns the creature in the cell.
@@ -204,12 +195,11 @@ void cell::unselect(const int movement) {
 // Indicates which are the cells next to this one
 // in any direction (N, NE, SE, S, SW or NW).
 void cell::connectCell(const int position, cell* connectedCell){
-   /// @todo Maybe change the param *cell to &cell (future plan)
    this->connectedCell[position] = connectedCell;
 }
 
 // Draws the cell in the screen.
-void cell::draw(void) {
+void cell::draw(SDL_Rect position) {
    screen->draw(terrain, position);
    if (mouseOver) screen->draw("alpha", position);
    if (canMove) screen->draw("alpha", position);

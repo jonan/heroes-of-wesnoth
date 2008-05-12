@@ -128,6 +128,12 @@ class unit {
       ///
       /// @return The cell where the unit is.
       cell* getPosition(void);
+      /// Returns the unit's type.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return The unit's Type.
+      int getType(void);
       /// Returns the hero that controls the unit.
       ///
       /// -no detailed description-

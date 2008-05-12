@@ -92,6 +92,11 @@ cell* unit::getPosition(void) {
    return position;
 }
 
+// Returns the unit's type.
+int unit::getType(void) {
+   return type;
+}
+
 // Returns the hero that controls the unit.
 hero* unit::getMaster(void) {
    return master;
@@ -108,8 +113,6 @@ void unit::attack(unit &creature) {
 
 // Draws the creature in the given position.
 void unit::draw(SDL_Rect &position) {
-   char text[3];
-
    // Draw the corresponding sprite.
    screen->draw(standing[sprite/NUM_FRAMES_FOR_SPRITE], position);
    // Increase the sprite.
@@ -118,6 +121,9 @@ void unit::draw(SDL_Rect &position) {
    if ( (sprite/NUM_FRAMES_FOR_SPRITE) == standing.size() )
       sprite = 0;
 
-   sprintf(text, "%i", number);
-   screen->write(text, position.x+17, position.y+52);
+   if (number>0) {
+      char text[3];
+      sprintf(text, "%i", number);
+      screen->write(text, position.x+17, position.y+52);
+   }
 }

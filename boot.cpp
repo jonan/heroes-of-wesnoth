@@ -47,6 +47,7 @@ void loadMainImages(void) {
    screen->newImage("button");
    screen->newImage("button-active");
    screen->newImage("button-pressed");
+   screen->newImage("ford");
    screen->newImage("grand-knight");
    screen->newImage("grass-r1");
    screen->newImage("grass-r2");

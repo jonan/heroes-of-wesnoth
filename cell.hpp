@@ -40,7 +40,6 @@ class unit;
 /// cells in any type of map.
 class cell {
    private:
-      SDL_Rect position; // Position where to draw the cell
       SDL_Surface *terrain; // Surface of the terrain
       unit *creature; // Creature in the cell
       cell *connectedCell[6]; // The six cells that are next to it
@@ -62,12 +61,6 @@ class cell {
    public:
       cell(void); // Constructor
 
-      /// Sets the cell's position.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] position Position where to draw the cell.
-      void setPosition(SDL_Rect position);
       /// Sets the cell's terrain.
       ///
       /// -no detailed description-
@@ -95,12 +88,6 @@ class cell {
       /// @param[in] y Y coordinate in the map.
       void setCoordinates(const int x, const int y);
 
-      /// Returns the cell's position.
-      ///
-      /// -no detailed description-
-      ///
-      /// @return Cell's position.
-      SDL_Rect getPosition(void);
       /// Returns the creature in the cell.
       ///
       /// -no detailed description-
@@ -172,7 +159,7 @@ class cell {
       /// Draws the cell in the screen.
       ///
       /// -no detailed description-
-      void draw(void);
+      void draw(SDL_Rect position);
 
       /// Indicates if the selected creature can move to this cell.
       ///

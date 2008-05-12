@@ -16,18 +16,22 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 #include <cstdlib>
+#include <iostream>
 
 #include "cell.hpp"
 #include "graphics.hpp"
 #include "map.hpp"
 
-// Indicates the terrain image of the map.
+using namespace std;
+
+// Indicates the terrain image of the map. Specify only the terrainName
+// attribute to apply the terrain to all the cells of the map.
 void map::setTerrain(const int terrainName, const int x, const int y) {
    SDL_Surface **terrain;
    int images; // Number of different images of a terrain.
    int movementPenalty;
    int randomNumber;
-
+   // Set the varibles depending of the tipe of terrain.
    if (terrainName == GRASS) {
       images = 8;
       movementPenalty = 1;
@@ -40,17 +44,24 @@ void map::setTerrain(const int terrainName, const int x, const int y) {
       terrain[5] = screen->getImage("grass-r6");
       terrain[6] = screen->getImage("grass-r7");
       terrain[7] = screen->getImage("grass-r8");
+   } else if (terrainName == WATER) {
+      images = 1;
+      movementPenalty = 1000;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("ford");
+   } else {
+      cout << "Wrong terrain type : " << terrainName << "\n\n";
+      exit(EXIT_FAILURE);
    }
 
-   if (x == -1 && y ==-1) {
-      for (int i=0; i<sizeX; i++) {
+   if (x == -1 && y ==-1) { // Set the attributes to all the cells.
+      for (int i=0; i<sizeX; i++)
          for (int j=0; j<sizeY; j++) {
             randomNumber = rand() % images;
             battleMap[i][j].setTerrain(*terrain[randomNumber]);
             battleMap[i][j].setMovementPenalty(movementPenalty);
          }
-      }
-   } else {
+   } else { // Set the attributes to a given cell.
       randomNumber = rand() % images;
       battleMap[x][y].setTerrain(*terrain[randomNumber]);
       battleMap[x][y].setMovementPenalty(movementPenalty);

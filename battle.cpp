@@ -20,49 +20,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "events.hpp"
 #include "graphics.hpp"
 #include "hero.hpp"
-#include "timer.hpp"
 #include "unit.hpp"
-
-// Puts the enemy creatures in the map.
-void battle::setCreatures(void) {
-   for (int i=0; i<MAX_CREATURES; i++)
-      battleMap[sizeX-2][i].setCreature(creatures[i]);
-}
-
-// Function to execute when the cell where the mouse is over is detected.
-void battle::mouseOver(const int x, const int y, const int button) {
-   if ( button == 1  &&  (selectedUnit->getPosition() != &battleMap[x][y]) ) {
-      if ( battleMap[x][y].canMoveHere() ) {
-         moveCreature(&battleMap[x][y]);
-         finishTurn();
-      } else if ( battleMap[x][y].canAttackHere() ) {
-         if ( battleMap[x][y].getCreature()->getMaster() != selectedUnit->getMaster() ) {
-            moveCreature(&battleMap[x][y]);
-            selectedUnit->attack( *battleMap[x][y].getCreature() );
-            selectedUnit->getPosition()->unselect();
-            // Check if any of the two creatures is dead.
-            if ( battleMap[x][y].getCreature()->getNumber() == 0 ) {
-               removeCreature(*battleMap[x][y].getCreature());
-               battleMap[x][y].setCreature(NULL);
-            }
-            if ( selectedUnit->getNumber() == 0) {
-               removeCreature(*battleMap[x][y].getCreature());
-               selectedUnit->getPosition()->setCreature(NULL);
-            }
-            finishTurn();
-         }
-      }
-   }
-}
 
 // This function is executed in the main loop. If
 // it returns true, the loop ends, else it continues.
 bool battle::frame(void) {
-   if (keys[SDLK_ESCAPE]) endBattle = true;
+   if (keys[SDLK_ESCAPE]) {
+      while (keys[SDLK_ESCAPE]) input->readInput();
+      endBattle = true;
+   }
    if (keys[SDLK_SPACE]) {
       while (keys[SDLK_SPACE]) input->readInput();
       selectedUnit->getPosition()->unselect();
-      finishTurn();
+      nextTurn();
    }
    if (selectedUnit->getMaster() == NULL)
       ai();
@@ -72,84 +42,93 @@ bool battle::frame(void) {
    return endBattle;
 }
 
-// Returns the next unit.
-unit* battle::nextTurn(void) {
-   bool done = false;
-
-   while (!done) {
-      // Look if it's someones turn
-      for (int i=0; i<MAX_BATTLE_UNITS; i++)
-         if (turns[i]>=TURN) {
-            turns[i] -= TURN;
-            if (i==0) {
-               if (player) {
-                  done = true;
-                  turn = 0;
-                  return player;
-               }
-            } else if (i<MAX_CREATURES+1) {
-               if (player->getCreature(i-1)) {
-                  done = true;
-                  turn = i;
-                  return player->getCreature(i-1);
-               }
-            } else if ( i<(2*MAX_CREATURES+1) ) {
-               if (creatures[i-MAX_CREATURES-1]) {
-                  done = true;
-                  turn = i;
-                  return creatures[i-MAX_CREATURES-1];
-               }
+// Function to execute when the cell where the mouse is over is detected.
+void battle::mouseOver(const int x, const int y, const int button) {
+   if ( button == 1  &&  (selectedUnit->getPosition() != &battleMap[x][y]) ) {
+      if ( battleMap[x][y].canMoveHere() ) {
+         moveCreature(&battleMap[x][y]);
+         nextTurn();
+      } else if ( battleMap[x][y].canAttackHere() ) {
+         if ( battleMap[x][y].getCreature()->getMaster() != selectedUnit->getMaster() ) {
+            moveCreature(&battleMap[x][y]);
+            selectedUnit->attack( *battleMap[x][y].getCreature() );
+            // Check if the creatures is dead.
+            if ( battleMap[x][y].getCreature()->getNumber() == 0 ) {
+               deleteCreature(*battleMap[x][y].getCreature());
+               battleMap[x][y].setCreature(NULL);
             }
-
-         }
-      // Increase all the turns
-      for (int j=0; j<MAX_BATTLE_UNITS; j++) {
-         if (j==0) {
-            if (player)
-               turns[j] += player->getAgility();
-         } else if (j<MAX_CREATURES+1) {
-            if (player->getCreature(j-1))
-               turns[j] += player->getCreature(j-1)->getAgility();
-         } else if ( j<(2*MAX_CREATURES+1) ) {
-            if (creatures[j-MAX_CREATURES-1])
-               turns[j] += creatures[j-MAX_CREATURES-1]->getAgility();
+            nextTurn();
          }
       }
    }
 }
 
-// Function to call when a turn ends.
-void battle::finishTurn(void) {
+// Returns the next unit.
+void battle::nextTurn(void) {
+   bool done = false;
+   unit* creature;
+
    // Check if the battle has ended
    // Check if the hero is dead
    if (player == NULL) endBattle = true;
    // Check if all enemy creatures are dead
    int counter = 0;
-   for (int i = 0; i<MAX_CREATURES; i++)
+   for (int i = 0; i<MAX_TEAM_UNITS; i++)
       if (creatures[i] == NULL) counter++;
-   if (counter == MAX_CREATURES) endBattle = true;
+   if (counter == MAX_TEAM_UNITS) endBattle = true;
    // If the battle hasn't ended continue
    if (!endBattle) {
-      selectedUnit = nextTurn();
+      // Search for the next creature
+      while (!done) {
+         // Look if it's someones turn
+         for (int i=0; i<MAX_BATTLE_UNITS && !done; i++)
+            if (turns[i]>=TURN) {
+               turns[i] -= TURN;
+               if (i==0) {
+                  if (player) {
+                     done = true;
+                     turn = 0;
+                     creature = player;
+                  }
+               } else if (i<MAX_TEAM_UNITS+1) {
+                  if (player->getCreature(i-1)) {
+                     done = true;
+                     turn = i;
+                     creature = player->getCreature(i-1);
+                  }
+               } else if ( i<(2*MAX_TEAM_UNITS+1) ) {
+                  if (creatures[i-MAX_TEAM_UNITS-1]) {
+                     done = true;
+                     turn = i;
+                     creature = creatures[i-MAX_TEAM_UNITS-1];
+                  }
+               }
+
+            }
+         // Increase all the turns
+         for (int j=0; j<MAX_BATTLE_UNITS && !done; j++) {
+            if (j==0) {
+               if (player)
+                  turns[j] += player->getAgility();
+            } else if (j<MAX_TEAM_UNITS+1) {
+               if (player->getCreature(j-1))
+                  turns[j] += player->getCreature(j-1)->getAgility();
+            } else if ( j<(2*MAX_TEAM_UNITS+1) ) {
+               if (creatures[j-MAX_TEAM_UNITS-1])
+               turns[j] += creatures[j-MAX_TEAM_UNITS-1]->getAgility();
+            }
+         }
+      }
+      selectedUnit = creature;
       selectedUnit->getPosition()->select();
       // Wait until the mouse button is released.
       while (mouse[BUTTON]) input->readInput();
    }
 }
 
-// Moves the selected creature to a given cell.
-void battle::moveCreature(cell *endPosition) {
-   int *path;
-   int movements;
-   cell *position = selectedUnit->getPosition();
-
-   endPosition->getPath(path, movements);
-   moveUnit(*selectedUnit, path, movements);
-   position->unselect(selectedUnit->getMovement());
-}
-
-// Removes a unit from the battle.
-void battle::removeCreature(unit &creature) {
+// Removes a unit from the battle and deletes it.
+void battle::deleteCreature(unit &creature) {
+   /// @todo Check this function
    bool found = false;
    int i = 0;
 
@@ -159,14 +138,15 @@ void battle::removeCreature(unit &creature) {
             player = NULL;
             found = true;
          }
-      } else if (i<MAX_CREATURES+1) {
+      } else if (i<MAX_TEAM_UNITS+1) {
          if (player->getCreature(i-1) == &creature) {
+            /// @todo Do the same without recruitCreature(unit*, int)
             player->recruitCreature(NULL, i-1);
             found = true;
          }
-      } else if (i<(2*MAX_CREATURES+1)) {
-         if (creatures[i-MAX_CREATURES-1] == &creature) {
-            creatures[i-MAX_CREATURES-1] = NULL;
+      } else if (i<(2*MAX_TEAM_UNITS+1)) {
+         if (creatures[i-MAX_TEAM_UNITS-1] == &creature) {
+            creatures[i-MAX_TEAM_UNITS-1] = NULL;
             found = true;
          }
       }
@@ -183,16 +163,11 @@ void battle::ai(void) {
    if (temp) { // Attack a unit
       moveCreature(temp);
       selectedUnit->attack( *temp->getCreature() );
-      selectedUnit->getPosition()->unselect();
       if ( temp->getCreature()->getNumber() == 0 ) {
-         removeCreature( *temp->getCreature() );
+         deleteCreature( *temp->getCreature() );
          temp->setCreature(NULL);
       }
-      if ( selectedUnit->getNumber() == 0) {
-         removeCreature( *temp->getCreature() );
-         selectedUnit->getPosition()->setCreature(NULL);
-      }
-      finishTurn();
+      nextTurn();
    } else { // Move the unit
       int x, y;
       selectedUnit->getPosition()->getCoordinates(x, y);
@@ -200,52 +175,37 @@ void battle::ai(void) {
       while(!battleMap[x][y].canMoveHere() && x<sizeX) x++;
       if (x!=sizeX) {
          moveCreature(&battleMap[x][y]);
-         finishTurn();
+         nextTurn();
       } else {
          selectedUnit->getPosition()->unselect();
-         finishTurn();
+         nextTurn();
       }
    }
 }
 
 // Constructor
-battle::battle(hero &player, unit **enemies, int numberEnemies) : map(18, 9) {
+battle::battle(hero &player, unit **enemies, const int numberEnemies) : map(18, 9) {
    this->player = &player;
-   // Set enemy creatures
-   for (int i=0; i<numberEnemies && i<MAX_CREATURES; i++) {
+   for (int i=0; i<numberEnemies && i<MAX_TEAM_UNITS; i++) {
       creatures[i] = enemies[i];
    }
-   if (numberEnemies<MAX_CREATURES) {
-      for (int j=numberEnemies; j<MAX_CREATURES; j++) creatures[j] = NULL;
+   if (numberEnemies<MAX_TEAM_UNITS) {
+      for (int j=numberEnemies; j<MAX_TEAM_UNITS; j++) creatures[j] = NULL;
    }
 
    for (int t=0; t<MAX_BATTLE_UNITS; t++) turns[t] = 0;
 
    endBattle = false;
 
-   setHero(player);
-   setCreatures();
+   // Put the hero and his units in the map.
+   battleMap[0][4].setCreature(&player);
+   for (int i=0; i<9; i++)
+      battleMap[1][i].setCreature(player.getCreature(i));
+   // Put the enemy creatures in the map.
+   for (int i=0; i<MAX_TEAM_UNITS; i++)
+      battleMap[sizeX-2][i].setCreature(creatures[i]);
+
    setTerrain(GRASS);
-}
-
-// Starts the battle.
-void battle::start(void) {
-   screen->erase();
-   // Set first turn.
-   selectedUnit = nextTurn();
-   selectedUnit->getPosition()->select();
-
-   /// @todo Use the loop function in loop.hpp
-   bool done = false;
-   timer fps;
-
-   while (!done) {
-      fps.start();
-      input->readInput();
-      done = frame();
-      screen->update();
-      fps.end(30);
-   }
 }
 
 // Creates and starts a battle.
@@ -254,25 +214,48 @@ void createBattle(void) {
    unit *creature[9];
    unit *temp;
 
+   // Create the hero and it's units.
    player = new hero(FIGHTER, HUMAN);
+   for (int j=0; j<9; j++) {
+      temp = new unit(SERGEANT, 3);
+      player->recruitCreature(temp);
+   }
+   // Create the enemy creatures.
    for (int i=0; i<5; i++) {
       creature[i] = new unit(SKELETON, 5);
    }
    for (int t=5; t<9; t++) {
       creature[t] = new unit(BAT, 1);
    }
-   for (int j=0; j<9; j++) {
-      temp = new unit(SERGEANT, 3);
-      player->recruitCreature(temp);
-   }
 
    battle war(*player, creature, 9);
    war.start();
    //war.results(&player, &creature);
 
+   /// @todo Free memory
    // Free memory
    /*if (player) delete player;
    for (int i=0; i<9; i++) {
       if (creature[i]) delete creature[i];
    }*/
+}
+
+// Creates and starts a battle.
+void createFastBattle(hero &player, const int enemyType) {
+   cell *temp;
+   unit *creature[9];
+
+   // Save players position
+   temp = player.getPosition();
+
+   // Create the enemy creatures.
+   for (int i=0; i<9; i++) {
+      creature[i] = new unit(enemyType, 5);
+   }
+
+   battle war(player, creature, 9);
+   war.start();
+
+   // Restore player's position
+   temp->setCreature(&player);
 }

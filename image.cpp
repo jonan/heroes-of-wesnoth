@@ -69,7 +69,7 @@ image::~image(void) {
    cout << "Freeing \"" << name << "\"...\t\t";
    // If the image name is to sort leave more space
    if ( strlen(name)<11 ) cout << "\t";
-   delete [] name;
+   free(name);
    SDL_FreeSurface(img);
    cout << "[ ok ]\n";
 }

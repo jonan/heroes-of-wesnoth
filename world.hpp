@@ -16,35 +16,28 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// The battle class and a function to create battles.
+/// The world class and a function to create worlds.
 /// @author Jonan
 
-#ifndef BATTLE_HPP
-#define BATTLE_HPP
+#ifndef WORLD_HPP
+#define WORLD_HPP
+
+#include <deque>
 
 #include "map.hpp"
 
-/// Max creatures for each team (not counting the hero
-#define MAX_TEAM_UNITS 9
-/// Max units in all the battle
-#define MAX_BATTLE_UNITS 19
-/// Agility needed to get a turn
-#define TURN 10
+using namespace std;
 
-class cell;
 class hero;
-class unit;
 
-/// Controls all the aspects of a battle.
+/// Controls all the aspects of a world.
 ///
 /// -no detailed description-
-class battle : public map {
+class world : public map {
    private:
-      hero *player;
-      unit *creatures[MAX_TEAM_UNITS];
-      int turns[MAX_BATTLE_UNITS];
+      deque<hero*> players;
       int turn;
-      bool endBattle;
+      bool endWorld;
 
       // This function is executed in the main loop. If
       // it returns true, the loop ends, else it continues.
@@ -56,28 +49,31 @@ class battle : public map {
       // Starts the next turn.
       void nextTurn(void);
 
-      // Removes a unit from the battle and deletes it.
-      void deleteCreature(unit &creature);
-
-      // Controls the units not controled by the player.
-      void ai(void);
+      // Removes a unit from the battle.
+      // void removeCreature(unit &creature);
 
    public:
-      /// @param[in] player The player's hero.
-      /// @param[in] enemies Array with all the enemies.
-      /// @param[in] numberEnemies Number of enemies in the array.
-      battle(hero &player, unit **enemies, const int numberEnemies); // Constructor
+      world(const char *mapFile, const int x, const int y); // Constructor
 
-      //void results(hero &player, unit &enemies);
+      /// Puts the enemies in the map.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] enemiesMapFile File with the position of all the enemies.
+      void setEnemies(const char *enemiesMapFile);
+      /// Puts a hero in the map.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] player Hero to put in the map.
+      /// @param[in] x X coordinate of the hero's position.
+      /// @param[in] y Y coordinate of the hero's position.
+      void setHero(hero &player, const int x, const int y);
 };
 
-/// Creates and starts a battle.
+/// Creates and starts a world.
 ///
 /// -no detailed description-
-void createBattle(void);
-/// Creates and starts a battle.
-///
-/// -no detailed description-
-void createFastBattle(hero &player, const int enemyType);
+void createWorld(void);
 
-#endif // BATTLE_HPP
+#endif // WORLD_HPP

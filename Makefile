@@ -1,6 +1,6 @@
 OBJECTS = battle.o boot.o cell.o events.o graphics.o hero.o hero_type.o \
 	image.o loop.o main.o map.o map_terrain.o menu.o menu_main.o timer.o \
-	ttf.o unit.o unit_type.o
+	ttf.o unit.o unit_type.o world.o
 SDL_LIBS = -lSDL -lSDL_ttf -lSDL_image
 CFLAGS = -c -g
 CC = g++
@@ -8,7 +8,7 @@ CC = g++
 heroes : $(OBJECTS)
 	$(CC) -g $(SDL_LIBS) -o heroes $(OBJECTS)
 
-battle.o : battle.cpp battle.hpp cell.hpp events.hpp graphics.hpp hero.hpp map.hpp timer.hpp unit.hpp
+battle.o : battle.cpp battle.hpp cell.hpp events.hpp graphics.hpp hero.hpp map.hpp unit.hpp
 	$(CC) $(CFLAGS) battle.cpp
 
 boot.o : boot.cpp boot.hpp events.hpp graphics.hpp
@@ -38,7 +38,7 @@ loop.o : loop.cpp loop.hpp events.hpp graphics.hpp timer.hpp
 main.o : main.cpp boot.hpp menu_main.hpp
 	$(CC) $(CFLAGS) main.cpp
 
-map.o : map.cpp map.hpp cell.hpp graphics.hpp hero.hpp unit.hpp
+map.o : map.cpp map.hpp cell.hpp events.hpp graphics.hpp hero.hpp timer.hpp unit.hpp
 	$(CC) $(CFLAGS) map.cpp
 
 map_terrain.o : map_terrain.cpp map.hpp cell.hpp graphics.hpp
@@ -61,6 +61,9 @@ unit.o : unit.cpp unit.hpp graphics.hpp
 
 unit_type.o : unit_type.cpp unit.hpp
 	$(CC) $(CFLAGS) unit_type.cpp
+
+world.o : world.cpp world.hpp battle.hpp cell.hpp events.hpp graphics.hpp hero.hpp timer.hpp unit.hpp map.hpp
+	$(CC) $(CFLAGS) world.cpp
 
 .PHONY : clean
 clean :
