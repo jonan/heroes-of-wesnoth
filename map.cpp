@@ -215,6 +215,11 @@ void map::moveMouse(const int x, const int y, const int button) {
          mouseOver(i, j, button);
       }
    }
+   // move visible map
+   if (i<firstCell.x && firstCell.x!=0) firstCell.x--;
+   if (i>firstCell.x+17 && firstCell.x!=sizeX-18) firstCell.x++;
+   if (j<firstCell.y && firstCell.y!=0) firstCell.y--;
+   if (j>firstCell.y+8 && firstCell.y!=sizeY-9) firstCell.y++;
 }
 
 // Moves a unit to a cell.

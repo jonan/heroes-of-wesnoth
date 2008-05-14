@@ -36,10 +36,6 @@ using namespace std;
 // it returns true, the loop ends, else it continues.
 bool world::frame(void) {
    if (keys[SDLK_ESCAPE]) endWorld = true;
-   if (keys[SDLK_UP]) if (firstCell.y!=0) firstCell.y--;
-   if (keys[SDLK_DOWN]) if (firstCell.y!=sizeY-9) firstCell.y++;
-   if (keys[SDLK_LEFT]) if (firstCell.x!=0) firstCell.x--;
-   if (keys[SDLK_RIGHT]) if (firstCell.x!=sizeX-18) firstCell.x++;
    moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
    draw();
    return endWorld;
