@@ -67,8 +67,6 @@ class battle : public map {
       /// @param[in] enemies Array with all the enemies.
       /// @param[in] numberEnemies Number of enemies in the array.
       battle(hero &player, unit **enemies, const int numberEnemies); // Constructor
-
-      //void results(hero &player, unit &enemies);
 };
 
 /// Creates and starts a battle.
@@ -78,6 +76,6 @@ void createBattle(void);
 /// Creates and starts a battle.
 ///
 /// -no detailed description-
-void createFastBattle(hero &player, const int enemyType);
+void createFastBattle(hero &player, const int enemyType, const int terrainType);
 
 #endif // BATTLE_HPP

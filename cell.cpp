@@ -113,8 +113,9 @@ cell::cell(void) {
 }
 
 // Sets the cell's terrain.
-void cell::setTerrain(SDL_Surface &terrain) {
+void cell::setTerrain(SDL_Surface &terrain, const int type) {
    this->terrain = &terrain;
+   this->type = type;
 }
 
 // Puts a creature in the cell.
@@ -133,6 +134,11 @@ void cell::setMovementPenalty(const int penalty) {
 void cell::setCoordinates(const int x, const int y) {
    mapX = x;
    mapY = y;
+}
+
+// Returns the cell's terrain.
+int cell::getTerrain(void) {
+   return type;
 }
 
 // Returns the creature in the cell.

@@ -128,7 +128,6 @@ void battle::nextTurn(void) {
 
 // Removes a unit from the battle and deletes it.
 void battle::deleteCreature(unit &creature) {
-   /// @todo Check this function
    bool found = false;
    int i = 0;
 
@@ -204,8 +203,6 @@ battle::battle(hero &player, unit **enemies, const int numberEnemies) : map(18, 
    // Put the enemy creatures in the map.
    for (int i=0; i<MAX_TEAM_UNITS; i++)
       battleMap[sizeX-2][i].setCreature(creatures[i]);
-
-   setTerrain(GRASS);
 }
 
 // Creates and starts a battle.
@@ -241,7 +238,7 @@ void createBattle(void) {
 }
 
 // Creates and starts a battle.
-void createFastBattle(hero &player, const int enemyType) {
+void createFastBattle(hero &player, const int enemyType, const int terrainType) {
    cell *temp;
    unit *creature[9];
 
@@ -254,6 +251,7 @@ void createFastBattle(hero &player, const int enemyType) {
    }
 
    battle war(player, creature, 9);
+   war.setTerrain(terrainType);
    war.start();
 
    // Restore player's position

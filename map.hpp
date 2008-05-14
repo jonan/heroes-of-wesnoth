@@ -60,11 +60,6 @@ class map {
       map(const int sizeX, const int sizeY); // Constructor
       ~map(void); // Destructor
 
-      // Indicates the terrain image of the map. Specify only the terrainName
-      // attribute to apply the terrain to all the cells of the map.
-      // (Implemented in map_terrain.cpp)
-      void setTerrain(const int terrainName, const int x = -1, const int y = -1);
-
       // Returns a cell where the creature can attack.
       cell* getAttackCell(void);
 
@@ -91,6 +86,17 @@ class map {
       ///
       /// -no detailed description-
       void start(void);
+
+      /// Indicates the terrain image of a cell.
+      ///
+      /// Specify only the terrainName attribute to
+      /// apply the terrain to all the cells of the map.
+      ///
+      /// @param[in] terrainName Type of terrain.
+      /// @param[in] x X coordinate of the cell.
+      /// @param[in] y Y coordinate of the cell.
+      // (Implemented in map_terrain.cpp)
+      void setTerrain(const int terrainName, const int x = -1, const int y = -1);
 };
 
 #endif // MAP_HPP

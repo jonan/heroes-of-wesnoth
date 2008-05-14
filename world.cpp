@@ -54,7 +54,7 @@ void world::mouseOver(const int x, const int y, const int button) {
       } else if ( battleMap[x][y].canAttackHere() ) {
          if ( battleMap[x][y].getCreature()->getMaster() != selectedUnit->getMaster() ) {
             moveCreature(&battleMap[x][y]);
-            createFastBattle((hero&)(*selectedUnit), battleMap[x][y].getCreature()->getType());
+            createFastBattle((hero&)(*selectedUnit), battleMap[x][y].getCreature()->getType(), battleMap[x][y].getTerrain());
             nextTurn();
          }
       }

@@ -41,6 +41,7 @@ class unit;
 class cell {
    private:
       SDL_Surface *terrain; // Surface of the terrain
+      int type; // Type of terrain of the cell
       unit *creature; // Creature in the cell
       cell *connectedCell[6]; // The six cells that are next to it
       int mapX, mapY; // Map coordinates of the cell
@@ -66,7 +67,7 @@ class cell {
       /// -no detailed description-
       ///
       /// @param[in] terrain Surface of the terrain.
-      void setTerrain(SDL_Surface &terrain);
+      void setTerrain(SDL_Surface &terrain, const int type);
       /// Puts a creature in the cell.
       ///
       /// -no detailed description-
@@ -88,6 +89,12 @@ class cell {
       /// @param[in] y Y coordinate in the map.
       void setCoordinates(const int x, const int y);
 
+      /// Returns the cell's terrain.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return Type of terrain of the cell.
+      int getTerrain(void);
       /// Returns the creature in the cell.
       ///
       /// -no detailed description-
