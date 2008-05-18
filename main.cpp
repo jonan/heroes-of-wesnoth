@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
       const string val(argv[i]);
       if (val == "-h" || val == "--help") {
          /// @todo Change version
-         cout << "\nHeroes of Wesnoth SVN\n"
+         cout << "\nHeroes of Wesnoth 0.1\n"
               << "\nusage: heroes [OPTIONS]\n"
               << "  -h, --help       prints this message and exits.\n"
               << endl;
