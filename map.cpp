@@ -25,15 +25,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // Connects all the cells in the map.
 void map::connectCells(void) {
-   for (int coor1=0; coor1<sizeX; coor1++) {
-      for (int coor2=0; coor2<sizeY; coor2++) {
+   for (int coor1=0; coor1<width; coor1++) {
+      for (int coor2=0; coor2<height; coor2++) {
          if ( (coor1%2)==1 ) { // coor1 is an odd number
-            if (coor1 == sizeX-1) { // The last colum of the map
+            if (coor1 == width-1) { // The last colum of the map
                if (coor2 == 0) {
                   battleMap[coor1][coor2].connectCell(N, NULL);
                   battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
                   battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2+1]);
-               } else if (coor2 == sizeY-1) {
+               } else if (coor2 == height-1) {
                   battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
                   battleMap[coor1][coor2].connectCell(S, NULL);
                   battleMap[coor1][coor2].connectCell(SW, NULL);
@@ -52,7 +52,7 @@ void map::connectCells(void) {
                battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2+1]);
                battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2]);
                battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2+1]);
-            } else if (coor2 == sizeY-1) { // Last row of the map
+            } else if (coor2 == height-1) { // Last row of the map
                battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
                battleMap[coor1][coor2].connectCell(S, NULL);
                battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2]);
@@ -73,7 +73,7 @@ void map::connectCells(void) {
                   battleMap[coor1][coor2].connectCell(N, NULL);
                   battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
                   battleMap[coor1][coor2].connectCell(NE, NULL);
-               } else if (coor2 == sizeY-1) {
+               } else if (coor2 == height-1) {
                   battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
                   battleMap[coor1][coor2].connectCell(S, NULL);
                   battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2-1]);
@@ -85,12 +85,12 @@ void map::connectCells(void) {
                battleMap[coor1][coor2].connectCell(NW, NULL);
                battleMap[coor1][coor2].connectCell(SW, NULL);
                battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2]);
-            } else if (coor1 == sizeX-1) { // The last colum of the map
+            } else if (coor1 == width-1) { // The last colum of the map
                if (coor2 == 0) {
                   battleMap[coor1][coor2].connectCell(N, NULL);
                   battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
                   battleMap[coor1][coor2].connectCell(NW, NULL);
-               } else if (coor2 == sizeY-1) {
+               } else if (coor2 == height-1) {
                   battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
                   battleMap[coor1][coor2].connectCell(S, NULL);
                   battleMap[coor1][coor2].connectCell(NW,&battleMap[coor1-1][coor2-1]);
@@ -109,7 +109,7 @@ void map::connectCells(void) {
                battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2]);
                battleMap[coor1][coor2].connectCell(NW, NULL);
                battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2]);
-            } else if (coor2 == sizeY-1) { // Last row of the map
+            } else if (coor2 == height-1) { // Last row of the map
                battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
                battleMap[coor1][coor2].connectCell(S, NULL);
                battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2-1]);
@@ -130,19 +130,19 @@ void map::connectCells(void) {
 }
 
 // Constructor
-map::map(const int sizeX, const int sizeY) {
-   this->sizeX = sizeX;
-   this->sizeY = sizeY;
+map::map(const int width, const int height) {
+   this->width = width;
+   this->height = height;
 
    // Create the array of cells
-   battleMap = new cell*[sizeX];
-   for (int i=0; i<sizeX; i++)
-      battleMap[i] = new cell[sizeY];
+   battleMap = new cell*[width];
+   for (int i=0; i<width; i++)
+      battleMap[i] = new cell[height];
 
    connectCells();
 
-   for (int x=0; x<sizeX; x++)
-      for (int y=0; y<sizeY; y++)
+   for (int x=0; x<width; x++)
+      for (int y=0; y<height; y++)
          battleMap[x][y].setCoordinates(x, y);
 
    firstCell.x = 0;
@@ -154,7 +154,7 @@ map::map(const int sizeX, const int sizeY) {
 
 // Destructor
 map::~map(void) {
-   for (int i=0; i<sizeX; i++)
+   for (int i=0; i<width; i++)
       delete [] battleMap[i];
    delete [] battleMap;
 }
@@ -168,12 +168,12 @@ cell* map::getAttackCell(void) {
    x=0;
    y=0;
 
-   while (!temp && x<sizeX) {
+   while (!temp && x<width) {
       if (battleMap[x][y].canAttackHere() && battleMap[x][y].getCreature()->getMaster() != NULL)
          temp = &battleMap[x][y];
       else {
          y++;
-         if (y == sizeY) {
+         if (y == height) {
             y=0;
             x++;
          }
@@ -217,9 +217,9 @@ void map::moveMouse(const int x, const int y, const int button) {
    }
    // move visible map
    if (i<firstCell.x && firstCell.x!=0) firstCell.x--;
-   if (i>firstCell.x+17 && firstCell.x!=sizeX-18) firstCell.x++;
+   if (i>firstCell.x+17 && firstCell.x!=width-18) firstCell.x++;
    if (j<firstCell.y && firstCell.y!=0) firstCell.y--;
-   if (j>firstCell.y+8 && firstCell.y!=sizeY-9) firstCell.y++;
+   if (j>firstCell.y+8 && firstCell.y!=height-9) firstCell.y++;
 }
 
 // Moves a unit to a cell.

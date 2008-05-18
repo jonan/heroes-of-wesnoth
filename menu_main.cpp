@@ -22,7 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "loop.hpp"
 #include "menu.hpp"
 #include "menu_main.hpp"
-#include "world.hpp"
+#include "mission.hpp"
 
 SDL_Rect background_pos, menu_pos, logo_pos;
 menu *mainMenu;
@@ -68,7 +68,8 @@ void createMenu(void) {
    mainMenu = new menu(menu_pos);
    mainMenu->addButton("Mission1", mission1);
    mainMenu->addButton("Mission2", mission2);
-   mainMenu->addButton("Battle", createBattle);
+   mainMenu->addButton("Mission3", mission3);
+   mainMenu->addButton("Battle", createDefaultBattle);
    mainMenu->addButton("Quit", quit);
    mainMenu->addBackground(drawBackground);
    atexit(deleteMenu);

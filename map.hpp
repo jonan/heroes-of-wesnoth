@@ -52,12 +52,12 @@ class map {
       void connectCells(void);
 
    protected:
-      int sizeX, sizeY; // The map's size.
+      int width, height; // The map's size.
       cell **battleMap;
       unit *selectedUnit; // The unit that's selected.
       cellCoor firstCell; // Coordinates of the top left cell.
 
-      map(const int sizeX, const int sizeY); // Constructor
+      map(const int width, const int height); // Constructor
       ~map(void); // Destructor
 
       // Returns a cell where the creature can attack.

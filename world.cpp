@@ -36,8 +36,8 @@ using namespace std;
 // it returns true, the loop ends, else it continues.
 bool world::frame(void) {
    if (keys[SDLK_ESCAPE]) endWorld = true;
-   moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
    draw();
+   moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
    return endWorld;
 }
 
@@ -50,7 +50,9 @@ void world::mouseOver(const int x, const int y, const int button) {
       } else if ( battleMap[x][y].canAttackHere() ) {
          if ( battleMap[x][y].getCreature()->getMaster() != selectedUnit->getMaster() ) {
             moveCreature(&battleMap[x][y]);
-            createFastBattle((hero&)(*selectedUnit), battleMap[x][y].getCreature()->getType(), battleMap[x][y].getTerrain());
+            if ( createBattle((hero&)(*selectedUnit), battleMap[x][y].getCreature()->getType(), battleMap[x][y].getTerrain()) )
+               deleteCreature(battleMap[x][y]);
+            else players[turn] = NULL;
             nextTurn();
          }
       }
@@ -60,7 +62,7 @@ void world::mouseOver(const int x, const int y, const int button) {
 // Starts the next turn.
 void world::nextTurn(void) {
    // Check if the battle has ended
-   if (players[0]==NULL) endWorld = true;
+   if (players[0]==NULL || numberEnemies == 0) endWorld = true;
    // If the battle hasn't ended continue
    if (!endWorld) {
       turn++;
@@ -72,8 +74,15 @@ void world::nextTurn(void) {
    }
 }
 
+// Removes a unit from the world and deletes it.
+void world::deleteCreature(cell &position) {
+   delete position.getCreature();
+   position.setCreature(NULL);
+   numberEnemies--;
+}
+
 // Constructor
-world::world(const char *mapFile, const int x, const int y) : map(x, y) {
+world::world(const char *mapFile, const int width, const int height) : map(width, height) {
    // Create a string with the fisical location of the file
    // "map/" + name
    string map = "maps/";
@@ -90,12 +99,12 @@ world::world(const char *mapFile, const int x, const int y) : map(x, y) {
    char temp;
    int i = 0;
    int j = 0;
-   while (j<sizeY) {
+   while (j<height) {
       file.get(temp);
       if (temp != '\n') {
          setTerrain(temp-48, i, j); // 48 is 0 in ASCII
          i++;
-         if (i == sizeX) {
+         if (i == width) {
             i = 0;
             j++;
          }
@@ -105,6 +114,7 @@ world::world(const char *mapFile, const int x, const int y) : map(x, y) {
    file.close();
 
    turn = -1;
+   numberEnemies = 0;
    endWorld = false;
 }
 
@@ -126,16 +136,17 @@ void world::setEnemies(const char *enemiesMapFile) {
    char temp;
    int i = 0;
    int j = 0;
-   while (j<sizeY) {
+   while (j<height) {
       file.get(temp);
       if (temp != '\n') {
          if (temp != '0') {
             unit *creature;
             creature = new unit(temp - 49, 0); // 49 is 1 in ASCII
             battleMap[i][j].setCreature(creature);
+            numberEnemies++;
          }
          i++;
-         if (i == sizeX) {
+         if (i == width) {
             i = 0;
             j++;
          }
@@ -149,40 +160,4 @@ void world::setEnemies(const char *enemiesMapFile) {
 void world::setHero(hero &player, const int x, const int y) {
    players.push_back(&player);
    battleMap[x][y].setCreature(&player);
-}
-
-// Creates and starts mission 1.
-void mission1(void) {
-   unit *temp;
-
-   hero player(FIGHTER, HUMAN);
-   world war("mission1", 30, 15);
-
-   // Set the hero's units.
-   for (int j=0; j<9; j++) {
-      temp = new unit(SERGEANT, 10);
-      player.recruitCreature(temp);
-   }
-
-   war.setEnemies("mission1_creatures");
-   war.setHero(player, 1, 1);
-   war.start();
-}
-
-// Creates and starts mission 1.
-void mission2(void) {
-   unit *temp;
-
-   hero player(FIGHTER, HUMAN);
-   world war("mission2", 30, 20);
-
-   // Set the hero's units.
-   for (int j=0; j<9; j++) {
-      temp = new unit(SERGEANT, 10);
-      player.recruitCreature(temp);
-   }
-
-   war.setEnemies("mission2_creatures");
-   war.setHero(player, 3, 5);
-   war.start();
 }

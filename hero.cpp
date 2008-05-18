@@ -31,6 +31,12 @@ hero::hero(const int type, const int ai) : unit(-1) {
    numCreatures=0;
 }
 
+hero::~hero(void) {
+   for (int i=0; i<MAX_UNITS; i++) {
+      if (creature[i]) delete creature[i];
+   }
+}
+
 // Returns the hero's type of AI.
 int hero::getAI(void) {
    return ai;

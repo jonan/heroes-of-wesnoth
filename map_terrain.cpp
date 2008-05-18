@@ -65,8 +65,8 @@ void map::setTerrain(const int terrainName, const int x, const int y) {
    }
 
    if (x == -1 && y ==-1) { // Set the attributes to all the cells.
-      for (int i=0; i<sizeX; i++)
-         for (int j=0; j<sizeY; j++) {
+      for (int i=0; i<width; i++)
+         for (int j=0; j<height; j++) {
             randomNumber = rand() % images;
             battleMap[i][j].setTerrain(*terrain[randomNumber], terrainName);
             battleMap[i][j].setMovementPenalty(movementPenalty);

@@ -67,15 +67,27 @@ class battle : public map {
       /// @param[in] enemies Array with all the enemies.
       /// @param[in] numberEnemies Number of enemies in the array.
       battle(hero &player, unit **enemies, const int numberEnemies); // Constructor
+
+      /// Returns true if the battle was won.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return true if the battle was won, false if it wasn't.
+      bool win(void);
 };
 
+/// Creates and starts the default.
+///
+/// -no detailed description-
+void createDefaultBattle(void);
 /// Creates and starts a battle.
 ///
 /// -no detailed description-
-void createBattle(void);
-/// Creates and starts a battle.
 ///
-/// -no detailed description-
-void createFastBattle(hero &player, const int enemyType, const int terrainType);
+/// @param[in] player The player's hero.
+/// @param[in] enemyType Type of enemies to face.
+/// @param[in] terrainType Type of terrain where to fight.
+/// @return true if the battle was won, false if it wasn't.
+bool createBattle(hero &player, const int enemyType, const int terrainType);
 
 #endif // BATTLE_HPP

@@ -56,6 +56,7 @@ class hero : public unit {
       /// @param[in] type Type of hero.
       /// @param[in] ai Type of AI.
       hero(const int type, const int ai); // Constructor
+      ~hero(void); // Destructor
 
       /// Returns the hero's type of AI.
       ///

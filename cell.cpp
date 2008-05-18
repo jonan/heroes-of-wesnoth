@@ -112,6 +112,11 @@ cell::cell(void) {
    canAttack = false;
 }
 
+// Destructor
+cell::~cell(void) {
+   if (path) delete [] path;
+}
+
 // Sets the cell's terrain.
 void cell::setTerrain(SDL_Surface &terrain, const int type) {
    this->terrain = &terrain;

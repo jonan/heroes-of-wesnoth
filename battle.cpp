@@ -15,6 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include <cstdlib>
+
 #include "battle.hpp"
 #include "cell.hpp"
 #include "events.hpp"
@@ -27,18 +29,23 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 bool battle::frame(void) {
    if (keys[SDLK_ESCAPE]) {
       while (keys[SDLK_ESCAPE]) input->readInput();
+      deleteCreature(*player);
       endBattle = true;
+   } else { // If the battle wasn't ended continue.
+      if (selectedUnit->getMaster() != NULL) {
+         // This controls only work when a friendly creature is moving
+         if (keys[SDLK_SPACE]) {
+            while (keys[SDLK_SPACE]) input->readInput();
+            selectedUnit->getPosition()->unselect();
+            nextTurn();
+         }
+      }
+      if (selectedUnit->getMaster() == NULL)
+         ai();
+      else
+         moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
+      draw();
    }
-   if (keys[SDLK_SPACE]) {
-      while (keys[SDLK_SPACE]) input->readInput();
-      selectedUnit->getPosition()->unselect();
-      nextTurn();
-   }
-   if (selectedUnit->getMaster() == NULL)
-      ai();
-   else
-      moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
-   draw();
    return endBattle;
 }
 
@@ -63,7 +70,7 @@ void battle::mouseOver(const int x, const int y, const int button) {
    }
 }
 
-// Returns the next unit.
+// Starts the next turn.
 void battle::nextTurn(void) {
    bool done = false;
    unit* creature;
@@ -171,8 +178,8 @@ void battle::ai(void) {
       int x, y;
       selectedUnit->getPosition()->getCoordinates(x, y);
       x=0;
-      while(!battleMap[x][y].canMoveHere() && x<sizeX) x++;
-      if (x!=sizeX) {
+      while(!battleMap[x][y].canMoveHere() && x<width) x++;
+      if (x!=width) {
          moveCreature(&battleMap[x][y]);
          nextTurn();
       } else {
@@ -202,11 +209,17 @@ battle::battle(hero &player, unit **enemies, const int numberEnemies) : map(18, 
       battleMap[1][i].setCreature(player.getCreature(i));
    // Put the enemy creatures in the map.
    for (int i=0; i<MAX_TEAM_UNITS; i++)
-      battleMap[sizeX-2][i].setCreature(creatures[i]);
+      battleMap[width-2][i].setCreature(creatures[i]);
+}
+
+// Returns true if the battle was won.
+bool battle::win(void) {
+   if (player) return true;
+   else return false;
 }
 
 // Creates and starts a battle.
-void createBattle(void) {
+void createDefaultBattle(void) {
    hero *player;
    unit *creature[9];
    unit *temp;
@@ -226,8 +239,8 @@ void createBattle(void) {
    }
 
    battle war(*player, creature, 9);
+   war.setTerrain(GRASS);
    war.start();
-   //war.results(&player, &creature);
 
    /// @todo Free memory
    // Free memory
@@ -238,16 +251,19 @@ void createBattle(void) {
 }
 
 // Creates and starts a battle.
-void createFastBattle(hero &player, const int enemyType, const int terrainType) {
+bool createBattle(hero &player, const int enemyType, const int terrainType) {
    cell *temp;
    unit *creature[9];
+   int numberEnemies;
 
    // Save players position
    temp = player.getPosition();
 
    // Create the enemy creatures.
+   numberEnemies = rand() % 5;
+   numberEnemies++;
    for (int i=0; i<9; i++) {
-      creature[i] = new unit(enemyType, 5);
+      creature[i] = new unit(enemyType, numberEnemies); //numberEnemies);
    }
 
    battle war(player, creature, 9);
@@ -256,4 +272,6 @@ void createFastBattle(hero &player, const int enemyType, const int terrainType) 
 
    // Restore player's position
    temp->setCreature(&player);
+
+   return war.win();
 }

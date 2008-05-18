@@ -37,6 +37,7 @@ class world : public map {
    private:
       deque<hero*> players;
       int turn;
+      int numberEnemies;
       bool endWorld;
 
       // This function is executed in the main loop. If
@@ -49,11 +50,14 @@ class world : public map {
       // Starts the next turn.
       void nextTurn(void);
 
-      // Removes a unit from the battle.
-      // void removeCreature(unit &creature);
+      // Removes a unit from the world and deletes it.
+      void deleteCreature(cell &position);
 
    public:
-      world(const char *mapFile, const int x, const int y); // Constructor
+      /// @param[in] mapFile File where the map is stored.
+      /// @param[in] width Map's width.
+      /// @param[in] height Map's height 
+      world(const char *mapFile, const int width, const int height); // Constructor
 
       /// Puts the enemies in the map.
       ///
@@ -70,14 +74,5 @@ class world : public map {
       /// @param[in] y Y coordinate of the hero's position.
       void setHero(hero &player, const int x, const int y);
 };
-
-/// Creates and starts mission 1.
-///
-/// -no detailed description-
-void mission1(void);
-/// Creates and starts mission 1.
-///
-/// -no detailed description-
-void mission2(void);
 
 #endif // WORLD_HPP

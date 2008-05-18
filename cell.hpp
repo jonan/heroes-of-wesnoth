@@ -61,12 +61,14 @@ class cell {
 
    public:
       cell(void); // Constructor
+      ~cell(void); // Destructor
 
       /// Sets the cell's terrain.
       ///
       /// -no detailed description-
       ///
       /// @param[in] terrain Surface of the terrain.
+      /// @param[in] type Type of terrain.
       void setTerrain(SDL_Surface &terrain, const int type);
       /// Puts a creature in the cell.
       ///

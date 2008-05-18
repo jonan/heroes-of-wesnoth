@@ -19,7 +19,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // Sets the creatures attributes acording to his type.
 void unit::setCreaturesAttributes(void) {
-   /// @todo Add more types of units
    if (type == ARMAGEDDON) {
       addStandingImage("armageddon");
       setAllAttributes(65, 0, 10, 0, 25, 0, 2, 2);

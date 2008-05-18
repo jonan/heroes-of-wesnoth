@@ -158,9 +158,9 @@ void menu::draw(void) {
    for (int i=0; i<buttons.size(); i++) {
       screen->draw( buttonSurface[ buttons[i]->getState() ], position );
       if (buttons[i]->getState() != PRESSED)
-         screen->write(buttons[i]->getText() , position.x+32, position.y+3);
+         screen->write(buttons[i]->getText() , position.x+28, position.y+3);
       else
-         screen->write(buttons[i]->getText() , position.x+34, position.y+4);
+         screen->write(buttons[i]->getText() , position.x+30, position.y+4);
       position.y += DISTANCE; // Set the position of the next button
    }
    // Put the position back to normal
