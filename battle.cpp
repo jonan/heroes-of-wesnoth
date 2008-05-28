@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "battle.hpp"
 #include "cell.hpp"
 #include "events.hpp"
+#include "graphics.hpp"
 #include "hero.hpp"
 
 // This function is executed in the main loop. If
@@ -208,6 +209,13 @@ battle::battle(hero &player, unit **enemies, const int numberEnemies) : map(18, 
    // Put the enemy creatures in the map.
    for (int i=0; i<MAX_TEAM_UNITS; i++)
       battleMap[width-2][i].setCreature(creatures[i]);
+}
+
+// Starts the battle.
+void battle::start(void) {
+   draw();
+   screen->transitionEffect();
+   map::start();
 }
 
 // Returns true if the battle was won.

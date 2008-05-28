@@ -271,7 +271,9 @@ void map::draw(void) {
 
 // Starts the map.
 void map::start(void) {
-   screen->erase();
+   /*draw();
+   screen->transitionEffect();*/
+
    // Set first turn.
    nextTurn();
 

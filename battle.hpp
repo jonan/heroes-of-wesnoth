@@ -67,6 +67,11 @@ class battle : public map {
       /// @param[in] numberEnemies Number of enemies in the array.
       battle(hero &player, unit **enemies, const int numberEnemies); // Constructor
 
+      /// Starts the battle.
+      ///
+      /// -no detailed description-
+      void start(void);
+
       /// Returns true if the battle was won.
       ///
       /// -no detailed description-

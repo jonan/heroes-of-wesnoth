@@ -28,6 +28,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #define SCREEN_HEIGHT 768
 #define BPP           16
 
+// @{
+/// Type of effects
+#define HORIZONTAL        0
+#define VERTICAL          1
+#define NUMBER_OF_EFFECTS 2
+// @}
+
 class imageList;
 class ttf;
 
@@ -98,6 +105,13 @@ class graphics {
       ///
       /// -no detailed description-
       void update(void);
+
+      /// Refreshes the screen with an especial effect.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] effect Effect to use. If it's -1 the effect is choseen randomly.
+      void transitionEffect(int effect = -1);
 
       /// Stops the program a number of milisecons.
       ///

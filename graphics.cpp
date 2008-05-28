@@ -15,10 +15,12 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include <cstdlib>
 #include <iostream>
 
 #include "graphics.hpp"
 #include "image.hpp"
+#include "timer.hpp"
 #include "ttf.hpp"
 
 using namespace std;
@@ -111,6 +113,28 @@ void graphics::erase(void) {
 // Refreshes the screen.
 void graphics::update(void) {
    SDL_Flip(screen);
+}
+
+// Refreshes the screen with an especial effect.
+void graphics::transitionEffect(int effect) {
+   /// @todo Add/Improve effects.
+   timer fps;
+
+   if (effect == -1) effect = rand() % NUMBER_OF_EFFECTS;
+
+   if (effect == HORIZONTAL) {
+      for (int x=0; x<SCREEN_WIDTH; x+=5) {
+         fps.start();
+         SDL_UpdateRect(screen, x, 0, 5, SCREEN_HEIGHT);
+         fps.end(10);
+      }
+   } else if (effect == VERTICAL) {
+      for (int y=0; y<SCREEN_HEIGHT; y+=5) {
+         fps.start();
+         SDL_UpdateRect(screen, 0, y, SCREEN_WIDTH, 5);
+         fps.end(10);
+      }
+   }
 }
 
 // Stops the program a number of milisecons.

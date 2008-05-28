@@ -84,7 +84,7 @@ class map {
       /// Starts the map.
       ///
       /// -no detailed description-
-      void start(void);
+      virtual void start(void);
 
       /// Indicates the terrain image of a cell.
       ///
