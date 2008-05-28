@@ -8,7 +8,7 @@ CC = g++
 heroes : $(OBJECTS)
 	$(CC) -g $(SDL_LIBS) -o heroes $(OBJECTS)
 
-battle.o : battle.cpp battle.hpp cell.hpp events.hpp graphics.hpp hero.hpp map.hpp unit.hpp
+battle.o : battle.cpp battle.hpp cell.hpp events.hpp hero.hpp map.hpp
 	$(CC) $(CFLAGS) battle.cpp
 
 boot.o : boot.cpp boot.hpp events.hpp graphics.hpp
@@ -38,7 +38,7 @@ loop.o : loop.cpp loop.hpp events.hpp graphics.hpp timer.hpp
 main.o : main.cpp boot.hpp menu_main.hpp
 	$(CC) $(CFLAGS) main.cpp
 
-map.o : map.cpp map.hpp cell.hpp events.hpp graphics.hpp hero.hpp timer.hpp unit.hpp
+map.o : map.cpp map.hpp cell.hpp events.hpp graphics.hpp timer.hpp unit.hpp
 	$(CC) $(CFLAGS) map.cpp
 
 map_terrain.o : map_terrain.cpp map.hpp cell.hpp graphics.hpp
@@ -47,10 +47,10 @@ map_terrain.o : map_terrain.cpp map.hpp cell.hpp graphics.hpp
 menu.o : menu.cpp menu.hpp graphics.hpp
 	$(CC) $(CFLAGS) menu.cpp
 
-menu_main.o : menu_main.cpp menu_main.hpp battle.hpp boot.hpp events.hpp graphics.hpp loop.hpp menu.hpp
+menu_main.o : menu_main.cpp menu_main.hpp battle.hpp boot.hpp events.hpp graphics.hpp loop.hpp menu.hpp mission.hpp
 	$(CC) $(CFLAGS) menu_main.cpp
 
-mission.o : mission.cpp mission.hpp hero.hpp unit.hpp world.hpp
+mission.o : mission.cpp mission.hpp hero.hpp map.hpp unit.hpp world.hpp
 	$(CC) $(CFLAGS) mission.cpp
 
 timer.o : timer.cpp timer.hpp
@@ -65,7 +65,7 @@ unit.o : unit.cpp unit.hpp graphics.hpp
 unit_type.o : unit_type.cpp unit.hpp
 	$(CC) $(CFLAGS) unit_type.cpp
 
-world.o : world.cpp world.hpp battle.hpp cell.hpp events.hpp graphics.hpp hero.hpp timer.hpp unit.hpp map.hpp
+world.o : world.cpp world.hpp battle.hpp cell.hpp events.hpp hero.hpp unit.hpp map.hpp
 	$(CC) $(CFLAGS) world.cpp
 
 .PHONY : clean

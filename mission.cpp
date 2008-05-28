@@ -17,7 +17,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "hero.hpp"
 #include "mission.hpp"
-#include "unit.hpp"
 #include "world.hpp"
 
 // Creates and starts mission 1.

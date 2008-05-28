@@ -30,7 +30,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 // @}
 
 class cell;
-class hero;
 class unit;
 
 // Struct to store the coordinates of a cell.

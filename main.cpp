@@ -32,15 +32,17 @@ int main(int argc, char *argv[]) {
       const string val(argv[i]);
       if (val == "-h" || val == "--help") {
          /// @todo Change version
-         cout << "\nHeroes of Wesnoth 0.1\n"
+         cout << "\nHeroes of Wesnoth SVN\n"
               << "\nusage: heroes [OPTIONS]\n"
               << "  -h, --help       prints this message and exits.\n"
               << endl;
          return EXIT_SUCCESS;
       }
    }
-   // Start the game
+   // Start the game engine
    boot();
+   // Start the main menu
    startMainMenu();
+
    return EXIT_SUCCESS;
 }

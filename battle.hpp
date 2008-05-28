@@ -31,7 +31,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// Agility needed to get a turn
 #define TURN 10
 
-class cell;
 class hero;
 class unit;
 

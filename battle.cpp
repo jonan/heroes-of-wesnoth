@@ -20,9 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "battle.hpp"
 #include "cell.hpp"
 #include "events.hpp"
-#include "graphics.hpp"
 #include "hero.hpp"
-#include "unit.hpp"
 
 // This function is executed in the main loop. If
 // it returns true, the loop ends, else it continues.

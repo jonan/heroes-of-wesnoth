@@ -24,10 +24,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "battle.hpp"
 #include "cell.hpp"
 #include "events.hpp"
-#include "graphics.hpp"
 #include "hero.hpp"
-#include "timer.hpp"
-#include "unit.hpp"
 #include "world.hpp"
 
 using namespace std;
