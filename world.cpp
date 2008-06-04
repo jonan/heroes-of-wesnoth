@@ -38,18 +38,25 @@ bool world::frame(void) {
    return endWorld;
 }
 
-// Function to execute when the cell where the mouse is over is detected.
-void world::mouseOver(const int x, const int y, const int button) {
-   if ( button == 1  &&  (selectedUnit->getPosition() != &battleMap[x][y]) ) {
+// Function to execute when the user clicks on a cell.
+void world::mouseClick(const int x, const int y) {
+   if ( selectedUnit->getPosition() != &battleMap[x][y] ) {
       if ( battleMap[x][y].canMoveHere() ) {
          moveCreature(&battleMap[x][y]);
          nextTurn();
       } else if ( battleMap[x][y].canAttackHere() ) {
          if ( battleMap[x][y].getCreature()->getMaster() != selectedUnit->getMaster() ) {
             moveCreature(&battleMap[x][y]);
-            if ( createBattle((hero&)(*selectedUnit), battleMap[x][y].getCreature()->getType(), battleMap[x][y].getTerrain()) )
+
+            // Set the battle information
+            hero *player = (hero*)(selectedUnit);
+            int creatureType = battleMap[x][y].getCreature()->getType();
+            int terrain = battleMap[x][y].getTerrain();
+            // Start the battle
+            if ( createBattle(*player, creatureType, terrain) )
                deleteCreature(battleMap[x][y]);
             else players[turn] = NULL;
+
             nextTurn();
          }
       }
@@ -138,6 +145,7 @@ void world::setEnemies(const char *enemiesMapFile) {
       if (temp != '\n') {
          if (temp != '0') {
             unit *creature;
+            /// @todo Free this units if they are not killed.
             creature = new unit(temp - 49, 0); // 49 is 1 in ASCII
             battleMap[i][j].setCreature(creature);
             numberEnemies++;

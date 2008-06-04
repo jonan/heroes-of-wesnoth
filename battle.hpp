@@ -49,8 +49,8 @@ class battle : public map {
       // it returns true, the loop ends, else it continues.
       bool frame(void);
 
-      // Function to execute when the cell where the mouse is over is detected.
-      void mouseOver(const int x, const int y, const int button);
+      // Function to execute when the user clicks on a cell.
+      void mouseClick(const int x, const int y);
 
       // Starts the next turn.
       void nextTurn(void);

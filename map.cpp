@@ -211,7 +211,7 @@ void map::moveMouse(const int x, const int y, const int button) {
       if (j>=firstCell.y && j<9+firstCell.y) { // battleMap[i][j] is a valid cell and the mouse is over it
          battleMap[i][j].putMouse();
          mouseOverCell = &battleMap[i][j];
-         mouseOver(i, j, button);
+         if (button == 1) mouseClick(i, j);
       }
    }
    // move visible map
@@ -271,9 +271,6 @@ void map::draw(void) {
 
 // Starts the map.
 void map::start(void) {
-   /*draw();
-   screen->transitionEffect();*/
-
    // Set first turn.
    nextTurn();
 

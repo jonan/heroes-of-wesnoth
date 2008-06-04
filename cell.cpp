@@ -101,9 +101,7 @@ void cell::eraseMovement(const int movement, const int call) {
 
 // Constructor
 cell::cell(void) {
-   terrain = NULL;
    creature = NULL;
-
    path = NULL;
 
    mouseOver = false;
@@ -118,9 +116,9 @@ cell::~cell(void) {
 }
 
 // Sets the cell's terrain.
-void cell::setTerrain(SDL_Surface &terrain, const int type) {
-   this->terrain = &terrain;
-   this->type = type;
+void cell::addImage(SDL_Surface &terrain, const int type) {
+   this->terrain.push_back(&terrain);
+   if (type != -1) this->type = type;
 }
 
 // Puts a creature in the cell.
@@ -190,15 +188,8 @@ void cell::select(void) {
 
 // Marks the cell as not being selected and tells all the cells
 // where the unit could move that now it can not move there.
-void cell::unselect(void) {
-   /// @todo Look if the creature is still on the cell when it's unselected.
-   selected = false;
-   eraseMovement(creature->getMovement(), 0);
-}
-
-// Marks the cell as not being selected and tells all the cells
-// where the unit could move that now it can not move there.
-void cell::unselect(const int movement) {
+void cell::unselect(int movement) {
+   if (movement == -1) movement = creature->getMovement();
    selected = false;
    eraseMovement(movement, 0);
 }
@@ -211,7 +202,8 @@ void cell::connectCell(const int position, cell* connectedCell){
 
 // Draws the cell in the screen.
 void cell::draw(SDL_Rect position) {
-   screen->draw(terrain, position);
+   for (int i=0; i<terrain.size(); i++)
+      screen->draw(terrain[i], position);
    if (mouseOver) screen->draw("alpha", position);
    if (canMove) screen->draw("alpha", position);
    if (creature) creature->draw(position);

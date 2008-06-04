@@ -75,10 +75,10 @@ class unit {
       hero *master; // The hero that controls the unit.
 
       // Sets all the unit's attributes.
-      void setAllAttributes(const int live, const int magic, const int physicalDefence,
-                            const int magicalDefence, const int physicalAttack,
-                            const int magicalAttack, const int agility,
-                            const int movement);
+      void setAllAttributes(const int live, const int magic,
+                            const int physicalDefence, const int magicalDefence,
+                            const int physicalAttack, const int magicalAttack,
+                            const int agility, const int movement);
       // Adds an image to the standing animation.
       void addStandingImage(const char *imageName);
       // Sets the creatures attributes acording to his type.

@@ -19,59 +19,40 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "mission.hpp"
 #include "world.hpp"
 
-// Creates and starts mission 1.
-void mission1(void) {
+// Creates and starts a mission.
+void createMission( const char *map, const char *enemies_map,
+                    const int width, const int height,
+                    const int positionX, const int positionY,
+                    const int numberAlies
+                  ) {
    unit *temp;
 
    hero *player;
-   world war("mission1", 30, 15);
+   world war(map, width, height);
 
    player = new hero(FIGHTER, HUMAN);
    // Set the hero's units.
    for (int j=0; j<9; j++) {
-      temp = new unit(SERGEANT, 10);
+      temp = new unit(SERGEANT, numberAlies);
       player->recruitCreature(temp);
    }
 
-   war.setEnemies("mission1_creatures");
-   war.setHero(*player, 1, 1);
+   war.setEnemies(enemies_map);
+   war.setHero(*player, positionX, positionY);
    war.start();
+}
+
+// Creates and starts mission 1.
+void mission1(void) {
+   createMission("mission1", "mission1_creatures", 30, 15, 1, 1, 10);
 }
 
 // Creates and starts mission 1.
 void mission2(void) {
-   unit *temp;
-
-   hero *player;
-   world war("mission2", 30, 26);
-
-   player = new hero(FIGHTER, HUMAN);
-   // Set the hero's units.
-   for (int j=0; j<9; j++) {
-      temp = new unit(SERGEANT, 15);
-      player->recruitCreature(temp);
-   }
-
-   war.setEnemies("mission2_creatures");
-   war.setHero(*player, 3, 5);
-   war.start();
+   createMission("mission2", "mission2_creatures", 30, 26, 3, 5, 15);
 }
 
 // Creates and starts mission 1.
 void mission3(void) {
-   unit *temp;
-
-   hero *player;
-   world war("mission3", 30, 20);
-
-   player = new hero(FIGHTER, HUMAN);
-   // Set the hero's units.
-   for (int j=0; j<9; j++) {
-      temp = new unit(SERGEANT, 25);
-      player->recruitCreature(temp);
-   }
-
-   war.setEnemies("mission3_creatures");
-   war.setHero(*player, 8, 4);
-   war.start();
+   createMission("mission3", "mission3_creatures", 30, 20, 8, 4, 25);
 }

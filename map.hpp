@@ -64,8 +64,8 @@ class map {
 
       // Tells the map the mouse's position.
       void moveMouse(const int x, const int y, const int button);
-      // Function to execute when the cell where the mouse is over is detected.
-      virtual void mouseOver(const int x, const int y, const int button) = 0;
+      // Function to execute when the user clicks on a cell.
+      virtual void mouseClick(const int x, const int y) = 0;
 
       // Starts the next turn.
       virtual void nextTurn(void) = 0;

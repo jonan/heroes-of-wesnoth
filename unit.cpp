@@ -21,10 +21,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "unit.hpp"
 
 // Sets all the unit's attributes.
-void unit::setAllAttributes(const int live, const int magic, const int physicalDefence,
-                            const int magicalDefence, const int physicalAttack,
-                            const int magicalAttack, const int agility,
-                            const int movement) {
+void unit::setAllAttributes(const int live, const int magic,
+                            const int physicalDefence, const int magicalDefence,
+                            const int physicalAttack, const int magicalAttack,
+                            const int agility, const int movement
+                           ) {
    this->live = live;
    liveMax = live;
    this->magic = magic;

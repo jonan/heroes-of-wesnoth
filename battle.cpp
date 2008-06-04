@@ -48,9 +48,9 @@ bool battle::frame(void) {
    return endBattle;
 }
 
-// Function to execute when the cell where the mouse is over is detected.
-void battle::mouseOver(const int x, const int y, const int button) {
-   if ( button == 1  &&  (selectedUnit->getPosition() != &battleMap[x][y]) ) {
+// Function to execute when the user clicks on a cell.
+void battle::mouseClick(const int x, const int y) {
+   if ( selectedUnit->getPosition() != &battleMap[x][y] ) {
       if ( battleMap[x][y].canMoveHere() ) {
          moveCreature(&battleMap[x][y]);
          nextTurn();
@@ -262,14 +262,14 @@ bool createBattle(hero &player, const int enemyType, const int terrainType) {
    unit *creature[9];
    int numberEnemies;
 
-   // Save players position
+   // Save players position in the world
    temp = player.getPosition();
 
    // Create the enemy creatures.
    numberEnemies = rand() % 5;
    numberEnemies++;
    for (int i=0; i<9; i++) {
-      creature[i] = new unit(enemyType, numberEnemies); //numberEnemies);
+      creature[i] = new unit(enemyType, numberEnemies);
    }
 
    battle war(player, creature, 9);

@@ -22,7 +22,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef CELL_HPP
 #define CELL_HPP
 
+#include <deque>
+
 #include <SDL/SDL.h>
+
+using namespace std;
 
 class unit;
 
@@ -40,7 +44,7 @@ class unit;
 /// cells in any type of map.
 class cell {
    private:
-      SDL_Surface *terrain; // Surface of the terrain
+      deque<SDL_Surface*> terrain; // Surfaces of the terrain
       int type; // Type of terrain of the cell
       unit *creature; // Creature in the cell
       cell *connectedCell[6]; // The six cells that are next to it
@@ -63,13 +67,13 @@ class cell {
       cell(void); // Constructor
       ~cell(void); // Destructor
 
-      /// Sets the cell's terrain.
+      /// Adds an image to the cell's terrain.
       ///
       /// -no detailed description-
       ///
       /// @param[in] terrain Surface of the terrain.
       /// @param[in] type Type of terrain.
-      void setTerrain(SDL_Surface &terrain, const int type);
+      void addImage(SDL_Surface &terrain, const int type = -1);
       /// Puts a creature in the cell.
       ///
       /// -no detailed description-
@@ -146,15 +150,10 @@ class cell {
       ///
       /// Marks the cell as not being selected and tells all the cells
       /// where the unit could move that now it can not move there.
-      void unselect(void);
-      /// The cell is no longer selected.
-      ///
-      /// Marks the cell as not being selected and tells all the cells
-      /// where the unit could move that now it can not move there.
       /// (To use when the creature has been erased but you know the movement)
       ///
-      /// @param[in] movement Movement of the creature.
-      void unselect(const int movement);
+      /// @param[in] movement Movement of the creature (only needed if the unit isn't over the cell).
+      void unselect(int movement = -1);
 
       /// Connects a cell to this one.
       ///

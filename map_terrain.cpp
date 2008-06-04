@@ -16,6 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 #include <cstdlib>
+#include <deque>
 #include <iostream>
 
 #include "cell.hpp"
@@ -68,12 +69,12 @@ void map::setTerrain(const int terrainName, const int x, const int y) {
       for (int i=0; i<width; i++)
          for (int j=0; j<height; j++) {
             randomNumber = rand() % images;
-            battleMap[i][j].setTerrain(*terrain[randomNumber], terrainName);
+            battleMap[i][j].addImage(*terrain[randomNumber], terrainName);
             battleMap[i][j].setMovementPenalty(movementPenalty);
          }
    } else { // Set the attributes to a given cell.
       randomNumber = rand() % images;
-      battleMap[x][y].setTerrain(*terrain[randomNumber], terrainName);
+      battleMap[x][y].addImage(*terrain[randomNumber], terrainName);
       battleMap[x][y].setMovementPenalty(movementPenalty);
    }
 }
