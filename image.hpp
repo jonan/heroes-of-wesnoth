@@ -73,7 +73,6 @@ class imageList {
       image* findImage(const char *imageName);
 
    public:
-      imageList(void) {}; // Constructor
       ~imageList(void); // Destructor
 
       /// Adds the image to the list.

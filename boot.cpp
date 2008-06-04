@@ -39,40 +39,11 @@ void freeEngine(void) {
 // time the game is executed.
 void loadMainImages(void) {
    screen->newImage("alpha", 50);
-   screen->newImage("armageddon");
-   screen->newImage("bat-se-1");
-   screen->newImage("bat-se-2");
-   screen->newImage("bat-se-3");
-   screen->newImage("bat-se-4");
-   screen->newImage("bat-se-5");
-   screen->newImage("blademaster");
    screen->newImage("button");
    screen->newImage("button-active");
    screen->newImage("button-pressed");
-   screen->newImage("cavespider");
-   screen->newImage("flanker");
-   screen->newImage("floor");
-   screen->newImage("floor2");
-   screen->newImage("floor3");
-   screen->newImage("floor4");
-   screen->newImage("floor5");
-   screen->newImage("floor6");
-   screen->newImage("ford");
-   screen->newImage("grand-knight");
-   screen->newImage("grass-r1");
-   screen->newImage("grass-r2");
-   screen->newImage("grass-r3");
-   screen->newImage("grass-r4");
-   screen->newImage("grass-r5");
-   screen->newImage("grass-r6");
-   screen->newImage("grass-r7");
-   screen->newImage("grass-r8");
    screen->newImage("heroes-logo");
-   screen->newImage("pillager");
-   screen->newImage("sergeant");
-   screen->newImage("skeleton");
    screen->newImage("wesnoth");
-   screen->newImage("wolf-rider");
 }
 
 // Starts the engine and loads the main images.

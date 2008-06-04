@@ -58,9 +58,10 @@ class graphics {
       graphics(void); // Constructor
       ~graphics(void); // Destructor
 
-      /// Returns the surface of a preveously loaded image.
+      /// Returns the surface of an image.
       ///
-      /// -no detailed description-
+      /// Looks for the image in the list of loaded
+      /// ones, if it's not there it loads it.
       ///
       /// @param[in] imageName The image's name, without the "img/" or the ".png".
       /// @return Surface of the image.
@@ -74,9 +75,10 @@ class graphics {
       /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
       void newImage(const char *imageName, const int alpha = SDL_ALPHA_OPAQUE);
 
-      /// Draws an image previously loaded to the indicated position.
+      /// Draws an image to the indicated position.
       ///
-      /// -no detailed description-
+      /// Before drawing looks for the image in the list
+      /// of loaded ones, if it's not there it loads it.
       ///
       /// @param[in] imageName The image's name, without the "img/" or the ".png".
       /// @param[in] position Position where the image will be drawn.

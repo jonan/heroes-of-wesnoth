@@ -99,12 +99,8 @@ image* imageList::findImage(const char *imageName) {
       else i++;
    }
 
-   if (!found) {
-      cout << "\nSearch for file \"" << imageName << "\" failed.\n\n";
-      exit(EXIT_FAILURE);
-   }
-
-   return images[i];
+   if (!found) return NULL;
+   else return images[i];
 }
 
 // Destructor
@@ -126,7 +122,11 @@ void imageList::addImage(const char *imageName, const int alpha) {
 
 // Returns the surface of an image in the list.
 SDL_Surface* imageList::getSurface(const char *imageName) {
-   return findImage(imageName)->getSurface();
+   image *temp;
+
+   temp = findImage(imageName);
+   if (temp) return temp->getSurface();
+   else return NULL;
 }
 
 // ---End---

@@ -74,11 +74,17 @@ graphics::~graphics(void) {
    SDL_Quit();
 }
 
-// Returns the surface of a preveously loaded image.
+// Looks for the image in the list of loaded
+// ones, if it's not there it loads it.
 SDL_Surface* graphics::getImage(const char *imageName) {
    SDL_Surface *temp;
 
    temp = image->getSurface(imageName);
+   if (!temp) { // The image hasn't been loaded.
+      newImage(imageName);
+      temp = image->getSurface(imageName);
+   }
+
    return temp;
 }
 
@@ -87,11 +93,17 @@ void graphics::newImage(const char *imageName, const int alpha) {
    image->addImage(imageName, alpha);
 }
 
-// Draws an image previously loaded to the indicated position.
+//Before drawing looks for the image in the list
+// of loaded ones, if it's not there it loads it.
 void graphics::draw(const char *imageName, SDL_Rect &position) {
    SDL_Surface *temp;
 
    temp = image->getSurface(imageName);
+   if (!temp) { // The image hasn't been loaded.
+      newImage(imageName);
+      temp = image->getSurface(imageName);
+   }
+
    SDL_BlitSurface(temp, NULL, screen, &position);
 }
 
