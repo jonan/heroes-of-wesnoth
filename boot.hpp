@@ -25,7 +25,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// Starts the engine and loads the main images.
 ///
 /// -no detailed description-
-void boot(void);
+void boot(const bool fullscreen);
 /// Exits the game.
 ///
 /// -no detailed description-

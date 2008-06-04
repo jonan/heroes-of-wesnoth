@@ -52,10 +52,10 @@ class graphics {
       // Initializes SDL, SDL_ttf and SDL_mixer.
       void init(void);
       // Creates the surface that will be drawn directly to the screen.
-      void createWindow(void);
+      void createWindow(const bool fullscreen);
 
    public:
-      graphics(void); // Constructor
+      graphics(const bool fullscreen); // Constructor
       ~graphics(void); // Destructor
 
       /// Returns the surface of an image.

@@ -42,13 +42,17 @@ void graphics::init(void) {
 }
 
 // Creates the surface that will be drawn directly to the screen
-void graphics::createWindow(void) {
+void graphics::createWindow(const bool fullscreen) {
    /// @todo Add option to change width and height.
    cout << "Opening " << SCREEN_WIDTH << "x" << SCREEN_HEIGHT << " window...\t\t";
+
    SDL_WM_SetCaption ("Heroes of Wesnoth", NULL);
-   // Not using fullscreen to prevent reseting computer after program crash.
-   // This will change in final version.
-   screen = SDL_SetVideoMode (SCREEN_WIDTH, SCREEN_HEIGHT, BPP, SDL_DOUBLEBUF | SDL_ANYFORMAT);// | SDL_FULLSCREEN);
+   if (fullscreen) {
+      screen = SDL_SetVideoMode (SCREEN_WIDTH, SCREEN_HEIGHT, BPP, SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN);
+   } else {
+      screen = SDL_SetVideoMode (SCREEN_WIDTH, SCREEN_HEIGHT, BPP, SDL_DOUBLEBUF | SDL_ANYFORMAT);
+   }
+
    if (screen == NULL) {
       cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
       exit(EXIT_FAILURE);
@@ -57,9 +61,9 @@ void graphics::createWindow(void) {
 }
 
 // Constructor
-graphics::graphics(void) {
+graphics::graphics(const bool fullscreen) {
    init();
-   createWindow();
+   createWindow(fullscreen);
    image = new imageList;
    text = new ttf();
 }

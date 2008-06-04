@@ -27,20 +27,26 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 using namespace std;
 
 int main(int argc, char *argv[]) {
+   // Default options
+   bool fullscreen = false;
+
    // Check the programs arguments
    for (int i=1; i<argc; i++) {
       const string val(argv[i]);
-      if (val == "-h" || val == "--help") {
+      if (val == "-fs" || val == "--full-screen") {
+         fullscreen = true;
+      } else {
          /// @todo Change version
          cout << "\nHeroes of Wesnoth SVN\n"
               << "\nusage: heroes [OPTIONS]\n"
-              << "  -h, --help       prints this message and exits.\n"
+              << "  -fs, --full-screen  starts the game in full screen mode.\n"
+              << "  -h, --help          prints this message and exits.\n"
               << endl;
          return EXIT_SUCCESS;
       }
    }
    // Start the game engine
-   boot();
+   boot(fullscreen);
    // Start the main menu
    startMainMenu();
 
