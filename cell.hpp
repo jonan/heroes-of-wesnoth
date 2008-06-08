@@ -45,7 +45,8 @@ class unit;
 class cell {
    private:
       deque<SDL_Surface*> terrain; // Surfaces of the terrain
-      int type; // Type of terrain of the cell
+      SDL_Surface *stars, *alpha;
+      char type; // Type of terrain of the cell
       unit *creature; // Creature in the cell
       cell *connectedCell[6]; // The six cells that are next to it
       int mapX, mapY; // Map coordinates of the cell
@@ -57,6 +58,7 @@ class cell {
       bool selected; // Indicates if the unit in the cell is selected
       bool canMove; // Indicates if the selected creature can move to this cell
       bool canAttack; // Indicates if the unit in the cell can be attacked
+      bool visible; // Indicates if the cell is visible or not
 
       // Calculates to what cells can a creature move.
       void creatureMovement(const int movement, int *path, const int movements);
@@ -73,7 +75,19 @@ class cell {
       ///
       /// @param[in] terrain Surface of the terrain.
       /// @param[in] type Type of terrain.
-      void addImage(SDL_Surface &terrain, const int type = -1);
+      void addImage(SDL_Surface &terrain, const char type = -1);
+      /// Sets the image used to outstand a cell.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] alpha Alpha surface.
+      void setAlpha(SDL_Surface &alpha);
+      /// Sets the image to show when the cell is not visible.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] stars Surface of the stars.
+      void setStars(SDL_Surface &stars);
       /// Puts a creature in the cell.
       ///
       /// -no detailed description-
@@ -100,7 +114,7 @@ class cell {
       /// -no detailed description-
       ///
       /// @return Type of terrain of the cell.
-      int getTerrain(void);
+      char getTerrain(void);
       /// Returns the creature in the cell.
       ///
       /// -no detailed description-
@@ -154,6 +168,13 @@ class cell {
       ///
       /// @param[in] movement Movement of the creature (only needed if the unit isn't over the cell).
       void unselect(int movement = -1);
+
+      /// Calculates which cells are visible.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] visibility Visibility of the hero on the cell.
+      void calculateView(int visibility);
 
       /// Connects a cell to this one.
       ///

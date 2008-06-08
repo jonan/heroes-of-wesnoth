@@ -44,6 +44,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 class hero : public unit {
    private:
       int ai; // Type of Artificial Intelligence
+      int visibility; // How far the hero sees
 
       unit *creature[MAX_UNITS]; // The creatures a hero can control
       int numCreatures; // The number of creatures that the hero actualy controls
@@ -64,6 +65,12 @@ class hero : public unit {
       ///
       /// @return The hero's type of AI
       int getAI(void);
+      /// Returns the hero's visibility.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return The hero's visibility
+      int getVisibility(void);
       /// Returns the number of creatures the hero controls.
       ///
       /// -no detailed description-

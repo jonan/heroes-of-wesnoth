@@ -27,13 +27,13 @@ using namespace std;
 
 // Initializes SDL, SDL_ttf and SDL_mixer
 void graphics::init(void) {
-   cout << "Starting SDL...\t\t\t\t";
+   cout << "Starting SDL...\t\t\t";
    if ( SDL_Init (SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0 ) { // SDL_INIT_AUDIO not yet needed
       cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
       exit(EXIT_FAILURE);
    }
    cout << "[ ok ]\n";
-   cout << "Starting SDL_ttf...\t\t\t";
+   cout << "Starting SDL_ttf...\t\t";
    if ( TTF_Init() < 0 ) {
       cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
       exit(EXIT_FAILURE);
@@ -44,7 +44,7 @@ void graphics::init(void) {
 // Creates the surface that will be drawn directly to the screen
 void graphics::createWindow(const bool fullscreen) {
    /// @todo Add option to change width and height.
-   cout << "Opening " << SCREEN_WIDTH << "x" << SCREEN_HEIGHT << " window...\t\t";
+   cout << "Opening " << SCREEN_WIDTH << "x" << SCREEN_HEIGHT << " window...\t";
 
    SDL_WM_SetCaption ("Heroes of Wesnoth", NULL);
    if (fullscreen) {
@@ -70,7 +70,6 @@ graphics::graphics(const bool fullscreen) {
 
 // Destructor
 graphics::~graphics(void) {
-   cout << "Freeing screen...\n";
    delete image;
    delete text;
    SDL_FreeSurface(screen);

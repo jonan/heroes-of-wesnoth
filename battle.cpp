@@ -22,6 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "events.hpp"
 #include "graphics.hpp"
 #include "hero.hpp"
+#include "unit.hpp"
 
 // This function is executed in the main loop. If
 // it returns true, the loop ends, else it continues.
@@ -52,11 +53,11 @@ bool battle::frame(void) {
 void battle::mouseClick(const int x, const int y) {
    if ( selectedUnit->getPosition() != &battleMap[x][y] ) {
       if ( battleMap[x][y].canMoveHere() ) {
-         moveCreature(&battleMap[x][y]);
+         moveCreature(battleMap[x][y]);
          nextTurn();
       } else if ( battleMap[x][y].canAttackHere() ) {
          if ( battleMap[x][y].getCreature()->getMaster() != selectedUnit->getMaster() ) {
-            moveCreature(&battleMap[x][y]);
+            moveCreature(battleMap[x][y]);
             selectedUnit->attack( *battleMap[x][y].getCreature() );
             // Check if the creatures is dead.
             if ( battleMap[x][y].getCreature()->getNumber() == 0 ) {
@@ -166,7 +167,7 @@ void battle::ai(void) {
    temp = getAttackCell();
 
    if (temp) { // Attack a unit
-      moveCreature(temp);
+      moveCreature(*temp);
       selectedUnit->attack( *temp->getCreature() );
       if ( temp->getCreature()->getNumber() == 0 ) {
          deleteCreature( *temp->getCreature() );
@@ -179,7 +180,7 @@ void battle::ai(void) {
       x=0;
       while(!battleMap[x][y].canMoveHere() && x<width) x++;
       if (x!=width) {
-         moveCreature(&battleMap[x][y]);
+         moveCreature(battleMap[x][y]);
          nextTurn();
       } else {
          selectedUnit->getPosition()->unselect();
@@ -202,6 +203,10 @@ battle::battle(hero &player, unit **enemies, const int numberEnemies) : map(18, 
 
    endBattle = false;
 
+   // Make the hole map visible
+   for (int x=0; x<18; x++)
+      for (int y=0; y<9; y++)
+         battleMap[x][y].calculateView(1);
    // Put the hero and his units in the map.
    battleMap[0][4].setCreature(&player);
    for (int i=0; i<9; i++)

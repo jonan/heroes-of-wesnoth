@@ -222,14 +222,14 @@ void map::moveMouse(const int x, const int y, const int button) {
 }
 
 // Moves a unit to a cell.
-void map::moveCreature(cell *endPosition) {
+void map::moveCreature(cell &endPosition) {
    int *path;
    int movements;
    cell *actualPosition;
    cell *temp;
 
    actualPosition = selectedUnit->getPosition();
-   endPosition->getPath(path, movements);
+   endPosition.getPath(path, movements);
 
    /// @note This isn't too elegant
    for (int i=0; i<movements; i++) {

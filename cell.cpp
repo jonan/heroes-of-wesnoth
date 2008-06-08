@@ -108,6 +108,7 @@ cell::cell(void) {
    selected = false;
    canMove = false;
    canAttack = false;
+   visible = false;
 }
 
 // Destructor
@@ -116,9 +117,19 @@ cell::~cell(void) {
 }
 
 // Sets the cell's terrain.
-void cell::addImage(SDL_Surface &terrain, const int type) {
+void cell::addImage(SDL_Surface &terrain, const char type) {
    this->terrain.push_back(&terrain);
    if (type != -1) this->type = type;
+}
+
+// Sets the image used to outstand a cell.
+void cell::setAlpha(SDL_Surface &alpha) {
+   this->alpha = &alpha;
+}
+
+// Sets the image to show when the cell is not visible.
+void cell::setStars(SDL_Surface &stars) {
+   this->stars = &stars;
 }
 
 // Puts a creature in the cell.
@@ -140,7 +151,7 @@ void cell::setCoordinates(const int x, const int y) {
 }
 
 // Returns the cell's terrain.
-int cell::getTerrain(void) {
+char cell::getTerrain(void) {
    return type;
 }
 
@@ -194,6 +205,17 @@ void cell::unselect(int movement) {
    eraseMovement(movement, 0);
 }
 
+// Calculates which cells are visible.
+void cell::calculateView(int visibility) {
+   if (visibility > 0) {
+      visible = true;
+      for (int i=N; i<=NW; i++) { // The six relative positions to the cell.
+         if (connectedCell[i])
+            connectedCell[i]->calculateView(visibility-1);
+      }
+   }
+}
+
 // Indicates which are the cells next to this one
 // in any direction (N, NE, SE, S, SW or NW).
 void cell::connectCell(const int position, cell* connectedCell){
@@ -202,12 +224,14 @@ void cell::connectCell(const int position, cell* connectedCell){
 
 // Draws the cell in the screen.
 void cell::draw(SDL_Rect position) {
-   for (int i=0; i<terrain.size(); i++)
-      screen->draw(terrain[i], position);
-   if (mouseOver) screen->draw("alpha", position);
-   if (canMove) screen->draw("alpha", position);
-   if (creature) creature->draw(position);
-   if (selected) screen->draw("alpha", position);
+   if (visible) {
+      for (int i=0; i<terrain.size(); i++)
+         screen->draw(terrain[i], position);
+      if (mouseOver) screen->draw(alpha, position);
+      if (canMove) screen->draw(alpha, position);
+      if (creature) creature->draw(position);
+      if (selected) screen->draw(alpha, position);
+   } else screen->draw(stars, position);
 }
 
 // Indicates if the selected creature can move to this cell.

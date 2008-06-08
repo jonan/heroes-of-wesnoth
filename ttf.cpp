@@ -23,13 +23,11 @@ using namespace std;
 
 // Constructor
 ttf::ttf(void) {
-   cout << "Loading font...\t\t\t\t";
    font = TTF_OpenFont("font/DejaVuSans.ttf", 14);
    if (font == NULL) {
-      cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
+      cout << "\n\t" << SDL_GetError() << "\n\n";
       exit(EXIT_FAILURE);
-   } else
-      cout << "[ ok ]\n";
+   }
 
    // Initialize position
    position.x = 0;
@@ -42,9 +40,7 @@ ttf::ttf(void) {
 
 // Destructor
 ttf::~ttf(void) {
-   cout << "Freeing font...\t\t\t\t";
    TTF_CloseFont(font);
-   cout << "[ ok ]\n";
 }
 
 // Writes a text into a surface.

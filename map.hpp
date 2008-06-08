@@ -24,9 +24,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // @{
 /// Types of terrain.
-#define CAVE  0
-#define GRASS 1
-#define WATER 2
+#define CAVE  '0'
+#define GRASS '1'
+#define WATER '2'
 // @}
 
 class cell;
@@ -75,7 +75,7 @@ class map {
       virtual bool frame(void) = 0;
 
       // Moves a unit to a cell.
-      void moveCreature(cell *endPosition);
+      void moveCreature(cell &endPosition);
 
       // Softens the map to make it look nicer.
       // (Implemented in map_smooth.cpp)
@@ -99,7 +99,7 @@ class map {
       /// @param[in] x X coordinate of the cell.
       /// @param[in] y Y coordinate of the cell.
       // (Implemented in map_terrain.cpp)
-      void setTerrain(const int terrainName, const int x = -1, const int y = -1);
+      void setTerrain(const char terrainName, const int x = -1, const int y = -1);
 };
 
 #endif // MAP_HPP

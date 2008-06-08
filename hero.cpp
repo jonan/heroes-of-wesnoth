@@ -29,6 +29,8 @@ hero::hero(const int type, const int ai) : unit(-1) {
       creature[i]=NULL;
    }
    numCreatures=0;
+
+   visibility = 8;
 }
 
 hero::~hero(void) {
@@ -40,6 +42,11 @@ hero::~hero(void) {
 // Returns the hero's type of AI.
 int hero::getAI(void) {
    return ai;
+}
+
+// Returns the hero's visibility.
+int hero::getVisibility(void) {
+   return visibility;
 }
 
 // Returns the number of creatures the hero controls.

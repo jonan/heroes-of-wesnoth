@@ -42,11 +42,13 @@ bool world::frame(void) {
 void world::mouseClick(const int x, const int y) {
    if ( selectedUnit->getPosition() != &battleMap[x][y] ) {
       if ( battleMap[x][y].canMoveHere() ) {
-         moveCreature(&battleMap[x][y]);
+         moveCreature(battleMap[x][y]);
+         battleMap[x][y].calculateView(players[turn]->getVisibility());
          nextTurn();
       } else if ( battleMap[x][y].canAttackHere() ) {
          if ( battleMap[x][y].getCreature()->getMaster() != selectedUnit->getMaster() ) {
-            moveCreature(&battleMap[x][y]);
+            moveCreature(battleMap[x][y]);
+            battleMap[x][y].calculateView(players[turn]->getVisibility());
 
             // Set the battle information
             hero *player = (hero*)(selectedUnit);
@@ -106,7 +108,7 @@ world::world(const char *mapFile, const int width, const int height) : map(width
    while (j<height) {
       file.get(temp);
       if (temp != '\n') {
-         setTerrain(temp-48, i, j); // 48 is 0 in ASCII
+         setTerrain(temp, i, j);
          i++;
          if (i == width) {
             i = 0;
@@ -145,10 +147,10 @@ void world::setEnemies(const char *enemiesMapFile) {
    while (j<height) {
       file.get(temp);
       if (temp != '\n') {
-         if (temp != '0') {
+         if (temp != '-') {
             unit *creature;
             /// @todo Free this units if they are not killed.
-            creature = new unit(temp - 49, 0); // 49 is 1 in ASCII
+            creature = new unit(temp, 0);
             battleMap[i][j].setCreature(creature);
             numberEnemies++;
          }
@@ -167,4 +169,5 @@ void world::setEnemies(const char *enemiesMapFile) {
 void world::setHero(hero &player, const int x, const int y) {
    players.push_back(&player);
    battleMap[x][y].setCreature(&player);
+   battleMap[x][y].calculateView(player.getVisibility());
 }

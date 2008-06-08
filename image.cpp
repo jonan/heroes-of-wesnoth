@@ -38,12 +38,9 @@ void image::loadImage(const int alpha) {
    string png = ".png";
    string imageDir = img + imageName + png;
 
-   cout << "Loading \"" << name << "\"...\t\t";
-   // If the image name is to sort leave more space
-   if ( strlen(name)<11 ) cout << "\t";
    image = IMG_Load( imageDir.c_str() );
    if ( image==NULL ) {
-      cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
+      cout << "\n\t" << SDL_GetError() << "\n\n";
       exit(EXIT_FAILURE);
    } else {
       /// @todo Improve alpha display.
@@ -54,7 +51,6 @@ void image::loadImage(const int alpha) {
       this->img = SDL_DisplayFormatAlpha(image);
       if (this->img) SDL_FreeSurface(image);
       else this->img = image;
-      cout << "[ ok ]\n";
    }
 }
 
@@ -66,12 +62,8 @@ image::image(const char *imageName, const int alpha) {
 
 // Destructor
 image::~image(void) {
-   cout << "Freeing \"" << name << "\"...\t\t";
-   // If the image name is to sort leave more space
-   if ( strlen(name)<11 ) cout << "\t";
    free(name);
    SDL_FreeSurface(img);
-   cout << "[ ok ]\n";
 }
 
 // Returns the image name.
@@ -105,10 +97,11 @@ image* imageList::findImage(const char *imageName) {
 
 // Destructor
 imageList::~imageList(void) {
-   cout << "Freeing imageList...\n";
+   cout << "Freeing imageList...\t\t";
    for (int i=0; i<images.size(); i++) {
       delete images[i];
    }
+   cout << "[ ok ]\n";
 }
 
 // Loads the image and then places it at

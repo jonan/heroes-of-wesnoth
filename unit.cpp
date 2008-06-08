@@ -44,7 +44,7 @@ void unit::addStandingImage(const char *imageName) {
 }
 
 // Constructor
-unit::unit(const int type, const int number) {
+unit::unit(const char type, const int number) {
    this->number = number;
 
    sprite = 0;
@@ -94,7 +94,7 @@ cell* unit::getPosition(void) {
 }
 
 // Returns the unit's type.
-int unit::getType(void) {
+char unit::getType(void) {
    return type;
 }
 

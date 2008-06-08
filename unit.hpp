@@ -30,15 +30,15 @@ using namespace std;
 
 // @{
 /// Types of units.
-#define ARMAGEDDON  0
-#define BAT         1
-#define BLADEMASTER 2
-#define CAVESPIDER  3
-#define FLANKER     4
-#define PILLAGER    5
-#define SERGEANT    6
-#define SKELETON    7
-#define WOLF_RIDER  8
+#define ARMAGEDDON  '0'
+#define BAT         '1'
+#define BLADEMASTER '2'
+#define CAVESPIDER  '3'
+#define FLANKER     '4'
+#define PILLAGER    '5'
+#define SERGEANT    '6'
+#define SKELETON    '7'
+#define WOLF_RIDER  '8'
 // @}
 
 /// Number of frames to wait before changing to the next sprite.
@@ -52,7 +52,7 @@ class hero;
 /// -no detailed description-
 class unit {
    protected:
-      int type;
+      char type;
 
       int number; // Number of units
 
@@ -88,7 +88,7 @@ class unit {
    public:
       /// @param[in] type Type of unit.
       /// @param[in] number Number of units.
-      unit(const int type, const int number = 1); // Constructor
+      unit(const char type, const int number = 1); // Constructor
       ~unit(void) {}; // Destructor
 
       /// Changes the number of units.
@@ -139,7 +139,7 @@ class unit {
       /// -no detailed description-
       ///
       /// @return The unit's Type.
-      int getType(void);
+      char getType(void);
       /// Returns the hero that controls the unit.
       ///
       /// -no detailed description-
