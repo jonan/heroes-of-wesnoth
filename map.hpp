@@ -77,6 +77,10 @@ class map {
       // Moves a unit to a cell.
       void moveCreature(cell *endPosition);
 
+      // Softens the map to make it look nicer.
+      // (Implemented in map_smooth.cpp)
+      void softenMap(void);
+
       // Draws the map in the screen.
       void draw(void);
 

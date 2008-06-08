@@ -117,6 +117,8 @@ world::world(const char *mapFile, const int width, const int height) : map(width
 
    file.close();
 
+   softenMap();
+
    turn = -1;
    numberEnemies = 0;
    endWorld = false;
