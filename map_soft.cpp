@@ -23,59 +23,158 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 using namespace std;
 
-#define FLOOR          0
-#define GRASS_TO_WATER 1
+#define ADD_CAVE_FLOOR          0
+#define ADD_FLAT_GRASS          1
+#define ADD_FLAT_GRASS_TO_WATER 2
+#define ADD_FLAT_ROAD           3
+#define ADD_WATER_COAST         4
+#define ADD_WATER_OCEAN         5
+
+/**
+CAVE_PATH
+CAVE_FLOOR
+FLAT_GRASS
+FLAT_ROAD
+FORD
+WATER_COAST
+WATER_OCEAN
+*/
+/*
+
+CAVE_FLOOR vs FLAT_GRASS -> CAVE_FLOOR
+CAVE_FLOOR vs FLAT_ROAD -> CAVE_FLOOR
+CAVE_FLOOR vs FORD -> CAVE_FLOOR
+CAVE_FLOOR vs WATER_COAST -> CAVE_FLOOR
+CAVE_FLOOR vs WATER_OCEAN -> CAVE_FLOOR
+
+FLAT_GRASS vs FLAT_ROAD -> FLAT_GRASS
+FLAT_GRASS vs FORD -> FLAT_GRASS
+FLAT_GRASS vs WATER_COAST -> FLAT_GRASS
+FLAT_GRASS vs WATER_OCEAN -> FLAT_GRASS
+
+FLAT_ROAD vs FORD -> FLAT_ROAD
+FLAT_ROAD vs WATER_COAST -> FLAT_ROAD
+FLAT_ROAD vs WATER_OCEAN -> FLAT_ROAD
+
+FORD vs WATER_COAST -> WATER_COAST
+FORD vs WATER_OCEAN -> WATER_OCEAN
+
+WATER_COAST vs WATER_OCEAN -> WATER_COAST
+
+*/
 
 // Sets the images needed to soften the map.
 void initializeVariables(SDL_Surface **one, SDL_Surface **two,
                          SDL_Surface **three, SDL_Surface **four,
                          int type
                         ) {
-   if (type == FLOOR) {
-      one[0] = screen->getImage("terrain/floor-n");
-      one[1] = screen->getImage("terrain/floor-ne");
-      one[2] = screen->getImage("terrain/floor-se");
-      one[3] = screen->getImage("terrain/floor-s");
-      one[4] = screen->getImage("terrain/floor-sw");
-      one[5] = screen->getImage("terrain/floor-nw");
+   if (type == ADD_CAVE_FLOOR) {
+      one[0] = screen->getImage("terrain/cave/floor-n");
+      one[1] = screen->getImage("terrain/cave/floor-ne");
+      one[2] = screen->getImage("terrain/cave/floor-se");
+      one[3] = screen->getImage("terrain/cave/floor-s");
+      one[4] = screen->getImage("terrain/cave/floor-sw");
+      one[5] = screen->getImage("terrain/cave/floor-nw");
 
-      two[0] = screen->getImage("terrain/floor-n-ne");
-      two[1] = screen->getImage("terrain/floor-ne-se");
-      two[2] = screen->getImage("terrain/floor-se-s");
-      two[3] = screen->getImage("terrain/floor-s-sw");
-      two[4] = screen->getImage("terrain/floor-sw-nw");
-      two[5] = screen->getImage("terrain/floor-nw-n");
+      two[0] = screen->getImage("terrain/cave/floor-n-ne");
+      two[1] = screen->getImage("terrain/cave/floor-ne-se");
+      two[2] = screen->getImage("terrain/cave/floor-se-s");
+      two[3] = screen->getImage("terrain/cave/floor-s-sw");
+      two[4] = screen->getImage("terrain/cave/floor-sw-nw");
+      two[5] = screen->getImage("terrain/cave/floor-nw-n");
 
       *three = NULL;
       *four = NULL;
-   }else if (type == GRASS_TO_WATER) {
-      one[0] = screen->getImage("terrain/grass-to-water-n");
-      one[1] = screen->getImage("terrain/grass-to-water-ne");
-      one[2] = screen->getImage("terrain/grass-to-water-se");
-      one[3] = screen->getImage("terrain/grass-to-water-s");
-      one[4] = screen->getImage("terrain/grass-to-water-sw");
-      one[5] = screen->getImage("terrain/grass-to-water-nw");
+   } else if (type == ADD_FLAT_GRASS) {
+      one[0] = screen->getImage("terrain/flat/grass-n");
+      one[1] = screen->getImage("terrain/flat/grass-ne");
+      one[2] = screen->getImage("terrain/flat/grass-se");
+      one[3] = screen->getImage("terrain/flat/grass-s");
+      one[4] = screen->getImage("terrain/flat/grass-sw");
+      one[5] = screen->getImage("terrain/flat/grass-nw");
 
-      two[0] = screen->getImage("terrain/grass-to-water-n-ne");
-      two[1] = screen->getImage("terrain/grass-to-water-ne-se");
-      two[2] = screen->getImage("terrain/grass-to-water-se-s");
-      two[3] = screen->getImage("terrain/grass-to-water-s-sw");
-      two[4] = screen->getImage("terrain/grass-to-water-sw-nw");
-      two[5] = screen->getImage("terrain/grass-to-water-nw-n");
+      two[0] = screen->getImage("terrain/flat/grass-n-ne");
+      two[1] = screen->getImage("terrain/flat/grass-ne-se");
+      two[2] = screen->getImage("terrain/flat/grass-se-s");
+      two[3] = screen->getImage("terrain/flat/grass-s-sw");
+      two[4] = screen->getImage("terrain/flat/grass-sw-nw");
+      two[5] = screen->getImage("terrain/flat/grass-nw-n");
 
-      three[0] = screen->getImage("terrain/grass-to-water-n-ne-se");
-      three[1] = screen->getImage("terrain/grass-to-water-ne-se-s");
-      three[2] = screen->getImage("terrain/grass-to-water-se-s-sw");
-      three[3] = screen->getImage("terrain/grass-to-water-s-sw-nw");
-      three[4] = screen->getImage("terrain/grass-to-water-sw-nw-n");
-      three[5] = screen->getImage("terrain/grass-to-water-nw-n-ne");
+      three[0] = screen->getImage("terrain/flat/grass-n-ne-se");
+      three[1] = screen->getImage("terrain/flat/grass-ne-se-s");
+      three[2] = screen->getImage("terrain/flat/grass-se-s-sw");
+      three[3] = screen->getImage("terrain/flat/grass-s-sw-nw");
+      three[4] = screen->getImage("terrain/flat/grass-sw-nw-n");
+      three[5] = screen->getImage("terrain/flat/grass-nw-n-ne");
 
-      four[0] = screen->getImage("terrain/grass-to-water-n-ne-se-s");
-      four[1] = screen->getImage("terrain/grass-to-water-ne-se-s-sw");
-      four[2] = screen->getImage("terrain/grass-to-water-se-s-sw-nw");
-      four[3] = screen->getImage("terrain/grass-to-water-s-sw-nw-n");
-      four[4] = screen->getImage("terrain/grass-to-water-sw-nw-n-ne");
-      four[5] = screen->getImage("terrain/grass-to-water-nw-n-ne-se");
+      *four = NULL;
+   } else if (type == ADD_FLAT_GRASS_TO_WATER) {
+      one[0] = screen->getImage("terrain/flat/grass-to-water-n");
+      one[1] = screen->getImage("terrain/flat/grass-to-water-ne");
+      one[2] = screen->getImage("terrain/flat/grass-to-water-se");
+      one[3] = screen->getImage("terrain/flat/grass-to-water-s");
+      one[4] = screen->getImage("terrain/flat/grass-to-water-sw");
+      one[5] = screen->getImage("terrain/flat/grass-to-water-nw");
+
+      two[0] = screen->getImage("terrain/flat/grass-to-water-n-ne");
+      two[1] = screen->getImage("terrain/flat/grass-to-water-ne-se");
+      two[2] = screen->getImage("terrain/flat/grass-to-water-se-s");
+      two[3] = screen->getImage("terrain/flat/grass-to-water-s-sw");
+      two[4] = screen->getImage("terrain/flat/grass-to-water-sw-nw");
+      two[5] = screen->getImage("terrain/flat/grass-to-water-nw-n");
+
+      three[0] = screen->getImage("terrain/flat/grass-to-water-n-ne-se");
+      three[1] = screen->getImage("terrain/flat/grass-to-water-ne-se-s");
+      three[2] = screen->getImage("terrain/flat/grass-to-water-se-s-sw");
+      three[3] = screen->getImage("terrain/flat/grass-to-water-s-sw-nw");
+      three[4] = screen->getImage("terrain/flat/grass-to-water-sw-nw-n");
+      three[5] = screen->getImage("terrain/flat/grass-to-water-nw-n-ne");
+
+      four[0] = screen->getImage("terrain/flat/grass-to-water-n-ne-se-s");
+      four[1] = screen->getImage("terrain/flat/grass-to-water-ne-se-s-sw");
+      four[2] = screen->getImage("terrain/flat/grass-to-water-se-s-sw-nw");
+      four[3] = screen->getImage("terrain/flat/grass-to-water-s-sw-nw-n");
+      four[4] = screen->getImage("terrain/flat/grass-to-water-sw-nw-n-ne");
+      four[5] = screen->getImage("terrain/flat/grass-to-water-nw-n-ne-se");
+   } else if (type == ADD_FLAT_ROAD) {
+      one[0] = screen->getImage("terrain/flat/road-n");
+      one[1] = screen->getImage("terrain/flat/road-ne");
+      one[2] = screen->getImage("terrain/flat/road-se");
+      one[3] = screen->getImage("terrain/flat/road-s");
+      one[4] = screen->getImage("terrain/flat/road-sw");
+      one[5] = screen->getImage("terrain/flat/road-nw");
+
+      two[0] = screen->getImage("terrain/flat/road-n-ne");
+      two[1] = screen->getImage("terrain/flat/road-ne-se");
+      two[2] = screen->getImage("terrain/flat/road-se-s");
+      two[3] = screen->getImage("terrain/flat/road-s-sw");
+      two[4] = screen->getImage("terrain/flat/road-sw-nw");
+      two[5] = screen->getImage("terrain/flat/road-nw-n");
+
+      *three = NULL;
+      *four = NULL;
+   } else if (type == ADD_WATER_COAST) {
+      one[0] = screen->getImage("terrain/water/coast-n");
+      one[1] = screen->getImage("terrain/water/coast-ne");
+      one[2] = screen->getImage("terrain/water/coast-se");
+      one[3] = screen->getImage("terrain/water/coast-s");
+      one[4] = screen->getImage("terrain/water/coast-sw");
+      one[5] = screen->getImage("terrain/water/coast-nw");
+
+      *two = NULL;
+      *three = NULL;
+      *four = NULL;
+   } else if (type == ADD_WATER_OCEAN) {
+      one[0] = screen->getImage("terrain/water/ocean-n");
+      one[1] = screen->getImage("terrain/water/ocean-ne");
+      one[2] = screen->getImage("terrain/water/ocean-se");
+      one[3] = screen->getImage("terrain/water/ocean-s");
+      one[4] = screen->getImage("terrain/water/ocean-sw");
+      one[5] = screen->getImage("terrain/water/ocean-nw");
+
+      *two = NULL;
+      *three = NULL;
+      *four = NULL;
    }
 }
 
@@ -86,7 +185,7 @@ void addImages(bool *terrain, cell &mapCell, SDL_Surface **one, SDL_Surface **tw
    while (position<7) {
       terrain[position] = false;
       if (position!=0 || !terrain[NW]) {
-         if (terrain[position+1]) {
+         if (terrain[position+1] && *two!=NULL) {
             terrain[position+1] = false;
             if (terrain[position+2] && *three!=NULL) {
                terrain[position+2] = false;
@@ -99,7 +198,7 @@ void addImages(bool *terrain, cell &mapCell, SDL_Surface **one, SDL_Surface **tw
                mapCell.addImage( *two[position] );
          } else
             mapCell.addImage( *one[position] );
-      } else {
+      } else if (*two!=NULL){
          terrain[NW] = false;
          if (terrain[SW] && *three!=NULL) {
             terrain[SW] = false;
@@ -134,16 +233,16 @@ void map::softenMap(void) {
    bool differentTerrain[7];
    cell *temp;
 
-   initializeVariables(one, two, three, four, FLOOR);
+   initializeVariables(one, two, three, four, ADD_CAVE_FLOOR);
    for (int j=0; j<7; j++) differentTerrain[j] = false;
 
    for (int x=0; x<width; x++) {
       for (int y=0; y<height; y++) {
-         if (battleMap[x][y].getTerrain() != CAVE) {
+         if (battleMap[x][y].getTerrain() != CAVE_FLOOR) {
             for (int i=N; i<=NW; i++) {
                temp = battleMap[x][y].getConnectedCell(i);
                if (temp != NULL) {
-                  if(temp->getTerrain() == CAVE) differentTerrain[i] = true;
+                  if(temp->getTerrain() == CAVE_FLOOR) differentTerrain[i] = true;
                }
             }
             addImages(differentTerrain, battleMap[x][y], one, two, three, four);
@@ -151,16 +250,92 @@ void map::softenMap(void) {
       }
    }
 
-   initializeVariables(one, two, three, four, GRASS_TO_WATER);
+   initializeVariables(one, two, three, four, ADD_FLAT_GRASS);
    for (int j=0; j<7; j++) differentTerrain[j] = false;
 
    for (int x=0; x<width; x++) {
       for (int y=0; y<height; y++) {
-         if (battleMap[x][y].getTerrain() == WATER) {
+         if (battleMap[x][y].getTerrain() == FLAT_ROAD) {
             for (int i=N; i<=NW; i++) {
                temp = battleMap[x][y].getConnectedCell(i);
                if (temp != NULL) {
-                  if(temp->getTerrain() == GRASS) differentTerrain[i] = true;
+                  if(temp->getTerrain() == FLAT_GRASS) differentTerrain[i] = true;
+               }
+            }
+            addImages(differentTerrain, battleMap[x][y], one, two, three, four);
+         }
+      }
+   }
+
+   initializeVariables(one, two, three, four, ADD_FLAT_GRASS_TO_WATER);
+   for (int j=0; j<7; j++) differentTerrain[j] = false;
+
+   for (int x=0; x<width; x++) {
+      for (int y=0; y<height; y++) {
+         if (battleMap[x][y].getTerrain() == FORD ||
+             battleMap[x][y].getTerrain() == WATER_COAST ||
+             battleMap[x][y].getTerrain() == WATER_OCEAN
+            ) {
+            for (int i=N; i<=NW; i++) {
+               temp = battleMap[x][y].getConnectedCell(i);
+               if (temp != NULL) {
+                  if(temp->getTerrain() == FLAT_GRASS) differentTerrain[i] = true;
+               }
+            }
+            addImages(differentTerrain, battleMap[x][y], one, two, three, four);
+         }
+      }
+   }
+
+   initializeVariables(one, two, three, four, ADD_FLAT_ROAD);
+   for (int j=0; j<7; j++) differentTerrain[j] = false;
+
+   for (int x=0; x<width; x++) {
+      for (int y=0; y<height; y++) {
+         if (battleMap[x][y].getTerrain() == FORD ||
+             battleMap[x][y].getTerrain() == WATER_COAST ||
+             battleMap[x][y].getTerrain() == WATER_OCEAN
+            ) {
+            for (int i=N; i<=NW; i++) {
+               temp = battleMap[x][y].getConnectedCell(i);
+               if (temp != NULL) {
+                  if(temp->getTerrain() == FLAT_ROAD) differentTerrain[i] = true;
+               }
+            }
+            addImages(differentTerrain, battleMap[x][y], one, two, three, four);
+         }
+      }
+   }
+
+   initializeVariables(one, two, three, four, ADD_WATER_COAST);
+   for (int j=0; j<7; j++) differentTerrain[j] = false;
+
+   for (int x=0; x<width; x++) {
+      for (int y=0; y<height; y++) {
+         if (battleMap[x][y].getTerrain() == FORD ||
+             battleMap[x][y].getTerrain() == WATER_OCEAN
+            ) {
+            for (int i=N; i<=NW; i++) {
+               temp = battleMap[x][y].getConnectedCell(i);
+               if (temp != NULL) {
+                  if(temp->getTerrain() == WATER_COAST) differentTerrain[i] = true;
+               }
+            }
+            addImages(differentTerrain, battleMap[x][y], one, two, three, four);
+         }
+      }
+   }
+
+   initializeVariables(one, two, three, four, ADD_WATER_OCEAN);
+   for (int j=0; j<7; j++) differentTerrain[j] = false;
+
+   for (int x=0; x<width; x++) {
+      for (int y=0; y<height; y++) {
+         if (battleMap[x][y].getTerrain() == FORD) {
+            for (int i=N; i<=NW; i++) {
+               temp = battleMap[x][y].getConnectedCell(i);
+               if (temp != NULL) {
+                  if(temp->getTerrain() == WATER_OCEAN) differentTerrain[i] = true;
                }
             }
             addImages(differentTerrain, battleMap[x][y], one, two, three, four);

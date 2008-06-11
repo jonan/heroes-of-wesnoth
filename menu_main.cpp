@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "battle.hpp"
 #include "boot.hpp"
+#include "editor.hpp"
 #include "events.hpp"
 #include "graphics.hpp"
 #include "loop.hpp"
@@ -70,6 +71,7 @@ void createMenu(void) {
    mainMenu->addButton("Mission2", mission2);
    mainMenu->addButton("Mission3", mission3);
    mainMenu->addButton("Battle", createDefaultBattle);
+   mainMenu->addButton("Editor", startEditor);
    mainMenu->addButton("Quit", quit);
    mainMenu->addBackground(drawBackground);
    atexit(deleteMenu);

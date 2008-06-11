@@ -37,43 +37,78 @@ void map::setTerrain(const char terrainName, const int x, const int y) {
    alpha = screen->getImage("alpha");
    numberStars = 7;
    stars = new SDL_Surface*[numberStars];
-   stars[0] = screen->getImage("terrain/blue1");
-   stars[1] = screen->getImage("terrain/blue2");
-   stars[2] = screen->getImage("terrain/blue3");
-   stars[3] = screen->getImage("terrain/blue4");
-   stars[4] = screen->getImage("terrain/blue5");
-   stars[5] = screen->getImage("terrain/blue6");
-   stars[6] = screen->getImage("terrain/blue7");
+   stars[0] = screen->getImage("terrain/stars/blue1");
+   stars[1] = screen->getImage("terrain/stars/blue2");
+   stars[2] = screen->getImage("terrain/stars/blue3");
+   stars[3] = screen->getImage("terrain/stars/blue4");
+   stars[4] = screen->getImage("terrain/stars/blue5");
+   stars[5] = screen->getImage("terrain/stars/blue6");
+   stars[6] = screen->getImage("terrain/stars/blue7");
    // Set the varibles depending of the tipe of terrain.
-   if (terrainName == CAVE) {
+   if (terrainName == CAVE_PATH) {
+      images = 10;
+      movementPenalty = 1;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/cave/path");
+      terrain[1] = screen->getImage("terrain/cave/path1");
+      terrain[2] = screen->getImage("terrain/cave/path2");
+      terrain[3] = screen->getImage("terrain/cave/path3");
+      terrain[4] = screen->getImage("terrain/cave/path4");
+      terrain[5] = screen->getImage("terrain/cave/path5");
+      terrain[6] = screen->getImage("terrain/cave/path6");
+      terrain[7] = screen->getImage("terrain/cave/path7");
+      terrain[8] = screen->getImage("terrain/cave/path8");
+      terrain[9] = screen->getImage("terrain/cave/path9");
+   } else if (terrainName == CAVE_FLOOR) {
       images = 6;
       movementPenalty = 1;
       terrain = new SDL_Surface*[images];
-      terrain[0] = screen->getImage("terrain/floor");
-      terrain[1] = screen->getImage("terrain/floor2");
-      terrain[2] = screen->getImage("terrain/floor3");
-      terrain[3] = screen->getImage("terrain/floor4");
-      terrain[4] = screen->getImage("terrain/floor5");
-      terrain[5] = screen->getImage("terrain/floor6");
-   } else if (terrainName == GRASS) {
+      terrain[0] = screen->getImage("terrain/cave/floor");
+      terrain[1] = screen->getImage("terrain/cave/floor2");
+      terrain[2] = screen->getImage("terrain/cave/floor3");
+      terrain[3] = screen->getImage("terrain/cave/floor4");
+      terrain[4] = screen->getImage("terrain/cave/floor5");
+      terrain[5] = screen->getImage("terrain/cave/floor6");
+   } else if (terrainName == FLAT_GRASS) {
       images = 8;
       movementPenalty = 1;
       terrain = new SDL_Surface*[images];
-      terrain[0] = screen->getImage("terrain/grass-r1");
-      terrain[1] = screen->getImage("terrain/grass-r2");
-      terrain[2] = screen->getImage("terrain/grass-r3");
-      terrain[3] = screen->getImage("terrain/grass-r4");
-      terrain[4] = screen->getImage("terrain/grass-r5");
-      terrain[5] = screen->getImage("terrain/grass-r6");
-      terrain[6] = screen->getImage("terrain/grass-r7");
-      terrain[7] = screen->getImage("terrain/grass-r8");
-   } else if (terrainName == WATER) {
+      terrain[0] = screen->getImage("terrain/flat/grass-r1");
+      terrain[1] = screen->getImage("terrain/flat/grass-r2");
+      terrain[2] = screen->getImage("terrain/flat/grass-r3");
+      terrain[3] = screen->getImage("terrain/flat/grass-r4");
+      terrain[4] = screen->getImage("terrain/flat/grass-r5");
+      terrain[5] = screen->getImage("terrain/flat/grass-r6");
+      terrain[6] = screen->getImage("terrain/flat/grass-r7");
+      terrain[7] = screen->getImage("terrain/flat/grass-r8");
+   } else if (terrainName == FLAT_ROAD) {
+      images = 3;
+      movementPenalty = 1;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/flat/road");
+      terrain[1] = screen->getImage("terrain/flat/road2");
+      terrain[2] = screen->getImage("terrain/flat/road3");
+   } else if (terrainName == FORD) {
       images = 1;
       movementPenalty = 1000;
       terrain = new SDL_Surface*[images];
       terrain[0] = screen->getImage("terrain/ford");
+   } else if (terrainName == WATER_COAST) {
+      images = 3;
+      movementPenalty = 1000;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/water/coast");
+      terrain[1] = screen->getImage("terrain/water/coast2");
+      terrain[2] = screen->getImage("terrain/water/coast3");
+   } else if (terrainName == WATER_OCEAN) {
+      images = 3;
+      movementPenalty = 1000;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/water/ocean");
+      terrain[1] = screen->getImage("terrain/water/ocean2");
+      terrain[2] = screen->getImage("terrain/water/ocean3");
    } else {
-      cout << "Wrong terrain type : " << terrainName << "\n\n";
+      cout << "\n\tWrong terrain type : " << terrainName << "\n\n";
       exit(EXIT_FAILURE);
    }
 

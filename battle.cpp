@@ -32,18 +32,17 @@ bool battle::frame(void) {
       deleteCreature(*player);
       endBattle = true;
    } else { // If the battle wasn't ended continue.
-      if (selectedUnit->getMaster() != NULL) {
+      if (selectedUnit->getMaster() == NULL) ai();
+      else {
          // This controls only work when a friendly creature is moving
          if (keys[SDLK_SPACE]) {
             while (keys[SDLK_SPACE]) input->readInput();
             selectedUnit->getPosition()->unselect();
             nextTurn();
          }
-      }
-      if (selectedUnit->getMaster() == NULL)
-         ai();
-      else
          moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
+      }
+
       draw();
    }
    return endBattle;
@@ -250,7 +249,7 @@ void createDefaultBattle(void) {
    }
 
    battle war(*player, creature, 9);
-   war.setTerrain(GRASS);
+   war.setTerrain(FLAT_GRASS);
    war.start();
 
    /// @todo Free memory
