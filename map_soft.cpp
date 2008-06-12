@@ -41,6 +41,13 @@ WATER_OCEAN
 */
 /*
 
+CAVE_PATH vs CAVE_FLOOR -> CAVE_FLOOR
+CAVE_PATH vs FLAT_GRASS -> FLAT_GRASS
+CAVE_PATH vs FLAT_ROAD -> FLAT_ROAD
+CAVE_PATH vs FORD -> FORD
+CAVE_PATH vs WATER_COAST -> WATER_COAST
+CAVE_PATH vs WATER_OCEAN -> WATER_OCEAN
+
 CAVE_FLOOR vs FLAT_GRASS -> CAVE_FLOOR
 CAVE_FLOOR vs FLAT_ROAD -> CAVE_FLOOR
 CAVE_FLOOR vs FORD -> CAVE_FLOOR
@@ -182,7 +189,7 @@ void initializeVariables(SDL_Surface **one, SDL_Surface **two,
 void addImages(bool *terrain, cell &mapCell, SDL_Surface **one, SDL_Surface **two, SDL_Surface **three, SDL_Surface **four) {
    int position = 0;
    while (!terrain[position]) position++;
-   while (position<7) {
+   while (position<6) {
       terrain[position] = false;
       if (position!=0 || !terrain[NW]) {
          if (terrain[position+1] && *two!=NULL) {
@@ -219,127 +226,86 @@ void addImages(bool *terrain, cell &mapCell, SDL_Surface **one, SDL_Surface **tw
                mapCell.addImage( *three[NW] );
          } else
             mapCell.addImage( *two[NW] );
-      }
+      } else mapCell.addImage( *one[position] );
       while (!terrain[position] && position<7) position++;
    }
 }
 
-// Softens the map to make it look nicer.
-void map::softenMap(void) {
+// Softens a type of terrain.
+void map::softenTerrain(const char cellTerrain, char *terrain, const int numberTerrains, const int softImages) {
    SDL_Surface *one[6];
    SDL_Surface *two[6];
    SDL_Surface *three[6];
    SDL_Surface *four[6];
-   bool differentTerrain[7];
    cell *temp;
+   bool differentTerrain[7];
+   bool needSoft = false; // Indicates if the cell needs to be soften
 
-   initializeVariables(one, two, three, four, ADD_CAVE_FLOOR);
    for (int j=0; j<7; j++) differentTerrain[j] = false;
+   initializeVariables(one, two, three, four, softImages);
 
-   for (int x=0; x<width; x++) {
+   for (int x=0; x<width; x++)
       for (int y=0; y<height; y++) {
-         if (battleMap[x][y].getTerrain() != CAVE_FLOOR) {
+         for (int i=0; i<numberTerrains; i++)
+            needSoft = ( needSoft || (battleMap[x][y].getTerrain() == terrain[i]) );
+         if (needSoft) {
+            needSoft = false; // Reset for next cell
             for (int i=N; i<=NW; i++) {
                temp = battleMap[x][y].getConnectedCell(i);
-               if (temp != NULL) {
-                  if(temp->getTerrain() == CAVE_FLOOR) differentTerrain[i] = true;
-               }
+               if (temp != NULL)
+                  if(temp->getTerrain() == cellTerrain) differentTerrain[i] = true;
             }
             addImages(differentTerrain, battleMap[x][y], one, two, three, four);
          }
       }
-   }
+}
 
-   initializeVariables(one, two, three, four, ADD_FLAT_GRASS);
-   for (int j=0; j<7; j++) differentTerrain[j] = false;
+// Softens the map to make it look nicer.
+void map::softenMap(void) {
+   char *terrain;
 
-   for (int x=0; x<width; x++) {
-      for (int y=0; y<height; y++) {
-         if (battleMap[x][y].getTerrain() == FLAT_ROAD) {
-            for (int i=N; i<=NW; i++) {
-               temp = battleMap[x][y].getConnectedCell(i);
-               if (temp != NULL) {
-                  if(temp->getTerrain() == FLAT_GRASS) differentTerrain[i] = true;
-               }
-            }
-            addImages(differentTerrain, battleMap[x][y], one, two, three, four);
-         }
-      }
-   }
+   terrain = new char[3];
+   terrain[0] = CAVE_PATH;
+   terrain[1] = FORD;
+   terrain[2] = WATER_OCEAN;
+   softenTerrain(WATER_COAST, terrain, 3, ADD_WATER_COAST);
 
-   initializeVariables(one, two, three, four, ADD_FLAT_GRASS_TO_WATER);
-   for (int j=0; j<7; j++) differentTerrain[j] = false;
+   delete [] terrain;
+   terrain = new char[2];
+   terrain[0] = CAVE_PATH;
+   terrain[1] = FORD;
+   softenTerrain(WATER_OCEAN, terrain, 2, ADD_WATER_OCEAN);
 
-   for (int x=0; x<width; x++) {
-      for (int y=0; y<height; y++) {
-         if (battleMap[x][y].getTerrain() == FORD ||
-             battleMap[x][y].getTerrain() == WATER_COAST ||
-             battleMap[x][y].getTerrain() == WATER_OCEAN
-            ) {
-            for (int i=N; i<=NW; i++) {
-               temp = battleMap[x][y].getConnectedCell(i);
-               if (temp != NULL) {
-                  if(temp->getTerrain() == FLAT_GRASS) differentTerrain[i] = true;
-               }
-            }
-            addImages(differentTerrain, battleMap[x][y], one, two, three, four);
-         }
-      }
-   }
+   delete [] terrain;
+   terrain = new char[6];
+   terrain[0] = CAVE_PATH;
+   terrain[1] = FLAT_GRASS;
+   terrain[2] = FLAT_ROAD;
+   terrain[3] = FORD;
+   terrain[4] = WATER_COAST;
+   terrain[5] = WATER_OCEAN;
+   softenTerrain(CAVE_FLOOR, terrain, 6, ADD_CAVE_FLOOR);
 
-   initializeVariables(one, two, three, four, ADD_FLAT_ROAD);
-   for (int j=0; j<7; j++) differentTerrain[j] = false;
+   delete [] terrain;
+   terrain = new char[2];
+   terrain[0] = CAVE_PATH;
+   terrain[1] = FLAT_ROAD;
+   softenTerrain(FLAT_GRASS, terrain, 2, ADD_FLAT_GRASS);
 
-   for (int x=0; x<width; x++) {
-      for (int y=0; y<height; y++) {
-         if (battleMap[x][y].getTerrain() == FORD ||
-             battleMap[x][y].getTerrain() == WATER_COAST ||
-             battleMap[x][y].getTerrain() == WATER_OCEAN
-            ) {
-            for (int i=N; i<=NW; i++) {
-               temp = battleMap[x][y].getConnectedCell(i);
-               if (temp != NULL) {
-                  if(temp->getTerrain() == FLAT_ROAD) differentTerrain[i] = true;
-               }
-            }
-            addImages(differentTerrain, battleMap[x][y], one, two, three, four);
-         }
-      }
-   }
+   delete [] terrain;
+   terrain = new char[3];
+   terrain[0] = FORD;
+   terrain[1] = WATER_COAST;
+   terrain[2] = WATER_OCEAN;
+   softenTerrain(FLAT_GRASS, terrain, 3, ADD_FLAT_GRASS_TO_WATER);
 
-   initializeVariables(one, two, three, four, ADD_WATER_COAST);
-   for (int j=0; j<7; j++) differentTerrain[j] = false;
+   delete [] terrain;
+   terrain = new char[4];
+   terrain[0] = CAVE_PATH;
+   terrain[1] = FORD;
+   terrain[2] = WATER_COAST;
+   terrain[3] = WATER_OCEAN;
+   softenTerrain(FLAT_ROAD, terrain, 4, ADD_FLAT_ROAD);
 
-   for (int x=0; x<width; x++) {
-      for (int y=0; y<height; y++) {
-         if (battleMap[x][y].getTerrain() == FORD ||
-             battleMap[x][y].getTerrain() == WATER_OCEAN
-            ) {
-            for (int i=N; i<=NW; i++) {
-               temp = battleMap[x][y].getConnectedCell(i);
-               if (temp != NULL) {
-                  if(temp->getTerrain() == WATER_COAST) differentTerrain[i] = true;
-               }
-            }
-            addImages(differentTerrain, battleMap[x][y], one, two, three, four);
-         }
-      }
-   }
-
-   initializeVariables(one, two, three, four, ADD_WATER_OCEAN);
-   for (int j=0; j<7; j++) differentTerrain[j] = false;
-
-   for (int x=0; x<width; x++) {
-      for (int y=0; y<height; y++) {
-         if (battleMap[x][y].getTerrain() == FORD) {
-            for (int i=N; i<=NW; i++) {
-               temp = battleMap[x][y].getConnectedCell(i);
-               if (temp != NULL) {
-                  if(temp->getTerrain() == WATER_OCEAN) differentTerrain[i] = true;
-               }
-            }
-            addImages(differentTerrain, battleMap[x][y], one, two, three, four);
-         }
-      }
-   }
+   delete [] terrain;
 }

@@ -30,7 +30,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 class editor : public map {
    private:
       char actualTerrain;
-      bool end;
+      bool endEditor;
 
       // Function to execute when the user clicks on a cell.
       void mouseClick(const int x, const int y);
@@ -42,12 +42,18 @@ class editor : public map {
       // Does nothing but it's necessary when inheriting from map.
       void nextTurn(void) {};
 
+      // Saves the current map in the file.
+      void save(void);
+      // Loads the map from the file.
+      void load(void);
+
    public:
       /// @param[in] width Map's width.
       /// @param[in] height Map's height 
       editor(const int width, const int height); // Constructor
 };
 
+// Starts the editor.
 void startEditor(void);
 
 #endif // EDITOR_HPP

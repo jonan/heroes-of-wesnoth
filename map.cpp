@@ -22,112 +22,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "timer.hpp"
 #include "unit.hpp"
 
-// Connects all the cells in the map.
-void map::connectCells(void) {
-   for (int coor1=0; coor1<width; coor1++) {
-      for (int coor2=0; coor2<height; coor2++) {
-         if ( (coor1%2)==1 ) { // coor1 is an odd number
-            if (coor1 == width-1) { // The last colum of the map
-               if (coor2 == 0) {
-                  battleMap[coor1][coor2].connectCell(N, NULL);
-                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
-                  battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2+1]);
-               } else if (coor2 == height-1) {
-                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
-                  battleMap[coor1][coor2].connectCell(S, NULL);
-                  battleMap[coor1][coor2].connectCell(SW, NULL);
-               } else {
-                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
-                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
-                  battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2+1]);
-               }
-               battleMap[coor1][coor2].connectCell(NE, NULL);
-               battleMap[coor1][coor2].connectCell(SE, NULL);
-               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2]);
-            } else if (coor2 == 0) { // The first row of the map
-               battleMap[coor1][coor2].connectCell(N, NULL);
-               battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
-               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2]);
-               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2+1]);
-               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2]);
-               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2+1]);
-            } else if (coor2 == height-1) { // Last row of the map
-               battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
-               battleMap[coor1][coor2].connectCell(S, NULL);
-               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2]);
-               battleMap[coor1][coor2].connectCell(SE, NULL);
-               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2]);
-               battleMap[coor1][coor2].connectCell(SW, NULL);
-            } else {
-               battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
-               battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
-               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2]);
-               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2+1]);
-               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2]);
-               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2+1]);
-            }
-         } else { // coor1 is an even number
-            if (coor1 == 0) { // The first colum of the map
-               if (coor2 == 0) {
-                  battleMap[coor1][coor2].connectCell(N, NULL);
-                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
-                  battleMap[coor1][coor2].connectCell(NE, NULL);
-               } else if (coor2 == height-1) {
-                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
-                  battleMap[coor1][coor2].connectCell(S, NULL);
-                  battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2-1]);
-               } else {
-                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
-                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
-                  battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2-1]);
-               }
-               battleMap[coor1][coor2].connectCell(NW, NULL);
-               battleMap[coor1][coor2].connectCell(SW, NULL);
-               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2]);
-            } else if (coor1 == width-1) { // The last colum of the map
-               if (coor2 == 0) {
-                  battleMap[coor1][coor2].connectCell(N, NULL);
-                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
-                  battleMap[coor1][coor2].connectCell(NW, NULL);
-               } else if (coor2 == height-1) {
-                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
-                  battleMap[coor1][coor2].connectCell(S, NULL);
-                  battleMap[coor1][coor2].connectCell(NW,&battleMap[coor1-1][coor2-1]);
-               } else {
-                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
-                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
-                  battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2-1]);
-               }
-               battleMap[coor1][coor2].connectCell(NE, NULL);
-               battleMap[coor1][coor2].connectCell(SE, NULL);
-               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2]);
-            } else if (coor2 == 0) { // The first row of the map
-               battleMap[coor1][coor2].connectCell(N, NULL);
-               battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
-               battleMap[coor1][coor2].connectCell(NE, NULL);
-               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2]);
-               battleMap[coor1][coor2].connectCell(NW, NULL);
-               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2]);
-            } else if (coor2 == height-1) { // Last row of the map
-               battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
-               battleMap[coor1][coor2].connectCell(S, NULL);
-               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2-1]);
-               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2]);
-               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2-1]);
-               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2]);
-            } else {
-               battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
-               battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
-               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2-1]);
-               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2]);
-               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2-1]);
-               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2]);
-            }
-         }
-      }
-   }
-}
-
 // Constructor
 map::map(const int width, const int height) {
    this->width = width;
@@ -243,6 +137,112 @@ void map::moveCreature(cell &endPosition) {
    }
 
    actualPosition->unselect(selectedUnit->getMovement());
+}
+
+// Connects all the cells in the map.
+void map::connectCells(void) {
+   for (int coor1=0; coor1<width; coor1++) {
+      for (int coor2=0; coor2<height; coor2++) {
+         if ( (coor1%2)==1 ) { // coor1 is an odd number
+            if (coor1 == width-1) { // The last colum of the map
+               if (coor2 == 0) {
+                  battleMap[coor1][coor2].connectCell(N, NULL);
+                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+                  battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2+1]);
+               } else if (coor2 == height-1) {
+                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+                  battleMap[coor1][coor2].connectCell(S, NULL);
+                  battleMap[coor1][coor2].connectCell(SW, NULL);
+               } else {
+                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+                  battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2+1]);
+               }
+               battleMap[coor1][coor2].connectCell(NE, NULL);
+               battleMap[coor1][coor2].connectCell(SE, NULL);
+               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2]);
+            } else if (coor2 == 0) { // The first row of the map
+               battleMap[coor1][coor2].connectCell(N, NULL);
+               battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2]);
+               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2+1]);
+               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2]);
+               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2+1]);
+            } else if (coor2 == height-1) { // Last row of the map
+               battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(S, NULL);
+               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2]);
+               battleMap[coor1][coor2].connectCell(SE, NULL);
+               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2]);
+               battleMap[coor1][coor2].connectCell(SW, NULL);
+            } else {
+               battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2]);
+               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2+1]);
+               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2]);
+               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2+1]);
+            }
+         } else { // coor1 is an even number
+            if (coor1 == 0) { // The first colum of the map
+               if (coor2 == 0) {
+                  battleMap[coor1][coor2].connectCell(N, NULL);
+                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+                  battleMap[coor1][coor2].connectCell(NE, NULL);
+               } else if (coor2 == height-1) {
+                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+                  battleMap[coor1][coor2].connectCell(S, NULL);
+                  battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2-1]);
+               } else {
+                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+                  battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2-1]);
+               }
+               battleMap[coor1][coor2].connectCell(NW, NULL);
+               battleMap[coor1][coor2].connectCell(SW, NULL);
+               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2]);
+            } else if (coor1 == width-1) { // The last colum of the map
+               if (coor2 == 0) {
+                  battleMap[coor1][coor2].connectCell(N, NULL);
+                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+                  battleMap[coor1][coor2].connectCell(NW, NULL);
+               } else if (coor2 == height-1) {
+                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+                  battleMap[coor1][coor2].connectCell(S, NULL);
+                  battleMap[coor1][coor2].connectCell(NW,&battleMap[coor1-1][coor2-1]);
+               } else {
+                  battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+                  battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+                  battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2-1]);
+               }
+               battleMap[coor1][coor2].connectCell(NE, NULL);
+               battleMap[coor1][coor2].connectCell(SE, NULL);
+               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2]);
+            } else if (coor2 == 0) { // The first row of the map
+               battleMap[coor1][coor2].connectCell(N, NULL);
+               battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+               battleMap[coor1][coor2].connectCell(NE, NULL);
+               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2]);
+               battleMap[coor1][coor2].connectCell(NW, NULL);
+               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2]);
+            } else if (coor2 == height-1) { // Last row of the map
+               battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(S, NULL);
+               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2]);
+               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2]);
+            } else {
+               battleMap[coor1][coor2].connectCell(N, &battleMap[coor1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(S, &battleMap[coor1][coor2+1]);
+               battleMap[coor1][coor2].connectCell(NE, &battleMap[coor1+1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(SE, &battleMap[coor1+1][coor2]);
+               battleMap[coor1][coor2].connectCell(NW, &battleMap[coor1-1][coor2-1]);
+               battleMap[coor1][coor2].connectCell(SW, &battleMap[coor1-1][coor2]);
+            }
+         }
+      }
+   }
 }
 
 // Draws the map in the screen.

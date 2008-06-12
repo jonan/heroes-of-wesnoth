@@ -49,15 +49,15 @@ struct cellCoor {
 /// (This class is meant to be inherit, not to be used directly)
 class map {
    private:
-      cell *mouseOverCell; // The cell where the mouse is.
-
-      // Connects all the cells in the map.
-      void connectCells(void);
+      // Softens a type of terrain.
+      // (Implemented in map_smooth.cpp)
+      void softenTerrain(const char cellTerrain, char *terrain, const int numberTerrains, const int softImages);
 
    protected:
       int width, height; // The map's size.
       cell **battleMap;
       unit *selectedUnit; // The unit that's selected.
+      cell *mouseOverCell; // The cell where the mouse is.
       cellCoor firstCell; // Coordinates of the top left cell.
 
       map(const int width, const int height); // Constructor
@@ -81,6 +81,8 @@ class map {
       // Moves a unit to a cell.
       void moveCreature(cell &endPosition);
 
+      // Connects all the cells in the map.
+      void connectCells(void);
       // Softens the map to make it look nicer.
       // (Implemented in map_smooth.cpp)
       void softenMap(void);
