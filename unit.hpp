@@ -41,6 +41,11 @@ using namespace std;
 #define WOLF_RIDER  '8'
 // @}
 
+// @{
+/// Types of animations.
+#define DYING  0
+// @}
+
 /// Number of frames to wait before changing to the next sprite.
 #define NUM_FRAMES_FOR_SPRITE 3
 
@@ -67,7 +72,9 @@ class unit {
       int movement; // The creatures speed
 
       deque<SDL_Surface*> standing;
+      deque<SDL_Surface*> dying;
       int sprite; // Last sprite drawn
+      int nonStandingSprite; // Last sprite of a non-standing animation drawn
 
       bool selected; // Indicates if the unit is selected
 
@@ -81,6 +88,8 @@ class unit {
                             const int agility, const int movement);
       // Adds an image to the standing animation.
       void addStandingImage(const char *imageName);
+      // Adds an image to the dying animation.
+      void addDyingImage(const char *imageName);
       // Sets the creatures attributes acording to his type.
       // (Implemented in unit_type.cpp)
       virtual void setCreaturesAttributes(void);
@@ -160,6 +169,14 @@ class unit {
       ///
       /// @param[in] position The position where the creature should be drawn.
       virtual void draw(SDL_Rect &position);
+      /// Draws an animation.
+      ///
+      ///  -no detailed description-
+      ///
+      /// @param[in] position The position where the creature should be drawn.
+      /// @param[in] type The type of animation.
+      /// @return true when the animation finishes.
+      bool animation(SDL_Rect &position, const int type);
 };
 
 #endif // UNIT_HPP

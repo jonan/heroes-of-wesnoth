@@ -56,6 +56,7 @@ class cell {
 
       bool mouseOver; // Indicates if the mouse is over the cell or not
       bool selected; // Indicates if the unit in the cell is selected
+      bool dying; // Indicates if the creature in the cell is dying
       bool canMove; // Indicates if the selected creature can move to this cell
       bool canAttack; // Indicates if the unit in the cell can be attacked
       bool visible; // Indicates if the cell is visible or not
@@ -202,6 +203,12 @@ class cell {
       ///
       /// @return true if the selected creature can attack the unit in this cell, false if not.
       bool canAttackHere(void);
+
+      /// Kills and deletes the creature in the cell.
+      ///
+      /// It really only marks the creature as dying and
+      /// it will remove it and delete it later.
+      void killCreature(void);
 };
 
 #endif // CELL_HPP

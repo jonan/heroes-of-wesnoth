@@ -78,7 +78,7 @@ class map {
       // it returns true, the loop ends, else it continues.
       virtual bool frame(void) = 0;
 
-      // Moves a unit to a cell.
+      // Moves a creature to a cell.
       void moveCreature(cell &endPosition);
 
       // Connects all the cells in the map.

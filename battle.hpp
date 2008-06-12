@@ -55,8 +55,8 @@ class battle : public map {
       // Starts the next turn.
       void nextTurn(void);
 
-      // Removes a unit from the battle and deletes it.
-      void deleteCreature(unit &creature);
+      // Removes a unit from the battle.
+      void removeCreature(unit &creature);
 
       // Controls the units not controled by the player.
       void ai(void);

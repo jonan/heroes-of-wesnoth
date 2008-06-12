@@ -115,7 +115,7 @@ void map::moveMouse(const int x, const int y, const int button) {
    if (j>firstCell.y+8 && firstCell.y!=height-9) firstCell.y++;
 }
 
-// Moves a unit to a cell.
+// Moves a creature to a cell.
 void map::moveCreature(cell &endPosition) {
    int *path;
    int movements;

@@ -38,9 +38,14 @@ void unit::setAllAttributes(const int live, const int magic,
    this->movement = movement;
 }
 
-// Sets the creature's image.
+// Adds an image to the standing animation.
 void unit::addStandingImage(const char *imageName) {
    standing.push_back( screen->getImage(imageName) );
+}
+
+// Adds an image to the dying animation.
+void unit::addDyingImage(const char *imageName) {
+   dying.push_back( screen->getImage(imageName) );
 }
 
 // Constructor
@@ -48,6 +53,7 @@ unit::unit(const char type, const int number) {
    this->number = number;
 
    sprite = 0;
+   nonStandingSprite = 0;
 
    if (type != -1) { // It should only be -1 when the unit is a hero.
       this->type = type;
@@ -126,5 +132,20 @@ void unit::draw(SDL_Rect &position) {
       char text[3];
       sprintf(text, "%i", number);
       screen->write(text, position.x+17, position.y+52);
+   }
+}
+
+// Draws an animation.
+bool unit::animation(SDL_Rect &position, const int type) {
+   if (type == DYING) {
+      // Draw the corresponding sprite.
+      screen->draw(dying[nonStandingSprite/NUM_FRAMES_FOR_SPRITE], position);
+      // Increase the sprite.
+      nonStandingSprite++;
+      // Check if this was the last sprite and start again if it was.
+      if ( (nonStandingSprite/NUM_FRAMES_FOR_SPRITE) == dying.size() ) {
+         nonStandingSprite = 0;
+         return false;
+      } else return true;
    }
 }

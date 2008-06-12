@@ -106,6 +106,7 @@ cell::cell(void) {
 
    mouseOver = false;
    selected = false;
+   dying = false;
    canMove = false;
    canAttack = false;
    visible = false;
@@ -229,7 +230,15 @@ void cell::draw(SDL_Rect position) {
          screen->draw(terrain[i], position);
       if (mouseOver) screen->draw(alpha, position);
       if (canMove) screen->draw(alpha, position);
-      if (creature) creature->draw(position);
+      if (creature) {
+         if (dying) {
+            dying = creature->animation(position, DYING);
+            if (!dying) {
+               delete creature;
+               creature = NULL;
+            }
+         } else creature->draw(position);
+      }
       if (selected) screen->draw(alpha, position);
    } else screen->draw(stars, position);
 }
@@ -242,4 +251,10 @@ bool cell::canMoveHere(void) {
 // Indicates if the selected creature can attack the unit in this cell.
 bool cell::canAttackHere(void) {
    return canAttack;
+}
+
+// It realy only marks the creature as dying and
+// it will remove it and delete it later.
+void cell::killCreature(void) {
+   dying = true;
 }

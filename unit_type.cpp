@@ -22,6 +22,12 @@ void unit::setCreaturesAttributes(void) {
    if (type == ARMAGEDDON) {
       addStandingImage("units/armageddon");
       setAllAttributes(65, 0, 10, 0, 25, 0, 2, 2);
+      addDyingImage("units/armageddon-die1");
+      addDyingImage("units/armageddon-die2");
+      addDyingImage("units/armageddon-die3");
+      addDyingImage("units/armageddon-die4");
+      addDyingImage("units/armageddon-die5");
+      addDyingImage("units/armageddon-die6");
   } else if (type == BAT) {
       addStandingImage("units/bat-se-1");
       addStandingImage("units/bat-se-2");
@@ -35,9 +41,18 @@ void unit::setCreaturesAttributes(void) {
   } else if (type == BLADEMASTER) {
       addStandingImage("units/blademaster");
       setAllAttributes(45, 0, 7, 0, 20, 0, 4, 3);
+      addDyingImage("units/blademaster-die-1");
+      addDyingImage("units/blademaster-die-2");
+      addDyingImage("units/blademaster-die-3");
+      addDyingImage("units/blademaster-die-4");
+      addDyingImage("units/blademaster-die-5");
+      addDyingImage("units/blademaster-die-6");
+      addDyingImage("units/blademaster-die-7");
   } else if (type == CAVESPIDER) {
       addStandingImage("units/cavespider");
       setAllAttributes(35, 0, 4, 0, 10, 0, 3, 1);
+      addDyingImage("units/cavespider-die-1");
+      addDyingImage("units/cavespider-die-2");
   } else if (type == FLANKER) {
       addStandingImage("units/flanker");
       setAllAttributes(10, 0, 2, 0, 7, 0, 5, 3);
@@ -50,6 +65,13 @@ void unit::setCreaturesAttributes(void) {
    } else if (type == SKELETON) {
       addStandingImage("units/skeleton");
       setAllAttributes(35, 0, 8, 5, 15, 0, 2, 2);
+      addDyingImage("units/skeleton-dying-1");
+      addDyingImage("units/skeleton-dying-2");
+      addDyingImage("units/skeleton-dying-3");
+      addDyingImage("units/skeleton-dying-4");
+      addDyingImage("units/skeleton-dying-5");
+      addDyingImage("units/skeleton-dying-6");
+      addDyingImage("units/skeleton-dying-7");
   } else if (type == WOLF_RIDER) {
       addStandingImage("units/wolf-rider");
       setAllAttributes(28, 0, 7, 0, 13, 0, 5, 4);

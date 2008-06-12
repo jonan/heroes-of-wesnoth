@@ -29,7 +29,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 bool battle::frame(void) {
    if (keys[SDLK_ESCAPE]) {
       while (keys[SDLK_ESCAPE]) input->readInput();
-      deleteCreature(*player);
+      removeCreature(*player);
+      delete player;
       endBattle = true;
    } else { // If the battle wasn't ended continue.
       if (selectedUnit->getMaster() == NULL) ai();
@@ -60,8 +61,8 @@ void battle::mouseClick(const int x, const int y) {
             selectedUnit->attack( *battleMap[x][y].getCreature() );
             // Check if the creatures is dead.
             if ( battleMap[x][y].getCreature()->getNumber() == 0 ) {
-               deleteCreature(*battleMap[x][y].getCreature());
-               battleMap[x][y].setCreature(NULL);
+               removeCreature(*battleMap[x][y].getCreature());
+               battleMap[x][y].killCreature();
             }
             nextTurn();
          }
@@ -132,8 +133,8 @@ void battle::nextTurn(void) {
    }
 }
 
-// Removes a unit from the battle and deletes it.
-void battle::deleteCreature(unit &creature) {
+// Removes a unit from the battle.
+void battle::removeCreature(unit &creature) {
    bool found = false;
    int i = 0;
 
@@ -157,7 +158,6 @@ void battle::deleteCreature(unit &creature) {
       }
       i++;
    }
-   delete &creature;
 }
 
 // Controls the units not controled by the player.
@@ -169,8 +169,8 @@ void battle::ai(void) {
       moveCreature(*temp);
       selectedUnit->attack( *temp->getCreature() );
       if ( temp->getCreature()->getNumber() == 0 ) {
-         deleteCreature( *temp->getCreature() );
-         temp->setCreature(NULL);
+         removeCreature( *temp->getCreature() );
+         temp->killCreature();
       }
       nextTurn();
    } else { // Move the unit
