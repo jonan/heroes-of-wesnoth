@@ -22,12 +22,6 @@ void unit::setCreaturesAttributes(void) {
    if (type == ARMAGEDDON) {
       addStandingImage("units/armageddon");
       setAllAttributes(65, 0, 10, 0, 25, 0, 2, 2);
-      addDyingImage("units/armageddon-die1");
-      addDyingImage("units/armageddon-die2");
-      addDyingImage("units/armageddon-die3");
-      addDyingImage("units/armageddon-die4");
-      addDyingImage("units/armageddon-die5");
-      addDyingImage("units/armageddon-die6");
   } else if (type == BAT) {
       addStandingImage("units/bat-se-1");
       addStandingImage("units/bat-se-2");

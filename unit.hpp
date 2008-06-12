@@ -67,7 +67,6 @@ class unit {
       int movement; // The creatures speed
 
       deque<SDL_Surface*> standing;
-      deque<SDL_Surface*> dying;
       int sprite; // Last sprite drawn
 
       bool selected; // Indicates if the unit is selected
@@ -82,8 +81,6 @@ class unit {
                             const int agility, const int movement);
       // Adds an image to the standing animation.
       void addStandingImage(const char *imageName);
-      // Adds an image to the dying animation.
-      void addDyingImage(const char *imageName);
       // Sets the creatures attributes acording to his type.
       // (Implemented in unit_type.cpp)
       virtual void setCreaturesAttributes(void);
