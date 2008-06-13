@@ -26,11 +26,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// Types of terrain.
 #define CAVE_PATH   '0'
 #define CAVE_FLOOR  '1'
-#define FLAT_GRASS  '2'
-#define FLAT_ROAD   '3'
-#define FORD        '4'
-#define WATER_COAST '5'
-#define WATER_OCEAN '6'
+#define DESERT      '2'
+#define FLAT_GRASS  '3'
+#define FLAT_ROAD   '4'
+#define FORD        '5'
+#define WATER_COAST '6'
+#define WATER_OCEAN '7'
 // @}
 
 class cell;

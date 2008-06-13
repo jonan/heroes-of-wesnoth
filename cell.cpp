@@ -119,8 +119,13 @@ cell::~cell(void) {
 
 // Sets the cell's terrain.
 void cell::addImage(SDL_Surface &terrain, const char type) {
+   if (type != -1) {
+      // If a new type is assigned, it means the new surface is
+      // the main one, so all previous ones need to be deleted.
+      if (!this->terrain.empty()) this->terrain.clear();
+      this->type = type;
+   }
    this->terrain.push_back(&terrain);
-   if (type != -1) this->type = type;
 }
 
 // Sets the image used to outstand a cell.

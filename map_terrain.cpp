@@ -69,6 +69,18 @@ void map::setTerrain(const char terrainName, const int x, const int y) {
       terrain[3] = screen->getImage("terrain/cave/floor4");
       terrain[4] = screen->getImage("terrain/cave/floor5");
       terrain[5] = screen->getImage("terrain/cave/floor6");
+   } else if (terrainName == DESERT) {
+      images = 8;
+      movementPenalty = 1;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/desert/desert");
+      terrain[1] = screen->getImage("terrain/desert/desert2");
+      terrain[2] = screen->getImage("terrain/desert/desert3");
+      terrain[3] = screen->getImage("terrain/desert/desert4");
+      terrain[4] = screen->getImage("terrain/desert/desert5");
+      terrain[5] = screen->getImage("terrain/desert/desert6");
+      terrain[6] = screen->getImage("terrain/desert/desert7");
+      terrain[7] = screen->getImage("terrain/desert/desert8");
    } else if (terrainName == FLAT_GRASS) {
       images = 8;
       movementPenalty = 1;
