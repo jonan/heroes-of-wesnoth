@@ -52,9 +52,14 @@ void events::readInput(void) {
             mouse[BUTTON] = MIDDLE;
          else if (event.button.button == SDL_BUTTON_RIGHT)
             mouse[BUTTON] = RIGHT;
+         else if (event.button.button == SDL_BUTTON_WHEELUP)
+            mouse[BUTTON] = UP;
+         else if (event.button.button == SDL_BUTTON_WHEELDOWN)
+            mouse[BUTTON] = DOWN;
       }
       else if (event.type == SDL_MOUSEBUTTONUP) {
-         mouse[BUTTON] = NONE;
+         if (mouse[BUTTON] != UP && mouse[BUTTON] != DOWN)
+            mouse[BUTTON] = NONE;
       }
       // KEYBOARD
       else if (event.type == SDL_KEYDOWN) {

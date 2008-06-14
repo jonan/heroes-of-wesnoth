@@ -47,6 +47,9 @@ class editor : public map {
       // Loads the map from the file.
       void load(void);
 
+      // Draws the editor in the screen.
+      void draw(void);
+
    public:
       /// @param[in] width Map's width.
       /// @param[in] height Map's height 

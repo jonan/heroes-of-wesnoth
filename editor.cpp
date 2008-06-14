@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "cell.hpp"
 #include "editor.hpp"
 #include "events.hpp"
+#include "graphics.hpp"
 
 using namespace std;
 
@@ -35,19 +36,30 @@ bool editor::frame(void) {
    if (keys[SDLK_ESCAPE]) {
       while (keys[SDLK_ESCAPE]) input->readInput();
       endEditor = true;
-   } else if (keys[SDLK_F1]) save();
-   else if (keys[SDLK_F2]) load();
-   else if (keys[SDLK_0]) actualTerrain = '0';
-   else if (keys[SDLK_1]) actualTerrain = '1';
-   else if (keys[SDLK_2]) actualTerrain = '2';
-   else if (keys[SDLK_3]) actualTerrain = '3';
-   else if (keys[SDLK_4]) actualTerrain = '4';
-   else if (keys[SDLK_5]) actualTerrain = '5';
-   else if (keys[SDLK_6]) actualTerrain = '6';
-   else if (keys[SDLK_SPACE]) {
-      while (keys[SDLK_SPACE]) input->readInput();
-      softenMap();
-   } else {
+   } else { // If the editor is not ended.
+      if (keys[SDLK_F1]) {
+         while (keys[SDLK_F1]) input->readInput();
+         save();
+      } else if (keys[SDLK_F2]) {
+         while (keys[SDLK_F2]) input->readInput();
+         load();
+      }
+
+      if (keys[SDLK_SPACE]) {
+         while (keys[SDLK_SPACE]) input->readInput();
+         softenMap();
+      }
+
+      if (mouse[BUTTON] == UP) {
+         mouse[BUTTON] = NONE;
+         actualTerrain++;
+         if (actualTerrain > LAST_TERRAIN) actualTerrain = '0';
+      } else if (mouse[BUTTON] == DOWN) {
+         mouse[BUTTON] = NONE;
+         actualTerrain--;
+         if (actualTerrain < '0') actualTerrain = LAST_TERRAIN;
+      }
+
       moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
       draw();
    }
@@ -102,6 +114,13 @@ void editor::load(void) {
    for (int x=0; x<width; x++)
       for (int y=0; y<height; y++)
          battleMap[x][y].calculateView(1);
+}
+
+// Draws the editor in the screen.
+void editor::draw(void) {
+   map::draw();
+   screen->write("F1:save", 25, 6);
+   screen->write("F2:load", 25, 20);
 }
 
 // Constructor

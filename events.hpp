@@ -54,6 +54,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #define LEFT          1
 #define MIDDLE        2
 #define RIGHT         3
+#define UP            4
+#define DOWN          5
 // @}
 
 /// Event control.
