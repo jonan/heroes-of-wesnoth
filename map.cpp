@@ -109,10 +109,14 @@ void map::moveMouse(const int x, const int y, const int button) {
       }
    }
    // move visible map
-   if (i<firstCell.x && firstCell.x!=0) firstCell.x--;
-   if (i>firstCell.x+17 && firstCell.x!=width-18) firstCell.x++;
-   if (j<firstCell.y && firstCell.y!=0) firstCell.y--;
-   if (j>firstCell.y+8 && firstCell.y!=height-9) firstCell.y++;
+   if ( (i<firstCell.x || keys[SDLK_LEFT]) && firstCell.x!=0)
+      firstCell.x--;
+   else if ( (i>firstCell.x+17 || keys[SDLK_RIGHT]) && firstCell.x!=width-18)
+      firstCell.x++;
+   if ( (j<firstCell.y || keys[SDLK_UP]) && firstCell.y!=0)
+      firstCell.y--;
+   else if ( (j>firstCell.y+8 || keys[SDLK_DOWN]) && firstCell.y!=height-9)
+      firstCell.y++;
 }
 
 // Moves a creature to a cell.
