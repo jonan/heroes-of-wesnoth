@@ -32,9 +32,13 @@ using namespace std;
 // This function is executed in the main loop. If
 // it returns true, the loop ends, else it continues.
 bool world::frame(void) {
-   if (keys[SDLK_ESCAPE]) endWorld = true;
-   draw();
-   moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
+   if (keys[SDLK_ESCAPE]) {
+      while (keys[SDLK_ESCAPE]) input->readInput();
+      endWorld = true;
+   } else {
+      draw();
+      moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
+   }
    return endWorld;
 }
 

@@ -29,7 +29,9 @@ using namespace std;
 #define ADD_FLAT_GRASS_TO_WATER 3
 #define ADD_FLAT_ROAD           4
 #define ADD_WATER_COAST         5
-#define ADD_WATER_OCEAN         6
+#define ADD_WATER_ICE           6
+#define ADD_WATER_ICE_TO_WATER  7
+#define ADD_WATER_OCEAN         8
 
 // Sets the images needed to soften the map.
 void initializeVariables(SDL_Surface **one, SDL_Surface **two,
@@ -155,6 +157,40 @@ void initializeVariables(SDL_Surface **one, SDL_Surface **two,
       *two = NULL;
       *three = NULL;
       *four = NULL;
+   } else if (type == ADD_WATER_ICE) {
+      one[0] = screen->getImage("terrain/water/ice-to-water-n");
+      one[1] = screen->getImage("terrain/water/ice-to-water-ne");
+      one[2] = screen->getImage("terrain/water/ice-to-water-se");
+      one[3] = screen->getImage("terrain/water/ice-to-water-s");
+      one[4] = screen->getImage("terrain/water/ice-to-water-sw");
+      one[5] = screen->getImage("terrain/water/ice-to-water-nw");
+
+      two[0] = screen->getImage("terrain/water/ice-to-water-n-ne");
+      two[1] = screen->getImage("terrain/water/ice-to-water-ne-se");
+      two[2] = screen->getImage("terrain/water/ice-to-water-se-s");
+      two[3] = screen->getImage("terrain/water/ice-to-water-s-sw");
+      two[4] = screen->getImage("terrain/water/ice-to-water-sw-nw");
+      two[5] = screen->getImage("terrain/water/ice-to-water-nw-n");
+
+      *three = NULL;
+      *four = NULL;
+   } else if (type == ADD_WATER_ICE_TO_WATER) {
+      one[0] = screen->getImage("terrain/water/ice-n");
+      one[1] = screen->getImage("terrain/water/ice-ne");
+      one[2] = screen->getImage("terrain/water/ice-se");
+      one[3] = screen->getImage("terrain/water/ice-s");
+      one[4] = screen->getImage("terrain/water/ice-sw");
+      one[5] = screen->getImage("terrain/water/ice-nw");
+
+      two[0] = screen->getImage("terrain/water/ice-n-ne");
+      two[1] = screen->getImage("terrain/water/ice-ne-se");
+      two[2] = screen->getImage("terrain/water/ice-se-s");
+      two[3] = screen->getImage("terrain/water/ice-s-sw");
+      two[4] = screen->getImage("terrain/water/ice-sw-nw");
+      two[5] = screen->getImage("terrain/water/ice-nw-n");
+
+      *three = NULL;
+      *four = NULL;
    } else if (type == ADD_WATER_OCEAN) {
       one[0] = screen->getImage("terrain/water/ocean-n");
       one[1] = screen->getImage("terrain/water/ocean-ne");
@@ -225,6 +261,7 @@ void map::softenTerrain(const char cellTerrain, char *terrain, const int numberT
    bool differentTerrain[7];
    bool needSoft = false; // Indicates if the cell needs to be soften
 
+   initializeVariables(one, two, three, four, ADD_WATER_ICE_TO_WATER);
    for (int j=0; j<7; j++) differentTerrain[j] = false;
    /// @todo Initialize variables only when they are needed.
    initializeVariables(one, two, three, four, softImages);
@@ -249,42 +286,40 @@ void map::softenTerrain(const char cellTerrain, char *terrain, const int numberT
 void map::softenMap(void) {
    char *terrain;
 
-   terrain = new char[3];
-   terrain[0] = CAVE_PATH;
-   terrain[1] = FORD;
-   terrain[2] = WATER_OCEAN;
-   softenTerrain(WATER_COAST, terrain, 3, ADD_WATER_COAST);
+   terrain = new char[2];
+   terrain[0] = FORD;
+   terrain[1] = WATER_OCEAN;
+   softenTerrain(WATER_COAST, terrain, 2, ADD_WATER_COAST);
 
    delete [] terrain;
-   terrain = new char[2];
-   terrain[0] = CAVE_PATH;
-   terrain[1] = FORD;
-   softenTerrain(WATER_OCEAN, terrain, 2, ADD_WATER_OCEAN);
+   terrain = new char[1];
+   terrain[0] = FORD;
+   softenTerrain(WATER_OCEAN, terrain, 1, ADD_WATER_OCEAN);
 
    delete [] terrain;
    terrain = new char[7];
-   terrain[0] = CAVE_PATH;
-   terrain[1] = DESERT;
-   terrain[2] = FLAT_GRASS;
-   terrain[3] = FLAT_ROAD;
-   terrain[4] = FORD;
-   terrain[5] = WATER_COAST;
+   terrain[0] = DESERT;
+   terrain[1] = FLAT_GRASS;
+   terrain[2] = FLAT_ROAD;
+   terrain[3] = FORD;
+   terrain[4] = WATER_COAST;
+   terrain[5] = WATER_ICE;
    terrain[6] = WATER_OCEAN;
    softenTerrain(CAVE_FLOOR, terrain, 7, ADD_CAVE_FLOOR);
 
    delete [] terrain;
    terrain = new char[4];
-   terrain[0] = CAVE_PATH;
-   terrain[1] = FORD;
-   terrain[2] = WATER_COAST;
+   terrain[0] = FORD;
+   terrain[1] = WATER_COAST;
+   terrain[2] = WATER_ICE;
    terrain[3] = WATER_OCEAN;
    softenTerrain(DESERT, terrain, 4, ADD_DESERT);
 
    delete [] terrain;
    terrain = new char[3];
-   terrain[0] = CAVE_PATH;
-   terrain[1] = DESERT;
-   terrain[2] = FLAT_ROAD;
+   terrain[0] = DESERT;
+   terrain[1] = FLAT_ROAD;
+   terrain[2] = WATER_ICE;
    softenTerrain(FLAT_GRASS, terrain, 3, ADD_FLAT_GRASS);
 
    delete [] terrain;
@@ -296,12 +331,19 @@ void map::softenMap(void) {
 
    delete [] terrain;
    terrain = new char[5];
-   terrain[0] = CAVE_PATH;
-   terrain[1] = DESERT;
-   terrain[2] = FORD;
-   terrain[3] = WATER_COAST;
+   terrain[0] = DESERT;
+   terrain[1] = FORD;
+   terrain[2] = WATER_COAST;
+   terrain[3] = WATER_ICE;
    terrain[4] = WATER_OCEAN;
    softenTerrain(FLAT_ROAD, terrain, 5, ADD_FLAT_ROAD);
+
+   delete [] terrain;
+   terrain = new char[3];
+   terrain[0] = FORD;
+   terrain[1] = WATER_COAST;
+   terrain[2] = WATER_OCEAN;
+   softenTerrain(WATER_ICE, terrain, 3, ADD_WATER_ICE_TO_WATER);
 
    delete [] terrain;
 }

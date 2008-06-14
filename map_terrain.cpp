@@ -45,21 +45,7 @@ void map::setTerrain(const char terrainName, const int x, const int y) {
    stars[5] = screen->getImage("terrain/stars/blue6");
    stars[6] = screen->getImage("terrain/stars/blue7");
    // Set the varibles depending of the tipe of terrain.
-   if (terrainName == CAVE_PATH) {
-      images = 10;
-      movementPenalty = 1;
-      terrain = new SDL_Surface*[images];
-      terrain[0] = screen->getImage("terrain/cave/path");
-      terrain[1] = screen->getImage("terrain/cave/path1");
-      terrain[2] = screen->getImage("terrain/cave/path2");
-      terrain[3] = screen->getImage("terrain/cave/path3");
-      terrain[4] = screen->getImage("terrain/cave/path4");
-      terrain[5] = screen->getImage("terrain/cave/path5");
-      terrain[6] = screen->getImage("terrain/cave/path6");
-      terrain[7] = screen->getImage("terrain/cave/path7");
-      terrain[8] = screen->getImage("terrain/cave/path8");
-      terrain[9] = screen->getImage("terrain/cave/path9");
-   } else if (terrainName == CAVE_FLOOR) {
+   if (terrainName == CAVE_FLOOR) {
       images = 6;
       movementPenalty = 1;
       terrain = new SDL_Surface*[images];
@@ -119,6 +105,16 @@ void map::setTerrain(const char terrainName, const int x, const int y) {
       terrain[0] = screen->getImage("terrain/water/ocean");
       terrain[1] = screen->getImage("terrain/water/ocean2");
       terrain[2] = screen->getImage("terrain/water/ocean3");
+   } else if (terrainName == WATER_ICE) {
+      images = 6;
+      movementPenalty = 1;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/water/ice");
+      terrain[1] = screen->getImage("terrain/water/ice2");
+      terrain[2] = screen->getImage("terrain/water/ice3");
+      terrain[3] = screen->getImage("terrain/water/ice4");
+      terrain[4] = screen->getImage("terrain/water/ice5");
+      terrain[5] = screen->getImage("terrain/water/ice6");
    } else {
       cout << "\n\tWrong terrain type : " << terrainName << "\n\n";
       exit(EXIT_FAILURE);

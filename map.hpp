@@ -24,13 +24,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // @{
 /// Types of terrain.
-#define CAVE_PATH    '0'
-#define CAVE_FLOOR   '1'
-#define DESERT       '2'
-#define FLAT_GRASS   '3'
-#define FLAT_ROAD    '4'
-#define FORD         '5'
-#define WATER_COAST  '6'
+#define CAVE_FLOOR   '0'
+#define DESERT       '1'
+#define FLAT_GRASS   '2'
+#define FLAT_ROAD    '3'
+#define FORD         '4'
+#define WATER_COAST  '5'
+#define WATER_ICE    '6'
 #define WATER_OCEAN  '7'
 #define LAST_TERRAIN '7'
 // @}
@@ -51,6 +51,8 @@ struct cellCoor {
 /// (This class is meant to be inherit, not to be used directly)
 class map {
    private:
+      cellCoor firstCell; // Coordinates of the top left cell.
+
       // Softens a type of terrain.
       // (Implemented in map_smooth.cpp)
       void softenTerrain(const char cellTerrain, char *terrain, const int numberTerrains, const int softImages);
@@ -60,7 +62,6 @@ class map {
       cell **battleMap;
       unit *selectedUnit; // The unit that's selected.
       cell *mouseOverCell; // The cell where the mouse is.
-      cellCoor firstCell; // Coordinates of the top left cell.
 
       map(const int width, const int height); // Constructor
       ~map(void); // Destructor
@@ -90,7 +91,7 @@ class map {
       void softenMap(void);
 
       // Draws the map in the screen.
-      void draw(void);
+      virtual void draw(void);
 
    public:
       /// Starts the map.
