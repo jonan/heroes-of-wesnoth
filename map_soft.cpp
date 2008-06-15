@@ -158,23 +158,6 @@ void initializeVariables(SDL_Surface **one, SDL_Surface **two,
       *three = NULL;
       *four = NULL;
    } else if (type == ADD_WATER_ICE) {
-      one[0] = screen->getImage("terrain/water/ice-to-water-n");
-      one[1] = screen->getImage("terrain/water/ice-to-water-ne");
-      one[2] = screen->getImage("terrain/water/ice-to-water-se");
-      one[3] = screen->getImage("terrain/water/ice-to-water-s");
-      one[4] = screen->getImage("terrain/water/ice-to-water-sw");
-      one[5] = screen->getImage("terrain/water/ice-to-water-nw");
-
-      two[0] = screen->getImage("terrain/water/ice-to-water-n-ne");
-      two[1] = screen->getImage("terrain/water/ice-to-water-ne-se");
-      two[2] = screen->getImage("terrain/water/ice-to-water-se-s");
-      two[3] = screen->getImage("terrain/water/ice-to-water-s-sw");
-      two[4] = screen->getImage("terrain/water/ice-to-water-sw-nw");
-      two[5] = screen->getImage("terrain/water/ice-to-water-nw-n");
-
-      *three = NULL;
-      *four = NULL;
-   } else if (type == ADD_WATER_ICE_TO_WATER) {
       one[0] = screen->getImage("terrain/water/ice-n");
       one[1] = screen->getImage("terrain/water/ice-ne");
       one[2] = screen->getImage("terrain/water/ice-se");
@@ -188,6 +171,23 @@ void initializeVariables(SDL_Surface **one, SDL_Surface **two,
       two[3] = screen->getImage("terrain/water/ice-s-sw");
       two[4] = screen->getImage("terrain/water/ice-sw-nw");
       two[5] = screen->getImage("terrain/water/ice-nw-n");
+
+      *three = NULL;
+      *four = NULL;
+   } else if (type == ADD_WATER_ICE_TO_WATER) {
+      one[0] = screen->getImage("terrain/water/ice-to-water-n");
+      one[1] = screen->getImage("terrain/water/ice-to-water-ne");
+      one[2] = screen->getImage("terrain/water/ice-to-water-se");
+      one[3] = screen->getImage("terrain/water/ice-to-water-s");
+      one[4] = screen->getImage("terrain/water/ice-to-water-sw");
+      one[5] = screen->getImage("terrain/water/ice-to-water-nw");
+
+      two[0] = screen->getImage("terrain/water/ice-to-water-n-ne");
+      two[1] = screen->getImage("terrain/water/ice-to-water-ne-se");
+      two[2] = screen->getImage("terrain/water/ice-to-water-se-s");
+      two[3] = screen->getImage("terrain/water/ice-to-water-s-sw");
+      two[4] = screen->getImage("terrain/water/ice-to-water-sw-nw");
+      two[5] = screen->getImage("terrain/water/ice-to-water-nw-n");
 
       *three = NULL;
       *four = NULL;
@@ -337,6 +337,13 @@ void map::softenMap(void) {
    terrain[3] = WATER_ICE;
    terrain[4] = WATER_OCEAN;
    softenTerrain(FLAT_ROAD, terrain, 5, ADD_FLAT_ROAD);
+
+   delete [] terrain;
+   terrain = new char[3];
+   terrain[0] = FORD;
+   terrain[1] = WATER_COAST;
+   terrain[2] = WATER_OCEAN;
+   softenTerrain(WATER_ICE, terrain, 3, ADD_WATER_ICE);
 
    delete [] terrain;
    terrain = new char[3];

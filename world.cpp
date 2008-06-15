@@ -84,6 +84,47 @@ void world::nextTurn(void) {
    }
 }
 
+
+// Puts the enemies in the map.
+void world::setEnemies(const char *mapFile) {
+   // Create a string with the fisical location of the file
+   // "map/" + name
+   string map = "maps/";
+   string fileName(mapFile);
+   string fileDir = map + mapFile + "_creatures";
+
+   ifstream file(fileDir.c_str(), ifstream::in);
+   if (file.fail()) {
+      cout << "Error opening map \"" << mapFile << "\"\n\n";
+      exit(EXIT_FAILURE);
+   }
+
+   // Set the enemies
+   numberEnemies = 0;
+   char temp;
+   int i = 0;
+   int j = 0;
+   while (j<height) {
+      file.get(temp);
+      if (temp != '\n') {
+         if (temp != '-') {
+            unit *creature;
+            /// @todo Free this units if they are not killed.
+            creature = new unit(temp, 0);
+            battleMap[i][j].setCreature(creature);
+            numberEnemies++;
+         }
+         i++;
+         if (i == width) {
+            i = 0;
+            j++;
+         }
+      }
+   }
+
+   file.close();
+}
+
 // Removes a unit from the world and deletes it.
 void world::deleteCreature(cell &position) {
    delete position.getCreature();
@@ -123,50 +164,11 @@ world::world(const char *mapFile, const int width, const int height) : map(width
 
    file.close();
 
+   setEnemies(mapFile);
    softenMap();
 
    turn = -1;
-   numberEnemies = 0;
    endWorld = false;
-}
-
-// Puts the enemies in the map.
-void world::setEnemies(const char *enemiesMapFile) {
-   // Create a string with the fisical location of the file
-   // "map/" + name
-   string map = "maps/";
-   string fileName(enemiesMapFile);
-   string fileDir = map + enemiesMapFile;
-
-   ifstream file(fileDir.c_str(), ifstream::in);
-   if (file.fail()) {
-      cout << "Error opening map \"" << enemiesMapFile << "\"\n\n";
-      exit(EXIT_FAILURE);
-   }
-
-   // Set the enemies
-   char temp;
-   int i = 0;
-   int j = 0;
-   while (j<height) {
-      file.get(temp);
-      if (temp != '\n') {
-         if (temp != '-') {
-            unit *creature;
-            /// @todo Free this units if they are not killed.
-            creature = new unit(temp, 0);
-            battleMap[i][j].setCreature(creature);
-            numberEnemies++;
-         }
-         i++;
-         if (i == width) {
-            i = 0;
-            j++;
-         }
-      }
-   }
-
-   file.close();
 }
 
 // Puts a hero in the map.

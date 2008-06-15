@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "world.hpp"
 
 // Creates and starts a mission.
-void createMission( const char *map, const char *enemies_map,
+void createMission( const char *map,
                     const int width, const int height,
                     const int positionX, const int positionY,
                     const int numberAlies
@@ -37,22 +37,21 @@ void createMission( const char *map, const char *enemies_map,
       player->recruitCreature(temp);
    }
 
-   war.setEnemies(enemies_map);
    war.setHero(*player, positionX, positionY);
    war.start();
 }
 
 // Creates and starts mission 1.
 void mission1(void) {
-   createMission("mission1", "mission1_creatures", 30, 15, 1, 1, 10);
+   createMission("mission1", 30, 15, 1, 1, 10);
 }
 
 // Creates and starts mission 1.
 void mission2(void) {
-   createMission("mission2", "mission2_creatures", 30, 26, 3, 5, 15);
+   createMission("mission2", 30, 26, 3, 5, 15);
 }
 
 // Creates and starts mission 1.
 void mission3(void) {
-   createMission("mission3", "mission3_creatures", 30, 20, 8, 4, 25);
+   createMission("mission3", 30, 20, 8, 4, 25);
 }

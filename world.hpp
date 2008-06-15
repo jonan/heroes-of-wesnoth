@@ -50,6 +50,8 @@ class world : public map {
       // Starts the next turn.
       void nextTurn(void);
 
+      // Puts the enemies in the map.
+      void setEnemies(const char *mapFile);
       // Removes a unit from the world and deletes it.
       void deleteCreature(cell &position);
 
@@ -58,13 +60,6 @@ class world : public map {
       /// @param[in] width Map's width.
       /// @param[in] height Map's height 
       world(const char *mapFile, const int width, const int height); // Constructor
-
-      /// Puts the enemies in the map.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] enemiesMapFile File with the position of all the enemies.
-      void setEnemies(const char *enemiesMapFile);
       /// Puts a hero in the map.
       ///
       /// -no detailed description-
