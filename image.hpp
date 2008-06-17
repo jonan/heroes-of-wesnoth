@@ -33,31 +33,64 @@ using namespace std;
 /// It should only be used by the imageList class.
 class image {
    private:
-      char *name; // Unique name of each image (the fisical image name)
+      char *name; // The fisical name of the image.
+      int alpha, mirror, angle; // Indicates if the image has been modified.
       SDL_Surface *img; // Image's surface
 
-      // Loads an image with the alpha value indicated,
-      // if ther's an error, exits the program.
-      void loadImage(const int alpha);
+      // Loads an image. If there's an error exits.
+      void loadImage(void);
 
    public:
-      /// @param[in] imageName The image's name, without the "img/" or the ".png"
-      /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque)
-      image(const char *imageName, const int alpha); // Constructor
+      /// @param[in] imageName The image's name, without the "img/" or the ".png".
+      /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
+      /// @param[in] mirror Indicates if the image is a mirror of the original.
+      /// @param[in] angle Number of degrees the image is rotated.
+      image(const char *imageName, const int alpha,
+            const int mirror, const int angle); // Constructor
       ~image(void); // Destructor
 
-      /// Returns the image name.
+      /// Returns the image's name.
       ///
       /// -no detailed description-
       ///
-      /// @return image name.
-      char* getName(void);
+      /// @return The image's name.
+      char* getName(void) {return name;}
+      /// Returns the image's alpha value.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return The image's alpha value.
+      int getAlpha(void) {return alpha;}
+      /// Returns the image's mirror.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return The image's mirror (NONE, X or Y).
+      int getMirror(void) {return mirror;}
+      /// Returns the image's angle.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return The image's angle
+      int getAngle(void) {return angle;}
       /// Returns the image's surface.
       ///
       /// -no detailed description-
       ///
       /// @return image's surface.
-      SDL_Surface* getSurface(void);
+      SDL_Surface* getSurface(void) {return img;}
+
+      /// Indicates if the given attributes correspond to this image.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] imageName The image's name, without the "img/" or the ".png".
+      /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
+      /// @param[in] mirror Indicates if the image is a mirror of the original.
+      /// @param[in] angle Number of degrees the image is rotated.
+      /// @return true if the attributes correspond to this image, false if not.
+      bool findImage(const char *imageName, const int alpha,
+                     const int mirror, const int angle);
 };
 
 /// A list of image classes.
@@ -68,9 +101,11 @@ class imageList {
    private:
       deque<image*> images;
 
-      // Looks for an image in the list. If the
-      // image doesn't exist, exits the program
-      image* findImage(const char *imageName);
+      // Looks for an image in the list.
+      image* findImage(const char *imageName, const int alpha,
+                       const int mirror, const int angle);
+      // Looks for an image in the list.
+      image* findImage(SDL_Surface *image);
 
    public:
       ~imageList(void); // Destructor
@@ -80,16 +115,30 @@ class imageList {
       /// Loads the image and then places it at
       /// the beginning or the list.
       ///
-      /// @param[in] imageName  The image's name, without the "img/" or the ".png".
+      /// @param[in] imageName The image's name, without the "img/" or the ".png".
       /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
-      void addImage(const char *imageName, const int alpha);
+      /// @param[in] mirror Indicates if the image is a mirror of the original.
+      /// @param[in] angle Number of degrees the image is rotated.
+      void addImage(const char *imageName, const int alpha,
+                    const int mirror, const int angle);
       /// Returns the surface of an image in the list.
       ///
       /// -no detailed description-
       ///
-      /// @param[in] imageName  The image's name, without the "img/" or the ".png".
-      /// @return Surface of an image in the list.
-      SDL_Surface* getSurface(const char *imageName);
+      /// @param[in] imageName The image's name, without the "img/" or the ".png".
+      /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
+      /// @param[in] mirror Indicates if the image is a mirror of the original.
+      /// @param[in] angle Number of degrees the image is rotated.
+      /// @return Surface of the image in the list.
+      SDL_Surface* getSurface(const char *imageName, const int alpha,
+                              const int mirror, const int angle);
+      /// Returns an image of the list.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] image The surface of the image to get.
+      /// @return The image with the given surface.
+      image* getImage(SDL_Surface *image);
 };
 
 #endif // IMAGE_HPP

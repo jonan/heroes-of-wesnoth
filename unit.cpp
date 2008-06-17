@@ -118,6 +118,54 @@ void unit::attack(unit &creature) {
    }
 }
 
+// Makes the unit face left
+void unit::faceLeft(void) {
+   deque<SDL_Surface*>::iterator initialEnd;
+   int initialSize;
+
+   // Change standing images
+   initialEnd = standing.end();
+   initialSize = standing.size();
+   // Add new images
+   for (int i=0; i<initialSize; i++)
+      standing.push_back( screen->faceLeft(standing[i]) );
+   // Erase previous images
+   standing.erase(standing.begin(), initialEnd);
+
+   // Change dying images
+   initialEnd = dying.end();
+   initialSize = dying.size();
+   // Add new images
+   for (int i=0; i<initialSize; i++)
+      dying.push_back( screen->faceLeft(dying[i]) );
+   // Erase previous images
+   dying.erase(dying.begin(), initialEnd);
+}
+
+// Makes the unit face right
+void unit::faceRight(void) {
+   deque<SDL_Surface*>::iterator initialEnd;
+   int initialSize;
+
+   // Change standing images
+   initialEnd = standing.end();
+   initialSize = standing.size();
+   // Add new images
+   for (int i=0; i<initialSize; i++)
+      standing.push_back( screen->faceRight(standing[i]) );
+   // Erase previous images
+   standing.erase(standing.begin(), initialEnd);
+
+   // Change dying images
+   initialEnd = dying.end();
+   initialSize = dying.size();
+   // Add new images
+   for (int i=0; i<initialSize; i++)
+      dying.push_back( screen->faceRight(dying[i]) );
+   // Erase previous images
+   dying.erase(dying.begin(), initialEnd);
+}
+
 // Draws the creature in the given position.
 void unit::draw(SDL_Rect &position) {
    // Draw the corresponding sprite.

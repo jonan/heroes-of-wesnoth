@@ -125,10 +125,19 @@ void map::moveCreature(cell &endPosition) {
    int movements;
    cell *actualPosition;
    cell *temp;
+   int actualX, actualY; // Coordinates of the actual cell
+   int endX, endY; // Coordinates of the cell where to move
 
    actualPosition = selectedUnit->getPosition();
-   endPosition.getPath(path, movements);
 
+   actualPosition->getCoordinates(actualX, actualY);
+   endPosition.getCoordinates(endX, endY);
+
+   // Make the creature face the same direction as moving
+   if (actualX>endX) selectedUnit->faceLeft();
+   else if (actualX<endX) selectedUnit->faceRight();
+
+   endPosition.getPath(path, movements);
    /// @note This isn't too elegant
    for (int i=0; i<movements; i++) {
       selectedUnit->getPosition()->setCreature(NULL);

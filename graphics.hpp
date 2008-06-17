@@ -29,6 +29,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #define BPP           16
 
 // @{
+/// Mirror
+#define NONE 0
+#define X    1
+#define Y    2
+// @}
+
+// @{
 /// Type of effects
 #define HORIZONTAL        0
 #define VERTICAL          1
@@ -46,7 +53,7 @@ class ttf;
 class graphics {
    private:
       SDL_Surface *screen; // The surface that represents the screen
-      imageList *image; // List with all the images used
+      imageList *images; // List with all the images used
       ttf *text; // Used to write text into the screen
 
       // Initializes SDL, SDL_ttf and SDL_mixer.
@@ -64,8 +71,27 @@ class graphics {
       /// ones, if it's not there it loads it.
       ///
       /// @param[in] imageName The image's name, without the "img/" or the ".png".
+      /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
+      /// @param[in] mirror Indicates if the image is a mirror of the original.
+      /// @param[in] angle Number of degrees the image is rotated.
       /// @return Surface of the image.
-      SDL_Surface* getImage(const char *imageName);
+      SDL_Surface* getImage(const char *imageName, const int alpha = SDL_ALPHA_OPAQUE,
+                            const int mirror = NONE, const int angle = 0);
+
+      /// Makes an image face left.
+      ///
+      ///  -no detailed description-
+      ///
+      /// @param[in] imageSurface Original image.
+      /// @return The same image but facing left.
+      SDL_Surface* faceLeft(SDL_Surface *imageSurface);
+      /// Makes an image face right.
+      ///
+      ///  -no detailed description-
+      ///
+      /// @param[in] imageSurface Original image.
+      /// @return The same image but facing right.
+      SDL_Surface* faceRight(SDL_Surface *imageSurface);
 
       /// Loads an image for further use.
       ///
@@ -73,7 +99,10 @@ class graphics {
       ///
       /// @param[in] imageName The image's name, without the "img/" or the ".png".
       /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
-      void newImage(const char *imageName, const int alpha = SDL_ALPHA_OPAQUE);
+      /// @param[in] mirror Indicates if the image is a mirror of the original.
+      /// @param[in] angle Number of degrees the image is rotated.
+      void newImage(const char *imageName, const int alpha = SDL_ALPHA_OPAQUE,
+                    const int mirror = NONE, const int angle = 0);
 
       /// Draws an image to the indicated position.
       ///

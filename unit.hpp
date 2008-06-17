@@ -98,7 +98,7 @@ class unit {
       /// @param[in] type Type of unit.
       /// @param[in] number Number of units.
       unit(const char type, const int number = 1); // Constructor
-      ~unit(void) {}; // Destructor
+      ~unit(void) {} // Destructor
 
       /// Changes the number of units.
       ///
@@ -162,6 +162,15 @@ class unit {
       ///
       /// @param[in] creature Unit to attack.
       void attack(unit &creature);
+
+      /// Makes the unit face left
+      ///
+      /// -no detailed description-
+      void faceLeft(void);
+      /// Makes the unit face right
+      ///
+      /// -no detailed description-
+      void faceRight(void);
 
       /// Draws the creature in the given position.
       ///

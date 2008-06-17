@@ -19,16 +19,17 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include <string>
 
 #include <SDL/SDL_image.h>
+#include <SDL/SDL_rotozoom.h>
 
+#include "graphics.hpp"
 #include "image.hpp"
 
 using namespace std;
 
 // class image
 
-// Loads an image with the alpha value indicated,
-// if ther's an error, exits the program.
-void image::loadImage(const int alpha) {
+// Loads an image. If there's an error exits.
+void image::loadImage(void) {
    SDL_Surface *image;
 
    // Create a string with the fisical location of the image
@@ -51,13 +52,23 @@ void image::loadImage(const int alpha) {
       this->img = SDL_DisplayFormatAlpha(image);
       if (this->img) SDL_FreeSurface(image);
       else this->img = image;
+      // Add the corresponding modifications to the image
+      if (angle != 0) this->img = rotozoomSurface(this->img, angle, 1, SMOOTHING_OFF);
+      if (mirror == X) this->img = zoomSurface(this->img, -1, 1, SMOOTHING_OFF);
+      else if (mirror == Y) this->img = zoomSurface(this->img, 1, -1, SMOOTHING_OFF);
    }
 }
 
 // Constructor
-image::image(const char *imageName, const int alpha) {
+image::image(const char *imageName, const int alpha,
+             const int mirror, const int angle
+            ) {
    name = strdup(imageName);
-   loadImage(alpha);
+   this->alpha = alpha;
+   this->mirror = mirror;
+   this->angle = angle;
+
+   loadImage();
 }
 
 // Destructor
@@ -66,27 +77,44 @@ image::~image(void) {
    SDL_FreeSurface(img);
 }
 
-// Returns the image name.
-char* image::getName(void) {
-   return name;
-}
-
-SDL_Surface* image::getSurface(void) {
-   return img;
+// Indicates if the given attributes correspond to this image.
+bool image::findImage(const char *imageName, const int alpha,
+                      const int mirror, const int angle
+                     ) {
+   return ( !strcmp(imageName, name) &&
+            alpha == this->alpha &&
+            mirror == this->mirror &&
+            angle == this->angle);
 }
 
 // ---End---
 
 // class imageList
 
-// Looks for an image in the list. If the
-// image doesn't exist, exits the program
-image* imageList::findImage(const char *imageName) {
+// Looks for an image in the list.
+image* imageList::findImage(const char *imageName, const int alpha,
+                            const int mirror, const int angle
+                           ) {
    int i=0;
    bool found=false;
 
    while (i<images.size() && !found) {
-      if ( strcmp(images[i]->getName(), imageName) == 0 )
+      if ( images[i]->findImage(imageName, alpha, mirror, angle) )
+         found = true;
+      else i++;
+   }
+
+   if (!found) return NULL;
+   else return images[i];
+}
+
+// Looks for an image in the list.
+image* imageList::findImage(SDL_Surface *image) {
+   int i=0;
+   bool found=false;
+
+   while (i<images.size() && !found) {
+      if ( images[i]->getSurface() == image )
          found = true;
       else i++;
    }
@@ -106,20 +134,29 @@ imageList::~imageList(void) {
 
 // Loads the image and then places it at
 // the beginning or the list.
-void imageList::addImage(const char *imageName, const int alpha) {
+void imageList::addImage(const char *imageName, const int alpha,
+                         const int mirror, const int angle
+                        ) {
    image *temp;
 
-   temp = new image(imageName, alpha);
+   temp = new image(imageName, alpha, mirror, angle);
    images.push_back(temp);
 }
 
 // Returns the surface of an image in the list.
-SDL_Surface* imageList::getSurface(const char *imageName) {
+SDL_Surface* imageList::getSurface(const char *imageName, const int alpha,
+                                   const int mirror, const int angle
+                                  ) {
    image *temp;
 
-   temp = findImage(imageName);
+   temp = findImage(imageName, alpha, mirror, angle);
    if (temp) return temp->getSurface();
    else return NULL;
+}
+
+// Returns an image of the list.
+image* imageList::getImage(SDL_Surface *image) {
+   return findImage(image);
 }
 
 // ---End---

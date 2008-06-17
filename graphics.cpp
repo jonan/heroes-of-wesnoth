@@ -64,13 +64,13 @@ void graphics::createWindow(const bool fullscreen) {
 graphics::graphics(const bool fullscreen) {
    init();
    createWindow(fullscreen);
-   image = new imageList;
+   images = new imageList;
    text = new ttf();
 }
 
 // Destructor
 graphics::~graphics(void) {
-   delete image;
+   delete images;
    delete text;
    SDL_FreeSurface(screen);
    TTF_Quit();
@@ -79,33 +79,61 @@ graphics::~graphics(void) {
 
 // Looks for the image in the list of loaded
 // ones, if it's not there it loads it.
-SDL_Surface* graphics::getImage(const char *imageName) {
+SDL_Surface* graphics::getImage(const char *imageName, const int alpha,
+                                const int mirror, const int angle
+                               ) {
    SDL_Surface *temp;
 
-   temp = image->getSurface(imageName);
+   temp = images->getSurface(imageName, alpha, mirror, angle);
    if (!temp) { // The image hasn't been loaded.
-      newImage(imageName);
-      temp = image->getSurface(imageName);
+      newImage(imageName, alpha, mirror, angle);
+      temp = images->getSurface(imageName, alpha, mirror, angle);
    }
 
    return temp;
 }
 
-// Adds a new image to the list
-void graphics::newImage(const char *imageName, const int alpha) {
-   image->addImage(imageName, alpha);
+// Makes an image face left.
+SDL_Surface* graphics::faceLeft(SDL_Surface *imageSurface) {
+   image* temp;
+
+   temp = images->getImage(imageSurface);
+   if (temp->getMirror() == X) return imageSurface;
+   else {
+      newImage(temp->getName(), temp->getAlpha(),
+               X, temp->getAngle());
+      return images->getSurface(temp->getName(), temp->getAlpha(),
+                                X, temp->getAngle());
+   }
 }
 
-//Before drawing looks for the image in the list
+// Makes an image face right.
+SDL_Surface* graphics::faceRight(SDL_Surface *imageSurface) {
+   image* temp;
+
+   temp = images->getImage(imageSurface);
+   if (temp->getMirror() != X) return imageSurface;
+   else {
+      newImage(temp->getName(), temp->getAlpha(),
+               NONE, temp->getAngle());
+      return images->getSurface(temp->getName(), temp->getAlpha(),
+                                NONE, temp->getAngle());
+   }
+}
+
+// Adds a new image to the list
+void graphics::newImage(const char *imageName, const int alpha,
+                        const int mirror, const int angle
+                       ) {
+   images->addImage(imageName, alpha, mirror, angle);
+}
+
+// Before drawing looks for the image in the list
 // of loaded ones, if it's not there it loads it.
 void graphics::draw(const char *imageName, SDL_Rect &position) {
    SDL_Surface *temp;
 
-   temp = image->getSurface(imageName);
-   if (!temp) { // The image hasn't been loaded.
-      newImage(imageName);
-      temp = image->getSurface(imageName);
-   }
+   temp = getImage(imageName);
 
    SDL_BlitSurface(temp, NULL, screen, &position);
 }

@@ -243,9 +243,11 @@ void createDefaultBattle(void) {
    // Create the enemy creatures.
    for (int i=0; i<5; i++) {
       creature[i] = new unit(SKELETON, 5);
+      creature[i]->faceLeft();
    }
    for (int t=5; t<9; t++) {
       creature[t] = new unit(BAT, 1);
+      creature[t]->faceLeft();
    }
 
    battle war(*player, creature, 9);
@@ -274,6 +276,7 @@ bool createBattle(hero &player, const int enemyType, const int terrainType) {
    numberEnemies++;
    for (int i=0; i<9; i++) {
       creature[i] = new unit(enemyType, numberEnemies);
+      creature[i]->faceLeft();
    }
 
    battle war(player, creature, 9);

@@ -34,7 +34,7 @@ void map::setTerrain(const char terrainName, const int x, const int y) {
    int movementPenalty;
    int randomNumber;
 
-   alpha = screen->getImage("alpha");
+   alpha = screen->getImage("alpha", 50);
    numberStars = 7;
    stars = new SDL_Surface*[numberStars];
    stars[0] = screen->getImage("terrain/stars/blue1");
