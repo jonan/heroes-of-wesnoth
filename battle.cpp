@@ -28,7 +28,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 // it returns true, the loop ends, else it continues.
 bool battle::frame(void) {
    if (keys[SDLK_ESCAPE]) {
-      while (keys[SDLK_ESCAPE]) input->readInput();
+      keys[SDLK_ESCAPE] = false;
       removeCreature(*player);
       delete player;
       endBattle = true;
@@ -37,7 +37,7 @@ bool battle::frame(void) {
       else {
          // This controls only work when a friendly creature is moving
          if (keys[SDLK_SPACE]) {
-            while (keys[SDLK_SPACE]) input->readInput();
+            keys[SDLK_SPACE] = false;
             selectedUnit->getPosition()->unselect();
             nextTurn();
          }
@@ -190,14 +190,15 @@ void battle::ai(void) {
 
 // Constructor
 battle::battle(hero &player, unit **enemies, const int numberEnemies) : map(18, 9) {
+   // Set the hero
    this->player = &player;
-   for (int i=0; i<numberEnemies && i<MAX_TEAM_UNITS; i++) {
+   // Set the enemies
+   for (int i=0; i<numberEnemies && i<MAX_TEAM_UNITS; i++)
       creatures[i] = enemies[i];
-   }
-   if (numberEnemies<MAX_TEAM_UNITS) {
-      for (int j=numberEnemies; j<MAX_TEAM_UNITS; j++) creatures[j] = NULL;
-   }
-
+   if (numberEnemies<MAX_TEAM_UNITS)
+      for (int j=numberEnemies; j<MAX_TEAM_UNITS; j++)
+         creatures[j] = NULL;
+   // Put turns to 0
    for (int t=0; t<MAX_BATTLE_UNITS; t++) turns[t] = 0;
 
    endBattle = false;
@@ -207,12 +208,17 @@ battle::battle(hero &player, unit **enemies, const int numberEnemies) : map(18, 
       for (int y=0; y<9; y++)
          battleMap[x][y].calculateView(1);
    // Put the hero and his units in the map.
+   player.faceRight();
    battleMap[0][4].setCreature(&player);
-   for (int i=0; i<9; i++)
+   for (int i=0; i<9; i++) {
+      player.getCreature(i)->faceRight();
       battleMap[1][i].setCreature(player.getCreature(i));
+   }
    // Put the enemy creatures in the map.
-   for (int i=0; i<MAX_TEAM_UNITS; i++)
+   for (int i=0; i<MAX_TEAM_UNITS; i++) {
+      creatures[i]->faceLeft();
       battleMap[width-2][i].setCreature(creatures[i]);
+   }
 }
 
 // Starts the battle.
@@ -243,11 +249,9 @@ void createDefaultBattle(void) {
    // Create the enemy creatures.
    for (int i=0; i<5; i++) {
       creature[i] = new unit(SKELETON, 5);
-      creature[i]->faceLeft();
    }
    for (int t=5; t<9; t++) {
       creature[t] = new unit(BAT, 1);
-      creature[t]->faceLeft();
    }
 
    battle war(*player, creature, 9);
@@ -276,7 +280,6 @@ bool createBattle(hero &player, const int enemyType, const int terrainType) {
    numberEnemies++;
    for (int i=0; i<9; i++) {
       creature[i] = new unit(enemyType, numberEnemies);
-      creature[i]->faceLeft();
    }
 
    battle war(player, creature, 9);

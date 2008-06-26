@@ -34,7 +34,7 @@ using namespace std;
 // it returns true, the loop ends, else it continues.
 bool world::frame(void) {
    if (keys[SDLK_ESCAPE]) {
-      while (keys[SDLK_ESCAPE]) input->readInput();
+      keys[SDLK_ESCAPE] = false;
       endWorld = true;
    } else {
       draw();

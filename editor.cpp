@@ -34,19 +34,19 @@ void editor::mouseClick(const int x, const int y) {
 // it returns true, the loop ends, else it continues.
 bool editor::frame(void) {
    if (keys[SDLK_ESCAPE]) {
-      while (keys[SDLK_ESCAPE]) input->readInput();
+      keys[SDLK_ESCAPE] = false;
       endEditor = true;
    } else { // If the editor is not ended.
       if (keys[SDLK_F1]) {
-         while (keys[SDLK_F1]) input->readInput();
+         keys[SDLK_F1] = false;
          save();
       } else if (keys[SDLK_F2]) {
-         while (keys[SDLK_F2]) input->readInput();
+         keys[SDLK_F2] = false;
          load();
       }
 
       if (keys[SDLK_SPACE]) {
-         while (keys[SDLK_SPACE]) input->readInput();
+         keys[SDLK_SPACE] = false;
          softenMap();
       }
 
@@ -121,6 +121,17 @@ void editor::draw(void) {
    map::draw();
    screen->write("F1:save", 25, 6);
    screen->write("F2:load", 25, 20);
+   // Temporal solution to know what terrain is selected
+   /// @todo Erase this when a better method is implemented.
+   SDL_Rect position;
+   position.x=503;
+   position.y=-40;
+   cell terrain, temp;
+   temp = battleMap[0][0];
+   setTerrain(actualTerrain, 0, 0);
+   terrain = battleMap[0][0];
+   battleMap[0][0] = temp;
+   terrain.draw(position);
 }
 
 // Constructor
