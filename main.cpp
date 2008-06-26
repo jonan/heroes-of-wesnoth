@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// The main function.
 /// @author Jonan
 
+#include <cstdlib>
 #include <iostream>
 
 #include "boot.hpp"
