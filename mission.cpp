@@ -46,12 +46,12 @@ void mission1(void) {
    createMission("mission1", 30, 15, 1, 1, 10);
 }
 
-// Creates and starts mission 1.
+// Creates and starts mission 2.
 void mission2(void) {
    createMission("mission2", 30, 26, 3, 5, 15);
 }
 
-// Creates and starts mission 1.
+// Creates and starts mission 3.
 void mission3(void) {
    createMission("mission3", 30, 20, 8, 4, 25);
 }

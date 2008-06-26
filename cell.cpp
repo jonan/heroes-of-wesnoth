@@ -128,26 +128,10 @@ void cell::addImage(SDL_Surface &terrain, const char type) {
    this->terrain.push_back(&terrain);
 }
 
-// Sets the image used to outstand a cell.
-void cell::setAlpha(SDL_Surface &alpha) {
-   this->alpha = &alpha;
-}
-
-// Sets the image to show when the cell is not visible.
-void cell::setStars(SDL_Surface &stars) {
-   this->stars = &stars;
-}
-
 // Puts a creature in the cell.
 void cell::setCreature(unit *creature) {
    this->creature = creature;
    if (creature) creature->setPosition(*this);
-}
-
-// If penalty is 1000 a creature
-// can never be over this cell.
-void cell::setMovementPenalty(const int penalty) {
-   movementPenalty = penalty;
 }
 
 // Sets the cells map coordinates.
@@ -156,25 +140,10 @@ void cell::setCoordinates(const int x, const int y) {
    mapY = y;
 }
 
-// Returns the cell's terrain.
-char cell::getTerrain(void) {
-   return type;
-}
-
-// Returns the creature in the cell.
-unit* cell::getCreature(void) {
-   return creature;
-}
-
 // Returns the cells map coordinates.
 void cell::getCoordinates(int &x, int &y) {
    x = mapX;
    y = mapY;
-}
-
-// Returns one of the six connected cells.
-cell* cell::getConnectedCell(const int place) {
-   return connectedCell[place];
 }
 
 // Returns the path that the unit has to follow to
@@ -182,16 +151,6 @@ cell* cell::getConnectedCell(const int place) {
 void cell::getPath(int* &path, int &movements) {
    path = this->path;
    movements = this->movements;
-}
-
-// Indicates that the mouse is over the cell.
-void cell::putMouse(void) {
-   mouseOver = true;
-}
-
-// The mouse is no longer over the cell.
-void cell::removeMouse(void) {
-   mouseOver = false;
 }
 
 // The cell is selected and the cell where
@@ -231,7 +190,7 @@ void cell::connectCell(const int position, cell* connectedCell){
 // Draws the cell in the screen.
 void cell::draw(SDL_Rect position) {
    if (visible) {
-      for (int i=0; i<terrain.size(); i++)
+      for (unsigned int i=0; i<terrain.size(); i++)
          screen->draw(terrain[i], position);
       if (mouseOver) screen->draw(alpha, position);
       if (canMove) screen->draw(alpha, position);
@@ -246,16 +205,6 @@ void cell::draw(SDL_Rect position) {
       }
       if (selected) screen->draw(alpha, position);
    } else screen->draw(stars, position);
-}
-
-// Indicates if the selected creature can move to this cell.
-bool cell::canMoveHere(void) {
-   return canMove;
-}
-
-// Indicates if the selected creature can attack the unit in this cell.
-bool cell::canAttackHere(void) {
-   return canAttack;
 }
 
 // It realy only marks the creature as dying and

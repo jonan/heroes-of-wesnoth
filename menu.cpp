@@ -32,26 +32,6 @@ button::~button(void) {
    free(text);
 }
 
-// Returns the button's text.
-char* button::getText(void) {
-   return text;
-}
-
-// Executes the button's function.
-void button::getFunction(void) {
-   function();
-}
-
-// Returns the button's state.
-int button::getState(void) {
-   return state;
-}
-
-// Changes the button state.
-void button::setState(const int state) {
-   this->state=state;
-}
-
 // ---End---
 
 // class menu
@@ -76,7 +56,7 @@ menu::menu(SDL_Rect position) {
 
 // Destructor
 menu::~menu(void) {
-   for (int i=0; i<buttons.size(); i++) {
+   for (unsigned int i=0; i<buttons.size(); i++) {
       delete buttons[i];
    }
 }
@@ -103,7 +83,7 @@ void menu::moveMouse(const int x, const int y, const int pressed) {
 
    if ( x>position.x && x < ( position.x + position.w ) ) { // Mouse in button's column
       int i = 0; // Buttons counter
-      while ( i<buttons.size() && !mouseOver ) {
+      while ( i < (int) buttons.size() && !mouseOver ) {
          if ( y>position.y && y<(position.y+position.h) ) { // Mouse over the button
             mouseOver = true;
             if ( pressed == SDL_BUTTON_LEFT ) {
@@ -155,7 +135,7 @@ void menu::draw(void) {
       drawBackgroundFunction();
       drawBackground = false;
    }
-   for (int i=0; i<buttons.size(); i++) {
+   for (unsigned int i=0; i<buttons.size(); i++) {
       screen->draw( buttonSurface[ buttons[i]->getState() ], position );
       if (buttons[i]->getState() != PRESSED)
          screen->write(buttons[i]->getText() , position.x+28, position.y+3);

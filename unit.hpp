@@ -99,7 +99,7 @@ class unit {
       /// @param[in] type Type of unit.
       /// @param[in] number Number of units.
       unit(const char type, const int number = 1); // Constructor
-      ~unit(void) {} // Destructor
+      virtual ~unit(void) {} // Destructor
 
       /// Changes the number of units.
       ///

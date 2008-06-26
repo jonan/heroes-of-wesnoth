@@ -39,21 +39,6 @@ hero::~hero(void) {
    }
 }
 
-// Returns the hero's type of AI.
-int hero::getAI(void) {
-   return ai;
-}
-
-// Returns the hero's visibility.
-int hero::getVisibility(void) {
-   return visibility;
-}
-
-// Returns the number of creatures the hero controls.
-int hero::getNumberCreatures(void) {
-   return numCreatures;
-}
-
 // Returns a creature controled by the hero.
 unit* hero::getCreature(const int number) {
    if (number < numCreatures) return creature[number];
@@ -77,6 +62,7 @@ bool hero::recruitCreature(unit *creature) {
 bool hero::recruitCreature(unit *creature, const int position) {
    if (position < MAX_UNITS) {
       this->creature[position] = creature;
+      return true;
    } else return false;
 }
 
@@ -87,6 +73,6 @@ void hero::draw(SDL_Rect &position) {
    // Increase the sprite.
    sprite++;
    // Check if this was the last sprite and start again if it was.
-   if ( (sprite/NUM_FRAMES_FOR_SPRITE) == standing.size() )
+   if ( (sprite/NUM_FRAMES_FOR_SPRITE) == (int) standing.size() )
       sprite = 0;
 }

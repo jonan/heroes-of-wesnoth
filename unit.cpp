@@ -15,7 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include <cstdlib>
 #include <cmath>
+#include <iostream>
 
 #include "graphics.hpp"
 #include "unit.hpp"
@@ -173,7 +175,7 @@ void unit::draw(SDL_Rect &position) {
    // Increase the sprite.
    sprite++;
    // Check if this was the last sprite and start again if it was.
-   if ( (sprite/NUM_FRAMES_FOR_SPRITE) == standing.size() )
+   if ( (sprite/NUM_FRAMES_FOR_SPRITE) == (int) standing.size() )
       sprite = 0;
 
    if (number>0) {
@@ -191,9 +193,12 @@ bool unit::animation(SDL_Rect &position, const int type) {
       // Increase the sprite.
       nonStandingSprite++;
       // Check if this was the last sprite and start again if it was.
-      if ( (nonStandingSprite/NUM_FRAMES_FOR_SPRITE) == dying.size() ) {
+      if ( (nonStandingSprite/NUM_FRAMES_FOR_SPRITE) == (int) dying.size() ) {
          nonStandingSprite = 0;
          return false;
       } else return true;
+   } else {
+      cout << "\n\tWrong animation type : " << type << "\n\n";
+      exit(EXIT_FAILURE);
    }
 }

@@ -59,24 +59,24 @@ class button {
       /// -no detailed description-
       ///
       /// @return Text to be writen in the button.
-      char* getText(void);
+      char* getText(void) {return text;}
       /// Executes the button's function.
       ///
       /// -no detailed description-
-      void getFunction(void);
+      void getFunction(void) {function();}
       /// Returns the button's state.
       ///
       /// -no detailed description-
       ///
       /// @return Button's state (NORMAL, ACTIVE or PRESSED).
-      int getState(void);
+      int getState(void) {return state;}
 
       /// Changes the button state.
       ///
       /// -no detailed description-
       ///
       /// @param[in] state New state of the button (NORMAL, ACTIVE or PRESSED).
-      void setState(const int state);
+      void setState(const int state) {this->state = state;}
 };
 
 /// Collection of related button classes.

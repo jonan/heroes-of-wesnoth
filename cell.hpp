@@ -82,13 +82,13 @@ class cell {
       /// -no detailed description-
       ///
       /// @param[in] alpha Alpha surface.
-      void setAlpha(SDL_Surface &alpha);
+      void setAlpha(SDL_Surface &alpha) {this->alpha = &alpha;}
       /// Sets the image to show when the cell is not visible.
       ///
       /// -no detailed description-
       ///
       /// @param[in] stars Surface of the stars.
-      void setStars(SDL_Surface &stars);
+      void setStars(SDL_Surface &stars) {this->stars = &stars;}
       /// Puts a creature in the cell.
       ///
       /// -no detailed description-
@@ -101,7 +101,7 @@ class cell {
       /// can never be over this cell.
       ///
       /// @param[in] penalty Movement penalty for this cell.
-      void setMovementPenalty(const int penalty);
+      void setMovementPenalty(const int penalty) {movementPenalty = penalty;}
       /// Sets the cells map coordinates.
       ///
       /// -no detailed description-
@@ -115,13 +115,13 @@ class cell {
       /// -no detailed description-
       ///
       /// @return Type of terrain of the cell.
-      char getTerrain(void);
+      char getTerrain(void) {return type;}
       /// Returns the creature in the cell.
       ///
       /// -no detailed description-
       ///
       /// @return Pointer to the unit in the cell.
-      unit* getCreature(void);
+      unit* getCreature(void) {return creature;}
       /// Returns the cells map coordinates.
       ///
       /// -no detailed description-
@@ -135,7 +135,7 @@ class cell {
       ///
       /// @param[in] place Can be N, NE, SE, S, SW or NW.
       /// @return The connected cell.
-      cell* getConnectedCell(const int place);
+      cell* getConnectedCell(const int place) {return connectedCell[place];}
       /// Returns the information needed to move a unit.
       ///
       /// Returns the path that the unit has to follow to
@@ -148,11 +148,11 @@ class cell {
       /// Indicates that the mouse is over the cell.
       ///
       /// -no detailed description-
-      void putMouse(void);
+      void putMouse(void) {mouseOver = true;}
       /// The mouse is no longer over the cell.
       ///
       /// -no detailed description-
-      void removeMouse(void);
+      void removeMouse(void) {mouseOver = false;}
 
       /// Indicates that the cell is now selected.
       ///
@@ -196,13 +196,13 @@ class cell {
       /// -no detailed description-
       ///
       /// @return true if the selected creature can move to this cell, false if not.
-      bool canMoveHere(void);
+      bool canMoveHere(void) {return canMove;}
       /// Indicates if the selected creature can attack the unit in this cell.
       ///
       /// -no detailed description-
       ///
       /// @return true if the selected creature can attack the unit in this cell, false if not.
-      bool canAttackHere(void);
+      bool canAttackHere(void) {return canAttack;}
 
       /// Kills and deletes the creature in the cell.
       ///

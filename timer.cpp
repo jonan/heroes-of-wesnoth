@@ -24,7 +24,7 @@ void timer::start(void) {
 }
 
 // Indicates the ending point.
-void timer::end(const int ms) {
+void timer::end(const unsigned int ms) {
    now = SDL_GetTicks();
 
    if ( (now-before) < ms )

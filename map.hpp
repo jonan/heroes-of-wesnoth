@@ -64,7 +64,7 @@ class map {
       cell *mouseOverCell; // The cell where the mouse is.
 
       map(const int width, const int height); // Constructor
-      ~map(void); // Destructor
+      virtual ~map(void); // Destructor
 
       // Returns a cell where the creature can attack.
       cell* getAttackCell(void);

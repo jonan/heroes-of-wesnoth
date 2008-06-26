@@ -96,7 +96,7 @@ bool image::findImage(const char *imageName, const int alpha,
 image* imageList::findImage(const char *imageName, const int alpha,
                             const int mirror, const int angle
                            ) {
-   int i=0;
+   unsigned int i=0;
    bool found=false;
 
    while (i<images.size() && !found) {
@@ -111,7 +111,7 @@ image* imageList::findImage(const char *imageName, const int alpha,
 
 // Looks for an image in the list.
 image* imageList::findImage(SDL_Surface *image) {
-   int i=0;
+   unsigned int i=0;
    bool found=false;
 
    while (i<images.size() && !found) {
@@ -127,7 +127,7 @@ image* imageList::findImage(SDL_Surface *image) {
 // Destructor
 imageList::~imageList(void) {
    cout << "Freeing imageList...\t\t";
-   for (int i=0; i<images.size(); i++) {
+   for (unsigned int i=0; i<images.size(); i++) {
       delete images[i];
    }
    cout << "[ ok ]\n";

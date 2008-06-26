@@ -64,19 +64,19 @@ class hero : public unit {
       /// -no detailed description-
       ///
       /// @return The hero's type of AI
-      int getAI(void);
+      int getAI(void) {return ai;}
       /// Returns the hero's visibility.
       ///
       /// -no detailed description-
       ///
       /// @return The hero's visibility
-      int getVisibility(void);
+      int getVisibility(void) {return visibility;}
       /// Returns the number of creatures the hero controls.
       ///
       /// -no detailed description-
       ///
       /// @return The number of creatures the hero controls.
-      int getNumberCreatures(void);
+      int getNumberCreatures(void) {return numCreatures;}
       /// Returns a creature controled by the hero.
       ///
       /// -no detailed description-

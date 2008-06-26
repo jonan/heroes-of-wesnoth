@@ -65,7 +65,7 @@ graphics::graphics(const bool fullscreen) {
    init();
    createWindow(fullscreen);
    images = new imageList;
-   text = new ttf();
+   text = new ttf;
 }
 
 // Destructor

@@ -77,7 +77,7 @@ void world::nextTurn(void) {
    // If the battle hasn't ended continue
    if (!endWorld) {
       turn++;
-      if (turn==players.size()) turn = 0;
+      if (turn == (int) players.size()) turn = 0;
       selectedUnit = players[turn];
       selectedUnit->getPosition()->select();
       // Wait until the mouse button is released.

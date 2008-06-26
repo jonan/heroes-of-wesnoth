@@ -2,7 +2,7 @@ OBJECTS = battle.o boot.o cell.o editor.o events.o graphics.o hero.o hero_type.o
 	image.o loop.o main.o map.o map_soft.o map_terrain.o menu.o menu_main.o \
 	mission.o timer.o ttf.o unit.o unit_type.o world.o
 SDL_LIBS = -lSDL -lSDL_ttf -lSDL_image -lSDL_gfx
-CFLAGS = -c -g
+CFLAGS = -c -g -Wall
 CC = g++
 
 heroes : $(OBJECTS)
