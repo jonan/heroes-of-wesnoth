@@ -19,7 +19,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // Sets the creatures attributes acording to his type.
 void unit::setCreaturesAttributes(void) {
-   if (type == ARMAGEDDON) {
+   if (type == ARCHER) {
+      addStandingImage("units/archer");
+      setAllAttributes(15, 0, 10, 0, 25, 0, 2, 2);
+      addDyingImage("units/archer-die1");
+      addDyingImage("units/archer-die2");
+      addDyingImage("units/archer-die3");
+      addDyingImage("units/archer-die4");
+  } else if (type == ARMAGEDDON) {
       addStandingImage("units/armageddon");
       setAllAttributes(65, 0, 10, 0, 25, 0, 2, 2);
       addDyingImage("units/armageddon-die1");

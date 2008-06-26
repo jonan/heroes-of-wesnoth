@@ -30,15 +30,16 @@ using namespace std;
 
 // @{
 /// Types of units.
-#define ARMAGEDDON  '0'
-#define BAT         '1'
-#define BLADEMASTER '2'
-#define CAVESPIDER  '3'
-#define FLANKER     '4'
-#define PILLAGER    '5'
-#define SERGEANT    '6'
-#define SKELETON    '7'
-#define WOLF_RIDER  '8'
+#define ARCHER      '0'
+#define ARMAGEDDON  '1'
+#define BAT         '2'
+#define BLADEMASTER '3'
+#define CAVESPIDER  '4'
+#define FLANKER     '5'
+#define PILLAGER    '6'
+#define SERGEANT    '7'
+#define SKELETON    '8'
+#define WOLF_RIDER  '9'
 // @}
 
 // @{
