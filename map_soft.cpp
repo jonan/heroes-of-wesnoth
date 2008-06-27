@@ -208,7 +208,7 @@ void initializeVariables(SDL_Surface **one, SDL_Surface **two,
 // Adds the necesary images to soften the map.
 void addImages(bool *terrain, cell &mapCell, SDL_Surface **one, SDL_Surface **two, SDL_Surface **three, SDL_Surface **four) {
    int position = 0;
-   while (!terrain[position]) position++;
+   while (!terrain[position] && position<6) position++;
    while (position<6) {
       terrain[position] = false;
       if (position!=0 || !terrain[NW]) {
@@ -258,11 +258,11 @@ void map::softenTerrain(const char cellTerrain, char *terrain, const int numberT
    SDL_Surface *three[6];
    SDL_Surface *four[6];
    cell *temp;
-   bool differentTerrain[7];
+   bool differentTerrain[6];
    bool needSoft = false; // Indicates if the cell needs to be soften
 
    initializeVariables(one, two, three, four, ADD_WATER_ICE_TO_WATER);
-   for (int j=0; j<7; j++) differentTerrain[j] = false;
+   for (int j=0; j<6; j++) differentTerrain[j] = false;
    /// @todo Initialize variables only when they are needed.
    initializeVariables(one, two, three, four, softImages);
 
