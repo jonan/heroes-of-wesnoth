@@ -42,15 +42,15 @@ void graphics::init(void) {
 }
 
 // Creates the surface that will be drawn directly to the screen
-void graphics::createWindow(const bool fullscreen) {
-   /// @todo Add option to change width and height.
-   cout << "Opening " << SCREEN_WIDTH << "x" << SCREEN_HEIGHT << " window...\t";
+void graphics::createWindow(const bool fullscreen, const int width, const int height, const int bpp) {
+   cout << "Opening " << width << "x" << height << "%" << bpp << " window...\t";
 
    SDL_WM_SetCaption ("Heroes of Wesnoth", NULL);
+   /// @todo put SDL standard video flags into a var. No need to write them so often.
    if (fullscreen) {
-      screen = SDL_SetVideoMode (SCREEN_WIDTH, SCREEN_HEIGHT, BPP, SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN);
+      screen = SDL_SetVideoMode (width, height, bpp, SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN);
    } else {
-      screen = SDL_SetVideoMode (SCREEN_WIDTH, SCREEN_HEIGHT, BPP, SDL_DOUBLEBUF | SDL_ANYFORMAT);
+      screen = SDL_SetVideoMode (width, height, bpp, SDL_DOUBLEBUF | SDL_ANYFORMAT);
    }
 
    if (screen == NULL) {
@@ -61,9 +61,22 @@ void graphics::createWindow(const bool fullscreen) {
 }
 
 // Constructor
-graphics::graphics(const bool fullscreen) {
+graphics::graphics(const bool fullscreen, int width, int height) {
    init();
-   createWindow(fullscreen);
+
+   // Validate the resolution input by user.
+   // Only check with SDL_FULLSCREEN is neccessary and useful.
+   // Without SDL_FULLSCREEN _all_ screen formats would be valid.
+   int bpp = SDL_VideoModeOK( width, height, 16, SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN );
+   if (!bpp) {
+      cout << "The choosen resolution (" << width << "x" << height 
+           << ") is not valid on your system. Trying default (1024x768)...\n";
+      width = 1024;
+      height = 768;
+      bpp = 16;
+   }
+   createWindow(fullscreen, width, height, bpp);
+
    images = new imageList;
    text = new ttf;
 }

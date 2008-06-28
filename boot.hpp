@@ -25,7 +25,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// Starts the engine and loads the main images.
 ///
 /// -no detailed description-
-void boot(const bool fullscreen);
+///
+/// @param[in] fullscreen Indicates if it's supposed to run on fullscreen.
+/// @param[in] width Screen's width.
+/// @param[in] height Screen's height.
+void boot(const bool fullscreen, const int width, const int height);
 /// Exits the game.
 ///
 /// -no detailed description-
