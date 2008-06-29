@@ -17,41 +17,48 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "hero.hpp"
 #include "mission.hpp"
-#include "world.hpp"
-
-// Creates and starts a mission.
-void createMission( const char *map,
-                    const int width, const int height,
-                    const int positionX, const int positionY,
-                    const int numberAlies
-                  ) {
-   unit *temp;
-
-   hero *player;
-   world war(map, width, height);
-
-   player = new hero(FIGHTER, HUMAN);
-   // Set the hero's units.
-   for (int j=0; j<9; j++) {
-      temp = new unit(SERGEANT, numberAlies);
-      player->recruitCreature(temp);
-   }
-
-   war.setHero(*player, positionX, positionY);
-   war.start();
-}
 
 // Creates and starts mission 1.
 void mission1(void) {
-   createMission("mission1", 30, 15, 1, 1, 10);
+   Mission *mission_1 = new Mission("mission1", 30, 15, 1, 1, 10);
+   mission_1->startMission();
 }
 
 // Creates and starts mission 2.
 void mission2(void) {
-   createMission("mission2", 30, 26, 3, 5, 15);
+   Mission *mission_2 = new Mission("mission2", 30, 26, 3, 5, 15);
+   mission_2->startMission();
 }
 
 // Creates and starts mission 3.
 void mission3(void) {
-   createMission("mission3", 30, 20, 8, 4, 25);
+   Mission *mission_3 = new Mission("mission3", 30, 20, 8, 4, 25);
+   mission_3->startMission();
+}
+
+Mission::Mission(  const char *map, const int width,
+                   const int height, const int heroPositionX,
+                   const int heroPositionY, const int numberAllies ) {
+   war = new world( map, width, height );
+   player = new hero( FIGHTER, HUMAN );
+   this->heroPositionX = heroPositionX;
+   this->heroPositionY = heroPositionY;
+   this->numberAllies = numberAllies;
+}
+
+Mission::~Mission() {
+   delete war;
+   delete player;
+}
+
+void Mission::startMission() {
+   unit *temp;
+
+   for ( int i=0; i < 9; i++ ) {
+      temp = new unit( SERGEANT, numberAllies );
+      player->recruitCreature( temp );
+   }
+
+   war->setHero( *player, heroPositionX, heroPositionY );
+   war->start();
 }

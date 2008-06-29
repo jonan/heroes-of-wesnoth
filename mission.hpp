@@ -22,6 +22,39 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef MISSION_HPP
 #define MISSION_HPP
 
+#include "world.hpp"
+
+/// Represents a scenario.
+///
+/// -no detailed description-
+class Mission {
+
+   private:
+      world *war;
+      hero *player;
+      int heroPositionX;
+      int heroPositionY;
+      int numberAllies;
+   public:
+      /// Constructor for mission objects.
+      ///
+      /// @param[in] *map The name of the map to use in the mission.
+      /// @param[in] width The width of the map.
+      /// @param[in] height The height of the map.
+      /// @param[in] heroPositionX Starting position of the hero - x-coordinate.
+      /// @param[in] heroPositionY Starting position of the hero - y-coordinate.
+      /// @param[in] numberAllies The number of units each of the heroes allies has.
+      Mission( const char *map, const int width,
+               const int height, const int heroPositionX,
+               const int heroPositionY, const int numberAllies );
+      ~Mission();
+
+      /// Launches the mission.
+      ///
+      /// -no detailed description-
+      void startMission();
+};
+
 /// Creates and starts mission 1.
 ///
 /// -no detailed description-
