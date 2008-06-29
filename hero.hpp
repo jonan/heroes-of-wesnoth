@@ -47,7 +47,6 @@ class hero : public unit {
       int visibility; // How far the hero sees
 
       unit *creature[MAX_UNITS]; // The creatures a hero can control
-      int numCreatures; // The number of creatures that the hero actualy controls
 
       // Sets the heros attributes acording to his type.
       // (Implemented in hero_type.cpp)
@@ -71,19 +70,13 @@ class hero : public unit {
       ///
       /// @return The hero's visibility
       int getVisibility(void) {return visibility;}
-      /// Returns the number of creatures the hero controls.
-      ///
-      /// -no detailed description-
-      ///
-      /// @return The number of creatures the hero controls.
-      int getNumberCreatures(void) {return numCreatures;}
       /// Returns a creature controled by the hero.
       ///
       /// -no detailed description-
       ///
       /// @param[in] number Number of the creature to return.
       /// @return A creature controled by the hero.
-      unit* getCreature(const int number);
+      unit* getCreature(const int number) {return creature[number];}
 
       /// Assings a new creature to the hero.
       ///
@@ -95,13 +88,12 @@ class hero : public unit {
       bool recruitCreature(unit *creature);
       /// Assings a new creature to the hero.
       ///
-      /// If the hero can't control a new creature (he already
-      /// controls 9) returns false, else returns true.
+      /// -no detailed description-
       ///
       /// @param[in] creature The new unit the hero can control.
       /// @param[in] position Position were the unit should be.
-      /// @return If the recruitment was successful or not.
-      bool recruitCreature(unit *creature, const int position);
+      /// @return The unit that was in that position.
+      unit* recruitCreature(unit *creature, const unsigned int position);
 
       /// Draws the hero in the given position.
       ///

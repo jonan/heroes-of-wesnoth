@@ -64,28 +64,20 @@ class unit {
 
       double live; // Actual live
       int liveMax; // Maximun live
-      int magic, magicMax; // Actual and maximun magic power
-
-      int physicalDefence, physicalAttack;
-      int magicalDefence, magicalAttack;
-      int agility;
-
-      int movement; // The creatures speed
+      int projectiles; // Number of projectiles a unit can shoot.
+      int attack, defense, agility, movement; // Unit's atributes
 
       deque<SDL_Surface*> standing;
       deque<SDL_Surface*> dying;
       int sprite; // Last sprite drawn
       int nonStandingSprite; // Last sprite of a non-standing animation drawn
 
-      bool selected; // Indicates if the unit is selected
-
       cell *position; // The cell where the unit is
       hero *master; // The hero that controls the unit.
 
       // Sets all the unit's attributes.
-      void setAllAttributes(const int live, const int magic,
-                            const int physicalDefence, const int magicalDefence,
-                            const int physicalAttack, const int magicalAttack,
+      void setAllAttributes(const int live, const int projectiles,
+                            const int attack, const int defense,
                             const int agility, const int movement);
       // Adds an image to the standing animation.
       void addStandingImage(const char *imageName);
@@ -106,63 +98,63 @@ class unit {
       /// -no detailed description-
       ///
       /// @param[in] number Number of units.
-      void setNumber(const int number);
+      void setNumber(const int number) {this->number = number;}
       /// Changes the unit's position.
       ///
       /// -no detailed description-
       ///
       /// @param[in] position The cell where the unit is.
-      void setPosition(cell &position);
+      void setPosition(cell &position) {this->position = &position;}
       /// Changes the hero that controls the unit.
       ///
       /// -no detailed description-
       ///
       /// @param[in] master Hero that controls the unit.
-      void setMaster(hero *master);
+      void setMaster(hero *master) {this->master = master;}
 
       /// Returns the number of units.
       ///
       /// -no detailed description-
       ///
       /// @return Number of units.
-      int getNumber(void);
+      int getNumber(void) {return number;}
       /// Returns the unit's movement.
       ///
       /// -no detailed description-
       ///
       /// @return Unit's movement.
-      int getMovement(void);
+      int getMovement(void) {return movement;}
       /// Returns the unit's agility.
       ///
       /// -no detailed description-
       ///
       /// @return Unit's agility.
-      int getAgility(void);
+      int getAgility(void) {return agility;}
       /// Returns the cell where the unit is.
       ///
       /// -no detailed description-
       ///
       /// @return The cell where the unit is.
-      cell* getPosition(void);
+      cell* getPosition(void) {return position;}
       /// Returns the unit's type.
       ///
       /// -no detailed description-
       ///
       /// @return The unit's Type.
-      char getType(void);
+      char getType(void) {return type;}
       /// Returns the hero that controls the unit.
       ///
       /// -no detailed description-
       ///
       /// @return The hero that controls the unit.
-      hero* getMaster(void);
+      hero* getMaster(void) {return master;}
 
       /// Attacks a given unit.
       ///
       /// -no detailed description-
       ///
       /// @param[in] creature Unit to attack.
-      void attack(unit &creature);
+      void attackCreature(unit &creature);
 
       /// Makes the unit face left
       ///
@@ -179,14 +171,6 @@ class unit {
       ///
       /// @param[in] position The position where the creature should be drawn.
       virtual void draw(SDL_Rect &position);
-      /// Draws an animation.
-      ///
-      ///  -no detailed description-
-      ///
-      /// @param[in] position The position where the creature should be drawn.
-      /// @param[in] type The type of animation.
-      /// @return true when the animation finishes.
-      bool animation(SDL_Rect &position, const int type);
 };
 
 #endif // UNIT_HPP

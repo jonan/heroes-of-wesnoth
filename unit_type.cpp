@@ -21,14 +21,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 void unit::setCreaturesAttributes(void) {
    if (type == ARCHER) {
       addStandingImage("units/archer");
-      setAllAttributes(15, 0, 10, 0, 25, 0, 2, 2);
+      setAllAttributes(15, 0, 25, 3, 2, 2);
       addDyingImage("units/archer-die1");
       addDyingImage("units/archer-die2");
       addDyingImage("units/archer-die3");
       addDyingImage("units/archer-die4");
   } else if (type == ARMAGEDDON) {
       addStandingImage("units/armageddon");
-      setAllAttributes(65, 0, 10, 0, 25, 0, 2, 2);
+      setAllAttributes(65, 0, 25, 10, 2, 2);
       addDyingImage("units/armageddon-die1");
       addDyingImage("units/armageddon-die2");
       addDyingImage("units/armageddon-die3");
@@ -44,10 +44,10 @@ void unit::setCreaturesAttributes(void) {
       addStandingImage("units/bat-se-4");
       addStandingImage("units/bat-se-3");
       addStandingImage("units/bat-se-2");
-      setAllAttributes(25, 5, 3, 2, 5, 1, 4, 4);
+      setAllAttributes(25, 0, 5, 3, 4, 4);
   } else if (type == BLADEMASTER) {
       addStandingImage("units/blademaster");
-      setAllAttributes(45, 0, 7, 0, 20, 0, 4, 3);
+      setAllAttributes(45, 0, 20, 7, 4, 3);
       addDyingImage("units/blademaster-die-1");
       addDyingImage("units/blademaster-die-2");
       addDyingImage("units/blademaster-die-3");
@@ -57,21 +57,21 @@ void unit::setCreaturesAttributes(void) {
       addDyingImage("units/blademaster-die-7");
   } else if (type == CAVESPIDER) {
       addStandingImage("units/cavespider");
-      setAllAttributes(35, 0, 4, 0, 10, 0, 3, 1);
+      setAllAttributes(35, 0, 10, 4, 3, 1);
       addDyingImage("units/cavespider-die-1");
       addDyingImage("units/cavespider-die-2");
   } else if (type == FLANKER) {
       addStandingImage("units/flanker");
-      setAllAttributes(10, 0, 2, 0, 7, 0, 5, 3);
+      setAllAttributes(10, 0, 7, 2, 5, 3);
   } else if (type == PILLAGER) {
       addStandingImage("units/pillager");
-      setAllAttributes(40, 0, 6, 0, 18, 0, 3, 5);
+      setAllAttributes(40, 0, 18, 6, 3, 5);
    } else if (type == SERGEANT) {
       addStandingImage("units/sergeant");
-      setAllAttributes(50, 0, 10, 5, 17, 0, 2, 3);
+      setAllAttributes(50, 0, 17, 10, 2, 3);
    } else if (type == SKELETON) {
       addStandingImage("units/skeleton");
-      setAllAttributes(35, 0, 8, 5, 15, 0, 2, 2);
+      setAllAttributes(35, 0, 15, 8, 2, 2);
       addDyingImage("units/skeleton-dying-1");
       addDyingImage("units/skeleton-dying-2");
       addDyingImage("units/skeleton-dying-3");
@@ -81,6 +81,6 @@ void unit::setCreaturesAttributes(void) {
       addDyingImage("units/skeleton-dying-7");
   } else if (type == WOLF_RIDER) {
       addStandingImage("units/wolf-rider");
-      setAllAttributes(28, 0, 7, 0, 13, 0, 5, 4);
+      setAllAttributes(28, 0, 13, 7, 5, 4);
    }
 }

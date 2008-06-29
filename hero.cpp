@@ -28,7 +28,6 @@ hero::hero(const int type, const int ai) : unit(-1) {
    for (int i=0; i<MAX_UNITS; i++) {
       creature[i]=NULL;
    }
-   numCreatures=0;
 
    visibility = 8;
 }
@@ -39,31 +38,32 @@ hero::~hero(void) {
    }
 }
 
-// Returns a creature controled by the hero.
-unit* hero::getCreature(const int number) {
-   if (number < numCreatures) return creature[number];
-   else return NULL;
-}
-
 // If the hero can't control a new creature (he already
 // controls 9) returns false, else returns true.
 bool hero::recruitCreature(unit *creature) {
-   if (numCreatures == MAX_UNITS) return false;
-   else {
-      this->creature[numCreatures] = creature;
-      this->creature[numCreatures]->setMaster(this);
-      numCreatures+=1;
-      return true;
+   bool done = false;
+   int i = 0;
+
+   while (i<MAX_UNITS && !done) {
+      if (this->creature[i] == NULL) {
+         this->creature[i] = creature;
+         this->creature[i]->setMaster(this);
+         done = true;
+      } else i++;
    }
+
+   return done? true:false;
 }
 
-// If the hero can't control a new creature (he already
-// controls 9) returns false, else returns true.
-bool hero::recruitCreature(unit *creature, const int position) {
+// Assings a new creature to the hero.
+unit* hero::recruitCreature(unit *creature, const unsigned int position) {
+   unit *temp;
+
    if (position < MAX_UNITS) {
+      temp = this->creature[position];
       this->creature[position] = creature;
-      return true;
-   } else return false;
+      return temp;
+   } else return NULL;
 }
 
 // Draws the hero in the given position.

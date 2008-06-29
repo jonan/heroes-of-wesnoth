@@ -23,19 +23,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "unit.hpp"
 
 // Sets all the unit's attributes.
-void unit::setAllAttributes(const int live, const int magic,
-                            const int physicalDefence, const int magicalDefence,
-                            const int physicalAttack, const int magicalAttack,
+void unit::setAllAttributes(const int live, const int projectiles,
+                            const int attack, const int defense,
                             const int agility, const int movement
                            ) {
    this->live = live;
    liveMax = live;
-   this->magic = magic;
-   magicMax = magic;
-   this->physicalDefence = physicalDefence;
-   this->physicalAttack = physicalAttack;
-   this->magicalDefence = magicalDefence;
-   this->magicalAttack = magicalAttack;
+   this->projectiles = projectiles;
+   this->attack = attack;
+   this->defense = defense;
    this->agility = agility;
    this->movement = movement;
 }
@@ -60,60 +56,18 @@ unit::unit(const char type, const int number) {
    if (type != -1) { // It should only be -1 when the unit is a hero.
       this->type = type;
       setCreaturesAttributes();
+      master = NULL;
    }
 
    position = NULL;
-   master = NULL;
-}
-
-// Changes the number of units.
-void unit::setNumber(const int number) {
-   this->number = number;
-}
-
-// Changes the unit's position.
-void unit::setPosition(cell &position) {
-   this->position = &position;
-}
-
-// Changes the hero that controls the unit.
-void unit::setMaster(hero *master) {
-   this->master = master;
-}
-
-// Returns the number of units.
-int unit::getNumber(void) {
-   return number;
-}
-
-// Returns the unit's movement.
-int unit::getMovement(void) {
-   return movement;
-}
-
-// Returns the unit's agility.
-int unit::getAgility(void) {
-   return agility;
-}
-
-// Returns the cell where the unit is.
-cell* unit::getPosition(void) {
-   return position;
-}
-
-// Returns the unit's type.
-char unit::getType(void) {
-   return type;
-}
-
-// Returns the hero that controls the unit.
-hero* unit::getMaster(void) {
-   return master;
 }
 
 // Attacks a given unit.
-void unit::attack(unit &creature) {
-   creature.live -= physicalAttack * ( log(number)+1 );
+void unit::attackCreature(unit &creature) {
+   double damage;
+
+   damage = (attack*(log(number)+1))/(creature.defense*(log(creature.number)+1));
+   creature.live -= damage;
    while (creature.live <= 0 && creature.number != 0) {
       creature.live = creature.liveMax+creature.live;
       creature.number--;
@@ -122,6 +76,9 @@ void unit::attack(unit &creature) {
 
 // Makes the unit face left
 void unit::faceLeft(void) {
+   /// @todo Check this
+   /* Adds at the end of each deque all the images
+      but facing left, then erases the original ones */
    deque<SDL_Surface*>::iterator initialEnd;
    int initialSize;
 
@@ -146,6 +103,9 @@ void unit::faceLeft(void) {
 
 // Makes the unit face right
 void unit::faceRight(void) {
+   /// @todo Check this
+   /* Adds at the end of each deque all the images
+      but facing right, then erases the original ones */
    deque<SDL_Surface*>::iterator initialEnd;
    int initialSize;
 
@@ -182,23 +142,5 @@ void unit::draw(SDL_Rect &position) {
       char text[3];
       sprintf(text, "%i", number);
       screen->write(text, position.x+17, position.y+52);
-   }
-}
-
-// Draws an animation.
-bool unit::animation(SDL_Rect &position, const int type) {
-   if (type == DYING) {
-      // Draw the corresponding sprite.
-      screen->draw(dying[nonStandingSprite/NUM_FRAMES_FOR_SPRITE], position);
-      // Increase the sprite.
-      nonStandingSprite++;
-      // Check if this was the last sprite and start again if it was.
-      if ( (nonStandingSprite/NUM_FRAMES_FOR_SPRITE) == (int) dying.size() ) {
-         nonStandingSprite = 0;
-         return false;
-      } else return true;
-   } else {
-      cout << "\n\tWrong animation type : " << type << "\n\n";
-      exit(EXIT_FAILURE);
    }
 }

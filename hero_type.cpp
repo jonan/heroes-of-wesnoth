@@ -21,7 +21,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 void hero::setCreaturesAttributes(void) {
    if (type == FIGHTER) {
       addStandingImage("units/grand-knight");
-      setAllAttributes(300, 10, 30, 10, 45, 5, 5, 5);
+      setAllAttributes(300, 0, 45, 30, 5, 5);
    } else if (type == WIZARD) {
       /// @todo Add more types of heroes
    }

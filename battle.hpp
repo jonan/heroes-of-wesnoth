@@ -24,8 +24,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "map.hpp"
 
-/// Max creatures for each team (not counting the hero
-#define MAX_TEAM_UNITS 9
+/// Max creatures for each team (not counting the hero)
+#define MAX_TEAM_UNITS    9
 /// Max units in all the battle
 #define MAX_BATTLE_UNITS 19
 /// Agility needed to get a turn
@@ -55,7 +55,7 @@ class battle : public map {
       // Starts the next turn.
       void nextTurn(void);
 
-      // Removes a unit from the battle.
+      // Removes a creature from the battle.
       void removeCreature(unit &creature);
 
       // Controls the units not controled by the player.
@@ -92,6 +92,6 @@ void createDefaultBattle(void);
 /// @param[in] enemyType Type of enemies to face.
 /// @param[in] terrainType Type of terrain where to fight.
 /// @return true if the battle was won, false if it wasn't.
-bool createBattle(hero &player, const int enemyType, const int terrainType);
+bool createBattle(hero &player, const char enemyType, const char terrainType);
 
 #endif // BATTLE_HPP

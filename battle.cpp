@@ -58,11 +58,11 @@ void battle::mouseClick(const int x, const int y) {
       } else if ( battleMap[x][y].canAttackHere() ) {
          if ( battleMap[x][y].getCreature()->getMaster() != selectedUnit->getMaster() ) {
             moveCreature(battleMap[x][y]);
-            selectedUnit->attack( *battleMap[x][y].getCreature() );
+            selectedUnit->attackCreature( *battleMap[x][y].getCreature() );
             // Check if the creatures is dead.
             if ( battleMap[x][y].getCreature()->getNumber() == 0 ) {
                removeCreature(*battleMap[x][y].getCreature());
-               battleMap[x][y].killCreature();
+               battleMap[x][y].setCreature(NULL);
             }
             nextTurn();
          }
@@ -133,7 +133,7 @@ void battle::nextTurn(void) {
    }
 }
 
-// Removes a unit from the battle.
+// Removes a creature from the battle.
 void battle::removeCreature(unit &creature) {
    bool found = false;
    int i = 0;
@@ -158,6 +158,7 @@ void battle::removeCreature(unit &creature) {
       }
       i++;
    }
+   delete &creature;
 }
 
 // Controls the units not controled by the player.
@@ -167,10 +168,10 @@ void battle::ai(void) {
 
    if (temp) { // Attack a unit
       moveCreature(*temp);
-      selectedUnit->attack( *temp->getCreature() );
+      selectedUnit->attackCreature( *temp->getCreature() );
       if ( temp->getCreature()->getNumber() == 0 ) {
          removeCreature( *temp->getCreature() );
-         temp->killCreature();
+         temp->setCreature(NULL);
       }
       nextTurn();
    } else { // Move the unit
@@ -267,7 +268,7 @@ void createDefaultBattle(void) {
 }
 
 // Creates and starts a battle.
-bool createBattle(hero &player, const int enemyType, const int terrainType) {
+bool createBattle(hero &player, const char enemyType, const char terrainType) {
    cell *temp;
    unit *creature[9];
    int numberEnemies;

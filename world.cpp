@@ -57,8 +57,8 @@ void world::mouseClick(const int x, const int y) {
 
             // Set the battle information
             hero *player = (hero*)(selectedUnit);
-            int creatureType = battleMap[x][y].getCreature()->getType();
-            int terrain = battleMap[x][y].getTerrain();
+            char creatureType = battleMap[x][y].getCreature()->getType();
+            char terrain = battleMap[x][y].getTerrain();
             // Start the battle
             if ( createBattle(*player, creatureType, terrain) )
                deleteCreature(battleMap[x][y]);
