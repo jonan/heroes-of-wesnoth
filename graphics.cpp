@@ -42,15 +42,17 @@ void graphics::init(void) {
 }
 
 // Creates the surface that will be drawn directly to the screen
-void graphics::createWindow(const bool fullscreen, const int width, const int height, const int bpp) {
-   cout << "Opening " << width << "x" << height << "%" << bpp << " window...\t";
+void graphics::createWindow(const bool fullscreen, const screenFormat scrFrmt) {
+   cout << "Opening " << scrFrmt.width << "x" << scrFrmt.height << "%" << scrFrmt.bpp << " window...\t";
 
    SDL_WM_SetCaption ("Heroes of Wesnoth", NULL);
    /// @todo put SDL standard video flags into a var. No need to write them so often.
    if (fullscreen) {
-      screen = SDL_SetVideoMode (width, height, bpp, SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN);
+      screen = SDL_SetVideoMode (scrFrmt.width, scrFrmt.height, scrFrmt.bpp,
+                                 SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN);
    } else {
-      screen = SDL_SetVideoMode (width, height, bpp, SDL_DOUBLEBUF | SDL_ANYFORMAT);
+      screen = SDL_SetVideoMode (scrFrmt.width, scrFrmt.height, scrFrmt.bpp, 
+                                 SDL_DOUBLEBUF | SDL_ANYFORMAT);
    }
 
    if (screen == NULL) {
@@ -61,21 +63,27 @@ void graphics::createWindow(const bool fullscreen, const int width, const int he
 }
 
 // Constructor
-graphics::graphics(const bool fullscreen, int width, int height) {
+graphics::graphics(const bool fullscreen, screenFormat scrFrmt) {
    init();
 
    // Validate the resolution input by user.
    // Only check with SDL_FULLSCREEN is neccessary and useful.
    // Without SDL_FULLSCREEN _all_ screen formats would be valid.
-   int bpp = SDL_VideoModeOK( width, height, 16, SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN );
-   if (!bpp) {
-      cout << "The choosen resolution (" << width << "x" << height 
-           << ") is not valid on your system. Trying default (1024x768)...\n";
-      width = 1024;
-      height = 768;
-      bpp = 16;
+   /// @todo This isn't working well enough. You can create weirdly small windows.
+   /// It only works for resolutions above the systems maximum.
+   int ok = SDL_VideoModeOK(scrFrmt.width, scrFrmt.height, scrFrmt.bpp,
+                            SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN);
+   if (!ok) {
+      /// @bug This won't be reportet when width = 0, height = 0 and bpp = 0. Why?
+      cout << "The choosen resolution ("
+           << scrFrmt.width << "x" << scrFrmt.height << "%" << scrFrmt.height
+           << ") is not valid on your system.\n"
+           << "Trying default (1024x768)...\n";
+      scrFrmt.width = 1024;
+      scrFrmt.height = 768;
+      scrFrmt.bpp = 16;
    }
-   createWindow(fullscreen, width, height, bpp);
+   createWindow(fullscreen, scrFrmt);
 
    images = new imageList;
    text = new ttf;
@@ -196,6 +204,10 @@ void graphics::transitionEffect(int effect) {
 // Stops the program a number of milisecons.
 void graphics::wait(const int ms) {
    SDL_Delay(ms);
+}
+
+screenFormat graphics::getScrFrmt(void) {
+   return scrFrmt;
 }
 
 graphics *screen = NULL;
