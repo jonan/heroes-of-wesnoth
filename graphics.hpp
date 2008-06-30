@@ -42,6 +42,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #define NUMBER_OF_EFFECTS 2
 // @}
 
+// @{
+/// Sides to face
+#define RIGHT 0
+#define LEFT  1
+// @}
+
 class imageList;
 class ttf;
 
@@ -100,20 +106,14 @@ class graphics {
       SDL_Surface* getImage(const char *imageName, const int alpha = SDL_ALPHA_OPAQUE,
                             const int mirror = NONE, const int angle = 0);
 
-      /// Makes an image face left.
+      /// Makes an image face the given side.
       ///
       ///  -no detailed description-
       ///
+      /// @param[in] side Side to face.
       /// @param[in] imageSurface Original image.
-      /// @return The same image but facing left.
-      SDL_Surface* faceLeft(SDL_Surface *imageSurface);
-      /// Makes an image face right.
-      ///
-      ///  -no detailed description-
-      ///
-      /// @param[in] imageSurface Original image.
-      /// @return The same image but facing right.
-      SDL_Surface* faceRight(SDL_Surface *imageSurface);
+      /// @return The same image facing the given side.
+      SDL_Surface* face(const int side, SDL_Surface *imageSurface);
 
       /// Loads an image for further use.
       ///

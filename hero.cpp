@@ -67,12 +67,40 @@ unit* hero::recruitCreature(unit *creature, const unsigned int position) {
 }
 
 // Draws the hero in the given position.
-void hero::draw(SDL_Rect &position) {
-   // Draw the corresponding sprite.
-   screen->draw(standing[sprite/NUM_FRAMES_FOR_SPRITE], position);
-   // Increase the sprite.
-   sprite++;
-   // Check if this was the last sprite and start again if it was.
-   if ( (sprite/NUM_FRAMES_FOR_SPRITE) == (int) standing.size() )
-      sprite = 0;
+void hero::draw(SDL_Rect &position, const int animation) {
+   if (actualAnimation != STANDING || animation != -1) {
+      if (actualAnimation == STANDING) actualAnimation = animation;
+      // Get closer to the enemy when attacking
+      if (actualAnimation == ATTACKING) {
+         if (facingSide == RIGHT) position.x += 10;
+         else position.x -= 10;
+      }
+      if (animations[actualAnimation].size() > 0) {
+         // Draw the corresponding sprite.
+         screen->draw(animations[actualAnimation][nonStandingSprite/NUM_FRAMES_FOR_SPRITE], position);
+         nonStandingSprite++;
+         // Check if this was the last sprite and go back to standing if it was.
+         if ( (nonStandingSprite/NUM_FRAMES_FOR_SPRITE) == (int) animations[actualAnimation].size() ) {
+            nonStandingSprite = 0;
+            actualAnimation = STANDING;
+         }
+      } else {
+         // If there's no animation for attack simply get the creature closer to the enemy
+         if (actualAnimation == ATTACKING) {
+            screen->draw(animations[STANDING][0], position);
+            nonStandingSprite++;
+            if (nonStandingSprite == NUM_FRAMES_FOR_SPRITE) {
+               nonStandingSprite = 0;
+               actualAnimation = STANDING;
+            }
+         } else actualAnimation = STANDING;
+      }
+   } else {
+      // Draw the corresponding sprite
+      screen->draw(animations[STANDING][sprite/NUM_FRAMES_FOR_SPRITE], position);
+      sprite++;
+      // Check if this was the last sprite and start again if it was.
+      if ( (sprite/NUM_FRAMES_FOR_SPRITE) == (int) animations[STANDING].size() )
+         sprite = 0;
+   }
 }

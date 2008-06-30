@@ -44,7 +44,11 @@ using namespace std;
 
 // @{
 /// Types of animations.
-#define DYING  0
+#define ATTACKING      0
+#define DEFENDING      1
+#define DYING          2
+#define STANDING       3
+#define NUM_ANIMATIONS 4
 // @}
 
 /// Number of frames to wait before changing to the next sprite.
@@ -61,14 +65,16 @@ class unit {
       char type;
 
       int number; // Number of units
+      int facingSide; // Indicates if the creature is facing left or right
 
       double live; // Actual live
       int liveMax; // Maximun live
       int projectiles; // Number of projectiles a unit can shoot.
       int attack, defense, agility, movement; // Unit's atributes
 
-      deque<SDL_Surface*> standing;
-      deque<SDL_Surface*> dying;
+      deque<SDL_Surface*> animations[NUM_ANIMATIONS];
+      int actualAnimation;
+
       int sprite; // Last sprite drawn
       int nonStandingSprite; // Last sprite of a non-standing animation drawn
 
@@ -79,10 +85,8 @@ class unit {
       void setAllAttributes(const int live, const int projectiles,
                             const int attack, const int defense,
                             const int agility, const int movement);
-      // Adds an image to the standing animation.
-      void addStandingImage(const char *imageName);
-      // Adds an image to the dying animation.
-      void addDyingImage(const char *imageName);
+      // Adds an image to the an animation.
+      void addAnimationImage(const char *imageName, const int animation);
       // Sets the creatures attributes acording to his type.
       // (Implemented in unit_type.cpp)
       virtual void setCreaturesAttributes(void);
@@ -111,6 +115,12 @@ class unit {
       ///
       /// @param[in] master Hero that controls the unit.
       void setMaster(hero *master) {this->master = master;}
+      /// Makes the unit face the given side
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] facingSide Side to face.
+      void setFacingSide(const int facingSide);
 
       /// Returns the number of units.
       ///
@@ -156,21 +166,13 @@ class unit {
       /// @param[in] creature Unit to attack.
       void attackCreature(unit &creature);
 
-      /// Makes the unit face left
-      ///
-      /// -no detailed description-
-      void faceLeft(void);
-      /// Makes the unit face right
-      ///
-      /// -no detailed description-
-      void faceRight(void);
-
       /// Draws the creature in the given position.
       ///
       /// -no detailed description-
       ///
       /// @param[in] position The position where the creature should be drawn.
-      virtual void draw(SDL_Rect &position);
+      /// @param[in] animation Type of animation to draw (default continues current animation).
+      virtual void draw(SDL_Rect &position, const int animation = -1);
 };
 
 #endif // UNIT_HPP

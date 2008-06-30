@@ -123,7 +123,7 @@ class menu {
       /// @param[in] x The x coordinate of the mouse's position.
       /// @param[in] y The y coordinate of the mouse's position.
       /// @param[in] pressed If the mouse left button is pressed or not.
-      void moveMouse(const int x, const int y, const int pressed);
+      void moveMouse(const int x, const int y, const bool pressed);
 
       /// Draws the menu.
       ///

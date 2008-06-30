@@ -20,67 +20,96 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 // Sets the creatures attributes acording to his type.
 void unit::setCreaturesAttributes(void) {
    if (type == ARCHER) {
-      addStandingImage("units/archer");
+      addAnimationImage("units/archer-sword-1", ATTACKING);
+      addAnimationImage("units/archer-sword-2", ATTACKING);
+      addAnimationImage("units/archer-sword-3", ATTACKING);
+      addAnimationImage("units/archer-sword-4", ATTACKING);
+      addAnimationImage("units/archer-bow-defend", DEFENDING);
+      addAnimationImage("units/archer-die1", DYING);
+      addAnimationImage("units/archer-die2", DYING);
+      addAnimationImage("units/archer-die3", DYING);
+      addAnimationImage("units/archer-die4", DYING);
+      addAnimationImage("units/archer", STANDING);
       setAllAttributes(15, 0, 25, 3, 2, 2);
-      addDyingImage("units/archer-die1");
-      addDyingImage("units/archer-die2");
-      addDyingImage("units/archer-die3");
-      addDyingImage("units/archer-die4");
   } else if (type == ARMAGEDDON) {
-      addStandingImage("units/armageddon");
+      addAnimationImage("units/armageddon-melee1", ATTACKING);
+      addAnimationImage("units/armageddon-melee2", ATTACKING);
+      addAnimationImage("units/armageddon-melee3", ATTACKING);
+      addAnimationImage("units/armageddon-defend", DEFENDING);
+      addAnimationImage("units/armageddon-die1", DYING);
+      addAnimationImage("units/armageddon-die2", DYING);
+      addAnimationImage("units/armageddon-die3", DYING);
+      addAnimationImage("units/armageddon-die4", DYING);
+      addAnimationImage("units/armageddon-die5", DYING);
+      addAnimationImage("units/armageddon-die6", DYING);
+      addAnimationImage("units/armageddon", STANDING);
       setAllAttributes(65, 0, 25, 10, 2, 2);
-      addDyingImage("units/armageddon-die1");
-      addDyingImage("units/armageddon-die2");
-      addDyingImage("units/armageddon-die3");
-      addDyingImage("units/armageddon-die4");
-      addDyingImage("units/armageddon-die5");
-      addDyingImage("units/armageddon-die6");
   } else if (type == BAT) {
-      addStandingImage("units/bat-se-1");
-      addStandingImage("units/bat-se-2");
-      addStandingImage("units/bat-se-3");
-      addStandingImage("units/bat-se-4");
-      addStandingImage("units/bat-se-5");
-      addStandingImage("units/bat-se-4");
-      addStandingImage("units/bat-se-3");
-      addStandingImage("units/bat-se-2");
+      addAnimationImage("units/bat-se-1", STANDING);
+      addAnimationImage("units/bat-se-2", STANDING);
+      addAnimationImage("units/bat-se-3", STANDING);
+      addAnimationImage("units/bat-se-4", STANDING);
+      addAnimationImage("units/bat-se-5", STANDING);
+      addAnimationImage("units/bat-se-4", STANDING);
+      addAnimationImage("units/bat-se-3", STANDING);
+      addAnimationImage("units/bat-se-2", STANDING);
       setAllAttributes(25, 0, 5, 3, 4, 4);
   } else if (type == BLADEMASTER) {
-      addStandingImage("units/blademaster");
+      addAnimationImage("units/blademaster-attack-close1", ATTACKING);
+      addAnimationImage("units/blademaster-attack-close2", ATTACKING);
+      addAnimationImage("units/blademaster-defend", DEFENDING);
+      addAnimationImage("units/blademaster-die-1", DYING);
+      addAnimationImage("units/blademaster-die-2", DYING);
+      addAnimationImage("units/blademaster-die-3", DYING);
+      addAnimationImage("units/blademaster-die-4", DYING);
+      addAnimationImage("units/blademaster-die-5", DYING);
+      addAnimationImage("units/blademaster-die-6", DYING);
+      addAnimationImage("units/blademaster-die-7", DYING);
+      addAnimationImage("units/blademaster", STANDING);
       setAllAttributes(45, 0, 20, 7, 4, 3);
-      addDyingImage("units/blademaster-die-1");
-      addDyingImage("units/blademaster-die-2");
-      addDyingImage("units/blademaster-die-3");
-      addDyingImage("units/blademaster-die-4");
-      addDyingImage("units/blademaster-die-5");
-      addDyingImage("units/blademaster-die-6");
-      addDyingImage("units/blademaster-die-7");
   } else if (type == CAVESPIDER) {
-      addStandingImage("units/cavespider");
+      addAnimationImage("units/cavespider-attack-melee", ATTACKING);
+      addAnimationImage("units/cavespider-defend", DEFENDING);
+      addAnimationImage("units/cavespider-die-1", DYING);
+      addAnimationImage("units/cavespider-die-2", DYING);
+      addAnimationImage("units/cavespider", STANDING);
       setAllAttributes(35, 0, 10, 4, 3, 1);
-      addDyingImage("units/cavespider-die-1");
-      addDyingImage("units/cavespider-die-2");
   } else if (type == FLANKER) {
-      addStandingImage("units/flanker");
+      addAnimationImage("units/flanker-attack1", ATTACKING);
+      addAnimationImage("units/flanker-attack2", ATTACKING);
+      addAnimationImage("units/flanker-defend", DEFENDING);
+      addAnimationImage("units/flanker", STANDING);
       setAllAttributes(10, 0, 7, 2, 5, 3);
   } else if (type == PILLAGER) {
-      addStandingImage("units/pillager");
+      addAnimationImage("units/pillager-attack2", ATTACKING);
+      addAnimationImage("units/pillager-attack", ATTACKING);
+      addAnimationImage("units/pillager-defend", DEFENDING);
+      addAnimationImage("units/pillager", STANDING);
       setAllAttributes(40, 0, 18, 6, 3, 5);
    } else if (type == SERGEANT) {
-      addStandingImage("units/sergeant");
+      addAnimationImage("units/sergeant-attack-sword-1", ATTACKING);
+      addAnimationImage("units/sergeant-attack-sword-2", ATTACKING);
+      addAnimationImage("units/sergeant-attack-sword-3", ATTACKING);
+      addAnimationImage("units/sergeant-defend", DEFENDING);
+      addAnimationImage("units/sergeant", STANDING);
       setAllAttributes(50, 0, 17, 10, 2, 3);
    } else if (type == SKELETON) {
-      addStandingImage("units/skeleton");
+      addAnimationImage("units/skeleton-attack", ATTACKING);
+      addAnimationImage("units/skeleton-attackb", ATTACKING);
+      addAnimationImage("units/skeleton-defend", DEFENDING);
+      addAnimationImage("units/skeleton-dying-1", DYING);
+      addAnimationImage("units/skeleton-dying-2", DYING);
+      addAnimationImage("units/skeleton-dying-3", DYING);
+      addAnimationImage("units/skeleton-dying-4", DYING);
+      addAnimationImage("units/skeleton-dying-5", DYING);
+      addAnimationImage("units/skeleton-dying-6", DYING);
+      addAnimationImage("units/skeleton-dying-7", DYING);
+      addAnimationImage("units/skeleton", STANDING);
       setAllAttributes(35, 0, 15, 8, 2, 2);
-      addDyingImage("units/skeleton-dying-1");
-      addDyingImage("units/skeleton-dying-2");
-      addDyingImage("units/skeleton-dying-3");
-      addDyingImage("units/skeleton-dying-4");
-      addDyingImage("units/skeleton-dying-5");
-      addDyingImage("units/skeleton-dying-6");
-      addDyingImage("units/skeleton-dying-7");
   } else if (type == WOLF_RIDER) {
-      addStandingImage("units/wolf-rider");
+      addAnimationImage("units/wolf-rider-attack", ATTACKING);
+      addAnimationImage("units/wolf-rider-defend", DEFENDING);
+      addAnimationImage("units/wolf-rider", STANDING);
       setAllAttributes(28, 0, 13, 7, 5, 4);
    }
 }

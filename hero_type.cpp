@@ -20,7 +20,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 // Sets the heros attributes acording to his type.
 void hero::setCreaturesAttributes(void) {
    if (type == FIGHTER) {
-      addStandingImage("units/grand-knight");
+      addAnimationImage("units/grand-knight-attack-sword", ATTACKING);
+      addAnimationImage("units/grand-knight-defend", DEFENDING);
+      addAnimationImage("units/grand-knight", STANDING);
       setAllAttributes(300, 0, 45, 30, 5, 5);
    } else if (type == WIZARD) {
       /// @todo Add more types of heroes

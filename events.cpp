@@ -47,18 +47,18 @@ void events::readInput(void) {
       // MOUSE
       if (event.type == SDL_MOUSEBUTTONDOWN) {
          if (event.button.button == SDL_BUTTON_LEFT)
-            mouse[BUTTON] = LEFT;
+            mouse[BUTTON] = BUTTON_LEFT;
          else if (event.button.button == SDL_BUTTON_MIDDLE)
-            mouse[BUTTON] = MIDDLE;
+            mouse[BUTTON] = BUTTON_MIDDLE;
          else if (event.button.button == SDL_BUTTON_RIGHT)
-            mouse[BUTTON] = RIGHT;
+            mouse[BUTTON] = BUTTON_RIGHT;
          else if (event.button.button == SDL_BUTTON_WHEELUP)
-            mouse[BUTTON] = UP;
+            mouse[BUTTON] = WHEEL_UP;
          else if (event.button.button == SDL_BUTTON_WHEELDOWN)
-            mouse[BUTTON] = DOWN;
+            mouse[BUTTON] = WHEEL_DOWN;
       }
       else if (event.type == SDL_MOUSEBUTTONUP) {
-         if (mouse[BUTTON] != UP && mouse[BUTTON] != DOWN)
+         //if (mouse[BUTTON] != WHEEL_UP && mouse[BUTTON] != WHEEL_DOWN)
             mouse[BUTTON] = NONE;
       }
       // KEYBOARD

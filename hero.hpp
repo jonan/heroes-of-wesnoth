@@ -100,7 +100,8 @@ class hero : public unit {
       /// -no detailed description-
       ///
       /// @param[in] position The position where the hero should be drawn.
-      void draw(SDL_Rect &position);
+      /// @param[in] animation Type of animation to draw (default continues current animation).
+      void draw(SDL_Rect &position, const int animation = -1);
 };
 
 #endif // HERO_HPP

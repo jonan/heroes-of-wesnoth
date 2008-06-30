@@ -50,12 +50,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // @{
 /// Mouse buttons
-#define NONE          0
-#define LEFT          1
-#define MIDDLE        2
-#define RIGHT         3
-#define UP            4
-#define DOWN          5
+#define NONE                 0
+#define BUTTON_LEFT          1
+#define BUTTON_MIDDLE        2
+#define BUTTON_RIGHT         3
+#define WHEEL_UP             4
+#define WHEEL_DOWN           5
 // @}
 
 /// Event control.

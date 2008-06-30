@@ -50,12 +50,12 @@ bool editor::frame(void) {
          softenMap();
       }
 
-      if (mouse[BUTTON] == UP) {
-         mouse[BUTTON] = NONE;
+      if (mouse[BUTTON] == WHEEL_UP) {
+         //mouse[BUTTON] = NONE;
          actualTerrain++;
          if (actualTerrain > LAST_TERRAIN) actualTerrain = '0';
-      } else if (mouse[BUTTON] == DOWN) {
-         mouse[BUTTON] = NONE;
+      } else if (mouse[BUTTON] == WHEEL_DOWN) {
+         //mouse[BUTTON] = NONE;
          actualTerrain--;
          if (actualTerrain < '0') actualTerrain = LAST_TERRAIN;
       }

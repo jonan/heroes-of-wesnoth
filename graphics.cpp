@@ -114,31 +114,21 @@ SDL_Surface* graphics::getImage(const char *imageName, const int alpha,
    return temp;
 }
 
-// Makes an image face left.
-SDL_Surface* graphics::faceLeft(SDL_Surface *imageSurface) {
+// Makes an image face the given side.
+SDL_Surface* graphics::face(const int side, SDL_Surface *imageSurface) {
+   /// @todo merge this function with faceRight()
    image* temp;
 
    temp = images->getImage(imageSurface);
-   if (temp->getMirror() == X) return imageSurface;
-   else {
-      newImage(temp->getName(), temp->getAlpha(),
-               X, temp->getAngle());
-      return images->getSurface(temp->getName(), temp->getAlpha(),
-                                X, temp->getAngle());
-   }
-}
-
-// Makes an image face right.
-SDL_Surface* graphics::faceRight(SDL_Surface *imageSurface) {
-   image* temp;
-
-   temp = images->getImage(imageSurface);
-   if (temp->getMirror() != X) return imageSurface;
-   else {
-      newImage(temp->getName(), temp->getAlpha(),
-               NONE, temp->getAngle());
-      return images->getSurface(temp->getName(), temp->getAlpha(),
-                                NONE, temp->getAngle());
+   if (temp->getMirror() == X) {
+      if (side == RIGHT)
+         return getImage(temp->getName(), temp->getAlpha(),
+                         NONE, temp->getAngle());
+      else return imageSurface;
+   } else {
+      if (side == RIGHT) return imageSurface;
+      else return getImage(temp->getName(), temp->getAlpha(),
+                           X, temp->getAngle());
    }
 }
 

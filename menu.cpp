@@ -78,7 +78,7 @@ void menu::addBackground(void (&drawBackgroundFunction)(void)) {
 
 // Every time the mouse's position or the mouse's buttons change, this
 // function should be called so the menu knows which button is being pressed.
-void menu::moveMouse(const int x, const int y, const int pressed) {
+void menu::moveMouse(const int x, const int y, const bool pressed) {
    bool mouseOver = false; // Indicates if the mouse is over a button
 
    if ( x>position.x && x < ( position.x + position.w ) ) { // Mouse in button's column
@@ -86,7 +86,7 @@ void menu::moveMouse(const int x, const int y, const int pressed) {
       while ( i < (int) buttons.size() && !mouseOver ) {
          if ( y>position.y && y<(position.y+position.h) ) { // Mouse over the button
             mouseOver = true;
-            if ( pressed == SDL_BUTTON_LEFT ) {
+            if (pressed) {
                if (activeButton != -1) {
                   buttons[activeButton]->setState(NORMAL);
                   activeButton = -1;

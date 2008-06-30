@@ -105,7 +105,7 @@ void map::moveMouse(const int x, const int y, const int button) {
       if (j>=firstCell.y && j<9+firstCell.y) { // battleMap[i][j] is a valid cell and the mouse is over it
          battleMap[i][j].putMouse();
          mouseOverCell = &battleMap[i][j];
-         if (button == 1) mouseClick(i, j);
+         if (button == BUTTON_LEFT) mouseClick(i, j);
       }
    }
    // move visible map
@@ -133,13 +133,13 @@ void map::moveCreature(cell &endPosition) {
    actualPosition->getCoordinates(actualX, actualY);
    endPosition.getCoordinates(endX, endY);
 
-   // Make the creature face the same direction as moving
-   if (actualX>endX) selectedUnit->faceLeft();
-   else if (actualX<endX) selectedUnit->faceRight();
-
    endPosition.getPath(path, movements);
    /// @note This isn't too elegant
    for (int i=0; i<movements; i++) {
+      // Make the creature face the same direction as moving
+      if (path[i] == NE || path[i] == SE) selectedUnit->setFacingSide(RIGHT);
+      else if (path[i] == NW || path[i] == SW) selectedUnit->setFacingSide(LEFT);
+
       selectedUnit->getPosition()->setCreature(NULL);
       temp = selectedUnit->getPosition()->getConnectedCell(path[i]);
       temp->setCreature(selectedUnit);

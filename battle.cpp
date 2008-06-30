@@ -27,25 +27,35 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 // This function is executed in the main loop. If
 // it returns true, the loop ends, else it continues.
 bool battle::frame(void) {
-   if (keys[SDLK_ESCAPE]) {
-      keys[SDLK_ESCAPE] = false;
-      removeCreature(*player);
-      delete player;
-      endBattle = true;
-   } else { // If the battle wasn't ended continue.
-      if (selectedUnit->getMaster() == NULL) ai();
-      else {
-         // This controls only work when a friendly creature is moving
-         if (keys[SDLK_SPACE]) {
-            keys[SDLK_SPACE] = false;
-            selectedUnit->getPosition()->unselect();
-            nextTurn();
+   if (!animation) {
+      if (keys[SDLK_ESCAPE]) {
+         keys[SDLK_ESCAPE] = false;
+         removeCreature(*player);
+         delete player;
+         endBattle = true;
+      } else { // If the battle wasn't ended continue.
+         if (selectedUnit->getMaster() == NULL) ai();
+         else {
+            // This controls only work when a friendly creature is moving
+            if (keys[SDLK_SPACE]) {
+               keys[SDLK_SPACE] = false;
+               selectedUnit->getPosition()->unselect();
+               nextTurn();
+            }
+            moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
          }
-         moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
-      }
 
+         draw();
+      }
+   } else {
+      if (sprite<MAX_ANIMATION_SPRITES) sprite++;
+      else {
+         sprite = 0;
+         animation = false;
+      }
       draw();
    }
+
    return endBattle;
 }
 
@@ -59,6 +69,7 @@ void battle::mouseClick(const int x, const int y) {
          if ( battleMap[x][y].getCreature()->getMaster() != selectedUnit->getMaster() ) {
             moveCreature(battleMap[x][y]);
             selectedUnit->attackCreature( *battleMap[x][y].getCreature() );
+            animation = true; // The attacking animation
             // Check if the creatures is dead.
             if ( battleMap[x][y].getCreature()->getNumber() == 0 ) {
                removeCreature(*battleMap[x][y].getCreature());
@@ -169,6 +180,7 @@ void battle::ai(void) {
    if (temp) { // Attack a unit
       moveCreature(*temp);
       selectedUnit->attackCreature( *temp->getCreature() );
+      animation = true; // The attacking animation
       if ( temp->getCreature()->getNumber() == 0 ) {
          removeCreature( *temp->getCreature() );
          temp->setCreature(NULL);
@@ -203,21 +215,23 @@ battle::battle(hero &player, unit **enemies, const int numberEnemies) : map(18, 
    for (int t=0; t<MAX_BATTLE_UNITS; t++) turns[t] = 0;
 
    endBattle = false;
+   animation = false;
+   sprite = 0;
 
    // Make the hole map visible
    for (int x=0; x<18; x++)
       for (int y=0; y<9; y++)
          battleMap[x][y].calculateView(1);
    // Put the hero and his units in the map.
-   player.faceRight();
+   player.setFacingSide(RIGHT);
    battleMap[0][4].setCreature(&player);
    for (int i=0; i<9; i++) {
-      player.getCreature(i)->faceRight();
+      player.getCreature(i)->setFacingSide(RIGHT);
       battleMap[1][i].setCreature(player.getCreature(i));
    }
    // Put the enemy creatures in the map.
    for (int i=0; i<MAX_TEAM_UNITS; i++) {
-      creatures[i]->faceLeft();
+      creatures[i]->setFacingSide(LEFT);
       battleMap[width-2][i].setCreature(creatures[i]);
    }
 }

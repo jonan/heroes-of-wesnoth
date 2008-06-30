@@ -25,11 +25,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "map.hpp"
 
 /// Max creatures for each team (not counting the hero)
-#define MAX_TEAM_UNITS    9
+#define MAX_TEAM_UNITS 9
 /// Max units in all the battle
 #define MAX_BATTLE_UNITS 19
 /// Agility needed to get a turn
 #define TURN 10
+/// Max sprites in an animation
+#define MAX_ANIMATION_SPRITES 10
 
 class hero;
 class unit;
@@ -44,6 +46,8 @@ class battle : public map {
       int turns[MAX_BATTLE_UNITS];
       int turn;
       bool endBattle;
+      bool animation; // Indicates if an animation is in progress
+      int sprite; // Number of the sprite of the actual animation
 
       // This function is executed in the main loop. If
       // it returns true, the loop ends, else it continues.

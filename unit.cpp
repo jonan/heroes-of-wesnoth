@@ -37,21 +37,18 @@ void unit::setAllAttributes(const int live, const int projectiles,
 }
 
 // Adds an image to the standing animation.
-void unit::addStandingImage(const char *imageName) {
-   standing.push_back( screen->getImage(imageName) );
-}
-
-// Adds an image to the dying animation.
-void unit::addDyingImage(const char *imageName) {
-   dying.push_back( screen->getImage(imageName) );
+void unit::addAnimationImage(const char *imageName, const int animation) {
+   animations[animation].push_back( screen->getImage(imageName) );
 }
 
 // Constructor
 unit::unit(const char type, const int number) {
    this->number = number;
 
+   facingSide = RIGHT;
    sprite = 0;
    nonStandingSprite = 0;
+   actualAnimation = STANDING;
 
    if (type != -1) { // It should only be -1 when the unit is a hero.
       this->type = type;
@@ -62,8 +59,33 @@ unit::unit(const char type, const int number) {
    position = NULL;
 }
 
+// Makes the unit face the given side
+void unit::setFacingSide(const int facingSide) {
+   if (this->facingSide != facingSide) {
+      this->facingSide = facingSide;
+      /* Adds at the end of each deque all the images but
+         facing the other way, then erases the original ones */
+      deque<SDL_Surface*>::iterator initialEnd;
+      int initialSize;
+
+      for (int i=0; i<NUM_ANIMATIONS; i++) {
+         initialEnd = animations[i].end();
+         initialSize = animations[i].size();
+         // Add new images
+         for (int j=0; j<initialSize; j++)
+            animations[i].push_back( screen->face(facingSide, animations[i][j]) );
+         // Erase previous images
+         animations[i].erase(animations[i].begin(), initialEnd);
+      }
+   }
+}
+
 // Attacks a given unit.
 void unit::attackCreature(unit &creature) {
+   // Set the attacking animation
+   actualAnimation = ATTACKING;
+   creature.actualAnimation = DEFENDING;
+   // Calculate the damage
    double damage;
 
    damage = (attack*(log(number)+1))/(creature.defense*(log(creature.number)+1));
@@ -74,69 +96,43 @@ void unit::attackCreature(unit &creature) {
    }
 }
 
-// Makes the unit face left
-void unit::faceLeft(void) {
-   /// @todo Check this
-   /* Adds at the end of each deque all the images
-      but facing left, then erases the original ones */
-   deque<SDL_Surface*>::iterator initialEnd;
-   int initialSize;
-
-   // Change standing images
-   initialEnd = standing.end();
-   initialSize = standing.size();
-   // Add new images
-   for (int i=0; i<initialSize; i++)
-      standing.push_back( screen->faceLeft(standing[i]) );
-   // Erase previous images
-   standing.erase(standing.begin(), initialEnd);
-
-   // Change dying images
-   initialEnd = dying.end();
-   initialSize = dying.size();
-   // Add new images
-   for (int i=0; i<initialSize; i++)
-      dying.push_back( screen->faceLeft(dying[i]) );
-   // Erase previous images
-   dying.erase(dying.begin(), initialEnd);
-}
-
-// Makes the unit face right
-void unit::faceRight(void) {
-   /// @todo Check this
-   /* Adds at the end of each deque all the images
-      but facing right, then erases the original ones */
-   deque<SDL_Surface*>::iterator initialEnd;
-   int initialSize;
-
-   // Change standing images
-   initialEnd = standing.end();
-   initialSize = standing.size();
-   // Add new images
-   for (int i=0; i<initialSize; i++)
-      standing.push_back( screen->faceRight(standing[i]) );
-   // Erase previous images
-   standing.erase(standing.begin(), initialEnd);
-
-   // Change dying images
-   initialEnd = dying.end();
-   initialSize = dying.size();
-   // Add new images
-   for (int i=0; i<initialSize; i++)
-      dying.push_back( screen->faceRight(dying[i]) );
-   // Erase previous images
-   dying.erase(dying.begin(), initialEnd);
-}
-
 // Draws the creature in the given position.
-void unit::draw(SDL_Rect &position) {
-   // Draw the corresponding sprite.
-   screen->draw(standing[sprite/NUM_FRAMES_FOR_SPRITE], position);
-   // Increase the sprite.
-   sprite++;
-   // Check if this was the last sprite and start again if it was.
-   if ( (sprite/NUM_FRAMES_FOR_SPRITE) == (int) standing.size() )
-      sprite = 0;
+void unit::draw(SDL_Rect &position, const int animation) {
+   if (actualAnimation != STANDING || animation != -1) {
+      if (actualAnimation == STANDING) actualAnimation = animation;
+      // Get closer to the enemy when attacking
+      if (actualAnimation == ATTACKING) {
+         if (facingSide == RIGHT) position.x += 10;
+         else position.x -= 10;
+      }
+      if (animations[actualAnimation].size() > 0) {
+         // Draw the corresponding sprite.
+         screen->draw(animations[actualAnimation][nonStandingSprite/NUM_FRAMES_FOR_SPRITE], position);
+         nonStandingSprite++;
+         // Check if this was the last sprite and go back to standing if it was.
+         if ( (nonStandingSprite/NUM_FRAMES_FOR_SPRITE) == (int) animations[actualAnimation].size() ) {
+            nonStandingSprite = 0;
+            actualAnimation = STANDING;
+         }
+      } else {
+         // If there's no animation for attack simply get the creature closer to the enemy
+         if (actualAnimation == ATTACKING) {
+            screen->draw(animations[STANDING][0], position);
+            nonStandingSprite++;
+            if (nonStandingSprite == NUM_FRAMES_FOR_SPRITE) {
+               nonStandingSprite = 0;
+               actualAnimation = STANDING;
+            }
+         } else actualAnimation = STANDING;
+      }
+   } else {
+      // Draw the corresponding sprite
+      screen->draw(animations[STANDING][sprite/NUM_FRAMES_FOR_SPRITE], position);
+      sprite++;
+      // Check if this was the last sprite and start again if it was.
+      if ( (sprite/NUM_FRAMES_FOR_SPRITE) == (int) animations[STANDING].size() )
+         sprite = 0;
+   }
 
    if (number>0) {
       char text[3];
