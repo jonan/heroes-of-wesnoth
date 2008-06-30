@@ -32,7 +32,7 @@ void mission2(void) {
 
 // Creates and starts mission 3.
 void mission3(void) {
-   Mission *mission_3 = new Mission("mission3", 30, 20, 8, 4, 25);
+   Mission *mission_3 = new Mission("mission3", 30, 20, 4, 8, 25);
    mission_3->startMission();
 }
 

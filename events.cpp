@@ -58,7 +58,7 @@ void events::readInput(void) {
             mouse[BUTTON] = WHEEL_DOWN;
       }
       else if (event.type == SDL_MOUSEBUTTONUP) {
-         //if (mouse[BUTTON] != WHEEL_UP && mouse[BUTTON] != WHEEL_DOWN)
+         if (mouse[BUTTON] != WHEEL_UP && mouse[BUTTON] != WHEEL_DOWN)
             mouse[BUTTON] = NONE;
       }
       // KEYBOARD

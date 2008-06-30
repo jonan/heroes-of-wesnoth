@@ -51,11 +51,11 @@ bool editor::frame(void) {
       }
 
       if (mouse[BUTTON] == WHEEL_UP) {
-         //mouse[BUTTON] = NONE;
+         mouse[BUTTON] = NONE;
          actualTerrain++;
          if (actualTerrain > LAST_TERRAIN) actualTerrain = '0';
       } else if (mouse[BUTTON] == WHEEL_DOWN) {
-         //mouse[BUTTON] = NONE;
+         mouse[BUTTON] = NONE;
          actualTerrain--;
          if (actualTerrain < '0') actualTerrain = LAST_TERRAIN;
       }
