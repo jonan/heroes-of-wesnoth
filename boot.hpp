@@ -26,11 +26,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 ///
 /// -no detailed description-
 ///
-/// @param[in] fullscreen Indicates if it's supposed to boot in fullscreen.
-/// @param[in] width The screen's width.
-/// @param[in] height The screen's height.
-/// @param[in] bpp The screen's bits-per-pixel.
-void boot(const bool fullscreen, const int width, const int height, const int bpp);
+/// @param[in] fullscreen Indicates if it's supposed to run on fullscreen.
+/// @param[in] width Screen's width.
+/// @param[in] height Screen's height.
+void boot(const bool fullscreen, const int width, const int height);
 /// Exits the game.
 ///
 /// -no detailed description-

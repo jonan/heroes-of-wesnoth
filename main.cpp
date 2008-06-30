@@ -32,16 +32,12 @@ int main(int argc, char *argv[]) {
    bool fullscreen = false;
    int width = 1024;
    int height = 768;
-   int bpp = 16;
 
    // Check the programs arguments
    for (int i=1; i<argc; i++) {
       const string val(argv[i]);
-
-   // Fullscreen argument
-      if (val == "-f" || val == "--full-screen") {
+      if (val == "-fs" || val == "--full-screen") {
          fullscreen = true;
-   // Resolution argument
       } else if ( val == "-r" || val == "--resolution") {
          if ( argc > i+2 ) {
             width = atoi(argv[i+1]);
@@ -52,25 +48,13 @@ int main(int argc, char *argv[]) {
             }
             i += 2; // Jump to next arg
          }
-   // Bitrate argument
-      } else if ( val == "-b" || val == "--bpp" ) {
-         if ( argc > i+1 ) {
-            bpp = atoi(argv[i+1]);
-            if (!bpp) {
-               bpp = 16;
-            }
-            ++i;
-         }
-   // Help & wrong argument
       } else {
          /// @todo Change version
          cout << "\nHeroes of Wesnoth SVN\n"
               << "\nusage: heroes [OPTIONS]\n"
-              << "  -b, --bpp BITRATE\n"
-              << "        starts the game with the given bitrate.\n\n"
-              << "  -f, --full-screen\n"
+              << "  -fs, --full-screen\n"
               << "        starts the game in full screen mode.\n\n"
-              << "  -r, --resolution HORIZONTAL_RESOLUTION VERTICAL_RESOLUTION\n"
+              << "  -r HORIZONTAL_RESOLUTION VERTICAL_RESOLUTION\n"
               << "        starts the game with the given resolution.\n\n"
               << "  -h, --help\n"
               << "        prints this message and exits.\n"
@@ -79,7 +63,7 @@ int main(int argc, char *argv[]) {
       }
    }
    // Start the game engine
-   boot(fullscreen, width, height, bpp);
+   boot(fullscreen, width, height);
    // Start the main menu
    startMainMenu();
 

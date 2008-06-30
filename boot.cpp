@@ -23,10 +23,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "graphics.hpp"
 
 // Loads the engine's global objects.
-void startEngine(const bool fullscreen, const screenFormat scrFrmt) {
-
+void startEngine(const bool fullscreen, const int width, const int height) {
    srand( time(NULL) ); // Set seed for random numbers
-   screen = new graphics(fullscreen, scrFrmt);
+   screen = new graphics(fullscreen, width, height);
    input = new events;
 }
 
@@ -48,9 +47,8 @@ void loadMainImages(void) {
 }
 
 // Starts the engine and loads the main images.
-void boot(const bool fullscreen, const int width, const int height, const int bpp) {
-   const screenFormat scrFrmt = { width, height, bpp };
-   startEngine(fullscreen, scrFrmt);
+void boot(const bool fullscreen, const int width, const int height) {
+   startEngine(fullscreen, width, height);
    atexit(freeEngine);
    loadMainImages();
 }

@@ -51,15 +51,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 class imageList;
 class ttf;
 
-/// Describes screen width, hight and bpp.
-///
-/// -no detailed description-
-struct screenFormat {
-   int width;
-   int height;
-   int bpp;
-};
-
 /// Complete screen control.
 ///
 /// This class gives you all the control you need over the screen.
@@ -70,27 +61,17 @@ class graphics {
       SDL_Surface *screen; // The surface that represents the screen
       imageList *images; // List with all the images used
       ttf *text; // Used to write text into the screen
-      screenFormat scrFrmt;
 
-      /// Initializes SDL and SDL_ttf.
-      ///
-      ///  -no detailed description-
+      // Initializes SDL, SDL_ttf and SDL_mixer.
       void init(void);
-      /// Creates the surface that will be drawn directly to the screen.
-      ///
-      /// @param[in] fullscreen Indicates if it's supposed to run on fullscreen.
-      /// @param[in] scrFrmt Struct of type screenFormat containing the size and bpp of the window to create.
-      void createWindow(const bool fullscreen, const screenFormat scrFrmt);
+      // Creates the surface that will be drawn directly to the screen.
+      void createWindow(const bool fullscreen, const int width, const int height, const int bpp);
 
    public:
-      /// Constructor for graphics objects.
-      ///
       /// @param[in] fullscreen Indicates if it's supposed to run on fullscreen.
-      /// @param[in] scrFrmt Struct of type screenFormat containing the size and bpp of the window to create.
-      graphics(const bool fullscreen, screenFormat scrFrmt); // Constructor
-      /// Standard Destructor for graphics objects.
-      ///
-      /// Deletes pointers made for the graphic object and shuts down SDL and SDL_ttf.
+      /// @param[in] width Screen's width.
+      /// @param[in] height Screen's height.
+      graphics(const bool fullscreen, int width, int height); // Constructor
       ~graphics(void); // Destructor
 
       /// Returns the surface of an image.
@@ -172,11 +153,6 @@ class graphics {
       ///
       /// @param[in] ms Milisecons to wait.
       void wait(const int ms);
-
-      /// Interface method for the scrFrmt of the graphics object.
-      ///
-      /// @return The screenFormat struct of the actual graphics object.
-      screenFormat getScrFrmt(void);
 };
 
 extern graphics *screen;
