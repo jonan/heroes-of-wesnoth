@@ -38,8 +38,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 class cell;
 class unit;
 
-// Struct to store the coordinates of a cell.
-struct cellCoor {
+// Struct to store coordinates.
+struct coordinates {
    int x;
    int y;
 };
@@ -51,7 +51,8 @@ struct cellCoor {
 /// (This class is meant to be inherit, not to be used directly)
 class map {
    private:
-      cellCoor firstCell; // Coordinates of the top left cell.
+      coordinates firstCellCoor; // Map coordinates of the top left visible cell.
+      coordinates firstCellPos; // Position of the top left visible cell in the screen.
       int horizontalCells, verticalCells; // Number of visible cells
 
       // Softens a type of terrain.

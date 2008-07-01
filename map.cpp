@@ -38,8 +38,8 @@ map::map(const int width, const int height) {
       for (int y=0; y<height; y++)
          battleMap[x][y].setCoordinates(x, y);
 
-   firstCell.x = 0;
-   firstCell.y = 0;
+   firstCellCoor.x = 0;
+   firstCellCoor.y = 0;
    // Calculate the size of the visible map
    int screenWidth, screenHeight;
    screen->getScreenSize(screenWidth, screenHeight);
@@ -47,6 +47,9 @@ map::map(const int width, const int height) {
    verticalCells = (screenHeight/72)-1;
    if (horizontalCells > width) horizontalCells = width;
    if (verticalCells > height) verticalCells = height;
+   // Center the map in the screen
+   firstCellPos.x = (screenWidth-(horizontalCells*54+18))/2;
+   firstCellPos.y = (screenHeight-(verticalCells*72+36))/2;
 
    selectedUnit=NULL;
    mouseOverCell=NULL;
@@ -85,12 +88,12 @@ cell* map::getAttackCell(void) {
 
 // Tells the map the mouse's position.
 void map::moveMouse(const int x, const int y, const int button) {
-   int i=firstCell.x, j=firstCell.y;
+   int i=firstCellCoor.x, j=firstCellCoor.y;
    SDL_Rect cellPosition;
 
-   cellPosition.x=17;
-   if ( (firstCell.x%2)==1 ) cellPosition.y = 77;
-   else cellPosition.y = 41;
+   cellPosition.x=firstCellPos.x;
+   if ( (firstCellCoor.x%2)==1 ) cellPosition.y = firstCellPos.y+36;
+   else cellPosition.y = firstCellPos.y;
 
    if (mouseOverCell)
       mouseOverCell->removeMouse();
@@ -101,29 +104,29 @@ void map::moveMouse(const int x, const int y, const int button) {
       i++;
    }
    i--;
-   if (i>=firstCell.x && i<horizontalCells+firstCell.x) {
-      if ( (i%2)==1 ) cellPosition.y = 77;
-      else cellPosition.y = 41;
+   if (i>=firstCellCoor.x && i<horizontalCells+firstCellCoor.x) {
+      if ( (i%2)==1 ) cellPosition.y = firstCellPos.y+36;
+      else cellPosition.y = firstCellPos.y;
       while (y > cellPosition.y){
          cellPosition.y += 72;
          j++;
       }
       j--;
-      if (j>=firstCell.y && j<verticalCells+firstCell.y) { // battleMap[i][j] is a valid cell and the mouse is over it
+      if (j>=firstCellCoor.y && j<verticalCells+firstCellCoor.y) { // battleMap[i][j] is a valid cell and the mouse is over it
          battleMap[i][j].putMouse();
          mouseOverCell = &battleMap[i][j];
          if (button == BUTTON_LEFT) mouseClick(i, j);
       }
    }
    // move visible map
-   if ( (i<firstCell.x || keys[SDLK_LEFT]) && firstCell.x!=0)
-      firstCell.x--;
-   else if ( (i>firstCell.x+17 || keys[SDLK_RIGHT]) && firstCell.x!=width-horizontalCells)
-      firstCell.x++;
-   if ( (j<firstCell.y || keys[SDLK_UP]) && firstCell.y!=0)
-      firstCell.y--;
-   else if ( (j>firstCell.y+8 || keys[SDLK_DOWN]) && firstCell.y!=height-verticalCells)
-      firstCell.y++;
+   if ( (i<firstCellCoor.x || keys[SDLK_LEFT]) && firstCellCoor.x!=0)
+      firstCellCoor.x--;
+   else if ( (i>firstCellCoor.x+(horizontalCells-1) || keys[SDLK_RIGHT]) && firstCellCoor.x!=width-horizontalCells)
+      firstCellCoor.x++;
+   if ( (j<firstCellCoor.y || keys[SDLK_UP]) && firstCellCoor.y!=0)
+      firstCellCoor.y--;
+   else if ( (j>firstCellCoor.y+(verticalCells-1) || keys[SDLK_DOWN]) && firstCellCoor.y!=height-verticalCells)
+      firstCellCoor.y++;
 }
 
 // Moves a creature to a cell.
@@ -270,21 +273,21 @@ void map::draw(void) {
    SDL_Rect position;
 
    // Position of the firts cell (top-left)
-   position.x = 17;
-   if ( (firstCell.x%2)==1 ) position.y = 77;
-   else position.y = 41;
+   position.x = firstCellPos.x;
+   if ( (firstCellCoor.x%2)==1 ) position.y = firstCellPos.y+36;
+   else position.y = firstCellPos.y;
    position.w = 72;
    position.h = 72;
 
    screen->erase();
    // Draws the visible cells.
-   for (int x=firstCell.x; x<horizontalCells+firstCell.x; x++) {
-      for (int y=firstCell.y; y<verticalCells+firstCell.y; y++) {
+   for (int x=firstCellCoor.x; x<horizontalCells+firstCellCoor.x; x++) {
+      for (int y=firstCellCoor.y; y<verticalCells+firstCellCoor.y; y++) {
          battleMap[x][y].draw(position);
          position.y+=72;
       }
-      if ( (x%2)==1 ) position.y=41; // x is an odd number
-      else position.y=77;
+      if ( (x%2)==1 ) position.y=firstCellPos.y; // x is an odd number
+      else position.y=firstCellPos.y+36;
       position.x+=54;
    }
 }
