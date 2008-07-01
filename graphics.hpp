@@ -59,6 +59,7 @@ class ttf;
 class graphics {
    private:
       SDL_Surface *screen; // The surface that represents the screen
+      int width, height; // The screen's witdh and height
       imageList *images; // List with all the images used
       ttf *text; // Used to write text into the screen
 
@@ -86,6 +87,14 @@ class graphics {
       /// @return Surface of the image.
       SDL_Surface* getImage(const char *imageName, const int alpha = SDL_ALPHA_OPAQUE,
                             const int mirror = NONE, const int angle = 0);
+
+      /// Returns the actual screen's size.
+      ///
+      ///  -no detailed description-
+      ///
+      /// @param[out] width The screen's width.
+      /// @param[out] height The screen's height.
+      void getScreenSize(int &width, int &height);
 
       /// Makes an image face the given side.
       ///

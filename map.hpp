@@ -52,6 +52,7 @@ struct cellCoor {
 class map {
    private:
       cellCoor firstCell; // Coordinates of the top left cell.
+      int horizontalCells, verticalCells; // Number of visible cells
 
       // Softens a type of terrain.
       // (Implemented in map_smooth.cpp)

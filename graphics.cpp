@@ -44,6 +44,8 @@ void graphics::init(void) {
 // Creates the surface that will be drawn directly to the screen
 void graphics::createWindow(const bool fullscreen, const int width, const int height, const int bpp) {
    cout << "Opening " << width << "x" << height << "%" << bpp << " window...\t";
+   this->width = width;
+   this->height = height;
 
    SDL_WM_SetCaption ("Heroes of Wesnoth", NULL);
    /// @todo put SDL standard video flags into a var. No need to write them so often.
@@ -104,6 +106,12 @@ SDL_Surface* graphics::getImage(const char *imageName, const int alpha,
    }
 
    return temp;
+}
+
+// Returns the actual screen's size.
+void graphics::getScreenSize(int &width, int &height) {
+   width = this->width;
+   height = this->height;
 }
 
 // Makes an image face the given side.

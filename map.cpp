@@ -40,6 +40,13 @@ map::map(const int width, const int height) {
 
    firstCell.x = 0;
    firstCell.y = 0;
+   // Calculate the size of the visible map
+   int screenWidth, screenHeight;
+   screen->getScreenSize(screenWidth, screenHeight);
+   horizontalCells = (screenWidth/54);
+   verticalCells = (screenHeight/72)-1;
+   if (horizontalCells > width) horizontalCells = width;
+   if (verticalCells > height) verticalCells = height;
 
    selectedUnit=NULL;
    mouseOverCell=NULL;
@@ -94,7 +101,7 @@ void map::moveMouse(const int x, const int y, const int button) {
       i++;
    }
    i--;
-   if (i>=firstCell.x && i<18+firstCell.x) {
+   if (i>=firstCell.x && i<horizontalCells+firstCell.x) {
       if ( (i%2)==1 ) cellPosition.y = 77;
       else cellPosition.y = 41;
       while (y > cellPosition.y){
@@ -102,7 +109,7 @@ void map::moveMouse(const int x, const int y, const int button) {
          j++;
       }
       j--;
-      if (j>=firstCell.y && j<9+firstCell.y) { // battleMap[i][j] is a valid cell and the mouse is over it
+      if (j>=firstCell.y && j<verticalCells+firstCell.y) { // battleMap[i][j] is a valid cell and the mouse is over it
          battleMap[i][j].putMouse();
          mouseOverCell = &battleMap[i][j];
          if (button == BUTTON_LEFT) mouseClick(i, j);
@@ -111,11 +118,11 @@ void map::moveMouse(const int x, const int y, const int button) {
    // move visible map
    if ( (i<firstCell.x || keys[SDLK_LEFT]) && firstCell.x!=0)
       firstCell.x--;
-   else if ( (i>firstCell.x+17 || keys[SDLK_RIGHT]) && firstCell.x!=width-18)
+   else if ( (i>firstCell.x+17 || keys[SDLK_RIGHT]) && firstCell.x!=width-horizontalCells)
       firstCell.x++;
    if ( (j<firstCell.y || keys[SDLK_UP]) && firstCell.y!=0)
       firstCell.y--;
-   else if ( (j>firstCell.y+8 || keys[SDLK_DOWN]) && firstCell.y!=height-9)
+   else if ( (j>firstCell.y+8 || keys[SDLK_DOWN]) && firstCell.y!=height-verticalCells)
       firstCell.y++;
 }
 
@@ -271,8 +278,8 @@ void map::draw(void) {
 
    screen->erase();
    // Draws the visible cells.
-   for (int x=firstCell.x; x<18+firstCell.x; x++) {
-      for (int y=firstCell.y; y<9+firstCell.y; y++) {
+   for (int x=firstCell.x; x<horizontalCells+firstCell.x; x++) {
+      for (int y=firstCell.y; y<verticalCells+firstCell.y; y++) {
          battleMap[x][y].draw(position);
          position.y+=72;
       }
