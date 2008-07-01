@@ -24,10 +24,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include <SDL/SDL.h>
 
-#define SCREEN_WIDTH  1024
-#define SCREEN_HEIGHT 768
-#define BPP           16
-
 // @{
 /// Mirror
 #define NONE 0

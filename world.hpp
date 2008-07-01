@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// The world class and a function to create worlds.
+/// The world class.
 /// @author Jonan
 
 #ifndef WORLD_HPP

@@ -47,13 +47,12 @@ void graphics::createWindow(const bool fullscreen, const int width, const int he
    this->width = width;
    this->height = height;
 
+   // Set the video mode
+   Uint32 SDLflags;
+   SDLflags = (SDL_DOUBLEBUF | SDL_ANYFORMAT);
+   if (fullscreen) SDLflags |= SDL_FULLSCREEN;
+   screen = SDL_SetVideoMode (width, height, bpp, SDLflags);
    SDL_WM_SetCaption ("Heroes of Wesnoth", NULL);
-   /// @todo put SDL standard video flags into a var. No need to write them so often.
-   if (fullscreen) {
-      screen = SDL_SetVideoMode (width, height, bpp, SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN);
-   } else {
-      screen = SDL_SetVideoMode (width, height, bpp, SDL_DOUBLEBUF | SDL_ANYFORMAT);
-   }
 
    if (screen == NULL) {
       cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
@@ -72,7 +71,7 @@ graphics::graphics(const bool fullscreen, int width, int height) {
    int bpp = SDL_VideoModeOK( width, height, 16, SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN );
    if (!bpp) {
       cout << "The choosen resolution (" << width << "x" << height 
-           << ") is not valid on your system. Trying default (1024x768)...\n";
+           << ") is not valid on your system. Trying default (1024x768%16)...\n";
       width = 1024;
       height = 768;
       bpp = 16;
@@ -177,15 +176,15 @@ void graphics::transitionEffect(int effect) {
    if (effect == -1) effect = rand() % NUMBER_OF_EFFECTS;
 
    if (effect == HORIZONTAL) {
-      for (int x=0; x<SCREEN_WIDTH; x+=5) {
+      for (int x=0; x<width; x+=5) {
          fps.start();
-         SDL_UpdateRect(screen, x, 0, 5, SCREEN_HEIGHT);
+         SDL_UpdateRect(screen, x, 0, 5, height);
          fps.end(10);
       }
    } else if (effect == VERTICAL) {
-      for (int y=0; y<SCREEN_HEIGHT; y+=5) {
+      for (int y=0; y<height; y+=5) {
          fps.start();
-         SDL_UpdateRect(screen, 0, y, SCREEN_WIDTH, 5);
+         SDL_UpdateRect(screen, 0, y, width, 5);
          fps.end(10);
       }
    }
