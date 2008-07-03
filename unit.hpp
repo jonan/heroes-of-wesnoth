@@ -76,7 +76,6 @@ class unit {
       int actualAnimation;
 
       int sprite; // Last sprite drawn
-      int nonStandingSprite; // Last sprite of a non-standing animation drawn
 
       cell *position; // The cell where the unit is
       hero *master; // The hero that controls the unit.
@@ -171,8 +170,13 @@ class unit {
       /// -no detailed description-
       ///
       /// @param[in] position The position where the creature should be drawn.
-      /// @param[in] animation Type of animation to draw (default continues current animation).
-      virtual void draw(SDL_Rect &position, const int animation = -1);
+      virtual void draw(SDL_Rect &position);
+      /// Starts a given animation.
+      ///
+      /// -no detailed description-
+      ///
+      /// @param[in] animation Type of animation.
+      void startAnimation(const int animation);
 };
 
 #endif // UNIT_HPP

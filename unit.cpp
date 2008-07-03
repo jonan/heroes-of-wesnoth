@@ -47,7 +47,6 @@ unit::unit(const char type, const int number) {
 
    facingSide = RIGHT;
    sprite = 0;
-   nonStandingSprite = 0;
    actualAnimation = STANDING;
 
    if (type != -1) { // It should only be -1 when the unit is a hero.
@@ -83,8 +82,8 @@ void unit::setFacingSide(const int facingSide) {
 // Attacks a given unit.
 void unit::attackCreature(unit &creature) {
    // Set the attacking animation
-   actualAnimation = ATTACKING;
-   creature.actualAnimation = DEFENDING;
+   startAnimation(ATTACKING);
+   creature.startAnimation(DEFENDING);
    // Calculate the damage
    double damage;
 
@@ -97,41 +96,31 @@ void unit::attackCreature(unit &creature) {
 }
 
 // Draws the creature in the given position.
-void unit::draw(SDL_Rect &position, const int animation) {
-   if (actualAnimation != STANDING || animation != -1) {
-      if (actualAnimation == STANDING) actualAnimation = animation;
-      // Get closer to the enemy when attacking
-      if (actualAnimation == ATTACKING) {
-         if (facingSide == RIGHT) position.x += 10;
-         else position.x -= 10;
-      }
-      if (animations[actualAnimation].size() > 0) {
-         // Draw the corresponding sprite.
-         screen->draw(animations[actualAnimation][nonStandingSprite/NUM_FRAMES_FOR_SPRITE], position);
-         nonStandingSprite++;
-         // Check if this was the last sprite and go back to standing if it was.
-         if ( (nonStandingSprite/NUM_FRAMES_FOR_SPRITE) == (int) animations[actualAnimation].size() ) {
-            nonStandingSprite = 0;
-            actualAnimation = STANDING;
-         }
-      } else {
-         // If there's no animation for attack simply get the creature closer to the enemy
-         if (actualAnimation == ATTACKING) {
-            screen->draw(animations[STANDING][0], position);
-            nonStandingSprite++;
-            if (nonStandingSprite == NUM_FRAMES_FOR_SPRITE) {
-               nonStandingSprite = 0;
-               actualAnimation = STANDING;
-            }
-         } else actualAnimation = STANDING;
+void unit::draw(SDL_Rect &position) {
+   // Get closer to the enemy when attacking
+   if (actualAnimation == ATTACKING) {
+      if (facingSide == RIGHT) position.x += 10;
+      else position.x -= 10;
+   }
+   if (animations[actualAnimation].size() > 0) {
+      // Draw the corresponding sprite.
+      screen->draw(animations[actualAnimation][sprite/NUM_FRAMES_FOR_SPRITE], position);
+      sprite++;
+      // Check if this was the last sprite and go back to standing if it was.
+      if ( (sprite/NUM_FRAMES_FOR_SPRITE) == (int) animations[actualAnimation].size() ) {
+         sprite = 0;
+         actualAnimation = STANDING;
       }
    } else {
-      // Draw the corresponding sprite
-      screen->draw(animations[STANDING][sprite/NUM_FRAMES_FOR_SPRITE], position);
-      sprite++;
-      // Check if this was the last sprite and start again if it was.
-      if ( (sprite/NUM_FRAMES_FOR_SPRITE) == (int) animations[STANDING].size() )
-         sprite = 0;
+      // If there's no animation for attack simply get the creature closer to the enemy
+      if (actualAnimation == ATTACKING) {
+         screen->draw(animations[STANDING][0], position);
+         sprite++;
+         if (sprite == NUM_FRAMES_FOR_SPRITE) {
+            sprite = 0;
+            actualAnimation = STANDING;
+         }
+      } else actualAnimation = STANDING;
    }
 
    if (number>0) {
@@ -139,4 +128,10 @@ void unit::draw(SDL_Rect &position, const int animation) {
       sprintf(text, "%i", number);
       screen->write(text, position.x+17, position.y+52);
    }
+}
+
+// Starts a given animation.
+void unit::startAnimation(const int animation) {
+   actualAnimation = animation;
+   sprite = 0;
 }

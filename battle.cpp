@@ -22,36 +22,26 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "events.hpp"
 #include "graphics.hpp"
 #include "hero.hpp"
+#include "timer.hpp"
 #include "unit.hpp"
 
 // This function is executed in the main loop. If
 // it returns true, the loop ends, else it continues.
 bool battle::frame(void) {
-   if (!animation) {
-      if (keys[SDLK_ESCAPE]) {
-         keys[SDLK_ESCAPE] = false;
-         removeCreature(*player);
-         delete player;
-         endBattle = true;
-      } else { // If the battle wasn't ended continue.
-         if (selectedUnit->getMaster() == NULL) ai();
-         else {
-            // This controls only work when a friendly creature is moving
-            if (keys[SDLK_SPACE]) {
-               keys[SDLK_SPACE] = false;
-               selectedUnit->getPosition()->unselect();
-               nextTurn();
-            }
-            moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
-         }
-
-         draw();
-      }
-   } else {
-      if (sprite<MAX_ANIMATION_SPRITES) sprite++;
+   if (keys[SDLK_ESCAPE]) {
+      keys[SDLK_ESCAPE] = false;
+      deleteCreature(*player);
+      endBattle = true;
+   } else { // If the battle wasn't ended continue.
+      if (selectedUnit->getMaster() == NULL) ai();
       else {
-         sprite = 0;
-         animation = false;
+         // This controls only work when a friendly creature is moving
+         if (keys[SDLK_SPACE]) {
+            keys[SDLK_SPACE] = false;
+            selectedUnit->getPosition()->unselect();
+            nextTurn();
+         }
+         moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
       }
       draw();
    }
@@ -69,10 +59,14 @@ void battle::mouseClick(const int x, const int y) {
          if ( battleMap[x][y].getCreature()->getMaster() != selectedUnit->getMaster() ) {
             moveCreature(battleMap[x][y]);
             selectedUnit->attackCreature( *battleMap[x][y].getCreature() );
-            animation = true; // The attacking animation
+            animation(); // The attacking animation
             // Check if the creatures is dead.
             if ( battleMap[x][y].getCreature()->getNumber() == 0 ) {
-               removeCreature(*battleMap[x][y].getCreature());
+               // Start the dying animation
+               battleMap[x][y].getCreature()->startAnimation(DYING);
+               animation();
+               // delete the creature
+               deleteCreature(*battleMap[x][y].getCreature());
                battleMap[x][y].setCreature(NULL);
             }
             nextTurn();
@@ -144,8 +138,8 @@ void battle::nextTurn(void) {
    }
 }
 
-// Removes a creature from the battle.
-void battle::removeCreature(unit &creature) {
+// Deletes a creature.
+void battle::deleteCreature(unit &creature) {
    bool found = false;
    int i = 0;
 
@@ -180,9 +174,13 @@ void battle::ai(void) {
    if (temp) { // Attack a unit
       moveCreature(*temp);
       selectedUnit->attackCreature( *temp->getCreature() );
-      animation = true; // The attacking animation
+      animation(); // The attacking animation
       if ( temp->getCreature()->getNumber() == 0 ) {
-         removeCreature( *temp->getCreature() );
+         // Start the dying animation
+         temp->getCreature()->startAnimation(DYING);
+         animation();
+         // delete the creature
+         deleteCreature( *temp->getCreature() );
          temp->setCreature(NULL);
       }
       nextTurn();
@@ -201,6 +199,21 @@ void battle::ai(void) {
    }
 }
 
+void battle::animation(void) {
+   /// @todo Use the loop function in loop.hpp
+   int sprite = 0;
+   timer fps;
+
+   while (sprite < MAX_ANIMATION_SPRITES) {
+      fps.start();
+      input->readInput();
+      draw();
+      screen->update();
+      fps.end(30);
+      sprite++;
+   }
+}
+
 // Constructor
 battle::battle(hero &player, unit **enemies, const int numberEnemies) : map(18, 9) {
    // Set the hero
@@ -215,8 +228,6 @@ battle::battle(hero &player, unit **enemies, const int numberEnemies) : map(18, 
    for (int t=0; t<MAX_BATTLE_UNITS; t++) turns[t] = 0;
 
    endBattle = false;
-   animation = false;
-   sprite = 0;
 
    // Make the hole map visible
    for (int x=0; x<18; x++)

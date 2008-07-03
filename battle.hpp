@@ -46,8 +46,6 @@ class battle : public map {
       int turns[MAX_BATTLE_UNITS];
       int turn;
       bool endBattle;
-      bool animation; // Indicates if an animation is in progress
-      int sprite; // Number of the sprite of the actual animation
 
       // This function is executed in the main loop. If
       // it returns true, the loop ends, else it continues.
@@ -59,11 +57,14 @@ class battle : public map {
       // Starts the next turn.
       void nextTurn(void);
 
-      // Removes a creature from the battle.
-      void removeCreature(unit &creature);
+      // Deletes a creature.
+      void deleteCreature(unit &creature);
 
       // Controls the units not controled by the player.
       void ai(void);
+
+      // Function to call whenever there is an animation.
+      void animation(void);
 
    public:
       /// @param[in] player The player's hero.

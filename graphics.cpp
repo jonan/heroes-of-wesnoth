@@ -115,7 +115,6 @@ void graphics::getScreenSize(int &width, int &height) {
 
 // Makes an image face the given side.
 SDL_Surface* graphics::face(const int side, SDL_Surface *imageSurface) {
-   /// @todo merge this function with faceRight()
    image* temp;
 
    temp = images->getImage(imageSurface);

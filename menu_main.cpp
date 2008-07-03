@@ -61,11 +61,6 @@ bool drawMenu(void) {
    return false; // To continue in the loop.
 }
 
-// Free main menu
-void deleteMenu(void) {
-   delete mainMenu;
-}
-
 // Creates the menu.
 void createMenu(void) {
    mainMenu = new menu(menu_pos);
@@ -76,7 +71,6 @@ void createMenu(void) {
    mainMenu->addButton("Editor", startEditor);
    mainMenu->addButton("Quit", quit);
    mainMenu->addBackground(drawBackground);
-   atexit(deleteMenu);
 }
 
 // Creates and starts the main menu.
@@ -84,4 +78,5 @@ void startMainMenu(void) {
    setPositions();
    createMenu();
    loop(drawMenu);
+   delete mainMenu;
 }

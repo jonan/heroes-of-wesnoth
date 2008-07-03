@@ -30,7 +30,7 @@ void unit::setCreaturesAttributes(void) {
       addAnimationImage("units/archer-die3", DYING);
       addAnimationImage("units/archer-die4", DYING);
       addAnimationImage("units/archer", STANDING);
-      setAllAttributes(15, 0, 25, 3, 2, 2);
+      setAllAttributes(15, 10, 25, 3, 2, 2);
   } else if (type == ARMAGEDDON) {
       addAnimationImage("units/armageddon-attack-melee1", ATTACKING);
       addAnimationImage("units/armageddon-attack-melee2", ATTACKING);
