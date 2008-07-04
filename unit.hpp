@@ -157,6 +157,12 @@ class unit {
       ///
       /// @return The hero that controls the unit.
       hero* getMaster(void) {return master;}
+      /// Returns the number of sprites of an animation.
+      ///
+      /// -no detailed description-
+      ///
+      /// @return Number of sprites of the animation.
+      int getNumSprites(const int animation) {return animations[animation].size();}
 
       /// Attacks a given unit.
       ///

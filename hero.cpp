@@ -82,15 +82,13 @@ void hero::draw(SDL_Rect &position) {
          sprite = 0;
          actualAnimation = STANDING;
       }
-   } else {
+   } else { // The animation is ATTACKING
       // If there's no animation for attack simply get the creature closer to the enemy
-      if (actualAnimation == ATTACKING) {
-         screen->draw(animations[STANDING][0], position);
-         sprite++;
-         if (sprite == NUM_FRAMES_FOR_SPRITE) {
-            sprite = 0;
-            actualAnimation = STANDING;
-         }
-      } else actualAnimation = STANDING;
+      screen->draw(animations[STANDING][0], position);
+      sprite++;
+      if (sprite == NUM_FRAMES_FOR_SPRITE) {
+         sprite = 0;
+         actualAnimation = STANDING;
+      }
    }
 }

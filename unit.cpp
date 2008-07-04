@@ -111,16 +111,14 @@ void unit::draw(SDL_Rect &position) {
          sprite = 0;
          actualAnimation = STANDING;
       }
-   } else {
+   } else { // The animation is ATTACKING
       // If there's no animation for attack simply get the creature closer to the enemy
-      if (actualAnimation == ATTACKING) {
-         screen->draw(animations[STANDING][0], position);
-         sprite++;
-         if (sprite == NUM_FRAMES_FOR_SPRITE) {
-            sprite = 0;
-            actualAnimation = STANDING;
-         }
-      } else actualAnimation = STANDING;
+      screen->draw(animations[STANDING][0], position);
+      sprite++;
+      if (sprite == NUM_FRAMES_FOR_SPRITE) {
+         sprite = 0;
+         actualAnimation = STANDING;
+      }
    }
 
    if (number>0) {
@@ -133,5 +131,10 @@ void unit::draw(SDL_Rect &position) {
 // Starts a given animation.
 void unit::startAnimation(const int animation) {
    actualAnimation = animation;
-   sprite = 0;
+   /* If this unit has no sprite for the given animation
+      go back to STANDIGN (ATTACKING has a default animation). */
+   if (animations[actualAnimation].size() > 0 || actualAnimation == ATTACKING)
+      sprite = 0;
+   else
+      actualAnimation = STANDING;
 }

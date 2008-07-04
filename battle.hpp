@@ -30,8 +30,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #define MAX_BATTLE_UNITS 19
 /// Agility needed to get a turn
 #define TURN 10
-/// Max sprites in an animation
-#define MAX_ANIMATION_SPRITES 10
 
 class hero;
 class unit;
@@ -64,7 +62,7 @@ class battle : public map {
       void ai(void);
 
       // Function to call whenever there is an animation.
-      void animation(void);
+      void animation(const int sprites);
 
    public:
       /// @param[in] player The player's hero.

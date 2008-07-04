@@ -59,12 +59,12 @@ void battle::mouseClick(const int x, const int y) {
          if ( battleMap[x][y].getCreature()->getMaster() != selectedUnit->getMaster() ) {
             moveCreature(battleMap[x][y]);
             selectedUnit->attackCreature( *battleMap[x][y].getCreature() );
-            animation(); // The attacking animation
+            animation(selectedUnit->getNumSprites(ATTACKING)); // The attacking animation
             // Check if the creatures is dead.
             if ( battleMap[x][y].getCreature()->getNumber() == 0 ) {
                // Start the dying animation
                battleMap[x][y].getCreature()->startAnimation(DYING);
-               animation();
+               animation(battleMap[x][y].getCreature()->getNumSprites(DYING));
                // delete the creature
                deleteCreature(*battleMap[x][y].getCreature());
                battleMap[x][y].setCreature(NULL);
@@ -174,11 +174,11 @@ void battle::ai(void) {
    if (temp) { // Attack a unit
       moveCreature(*temp);
       selectedUnit->attackCreature( *temp->getCreature() );
-      animation(); // The attacking animation
+      animation(selectedUnit->getNumSprites(ATTACKING)); // The attacking animation
       if ( temp->getCreature()->getNumber() == 0 ) {
          // Start the dying animation
          temp->getCreature()->startAnimation(DYING);
-         animation();
+         animation(temp->getCreature()->getNumSprites(DYING));
          // delete the creature
          deleteCreature( *temp->getCreature() );
          temp->setCreature(NULL);
@@ -199,18 +199,19 @@ void battle::ai(void) {
    }
 }
 
-void battle::animation(void) {
+// Function to call whenever there is an animation.
+void battle::animation(const int sprites) {
    /// @todo Use the loop function in loop.hpp
-   int sprite = 0;
+   int frame = 0;
    timer fps;
 
-   while (sprite < MAX_ANIMATION_SPRITES) {
+   while (frame/NUM_FRAMES_FOR_SPRITE < sprites) {
       fps.start();
       input->readInput();
       draw();
       screen->update();
       fps.end(30);
-      sprite++;
+      frame++;
    }
 }
 
@@ -313,7 +314,7 @@ bool createBattle(hero &player, const char enemyType, const char terrainType) {
    war.start();
 
    // Restore player's position
-   temp->setCreature(&player);
+   if (war.win()) temp->setCreature(&player);
 
    return war.win();
 }
