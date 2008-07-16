@@ -24,15 +24,24 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // @{
 /// Types of terrain.
-#define CAVE_FLOOR   '0'
-#define DESERT       '1'
-#define FLAT_GRASS   '2'
-#define FLAT_ROAD    '3'
-#define FORD         '4'
-#define WATER_COAST  '5'
-#define WATER_ICE    '6'
-#define WATER_OCEAN  '7'
-#define LAST_TERRAIN '7'
+#define CAVE_FLOOR      '0'
+#define CAVE_HILLS      '1'
+#define DESERT          '2'
+#define DESERT_HILLS    '3'
+#define DESERT_MOUNTAIN '4'
+#define DESERT_ROAD     '5'
+#define DESERT_SAND     '6'
+#define FLAT_DIRT       '7'
+#define FLAT_GRASS      '8'
+#define FLAT_ROAD       '9'
+#define FLAT_SAVANNA    'a'
+#define FLAT_STONE_PATH 'b'
+#define LAVA            'c'
+#define WATER_COAST     'd'
+#define WATER_FORD      'e'
+#define WATER_ICE       'f'
+#define WATER_OCEAN     'g'
+#define LAST_TERRAIN    'g'
 // @}
 
 class cell;

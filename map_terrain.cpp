@@ -55,6 +55,13 @@ void map::setTerrain(const char terrainName, const int x, const int y) {
       terrain[3] = screen->getImage("terrain/cave/floor4");
       terrain[4] = screen->getImage("terrain/cave/floor5");
       terrain[5] = screen->getImage("terrain/cave/floor6");
+   } else if (terrainName == CAVE_HILLS) {
+      images = 3;
+      movementPenalty = 1000;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/cave/hills-variation");
+      terrain[1] = screen->getImage("terrain/cave/hills-variation2");
+      terrain[2] = screen->getImage("terrain/cave/hills-variation3");
    } else if (terrainName == DESERT) {
       images = 8;
       movementPenalty = 1;
@@ -67,6 +74,42 @@ void map::setTerrain(const char terrainName, const int x, const int y) {
       terrain[5] = screen->getImage("terrain/desert/desert6");
       terrain[6] = screen->getImage("terrain/desert/desert7");
       terrain[7] = screen->getImage("terrain/desert/desert8");
+   } else if (terrainName == DESERT_HILLS) {
+      images = 3;
+      movementPenalty = 1000;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/desert/desert-hills");
+      terrain[1] = screen->getImage("terrain/desert/desert-hills2");
+      terrain[2] = screen->getImage("terrain/desert/desert-hills3");
+   } else if (terrainName == DESERT_MOUNTAIN) {
+      images = 3;
+      movementPenalty = 1000;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/desert/desert-mountain-peak1");
+      terrain[1] = screen->getImage("terrain/desert/desert-mountain-peak2");
+      terrain[2] = screen->getImage("terrain/desert/desert-mountain-peak3");
+   } else if (terrainName == DESERT_ROAD) {
+      images = 1;
+      movementPenalty = 1;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/desert/desert-road");
+   } else if (terrainName == DESERT_SAND) {
+      images = 8;
+      movementPenalty = 1;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/desert/sand");
+      terrain[1] = screen->getImage("terrain/desert/sand2");
+      terrain[2] = screen->getImage("terrain/desert/sand3");
+      terrain[3] = screen->getImage("terrain/desert/sand4");
+      terrain[4] = screen->getImage("terrain/desert/sand5");
+      terrain[5] = screen->getImage("terrain/desert/sand6");
+      terrain[6] = screen->getImage("terrain/desert/sand7");
+      terrain[7] = screen->getImage("terrain/desert/sand8");
+   } else if (terrainName == FLAT_DIRT) {
+      images = 1;
+      movementPenalty = 1;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/flat/dirt");
    } else if (terrainName == FLAT_GRASS) {
       images = 8;
       movementPenalty = 1;
@@ -86,11 +129,30 @@ void map::setTerrain(const char terrainName, const int x, const int y) {
       terrain[0] = screen->getImage("terrain/flat/road");
       terrain[1] = screen->getImage("terrain/flat/road2");
       terrain[2] = screen->getImage("terrain/flat/road3");
-   } else if (terrainName == FORD) {
-      images = 1;
+   } else if (terrainName == FLAT_SAVANNA) {
+      images = 3;
+      movementPenalty = 1;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/flat/savanna");
+      terrain[1] = screen->getImage("terrain/flat/savanna2");
+      terrain[2] = screen->getImage("terrain/flat/savanna3");
+   } else if (terrainName == FLAT_STONE_PATH) {
+      images = 6;
+      movementPenalty = 1;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/flat/stone-path");
+      terrain[1] = screen->getImage("terrain/flat/stone-path2");
+      terrain[2] = screen->getImage("terrain/flat/stone-path3");
+      terrain[3] = screen->getImage("terrain/flat/stone-path4");
+      terrain[4] = screen->getImage("terrain/flat/stone-path5");
+      terrain[5] = screen->getImage("terrain/flat/stone-path6");
+   } else if (terrainName == LAVA) {
+      images = 3;
       movementPenalty = 1000;
       terrain = new SDL_Surface*[images];
-      terrain[0] = screen->getImage("terrain/ford");
+      terrain[0] = screen->getImage("terrain/lava");
+      terrain[1] = screen->getImage("terrain/lava2");
+      terrain[2] = screen->getImage("terrain/lava3");
    } else if (terrainName == WATER_COAST) {
       images = 3;
       movementPenalty = 1000;
@@ -98,6 +160,12 @@ void map::setTerrain(const char terrainName, const int x, const int y) {
       terrain[0] = screen->getImage("terrain/water/coast");
       terrain[1] = screen->getImage("terrain/water/coast2");
       terrain[2] = screen->getImage("terrain/water/coast3");
+   } else if (terrainName == WATER_FORD) {
+      images = 2;
+      movementPenalty = 1000;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/water/ford");
+      terrain[1] = screen->getImage("terrain/water/ford2");
    } else if (terrainName == WATER_OCEAN) {
       images = 3;
       movementPenalty = 1000;
