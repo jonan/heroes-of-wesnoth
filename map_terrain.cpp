@@ -146,6 +146,13 @@ void map::setTerrain(const char terrainName, const int x, const int y) {
       terrain[3] = screen->getImage("terrain/flat/stone-path4");
       terrain[4] = screen->getImage("terrain/flat/stone-path5");
       terrain[5] = screen->getImage("terrain/flat/stone-path6");
+   } else if (terrainName == HILLS) {
+      images = 3;
+      movementPenalty = 1000;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/hills-variation");
+      terrain[1] = screen->getImage("terrain/hills-variation2");
+      terrain[2] = screen->getImage("terrain/hills-variation3");
    } else if (terrainName == LAVA) {
       images = 3;
       movementPenalty = 1000;
@@ -183,6 +190,19 @@ void map::setTerrain(const char terrainName, const int x, const int y) {
       terrain[3] = screen->getImage("terrain/water/ice4");
       terrain[4] = screen->getImage("terrain/water/ice5");
       terrain[5] = screen->getImage("terrain/water/ice6");
+   } else if (terrainName == WATER_SNOW) {
+      images = 2;
+      movementPenalty = 1;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/water/snow");
+      terrain[1] = screen->getImage("terrain/water/snow2");
+   } else if (terrainName == WATER_SNOW_HILLS) {
+      images = 3;
+      movementPenalty = 1000;
+      terrain = new SDL_Surface*[images];
+      terrain[0] = screen->getImage("terrain/water/snow-hills");
+      terrain[1] = screen->getImage("terrain/water/snow-hills2");
+      terrain[2] = screen->getImage("terrain/water/snow-hills2");
    } else {
       cout << "\n\tWrong terrain type : " << terrainName << "\n\n";
       exit(EXIT_FAILURE);
