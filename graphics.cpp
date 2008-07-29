@@ -15,183 +15,196 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include "graphics.hpp"
+
 #include <cstdlib>
 #include <iostream>
 
-#include "graphics.hpp"
 #include "image.hpp"
 #include "timer.hpp"
 #include "ttf.hpp"
 
-using namespace std;
+// std
+using std::cout;
 
-// Initializes SDL, SDL_ttf and SDL_mixer
-void graphics::init(void) {
-   cout << "Starting SDL...\t\t\t";
-   if ( SDL_Init (SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0 ) { // SDL_INIT_AUDIO not yet needed
-      cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
-      exit(EXIT_FAILURE);
-   }
-   cout << "[ ok ]\n";
-   cout << "Starting SDL_ttf...\t\t";
-   if ( TTF_Init() < 0 ) {
-      cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
-      exit(EXIT_FAILURE);
-   }
-   cout << "[ ok ]\n";
-}
+namespace video_engine {
 
-// Creates the surface that will be drawn directly to the screen
-void graphics::createWindow(const bool fullscreen, const int width, const int height, const int bpp) {
-   cout << "Opening " << width << "x" << height << "%" << bpp << " window...\t";
-   this->width = width;
-   this->height = height;
-
-   // Set the video mode
-   Uint32 SDLflags;
-   SDLflags = (SDL_DOUBLEBUF | SDL_ANYFORMAT);
-   if (fullscreen) SDLflags |= SDL_FULLSCREEN;
-   screen = SDL_SetVideoMode (width, height, bpp, SDLflags);
-   SDL_WM_SetCaption ("Heroes of Wesnoth", NULL);
-
-   if (screen == NULL) {
-      cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
-      exit(EXIT_FAILURE);
-   }
-   cout << "[ ok ]\n";
-}
-
-// Constructor
-graphics::graphics(const bool fullscreen, int width, int height) {
-   init();
-
-   // Validate the resolution input by user.
-   // Only check with SDL_FULLSCREEN is neccessary and useful.
-   // Without SDL_FULLSCREEN _all_ screen formats would be valid.
-   int bpp = SDL_VideoModeOK( width, height, 16, SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN );
-   if (!bpp) {
-      cout << "The choosen resolution (" << width << "x" << height 
-           << ") is not valid on your system. Trying default (1024x768%16)...\n";
-      width = 1024;
-      height = 768;
-      bpp = 16;
-   }
-   createWindow(fullscreen, width, height, bpp);
-
-   images = new imageList;
-   text = new ttf;
+// Singleton pattern constructor
+Graphics* Graphics::instance(const bool fullscreen, int width, int height) {
+  static Graphics inst(fullscreen, width, height);
+  return &inst;
 }
 
 // Destructor
-graphics::~graphics(void) {
-   delete images;
-   delete text;
-   SDL_FreeSurface(screen);
-   TTF_Quit();
-   SDL_Quit();
+Graphics::~Graphics(void) {
+  delete images;
+  delete text;
+  SDL_FreeSurface(screen);
+  TTF_Quit();
+  SDL_Quit();
 }
 
 // Looks for the image in the list of loaded
 // ones, if it's not there it loads it.
-SDL_Surface* graphics::getImage(const char *imageName, const int alpha,
+SDL_Surface* Graphics::getImage(const char *image_name, const int alpha,
                                 const int mirror, const int angle
                                ) {
-   SDL_Surface *temp;
+  SDL_Surface *temp;
 
-   temp = images->getSurface(imageName, alpha, mirror, angle);
-   if (!temp) { // The image hasn't been loaded.
-      newImage(imageName, alpha, mirror, angle);
-      temp = images->getSurface(imageName, alpha, mirror, angle);
-   }
+  temp = images->getSurface(image_name, alpha, mirror, angle);
+  if (!temp) { // The image hasn't been loaded.
+    newImage(image_name, alpha, mirror, angle);
+    temp = images->getSurface(image_name, alpha, mirror, angle);
+  }
 
-   return temp;
+  return temp;
 }
 
 // Returns the actual screen's size.
-void graphics::getScreenSize(int &width, int &height) {
-   width = this->width;
-   height = this->height;
+void Graphics::getScreenSize(int &width, int &height) {
+  width = this->width;
+  height = this->height;
 }
 
 // Makes an image face the given side.
-SDL_Surface* graphics::face(const int side, SDL_Surface *imageSurface) {
-   image* temp;
+SDL_Surface* Graphics::face(const int side, SDL_Surface *image_surface) {
+  Image* temp;
 
-   temp = images->getImage(imageSurface);
-   if (temp->getMirror() == X) {
-      if (side == RIGHT)
-         return getImage(temp->getName(), temp->getAlpha(),
-                         NONE, temp->getAngle());
-      else return imageSurface;
-   } else {
-      if (side == RIGHT) return imageSurface;
-      else return getImage(temp->getName(), temp->getAlpha(),
-                           X, temp->getAngle());
-   }
+  temp = images->getImage(image_surface);
+  if (temp->getMirror() == X) {
+    if (side == RIGHT)
+      return getImage(temp->getName(), temp->getAlpha(),
+                      NONE, temp->getAngle());
+    else
+      return image_surface;
+  } else {
+    if (side == RIGHT)
+      return image_surface;
+    else
+      return getImage(temp->getName(), temp->getAlpha(),
+                      X, temp->getAngle());
+  }
 }
 
 // Adds a new image to the list
-void graphics::newImage(const char *imageName, const int alpha,
+void Graphics::newImage(const char *image_name, const int alpha,
                         const int mirror, const int angle
                        ) {
-   images->addImage(imageName, alpha, mirror, angle);
+  images->addImage(image_name, alpha, mirror, angle);
 }
 
 // Before drawing looks for the image in the list
 // of loaded ones, if it's not there it loads it.
-void graphics::draw(const char *imageName, SDL_Rect &position) {
-   SDL_Surface *temp;
+void Graphics::draw(const char *image_name, SDL_Rect &position) {
+  SDL_Surface *temp;
 
-   temp = getImage(imageName);
+  temp = getImage(image_name, OPAQUE, NONE, 0);
 
-   SDL_BlitSurface(temp, NULL, screen, &position);
+  SDL_BlitSurface(temp, NULL, screen, &position);
 }
 
 // Draws a surface to the indicated position.
-void graphics::draw(SDL_Surface *img, SDL_Rect &position) {
-   SDL_BlitSurface(img, NULL, screen, &position);
+void Graphics::draw(SDL_Surface *img, SDL_Rect &position) {
+  SDL_BlitSurface(img, NULL, screen, &position);
 }
 
 // Writes text in the screen.
-void graphics::write(const char *text,  const int x, const int y) {
-   this->text->write(text, screen, x, y);
+void Graphics::write(const char *text,  const int x, const int y) {
+  this->text->write(text, screen, x, y);
 }
-
 
 // Puts the screen black.
-void graphics::erase(void) {
-   SDL_FillRect(screen, NULL, 0);
+void Graphics::erase(void) {
+  SDL_FillRect(screen, NULL, 0);
 }
+
 // Refreshes the screen.
-void graphics::update(void) {
-   SDL_Flip(screen);
+void Graphics::update(void) {
+  SDL_Flip(screen);
 }
 
 // Refreshes the screen with an especial effect.
-void graphics::transitionEffect(int effect) {
-   /// @todo Add/Improve effects.
-   timer fps;
+void Graphics::transitionEffect(int effect) {
+  /// @todo Add/Improve effects.
+  Timer fps;
 
-   if (effect == -1) effect = rand() % NUMBER_OF_EFFECTS;
+  if (effect == RANDOM)
+    effect = rand() % NUMBER_OF_EFFECTS;
 
-   if (effect == HORIZONTAL) {
+  switch (effect) {
+    case HORIZONTAL:
       for (int x=0; x<width; x+=5) {
-         fps.start();
-         SDL_UpdateRect(screen, x, 0, 5, height);
-         fps.end(10);
+        fps.start();
+        SDL_UpdateRect(screen, x, 0, 5, height);
+        fps.end(10);
       }
-   } else if (effect == VERTICAL) {
+      break;
+    case VERTICAL:
       for (int y=0; y<height; y+=5) {
-         fps.start();
-         SDL_UpdateRect(screen, 0, y, width, 5);
-         fps.end(10);
+        fps.start();
+        SDL_UpdateRect(screen, 0, y, width, 5);
+        fps.end(10);
       }
-   }
+  }
 }
 
-// Stops the program a number of milisecons.
-void graphics::wait(const int ms) {
-   SDL_Delay(ms);
+// Constructor
+Graphics::Graphics(const bool fullscreen, int width, int height) {
+  init();
+
+  // Validate the resolution input by user.
+  // Only check with SDL_FULLSCREEN is neccessary and useful.
+  // Without SDL_FULLSCREEN _all_ screen formats would be valid.
+  int bpp = SDL_VideoModeOK( width, height, 16, SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN );
+  if (!bpp) {
+    cout << "The choosen resolution (" << width << "x" << height 
+         << ") is not valid on your system. Trying default (1024x768%16)...\n";
+    width = 1024;
+    height = 768;
+    bpp = 16;
+  }
+  createWindow(fullscreen, width, height, bpp);
+
+  images = new ImageList;
+  text = new Ttf;
 }
 
-graphics *screen = NULL;
+// Initializes SDL, SDL_ttf and SDL_mixer
+void Graphics::init(void) {
+  cout << "Starting SDL...\t\t\t";
+  if ( SDL_Init (SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0 ) { // SDL_INIT_AUDIO not yet needed
+    cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
+    exit(EXIT_FAILURE);
+  }
+  cout << "[ ok ]\n";
+  cout << "Starting SDL_ttf...\t\t";
+  if ( TTF_Init() < 0 ) {
+    cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
+    exit(EXIT_FAILURE);
+  }
+  cout << "[ ok ]\n";
+}
+
+// Creates the surface that will be drawn directly to the screen
+void Graphics::createWindow(const bool fullscreen, const int width, const int height, const int bpp) {
+  cout << "Opening " << width << "x" << height << "%" << bpp << " window...\t";
+  this->width = width;
+  this->height = height;
+
+  // Set the video mode
+  Uint32 SDLflags;
+  SDLflags = (SDL_DOUBLEBUF | SDL_ANYFORMAT);
+  if (fullscreen) SDLflags |= SDL_FULLSCREEN;
+  screen = SDL_SetVideoMode (width, height, bpp, SDLflags);
+  SDL_WM_SetCaption ("Heroes of Wesnoth", NULL);
+
+  if (screen == NULL) {
+    cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
+    exit(EXIT_FAILURE);
+  }
+  cout << "[ ok ]\n";
+}
+
+Graphics *screen = NULL;
+
+} // namespace video_engine

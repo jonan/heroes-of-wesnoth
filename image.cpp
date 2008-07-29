@@ -15,6 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include "image.hpp"
+
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -23,141 +25,156 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include <SDL/SDL_rotozoom.h>
 
 #include "graphics.hpp"
-#include "image.hpp"
 
-using namespace std;
+// std
+using std::cout;
+using std::string;
+
+// video_engine
+using video_engine::Graphics;
 
 // class image
 
-// Loads an image. If there's an error exits.
-void image::loadImage(void) {
-   SDL_Surface *image;
-
-   // Create a string with the fisical location of the image
-   // "img/" + name + ".png"
-   string img = "img/";
-   string imageName(name);
-   string png = ".png";
-   string imageDir = img + imageName + png;
-
-   image = IMG_Load( imageDir.c_str() );
-   if ( image==NULL ) {
-      cout << "\n\t" << SDL_GetError() << "\n\n";
-      exit(EXIT_FAILURE);
-   } else {
-      /// @todo Improve alpha display.
-      if (alpha != SDL_ALPHA_OPAQUE) { // Image transparent
-         SDL_SetColorKey(image, SDL_SRCCOLORKEY|SDL_RLEACCEL, SDL_MapRGB(image->format,0,0,0));
-         SDL_SetAlpha(image, SDL_SRCALPHA|SDL_RLEACCEL, alpha);
-      }
-      this->img = SDL_DisplayFormatAlpha(image);
-      if (this->img) SDL_FreeSurface(image);
-      else this->img = image;
-      // Add the corresponding modifications to the image
-      if (angle != 0) this->img = rotozoomSurface(this->img, angle, 1, SMOOTHING_OFF);
-      if (mirror == X) this->img = zoomSurface(this->img, -1, 1, SMOOTHING_OFF);
-      else if (mirror == Y) this->img = zoomSurface(this->img, 1, -1, SMOOTHING_OFF);
-   }
-}
-
 // Constructor
-image::image(const char *imageName, const int alpha,
-             const int mirror, const int angle
-            ) {
-   name = strdup(imageName);
-   this->alpha = alpha;
-   this->mirror = mirror;
-   this->angle = angle;
+Graphics::Image::Image(const char *image_name, const int alpha,
+                       const int mirror, const int angle
+                      ) {
+  name = strdup(image_name);
+  this->alpha = alpha;
+  this->mirror = mirror;
+  this->angle = angle;
 
-   loadImage();
+  loadImage();
 }
 
 // Destructor
-image::~image(void) {
-   free(name);
-   SDL_FreeSurface(img);
+Graphics::Image::~Image(void) {
+  free(name);
+  SDL_FreeSurface(img);
 }
 
 // Indicates if the given attributes correspond to this image.
-bool image::findImage(const char *imageName, const int alpha,
-                      const int mirror, const int angle
-                     ) {
-   return ( !strcmp(imageName, name) &&
-            alpha == this->alpha &&
-            mirror == this->mirror &&
-            angle == this->angle);
+bool Graphics::Image::findImage(const char *image_name, const int alpha,
+                                const int mirror, const int angle
+                               ) {
+  return ( !strcmp(image_name, name) &&
+           alpha == this->alpha &&
+           mirror == this->mirror &&
+           angle == this->angle );
+}
+
+// Loads an image. If there's an error exits.
+void Graphics::Image::loadImage(void) {
+  SDL_Surface *image;
+
+  // Create a string with the fisical location of the image
+  // "img/" + name + ".png"
+  string img = "img/";
+  string image_name(name);
+  string png = ".png";
+  string image_dir = img + image_name + png;
+
+  image = IMG_Load( image_dir.c_str() );
+  if ( image==NULL ) {
+    cout << "\n\t" << SDL_GetError() << "\n\n";
+    exit(EXIT_FAILURE);
+  } else {
+    /// @todo Improve alpha display.
+    if (alpha != OPAQUE) { // Image transparent
+      SDL_SetColorKey(image, SDL_SRCCOLORKEY|SDL_RLEACCEL, SDL_MapRGB(image->format,0,0,0));
+      SDL_SetAlpha(image, SDL_SRCALPHA|SDL_RLEACCEL, alpha);
+    }
+    this->img = SDL_DisplayFormatAlpha(image);
+    if (this->img)
+      SDL_FreeSurface(image);
+    else
+      this->img = image;
+    // Add the corresponding modifications to the image
+    if (angle != 0) this->img = rotozoomSurface(this->img, angle, 1, SMOOTHING_OFF);
+    if (mirror == X)
+      this->img = zoomSurface(this->img, -1, 1, SMOOTHING_OFF);
+    else if (mirror == Y)
+      this->img = zoomSurface(this->img, 1, -1, SMOOTHING_OFF);
+  }
 }
 
 // ---End---
 
 // class imageList
 
-// Looks for an image in the list.
-image* imageList::findImage(const char *imageName, const int alpha,
-                            const int mirror, const int angle
-                           ) {
-   unsigned int i=0;
-   bool found=false;
-
-   while (i<images.size() && !found) {
-      if ( images[i]->findImage(imageName, alpha, mirror, angle) )
-         found = true;
-      else i++;
-   }
-
-   if (!found) return NULL;
-   else return images[i];
-}
-
-// Looks for an image in the list.
-image* imageList::findImage(SDL_Surface *image) {
-   unsigned int i=0;
-   bool found=false;
-
-   while (i<images.size() && !found) {
-      if ( images[i]->getSurface() == image )
-         found = true;
-      else i++;
-   }
-
-   if (!found) return NULL;
-   else return images[i];
-}
-
 // Destructor
-imageList::~imageList(void) {
-   cout << "Freeing imageList...\t\t";
-   for (unsigned int i=0; i<images.size(); i++) {
-      delete images[i];
-   }
-   cout << "[ ok ]\n";
+Graphics::ImageList::~ImageList(void) {
+  cout << "Freeing imageList...\t\t";
+  for (unsigned int i=0; i<images.size(); i++) {
+    delete images[i];
+  }
+  cout << "[ ok ]\n";
 }
 
 // Loads the image and then places it at
 // the beginning or the list.
-void imageList::addImage(const char *imageName, const int alpha,
-                         const int mirror, const int angle
-                        ) {
-   image *temp;
+void Graphics::ImageList::addImage(const char *image_name, const int alpha,
+                                   const int mirror, const int angle
+                                  ) {
+  Image *temp;
 
-   temp = new image(imageName, alpha, mirror, angle);
-   images.push_back(temp);
+  temp = new Image(image_name, alpha, mirror, angle);
+  images.push_back(temp);
 }
 
 // Returns the surface of an image in the list.
-SDL_Surface* imageList::getSurface(const char *imageName, const int alpha,
-                                   const int mirror, const int angle
-                                  ) {
-   image *temp;
+SDL_Surface* Graphics::ImageList::getSurface(const char *image_name, const int alpha,
+                                             const int mirror, const int angle
+                                            ) {
+  Image *temp;
 
-   temp = findImage(imageName, alpha, mirror, angle);
-   if (temp) return temp->getSurface();
-   else return NULL;
+  temp = findImage(image_name, alpha, mirror, angle);
+  if (temp)
+    return temp->getSurface();
+  else
+    return NULL;
 }
 
 // Returns an image of the list.
-image* imageList::getImage(SDL_Surface *image) {
-   return findImage(image);
+Graphics::Image* Graphics::ImageList::getImage(SDL_Surface *image) {
+  return findImage(image);
+}
+
+// Looks for an image in the list.
+Graphics::Image* Graphics::ImageList::findImage(const char *image_name, const int alpha,
+                                                const int mirror, const int angle
+                                               ) {
+  unsigned int i=0;
+  bool found=false;
+
+  while (i<images.size() && !found) {
+    if ( images[i]->findImage(image_name, alpha, mirror, angle) )
+      found = true;
+    else
+      i++;
+  }
+
+  if (!found)
+    return NULL;
+  else
+    return images[i];
+}
+
+// Looks for an image in the list.
+Graphics::Image* Graphics::ImageList::findImage(SDL_Surface *image) {
+  unsigned int i=0;
+  bool found=false;
+
+  while (i<images.size() && !found) {
+    if ( images[i]->getSurface() == image )
+      found = true;
+    else i++;
+  }
+
+  if (!found)
+    return NULL;
+  else
+    return images[i];
 }
 
 // ---End---

@@ -25,47 +25,50 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "boot.hpp"
 #include "menu_main.hpp"
 
-using namespace std;
+// std
+using std::cout;
+using std::endl;
+using std::string;
 
 int main(int argc, char *argv[]) {
-   // Default options
-   bool fullscreen = false;
-   int width = 1024;
-   int height = 768;
+  // Default options
+  bool fullscreen = false;
+  int width = 1024;
+  int height = 768;
 
-   // Check the programs arguments
-   for (int i=1; i<argc; i++) {
-      const string val(argv[i]);
-      if (val == "-fs" || val == "--full-screen") {
-         fullscreen = true;
-      } else if ( val == "-r" || val == "--resolution") {
-         if ( argc > i+2 ) {
-            width = atoi(argv[i+1]);
-            height = atoi(argv[i+2]);
-            if (!width || !height) { // Go back to default
-               width = 1024;
-               height = 768;
-            }
-            i += 2; // Jump to next arg
-         }
-      } else {
-         /// @todo Change version
-         cout << "\nHeroes of Wesnoth SVN\n"
-              << "\nusage: heroes [OPTIONS]\n"
-              << "  -fs, --full-screen\n"
-              << "        starts the game in full screen mode.\n\n"
-              << "  -r HORIZONTAL_RESOLUTION VERTICAL_RESOLUTION\n"
-              << "        starts the game with the given resolution.\n\n"
-              << "  -h, --help\n"
-              << "        prints this message and exits.\n"
-              << endl;
-         return EXIT_SUCCESS;
+  // Check the programs arguments
+  for (int i=1; i<argc; i++) {
+    const string val(argv[i]);
+    if (val == "-fs" || val == "--full-screen") {
+      fullscreen = true;
+    } else if ( val == "-r" || val == "--resolution") {
+      if ( argc > i+2 ) {
+        width = atoi(argv[i+1]);
+        height = atoi(argv[i+2]);
+        if (!width || !height) { // Go back to default
+          width = 1024;
+          height = 768;
+        }
+        i += 2; // Jump to next arg
       }
-   }
-   // Start the game engine
-   boot(fullscreen, width, height);
-   // Start the main menu
-   startMainMenu();
+    } else {
+      /// @todo Change version
+      cout << "\nHeroes of Wesnoth SVN\n"
+           << "\nusage: heroes [OPTIONS]\n"
+           << "  -fs, --full-screen\n"
+           << "      starts the game in full screen mode.\n\n"
+           << "  -r HORIZONTAL_RESOLUTION VERTICAL_RESOLUTION\n"
+           << "      starts the game with the given resolution.\n\n"
+           << "  -h, --help\n"
+           << "      prints this message and exits.\n"
+           << endl;
+      return EXIT_SUCCESS;
+    }
+  }
+  // Start the game engine
+  boot(fullscreen, width, height);
+  // Start the main menu
+  startMainMenu();
 
-   return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }

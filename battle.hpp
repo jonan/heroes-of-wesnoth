@@ -24,63 +24,64 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "map.hpp"
 
-/// Max creatures for each team (not counting the hero)
-#define MAX_TEAM_UNITS 9
-/// Max units in all the battle
-#define MAX_BATTLE_UNITS 19
-/// Agility needed to get a turn
-#define TURN 10
+#include "macros.hpp"
 
-class hero;
-class unit;
+class Hero;
+class Unit;
 
 /// Controls all the aspects of a battle.
 ///
 /// -no detailed description-
-class battle : public map {
-   private:
-      hero *player;
-      unit *creatures[MAX_TEAM_UNITS];
-      int turns[MAX_BATTLE_UNITS];
-      int turn;
-      bool endBattle;
+class Battle : public Map {
+  public:
+    /// @param[in] player The player's hero.
+    /// @param[in] enemies Array with all the enemies.
+    /// @param[in] num_enemies Number of enemies in the array.
+    Battle(Hero &player, Unit **enemies, const int num_enemies); // Constructor
 
-      // This function is executed in the main loop. If
-      // it returns true, the loop ends, else it continues.
-      bool frame(void);
+    /// Starts the battle.
+    ///
+    /// -no detailed description-
+    virtual void start(void);
 
-      // Function to execute when the user clicks on a cell.
-      void mouseClick(const int x, const int y);
+    /// Returns true if the battle was won.
+    ///
+    /// -no detailed description-
+    ///
+    /// @return true if the battle was won, false if it wasn't.
+    bool win(void);
 
-      // Starts the next turn.
-      void nextTurn(void);
+  private:
+    static const int MAX_TEAM_UNITS = 9; // Not counting the hero.
+    static const int MAX_BATTLE_UNITS = 19;
+    static const int TURN = 10; // Agility needed to get a turn
 
-      // Deletes a creature.
-      void deleteCreature(unit &creature);
+    // This function is executed in the main loop. If
+    // it returns true, the loop ends, else it continues.
+    virtual bool frame(void);
 
-      // Controls the units not controled by the player.
-      void ai(void);
+    // Function to execute when the user clicks on a cell.
+    virtual void mouseClick(const int x, const int y);
 
-      // Function to call whenever there is an animation.
-      void animation(const int sprites);
+    // Starts the next turn.
+    virtual void nextTurn(void);
 
-   public:
-      /// @param[in] player The player's hero.
-      /// @param[in] enemies Array with all the enemies.
-      /// @param[in] numberEnemies Number of enemies in the array.
-      battle(hero &player, unit **enemies, const int numberEnemies); // Constructor
+    // Deletes a creature.
+    void deleteCreature(Unit &creature);
 
-      /// Starts the battle.
-      ///
-      /// -no detailed description-
-      void start(void);
+    // Controls the units not controled by the player.
+    void ai(void);
 
-      /// Returns true if the battle was won.
-      ///
-      /// -no detailed description-
-      ///
-      /// @return true if the battle was won, false if it wasn't.
-      bool win(void);
+    // Function to call whenever there is an animation.
+    void animation(const int sprites);
+
+    Hero *player;
+    Unit *creatures[MAX_TEAM_UNITS];
+    int turns[MAX_BATTLE_UNITS];
+    int turn;
+    bool end_battle;
+
+    DISALLOW_COPY_AND_ASSIGN(Battle);
 };
 
 /// Creates and starts the default.
@@ -92,9 +93,9 @@ void createDefaultBattle(void);
 /// -no detailed description-
 ///
 /// @param[in] player The player's hero.
-/// @param[in] enemyType Type of enemies to face.
-/// @param[in] terrainType Type of terrain where to fight.
+/// @param[in] enemy_type Type of enemies to face.
+/// @param[in] terrain_type Type of terrain where to fight.
 /// @return true if the battle was won, false if it wasn't.
-bool createBattle(hero &player, const char enemyType, const char terrainType);
+bool createBattle(Hero &player, const char enemy_type, const char terrain_type);
 
 #endif // BATTLE_HPP

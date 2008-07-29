@@ -26,48 +26,51 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "map.hpp"
 
-using namespace std;
+#include "macros.hpp"
 
-class hero;
+class Hero;
 
 /// Controls all the aspects of a world.
 ///
 /// -no detailed description-
-class world : public map {
-   private:
-      deque<hero*> players;
-      int turn;
-      int numberEnemies;
-      bool endWorld;
+class World : public Map {
+  public:
+    /// @param[in] map_file File where the map is stored.
+    /// @param[in] width Map's width.
+    /// @param[in] height Map's height 
+    World(const char *map_file, const int width, const int height); // Constructor
 
-      // This function is executed in the main loop. If
-      // it returns true, the loop ends, else it continues.
-      bool frame(void);
+    /// Puts a hero in the map.
+    ///
+    /// -no detailed description-
+    ///
+    /// @param[in] player Hero to put in the map.
+    /// @param[in] x X coordinate of the hero's position.
+    /// @param[in] y Y coordinate of the hero's position.
+    void setHero(Hero &player, const int x, const int y);
 
-      // Function to execute when the user clicks on a cell.
-      void mouseClick(const int x, const int y);
+  private:
+    // This function is executed in the main loop. If
+    // it returns true, the loop ends, else it continues.
+    virtual bool frame(void);
 
-      // Starts the next turn.
-      void nextTurn(void);
+    // Function to execute when the user clicks on a cell.
+    virtual void mouseClick(const int x, const int y);
 
-      // Puts the enemies in the map.
-      void setEnemies(const char *mapFile);
-      // Removes a unit from the world and deletes it.
-      void deleteCreature(cell &position);
+    // Starts the next turn.
+    virtual void nextTurn(void);
 
-   public:
-      /// @param[in] mapFile File where the map is stored.
-      /// @param[in] width Map's width.
-      /// @param[in] height Map's height 
-      world(const char *mapFile, const int width, const int height); // Constructor
-      /// Puts a hero in the map.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] player Hero to put in the map.
-      /// @param[in] x X coordinate of the hero's position.
-      /// @param[in] y Y coordinate of the hero's position.
-      void setHero(hero &player, const int x, const int y);
+    // Puts the enemies in the map.
+    void setEnemies(const char *map_file);
+    // Removes a unit from the world and deletes it.
+    void deleteCreature(Cell &position);
+
+    std::deque<Hero*> players;
+    int turn;
+    int number_enemies;
+    bool end_world;
+
+    DISALLOW_COPY_AND_ASSIGN(World);
 };
 
 #endif // WORLD_HPP

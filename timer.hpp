@@ -24,27 +24,33 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include <SDL/SDL.h>
 
+#include "macros.hpp"
+
 /// Controls the game's speed.
 ///
 /// This class alows you to control the time
 /// that passes bettwen to points of the program.
-class timer {
-   private:
-      Uint32 now; // Actual time.
-      Uint32 before; // The time it was the last time it looked.
+class Timer {
+  public:
+    Timer(void); // Constructor
 
-   public:
-      /// Indicates the starting point.
-      ///
-      /// The moment from which to start counting time. Make
-      /// sure you call end(int) one time every time you use it.
-      void start(void);
-      /// Indicates the ending point.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] ms milliseconds that should pass bettwen the two points.
-      void end(const unsigned int ms);
+    /// Indicates the starting point.
+    ///
+    /// The moment from which to start counting time. Make
+    /// sure you call end(int) one time every time you use it.
+    void start(void);
+    /// Indicates the ending point.
+    ///
+    /// -no detailed description-
+    ///
+    /// @param[in] ms milliseconds that should pass bettwen the two points.
+    void end(const Uint32 ms);
+
+  private:
+    Uint32 now; // Actual time.
+    Uint32 before; // The time it was the last time it looked.
+
+    DISALLOW_COPY_AND_ASSIGN(Timer);
 };
 
 #endif // TIMER_HPP

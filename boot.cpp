@@ -15,45 +15,52 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include "boot.hpp"
+
 #include <ctime>
 #include <cstdlib>
 
-#include "boot.hpp"
 #include "events.hpp"
 #include "graphics.hpp"
 
+// events_engine
+using events_engine::input;
+
+// video_engine
+using video_engine::screen;
+
+using video_engine::OPAQUE;
+
+using video_engine::NONE;
+
 // Loads the engine's global objects.
 void startEngine(const bool fullscreen, const int width, const int height) {
-   srand( time(NULL) ); // Set seed for random numbers
-   screen = new graphics(fullscreen, width, height);
-   input = new events;
-}
-
-// Frees the engine's global objects.
-void freeEngine(void) {
-   delete input;
-   delete screen;
+  srand( time(NULL) ); // Set seed for random numbers
+  screen = video_engine::Graphics::instance(fullscreen, width, height);
+  input = events_engine::Events::instance();
 }
 
 // Loads the images that will be used almost every
 // time the game is executed.
 void loadMainImages(void) {
-   screen->newImage("alpha", 50);
-   screen->newImage("button");
-   screen->newImage("button-active");
-   screen->newImage("button-pressed");
-   screen->newImage("heroes-logo");
-   screen->newImage("wesnoth");
+  screen->newImage("alpha", 50, NONE, 0);
+  screen->newImage("button", OPAQUE, NONE, 0);
+  screen->newImage("button-active", OPAQUE, NONE, 0);
+  screen->newImage("button-pressed", OPAQUE, NONE, 0);
+  screen->newImage("heroes-logo", OPAQUE, NONE, 0);
+  screen->newImage("wesnoth", OPAQUE, NONE, 0);
+  // Images to soften terrains.
+  // They are always loaded and it shouldn't be like that,
+  // but until that is fixed, better loading them at boot time.
 }
 
 // Starts the engine and loads the main images.
 void boot(const bool fullscreen, const int width, const int height) {
-   startEngine(fullscreen, width, height);
-   atexit(freeEngine);
-   loadMainImages();
+  startEngine(fullscreen, width, height);
+  loadMainImages();
 }
 
 // Exits the game.
 void quit(void) {
-   exit(EXIT_SUCCESS);
+  exit(EXIT_SUCCESS);
 }

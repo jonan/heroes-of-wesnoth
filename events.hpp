@@ -24,62 +24,49 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include <SDL/SDL.h>
 
-/// Number of keys in a keyboard
-#define NUM_KEYS 323
+#include "macros.hpp"
 
-// @{
-/// Types of events
-#define NO_EVENT    0
-#define KEYBOARD    1
-#define MOUSE       2
-#define SYSTEM      3
-// @}
+/// All functions related to events.
+///
+/// -no detailed description-
+namespace events_engine {
 
-// @{
-/// Types of system events
-#define QUIT        0
-#define VIDEOEXPOSE 1
-// @}
-
-// @{
 /// Mouse info
-#define POSITION_X    0
-#define POSITION_Y    1
-#define BUTTON        2
-// @}
+enum {POSITION_X, POSITION_Y, BUTTON};
 
-// @{
 /// Mouse buttons
-#define NONE                 0
-#define BUTTON_LEFT          1
-#define BUTTON_MIDDLE        2
-#define BUTTON_RIGHT         3
-#define WHEEL_UP             4
-#define WHEEL_DOWN           5
-// @}
+enum {NONE, BUTTON_LEFT, BUTTON_MIDDLE, BUTTON_RIGHT, WHEEL_UP, WHEEL_DOWN};
 
 /// Event control.
 ///
 /// Tells you when has an event has occur. This event can be a system event (redimension,
 /// close, redraw, etc.) or user event (keyboard or mouse). Once the event has occur,
 /// gives you complete information about it.
-class events {
-   private:
-      SDL_Event event;
+class Events {
+  public:
+    static Events* instance(void); // Singleton pattern constructor
+    ~Events(void); // Destructor
 
-   public:
-      events(void); // Constructor
-      ~events(void); // Destructor
+    /// Reads the input from mouse, keyboard and system.
+    ///
+    /// Gets the input and stores the information obtained
+    /// (must be called before any other events function).
+    void readInput(void);
 
-      /// Reads the input from mouse, keyboard and system.
-      ///
-      /// Gets the input and stores the information obtained
-      /// (must be called before any other events function).
-      void readInput(void);
+  private:
+    static const int NUM_KEYS = 323;
+
+    Events(void); // Constructor
+
+    SDL_Event event;
+
+    DISALLOW_COPY_AND_ASSIGN(Events);
 };
 
-extern events *input;
+extern Events *input;
 extern bool *keys; // Stores the state of each keyboard key
 extern int *mouse; // Mouse info
+
+} // namespace events_engine
 
 #endif // EVENTS_HPP

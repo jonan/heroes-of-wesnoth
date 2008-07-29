@@ -15,6 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include "menu_main.hpp"
+
 #include <cstdlib>
 
 #include "battle.hpp"
@@ -24,59 +26,70 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "graphics.hpp"
 #include "loop.hpp"
 #include "menu.hpp"
-#include "menu_main.hpp"
 #include "mission.hpp"
 
+//events_engine
+using events_engine::mouse;
+
+using events_engine::POSITION_X;
+using events_engine::POSITION_Y;
+using events_engine::BUTTON;
+
+using events_engine::BUTTON_LEFT;
+
+// video_engine
+using video_engine::screen;
+
 SDL_Rect background_pos, menu_pos, logo_pos;
-menu *mainMenu;
+Menu *main_menu;
 
 // Set's all the position variables that the menu needs.
 void setPositions(void) {
-   menu_pos.x = 465;
-   menu_pos.y = 500;
-   menu_pos.w = 108;
-   menu_pos.h = 22;
+  menu_pos.x = 465;
+  menu_pos.y = 500;
+  menu_pos.w = 108;
+  menu_pos.h = 22;
 
-   background_pos.x = 0;
-   background_pos.y = 0;
-   background_pos.w = 1024;
-   background_pos.h = 768;
+  background_pos.x = 0;
+  background_pos.y = 0;
+  background_pos.w = 1024;
+  background_pos.h = 768;
 
-   logo_pos.x = 120;
-   logo_pos.y = 70;
-   logo_pos.w = 777;
-   logo_pos.h = 385;
+  logo_pos.x = 120;
+  logo_pos.y = 70;
+  logo_pos.w = 777;
+  logo_pos.h = 385;
 }
 
 // Draws the menu's background
 void drawBackground(void) {
-   screen->draw("wesnoth", background_pos);
-   screen->draw("heroes-logo", logo_pos);
+  screen->draw("wesnoth", background_pos);
+  screen->draw("heroes-logo", logo_pos);
 }
 
 // Draws the menu.
 bool drawMenu(void) {
-   mainMenu->moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]==BUTTON_LEFT);
-   mainMenu->draw();
-   return false; // To continue in the loop.
+  main_menu->moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]==BUTTON_LEFT);
+  main_menu->draw();
+  return false; // To continue in the loop.
 }
 
 // Creates the menu.
 void createMenu(void) {
-   mainMenu = new menu(menu_pos);
-   mainMenu->addButton("Mission1", mission1);
-   mainMenu->addButton("Mission2", mission2);
-   mainMenu->addButton("Mission3", mission3);
-   mainMenu->addButton("Battle", createDefaultBattle);
-   mainMenu->addButton("Editor", startEditor);
-   mainMenu->addButton("Quit", quit);
-   mainMenu->addBackground(drawBackground);
+  main_menu = new Menu(menu_pos);
+  main_menu->addButton("Mission1", mission1);
+  main_menu->addButton("Mission2", mission2);
+  main_menu->addButton("Mission3", mission3);
+  main_menu->addButton("Battle", createDefaultBattle);
+  main_menu->addButton("Editor", startEditor);
+  main_menu->addButton("Quit", quit);
+  main_menu->addBackground(drawBackground);
 }
 
 // Creates and starts the main menu.
 void startMainMenu(void) {
-   setPositions();
-   createMenu();
-   loop(drawMenu);
-   delete mainMenu;
+  setPositions();
+  createMenu();
+  loop(drawMenu);
+  delete main_menu;
 }

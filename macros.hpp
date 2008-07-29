@@ -15,22 +15,16 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-#include "timer.hpp"
+/// @file
+/// Macros used in different files of the code.
+/// @author Jonan
 
-Timer::Timer(void) {
-  start();
-}
+#ifndef MACROS_HPP
+#define MACROS_HPP
 
-// The moment from which to start counting time. Make
-// sure you call endFPS(int) one time every time you use it.
-void Timer::start(void) {
-  now = before = SDL_GetTicks();
-}
+/// A macro to disallow the copy constructor and operator= functions.
+#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
+  TypeName(const TypeName&);               \
+  void operator=(const TypeName&)
 
-// Indicates the ending point.
-void Timer::end(const Uint32 ms) {
-  now = SDL_GetTicks();
-
-  if ( (now-before) < ms )
-    SDL_Delay( ms - (now - before) );
-}
+#endif // MACROS_HPP

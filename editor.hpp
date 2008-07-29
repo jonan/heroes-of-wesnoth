@@ -24,36 +24,40 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "map.hpp"
 
+#include "macros.hpp"
+
 /// The map editor.
 ///
 /// -no detailed description-
-class editor : public map {
-   private:
-      char actualTerrain;
-      bool endEditor;
+class Editor : public Map {
+  public:
+    /// @param[in] width Map's width.
+    /// @param[in] height Map's height 
+    Editor(const int width, const int height); // Constructor
 
-      // Function to execute when the user clicks on a cell.
-      void mouseClick(const int x, const int y);
+  private:
+    // Function to execute when the user clicks on a cell.
+    virtual void mouseClick(const int x, const int y);
 
-      // This function is executed in the main loop. If
-      // it returns true, the loop ends, else it continues.
-      bool frame(void);
+    // This function is executed in the main loop. If
+    // it returns true, the loop ends, else it continues.
+    virtual bool frame(void);
 
-      // Does nothing but it's necessary when inheriting from map.
-      void nextTurn(void) {};
+    // Does nothing but it's necessary when inheriting from map.
+    virtual void nextTurn(void) {};
 
-      // Saves the current map in the file.
-      void save(void);
-      // Loads the map from the file.
-      void load(void);
+    // Saves the current map in the file.
+    void save(void);
+    // Loads the map from the file.
+    void load(void);
 
-      // Draws the editor in the screen.
-      void draw(void);
+    // Draws the editor in the screen.
+    virtual void draw(void);
 
-   public:
-      /// @param[in] width Map's width.
-      /// @param[in] height Map's height 
-      editor(const int width, const int height); // Constructor
+    char actual_terrain;
+    bool end_editor;
+
+    DISALLOW_COPY_AND_ASSIGN(Editor);
 };
 
 // Starts the editor.

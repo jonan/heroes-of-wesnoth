@@ -24,142 +24,149 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include <SDL/SDL.h>
 
-// @{
+#include "macros.hpp"
+
+/// All functions that operate directly with the video.
+///
+/// -no detailed description-
+namespace video_engine {
+
+/// Alpha value
+const int OPAQUE = 255;
+
 /// Mirror
-#define NONE 0
-#define X    1
-#define Y    2
-// @}
+enum {NONE, X, Y};
 
-// @{
 /// Type of effects
-#define HORIZONTAL        0
-#define VERTICAL          1
-#define NUMBER_OF_EFFECTS 2
-// @}
+enum {HORIZONTAL, VERTICAL, NUMBER_OF_EFFECTS, RANDOM};
 
-// @{
 /// Sides to face
-#define RIGHT 0
-#define LEFT  1
-// @}
-
-class imageList;
-class ttf;
+enum {RIGHT, LEFT};
 
 /// Complete screen control.
 ///
 /// This class gives you all the control you need over the screen.
 /// The game is played in one screen so there should
 /// only be one object of this type.
-class graphics {
-   private:
-      SDL_Surface *screen; // The surface that represents the screen
-      int width, height; // The screen's witdh and height
-      imageList *images; // List with all the images used
-      ttf *text; // Used to write text into the screen
+class Graphics {
+  public:
+    /// @param[in] fullscreen Indicates if it's supposed to run on fullscreen.
+    /// @param[in] width Screen's width.
+    /// @param[in] height Screen's height.
+    static Graphics* instance(const bool fullscreen, int width, int height); // Singleton pattern constructor
+    ~Graphics(void); // Destructor
 
-      // Initializes SDL, SDL_ttf and SDL_mixer.
-      void init(void);
-      // Creates the surface that will be drawn directly to the screen.
-      void createWindow(const bool fullscreen, const int width, const int height, const int bpp);
+    /// Returns the surface of an image.
+    ///
+    /// Looks for the image in the list of loaded
+    /// ones, if it's not there it loads it.
+    ///
+    /// @param[in] image_name The image's name, without the "img/" or the ".png".
+    /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
+    /// @param[in] mirror Indicates if the image is a mirror of the original.
+    /// @param[in] angle Number of degrees the image is rotated.
+    /// @return Surface of the image.
+    SDL_Surface* getImage(const char *image_name, const int alpha,
+                          const int mirror, const int angle);
 
-   public:
-      /// @param[in] fullscreen Indicates if it's supposed to run on fullscreen.
-      /// @param[in] width Screen's width.
-      /// @param[in] height Screen's height.
-      graphics(const bool fullscreen, int width, int height); // Constructor
-      ~graphics(void); // Destructor
+    /// Returns the actual screen's size.
+    ///
+    ///  -no detailed description-
+    ///
+    /// @param[out] width The screen's width.
+    /// @param[out] height The screen's height.
+    void getScreenSize(int &width, int &height);
 
-      /// Returns the surface of an image.
-      ///
-      /// Looks for the image in the list of loaded
-      /// ones, if it's not there it loads it.
-      ///
-      /// @param[in] imageName The image's name, without the "img/" or the ".png".
-      /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
-      /// @param[in] mirror Indicates if the image is a mirror of the original.
-      /// @param[in] angle Number of degrees the image is rotated.
-      /// @return Surface of the image.
-      SDL_Surface* getImage(const char *imageName, const int alpha = SDL_ALPHA_OPAQUE,
-                            const int mirror = NONE, const int angle = 0);
+    /// Makes an image face the given side.
+    ///
+    ///  -no detailed description-
+    ///
+    /// @param[in] side Side to face.
+    /// @param[in] image_surface Original image.
+    /// @return The same image facing the given side.
+    SDL_Surface* face(const int side, SDL_Surface *image_surface);
 
-      /// Returns the actual screen's size.
-      ///
-      ///  -no detailed description-
-      ///
-      /// @param[out] width The screen's width.
-      /// @param[out] height The screen's height.
-      void getScreenSize(int &width, int &height);
+    /// Loads an image for further use.
+    ///
+    /// Adds a new image to the list
+    ///
+    /// @param[in] image_name The image's name, without the "img/" or the ".png".
+    /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
+    /// @param[in] mirror Indicates if the image is a mirror of the original.
+    /// @param[in] angle Number of degrees the image is rotated.
+    void newImage(const char *image_name, const int alpha,
+                  const int mirror, const int angle);
 
-      /// Makes an image face the given side.
-      ///
-      ///  -no detailed description-
-      ///
-      /// @param[in] side Side to face.
-      /// @param[in] imageSurface Original image.
-      /// @return The same image facing the given side.
-      SDL_Surface* face(const int side, SDL_Surface *imageSurface);
+    /// Draws an image to the indicated position.
+    ///
+    /// Before drawing looks for the image in the list
+    /// of loaded ones, if it's not there it loads it.
+    ///
+    /// @param[in] image_name The image's name, without the "img/" or the ".png".
+    /// @param[in] position Position where the image will be drawn.
+    void draw(const char *image_name, SDL_Rect &position);
+    /// Draws a surface to the indicated position.
+    ///
+    /// -no detailed description-
+    ///
+    /// @param[in] img The images's surface.
+    /// @param[in] position Position where the image will be drawn.
+    void draw(SDL_Surface *img, SDL_Rect &position);
+    /// Writes text in the screen.
+    ///
+    /// -no detailed description-
+    ///
+    /// @param[in] text Text to be writen.
+    /// @param[in] x The x coordinate of the top left corner of the text.
+    /// @param[in] y The y coordinate of the top left corner of the text.
+    void write(const char *text,  const int x, const int y);
 
-      /// Loads an image for further use.
-      ///
-      /// Adds a new image to the list
-      ///
-      /// @param[in] imageName The image's name, without the "img/" or the ".png".
-      /// @param[in] alpha Alpha value of the image (0 transparent - 255 opaque).
-      /// @param[in] mirror Indicates if the image is a mirror of the original.
-      /// @param[in] angle Number of degrees the image is rotated.
-      void newImage(const char *imageName, const int alpha = SDL_ALPHA_OPAQUE,
-                    const int mirror = NONE, const int angle = 0);
+    /// Puts the screen black.
+    ///
+    /// -no detailed description-
+    void erase(void);
+    /// Refreshes the screen.
+    ///
+    /// -no detailed description-
+    void update(void);
 
-      /// Draws an image to the indicated position.
-      ///
-      /// Before drawing looks for the image in the list
-      /// of loaded ones, if it's not there it loads it.
-      ///
-      /// @param[in] imageName The image's name, without the "img/" or the ".png".
-      /// @param[in] position Position where the image will be drawn.
-      void draw(const char *imageName, SDL_Rect &position);
-      /// Draws a surface to the indicated position.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] img The images's surface.
-      /// @param[in] position Position where the image will be drawn.
-      void draw(SDL_Surface *img, SDL_Rect &position);
-      /// Writes text in the screen.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] text Text to be writen.
-      /// @param[in] x The x coordinate of the top left corner of the text.
-      /// @param[in] y The y coordinate of the top left corner of the text.
-      void write(const char *text,  const int x, const int y);
+    /// Refreshes the screen with an especial effect.
+    ///
+    /// -no detailed description-
+    ///
+    /// @param[in] effect Type of effect to use.
+    void transitionEffect(int effect);
 
-      /// Puts the screen black.
-      ///
-      /// -no detailed description-
-      void erase(void);
-      /// Refreshes the screen.
-      ///
-      /// -no detailed description-
-      void update(void);
+    /// Stops the program a number of milisecons.
+    ///
+    /// -no detailed description-
+    ///
+    /// @param[in] ms Milisecons to wait.
+    void wait(const int ms) {SDL_Delay(ms);}
 
-      /// Refreshes the screen with an especial effect.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] effect Effect to use. If it's -1 the effect is choseen randomly.
-      void transitionEffect(int effect = -1);
+  private:
+    Graphics(const bool fullscreen, int width, int height); // Constructor
 
-      /// Stops the program a number of milisecons.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] ms Milisecons to wait.
-      void wait(const int ms);
+    // Initializes SDL, SDL_ttf and SDL_mixer.
+    void init(void);
+    // Creates the surface that will be drawn directly to the screen.
+    void createWindow(const bool fullscreen, const int width, const int height, const int bpp);
+
+    // Declaration of nested classes
+    class Image;
+    class ImageList;
+    class Ttf;
+
+    SDL_Surface *screen; // The surface that represents the screen
+    int width, height; // The screen's witdh and height
+    ImageList *images; // List with all the images used
+    Ttf *text; // Used to write text into the screen
+
+    DISALLOW_COPY_AND_ASSIGN(Graphics);
 };
 
-extern graphics *screen;
+extern Graphics *screen;
+
+} // namespace video_engine
 
 #endif // GRAPHICS_HPP

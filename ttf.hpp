@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// The ttf class.
+/// The ttf class (can only be used why graphics).
 /// @author Jonan
 
 #ifndef TTF_HPP
@@ -24,32 +24,37 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include <SDL/SDL_ttf.h>
 
+#include "graphics.hpp"
+
+#include "macros.hpp"
+
 /// @todo Add options to change color, size, etc.
 
 /// Represents text on the screen.
 ///
-/// This class is only meant to be used by graphics, which
-/// controls every single thing represented on the screen.
-class ttf{
-   private:
-      TTF_Font *font;
-      SDL_Surface *textSurface;
-      SDL_Rect position;
-      SDL_Color color;
+/// -no detailed description-
+class video_engine::Graphics::Ttf {
+  public:
+    Ttf(void); // Constructor
+    ~Ttf(void); // Destrucor
 
-   public:
-      ttf(void); // Constructor
-      ~ttf(void); // Destrucor
+    /// Writes a text into a surface.
+    ///
+    /// -no detailed description-
+    ///
+    /// @param[in] text A string with the text to write.
+    /// @param[in] surface The surface where to draw the text.
+    /// @param[in] x The x coordinate of the top left corner of the text.
+    /// @param[in] y The y coordinate of the top left corner of the text.
+    void write(const char *text, SDL_Surface *surface, const int x, const int y);
 
-      /// Writes a text into a surface.
-      ///
-      /// -no detailed description-
-      ///
-      /// @param[in] text A string with the text to write.
-      /// @param[in] surface The surface where to draw the text.
-      /// @param[in] x The x coordinate of the top left corner of the text.
-      /// @param[in] y The y coordinate of the top left corner of the text.
-      void write(const char *text, SDL_Surface *surface, const int x, const int y);
+  private:
+    TTF_Font *font;
+    SDL_Surface *text_surface;
+    SDL_Rect position;
+    SDL_Color color;
+
+    DISALLOW_COPY_AND_ASSIGN(Ttf);
 };
 
 #endif // TTF_HPP

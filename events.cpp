@@ -17,60 +17,70 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "events.hpp"
 
-// Constructor
-events::events(void) {
-   keys = new bool[NUM_KEYS];
-   mouse = new int[3];
+namespace events_engine {
 
-   // Set all keys to false
-   for (int i = 0; i < NUM_KEYS; i++)
-      keys[i] = false;
-   // Clear mouse info
-   for (int j = 0; j < 3; j++)
-      mouse[j] = 0;
-
-   // Mouse motion events won't go to the SDL queue
-   SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
+// Singleton pattern constructor
+Events* Events::instance(void) {
+  static Events inst;
+  return &inst;
 }
 
 // Destructor
-events::~events(void) {
-   delete [] keys;
-   delete [] mouse;
+Events::~Events(void) {
+  delete [] keys;
+  delete [] mouse;
 }
 
 // Gets the input and stores the information obtained
 // (must be called before any other events function).
-void events::readInput(void) {
-   SDL_GetMouseState(&mouse[POSITION_X], &mouse[POSITION_Y]);
-   while (SDL_PollEvent(&event)) {
-      // MOUSE
-      if (event.type == SDL_MOUSEBUTTONDOWN) {
-         if (event.button.button == SDL_BUTTON_LEFT)
-            mouse[BUTTON] = BUTTON_LEFT;
-         else if (event.button.button == SDL_BUTTON_MIDDLE)
-            mouse[BUTTON] = BUTTON_MIDDLE;
-         else if (event.button.button == SDL_BUTTON_RIGHT)
-            mouse[BUTTON] = BUTTON_RIGHT;
-         else if (event.button.button == SDL_BUTTON_WHEELUP)
-            mouse[BUTTON] = WHEEL_UP;
-         else if (event.button.button == SDL_BUTTON_WHEELDOWN)
-            mouse[BUTTON] = WHEEL_DOWN;
-      }
-      else if (event.type == SDL_MOUSEBUTTONUP) {
-         if (mouse[BUTTON] != WHEEL_UP && mouse[BUTTON] != WHEEL_DOWN)
-            mouse[BUTTON] = NONE;
-      }
-      // KEYBOARD
-      else if (event.type == SDL_KEYDOWN) {
-         keys[event.key.keysym.sym] = true;
-      }
-      else if (event.type == SDL_KEYUP) {
-         keys[event.key.keysym.sym] = false;
-      }
-   }
+void Events::readInput(void) {
+  SDL_GetMouseState(&mouse[POSITION_X], &mouse[POSITION_Y]);
+  while (SDL_PollEvent(&event)) {
+    // MOUSE
+    if (event.type == SDL_MOUSEBUTTONDOWN) {
+      if (event.button.button == SDL_BUTTON_LEFT)
+        mouse[BUTTON] = BUTTON_LEFT;
+      else if (event.button.button == SDL_BUTTON_MIDDLE)
+        mouse[BUTTON] = BUTTON_MIDDLE;
+      else if (event.button.button == SDL_BUTTON_RIGHT)
+        mouse[BUTTON] = BUTTON_RIGHT;
+      else if (event.button.button == SDL_BUTTON_WHEELUP)
+        mouse[BUTTON] = WHEEL_UP;
+      else if (event.button.button == SDL_BUTTON_WHEELDOWN)
+        mouse[BUTTON] = WHEEL_DOWN;
+    }
+    else if (event.type == SDL_MOUSEBUTTONUP) {
+      if (mouse[BUTTON] != WHEEL_UP && mouse[BUTTON] != WHEEL_DOWN)
+        mouse[BUTTON] = NONE;
+    }
+    // KEYBOARD
+    else if (event.type == SDL_KEYDOWN) {
+      keys[event.key.keysym.sym] = true;
+    }
+    else if (event.type == SDL_KEYUP) {
+      keys[event.key.keysym.sym] = false;
+    }
+  }
 }
 
-events *input = NULL;
+// Constructor
+Events::Events(void) {
+  keys = new bool[NUM_KEYS];
+  mouse = new int[3];
+
+  // Set all keys to false
+  for (int i = 0; i < NUM_KEYS; i++)
+    keys[i] = false;
+  // Clear mouse info
+  for (int j = 0; j < 3; j++)
+    mouse[j] = 0;
+
+  // Mouse motion events won't go to the SDL queue
+  SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
+}
+
+Events *input = NULL;
 bool *keys = NULL;
 int *mouse = NULL;
+
+} // namespace events_engine

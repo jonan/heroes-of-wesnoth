@@ -15,801 +15,849 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include "map.hpp"
+
 #include <SDL/SDL.h>
 
 #include "cell.hpp"
 #include "graphics.hpp"
-#include "map.hpp"
 
-using namespace std;
+// video_engine
+using video_engine::screen;
 
-#define ADD_CAVE_FLOOR              0
-#define ADD_CAVE_HILLS              1
-#define ADD_DESERT                  2
-#define ADD_DESERT_HILLS            3
-#define ADD_DESERT_MOUNTAIN         4
-#define ADD_DESERT_ROAD             5
-#define ADD_DESERT_SAND             6
-#define ADD_FLAT_DIRT               7
-#define ADD_FLAT_GRASS              8
-#define ADD_FLAT_GRASS_TO_WATER     9
-#define ADD_FLAT_ROAD              10
-#define ADD_FLAT_SAVANNA           11
-#define ADD_FLAT_SAVANNA_TO_WATER  12
-#define ADD_FLAT_STONE_PATH        13
-#define ADD_HILLS                  14
-#define ADD_LAVA                   15
-#define ADD_WATER_COAST            16
-#define ADD_WATER_FORD             17
-#define ADD_WATER_ICE              18
-#define ADD_WATER_ICE_TO_WATER     19
-#define ADD_WATER_SNOW             20
-#define ADD_WATER_SNOW_HILLS       21
+using video_engine::OPAQUE;
+
+using video_engine::NONE;
+
+enum {ADD_CAVE_FLOOR,
+      ADD_CAVE_HILLS,
+      ADD_DESERT,
+      ADD_DESERT_HILLS,
+      ADD_DESERT_MOUNTAIN,
+      ADD_DESERT_ROAD,
+      ADD_DESERT_SAND,
+      ADD_FLAT_DIRT,
+      ADD_FLAT_GRASS,
+      ADD_FLAT_GRASS_TO_WATER,
+      ADD_FLAT_ROAD,
+      ADD_FLAT_SAVANNA,
+      ADD_FLAT_SAVANNA_TO_WATER,
+      ADD_FLAT_STONE_PATH,
+      ADD_HILLS,
+      ADD_LAVA,
+      ADD_WATER_COAST,
+      ADD_WATER_FORD,
+      ADD_WATER_ICE,
+      ADD_WATER_ICE_TO_WATER,
+      ADD_WATER_SNOW,
+      ADD_WATER_SNOW_HILLS};
 
 // Sets the images needed to soften the map.
 void initializeVariables(SDL_Surface **one, SDL_Surface **two,
                          SDL_Surface **three, SDL_Surface **four,
                          int type
                         ) {
-   if (type == ADD_CAVE_FLOOR) {
-      one[0] = screen->getImage("terrain/cave/floor-n");
-      one[1] = screen->getImage("terrain/cave/floor-ne");
-      one[2] = screen->getImage("terrain/cave/floor-se");
-      one[3] = screen->getImage("terrain/cave/floor-s");
-      one[4] = screen->getImage("terrain/cave/floor-sw");
-      one[5] = screen->getImage("terrain/cave/floor-nw");
+  switch (type) {
+    case ADD_CAVE_FLOOR:
+      one[0] = screen->getImage("terrain/cave/floor-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/cave/floor-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/cave/floor-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/cave/floor-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/cave/floor-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/cave/floor-nw", OPAQUE, NONE, 0);
 
-      two[0] = screen->getImage("terrain/cave/floor-n-ne");
-      two[1] = screen->getImage("terrain/cave/floor-ne-se");
-      two[2] = screen->getImage("terrain/cave/floor-se-s");
-      two[3] = screen->getImage("terrain/cave/floor-s-sw");
-      two[4] = screen->getImage("terrain/cave/floor-sw-nw");
-      two[5] = screen->getImage("terrain/cave/floor-nw-n");
+      two[0] = screen->getImage("terrain/cave/floor-n-ne", OPAQUE, NONE, 0);
+      two[1] = screen->getImage("terrain/cave/floor-ne-se", OPAQUE, NONE, 0);
+      two[2] = screen->getImage("terrain/cave/floor-se-s", OPAQUE, NONE, 0);
+      two[3] = screen->getImage("terrain/cave/floor-s-sw", OPAQUE, NONE, 0);
+      two[4] = screen->getImage("terrain/cave/floor-sw-nw", OPAQUE, NONE, 0);
+      two[5] = screen->getImage("terrain/cave/floor-nw-n", OPAQUE, NONE, 0);
 
       *three = NULL;
       *four = NULL;
-   } else if (type == ADD_CAVE_HILLS) {
-      one[0] = screen->getImage("terrain/cave/hills-n");
-      one[1] = screen->getImage("terrain/cave/hills-ne");
-      one[2] = screen->getImage("terrain/cave/hills-se");
-      one[3] = screen->getImage("terrain/cave/hills-s");
-      one[4] = screen->getImage("terrain/cave/hills-sw");
-      one[5] = screen->getImage("terrain/cave/hills-nw");
+      break;
+    case ADD_CAVE_HILLS:
+      one[0] = screen->getImage("terrain/cave/hills-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/cave/hills-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/cave/hills-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/cave/hills-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/cave/hills-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/cave/hills-nw", OPAQUE, NONE, 0);
 
       *two = NULL;
       *three = NULL;
       *four = NULL;
-   } else if (type == ADD_DESERT) {
-      one[0] = screen->getImage("terrain/desert/desert-n");
-      one[1] = screen->getImage("terrain/desert/desert-ne");
-      one[2] = screen->getImage("terrain/desert/desert-se");
-      one[3] = screen->getImage("terrain/desert/desert-s");
-      one[4] = screen->getImage("terrain/desert/desert-sw");
-      one[5] = screen->getImage("terrain/desert/desert-nw");
+      break;
+    case ADD_DESERT:
+      one[0] = screen->getImage("terrain/desert/desert-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/desert/desert-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/desert/desert-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/desert/desert-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/desert/desert-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/desert/desert-nw", OPAQUE, NONE, 0);
 
-      two[0] = screen->getImage("terrain/desert/desert-n-ne");
-      two[1] = screen->getImage("terrain/desert/desert-ne-se");
-      two[2] = screen->getImage("terrain/desert/desert-se-s");
-      two[3] = screen->getImage("terrain/desert/desert-s-sw");
-      two[4] = screen->getImage("terrain/desert/desert-sw-nw");
-      two[5] = screen->getImage("terrain/desert/desert-nw-n");
+      two[0] = screen->getImage("terrain/desert/desert-n-ne", OPAQUE, NONE, 0);
+      two[1] = screen->getImage("terrain/desert/desert-ne-se", OPAQUE, NONE, 0);
+      two[2] = screen->getImage("terrain/desert/desert-se-s", OPAQUE, NONE, 0);
+      two[3] = screen->getImage("terrain/desert/desert-s-sw", OPAQUE, NONE, 0);
+      two[4] = screen->getImage("terrain/desert/desert-sw-nw", OPAQUE, NONE, 0);
+      two[5] = screen->getImage("terrain/desert/desert-nw-n", OPAQUE, NONE, 0);
 
-      three[0] = screen->getImage("terrain/desert/desert-n-ne-se");
-      three[1] = screen->getImage("terrain/desert/desert-ne-se-s");
-      three[2] = screen->getImage("terrain/desert/desert-se-s-sw");
-      three[3] = screen->getImage("terrain/desert/desert-s-sw-nw");
-      three[4] = screen->getImage("terrain/desert/desert-sw-nw-n");
-      three[5] = screen->getImage("terrain/desert/desert-nw-n-ne");
+      three[0] = screen->getImage("terrain/desert/desert-n-ne-se", OPAQUE, NONE, 0);
+      three[1] = screen->getImage("terrain/desert/desert-ne-se-s", OPAQUE, NONE, 0);
+      three[2] = screen->getImage("terrain/desert/desert-se-s-sw", OPAQUE, NONE, 0);
+      three[3] = screen->getImage("terrain/desert/desert-s-sw-nw", OPAQUE, NONE, 0);
+      three[4] = screen->getImage("terrain/desert/desert-sw-nw-n", OPAQUE, NONE, 0);
+      three[5] = screen->getImage("terrain/desert/desert-nw-n-ne", OPAQUE, NONE, 0);
 
       *four = NULL;
-   } else if (type == ADD_DESERT_HILLS) {
-      one[0] = screen->getImage("terrain/desert/desert-hills-n");
-      one[1] = screen->getImage("terrain/desert/desert-hills-ne");
-      one[2] = screen->getImage("terrain/desert/desert-hills-se");
-      one[3] = screen->getImage("terrain/desert/desert-hills-s");
-      one[4] = screen->getImage("terrain/desert/desert-hills-sw");
-      one[5] = screen->getImage("terrain/desert/desert-hills-nw");
+      break;
+    case ADD_DESERT_HILLS:
+      one[0] = screen->getImage("terrain/desert/desert-hills-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/desert/desert-hills-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/desert/desert-hills-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/desert/desert-hills-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/desert/desert-hills-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/desert/desert-hills-nw", OPAQUE, NONE, 0);
 
       *two = NULL;
       *three = NULL;
       *four = NULL;
-   } else if (type == ADD_DESERT_MOUNTAIN) {
-      one[0] = screen->getImage("terrain/desert/desert-mountains-n");
-      one[1] = screen->getImage("terrain/desert/desert-mountains-ne");
-      one[2] = screen->getImage("terrain/desert/desert-mountains-se");
-      one[3] = screen->getImage("terrain/desert/desert-mountains-s");
-      one[4] = screen->getImage("terrain/desert/desert-mountains-sw");
-      one[5] = screen->getImage("terrain/desert/desert-mountains-nw");
+      break;
+    case ADD_DESERT_MOUNTAIN:
+      one[0] = screen->getImage("terrain/desert/desert-mountains-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/desert/desert-mountains-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/desert/desert-mountains-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/desert/desert-mountains-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/desert/desert-mountains-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/desert/desert-mountains-nw", OPAQUE, NONE, 0);
 
       *two = NULL;
       *three = NULL;
       *four = NULL;
-   } else if (type == ADD_DESERT_ROAD) {
-      one[0] = screen->getImage("terrain/desert/desert-road-n");
-      one[1] = screen->getImage("terrain/desert/desert-road-ne");
-      one[2] = screen->getImage("terrain/desert/desert-road-se");
-      one[3] = screen->getImage("terrain/desert/desert-road-s");
-      one[4] = screen->getImage("terrain/desert/desert-road-sw");
-      one[5] = screen->getImage("terrain/desert/desert-road-nw");
+      break;
+    case ADD_DESERT_ROAD:
+      one[0] = screen->getImage("terrain/desert/desert-road-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/desert/desert-road-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/desert/desert-road-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/desert/desert-road-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/desert/desert-road-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/desert/desert-road-nw", OPAQUE, NONE, 0);
 
-      two[0] = screen->getImage("terrain/desert/desert-road-n-ne");
-      two[1] = screen->getImage("terrain/desert/desert-road-ne-se");
-      two[2] = screen->getImage("terrain/desert/desert-road-se-s");
-      two[3] = screen->getImage("terrain/desert/desert-road-s-sw");
-      two[4] = screen->getImage("terrain/desert/desert-road-sw-nw");
-      two[5] = screen->getImage("terrain/desert/desert-road-nw-n");
+      two[0] = screen->getImage("terrain/desert/desert-road-n-ne", OPAQUE, NONE, 0);
+      two[1] = screen->getImage("terrain/desert/desert-road-ne-se", OPAQUE, NONE, 0);
+      two[2] = screen->getImage("terrain/desert/desert-road-se-s", OPAQUE, NONE, 0);
+      two[3] = screen->getImage("terrain/desert/desert-road-s-sw", OPAQUE, NONE, 0);
+      two[4] = screen->getImage("terrain/desert/desert-road-sw-nw", OPAQUE, NONE, 0);
+      two[5] = screen->getImage("terrain/desert/desert-road-nw-n", OPAQUE, NONE, 0);
 
-      three[0] = screen->getImage("terrain/desert/desert-road-n-ne-se");
-      three[1] = screen->getImage("terrain/desert/desert-road-ne-se-s");
-      three[2] = screen->getImage("terrain/desert/desert-road-se-s-sw");
-      three[3] = screen->getImage("terrain/desert/desert-road-s-sw-nw");
-      three[4] = screen->getImage("terrain/desert/desert-road-sw-nw-n");
-      three[5] = screen->getImage("terrain/desert/desert-road-nw-n-ne");
-
-      *four = NULL;
-   } else if (type == ADD_DESERT_SAND) {
-      one[0] = screen->getImage("terrain/desert/sand-n");
-      one[1] = screen->getImage("terrain/desert/sand-ne");
-      one[2] = screen->getImage("terrain/desert/sand-se");
-      one[3] = screen->getImage("terrain/desert/sand-s");
-      one[4] = screen->getImage("terrain/desert/sand-sw");
-      one[5] = screen->getImage("terrain/desert/sand-nw");
-
-      two[0] = screen->getImage("terrain/desert/sand-n-ne");
-      two[1] = screen->getImage("terrain/desert/sand-ne-se");
-      two[2] = screen->getImage("terrain/desert/sand-se-s");
-      two[3] = screen->getImage("terrain/desert/sand-s-sw");
-      two[4] = screen->getImage("terrain/desert/sand-sw-nw");
-      two[5] = screen->getImage("terrain/desert/sand-nw-n");
-
-      three[0] = screen->getImage("terrain/desert/sand-n-ne-se");
-      three[1] = screen->getImage("terrain/desert/sand-ne-se-s");
-      three[2] = screen->getImage("terrain/desert/sand-se-s-sw");
-      three[3] = screen->getImage("terrain/desert/sand-s-sw-nw");
-      three[4] = screen->getImage("terrain/desert/sand-sw-nw-n");
-      three[5] = screen->getImage("terrain/desert/sand-nw-n-ne");
+      three[0] = screen->getImage("terrain/desert/desert-road-n-ne-se", OPAQUE, NONE, 0);
+      three[1] = screen->getImage("terrain/desert/desert-road-ne-se-s", OPAQUE, NONE, 0);
+      three[2] = screen->getImage("terrain/desert/desert-road-se-s-sw", OPAQUE, NONE, 0);
+      three[3] = screen->getImage("terrain/desert/desert-road-s-sw-nw", OPAQUE, NONE, 0);
+      three[4] = screen->getImage("terrain/desert/desert-road-sw-nw-n", OPAQUE, NONE, 0);
+      three[5] = screen->getImage("terrain/desert/desert-road-nw-n-ne", OPAQUE, NONE, 0);
 
       *four = NULL;
-   } else if (type == ADD_FLAT_DIRT) {
-      one[0] = screen->getImage("terrain/flat/dirt-n");
-      one[1] = screen->getImage("terrain/flat/dirt-ne");
-      one[2] = screen->getImage("terrain/flat/dirt-se");
-      one[3] = screen->getImage("terrain/flat/dirt-s");
-      one[4] = screen->getImage("terrain/flat/dirt-sw");
-      one[5] = screen->getImage("terrain/flat/dirt-nw");
+      break;
+    case ADD_DESERT_SAND:
+      one[0] = screen->getImage("terrain/desert/sand-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/desert/sand-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/desert/sand-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/desert/sand-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/desert/sand-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/desert/sand-nw", OPAQUE, NONE, 0);
 
-      two[0] = screen->getImage("terrain/flat/dirt-n-ne");
-      two[1] = screen->getImage("terrain/flat/dirt-ne-se");
-      two[2] = screen->getImage("terrain/flat/dirt-se-s");
-      two[3] = screen->getImage("terrain/flat/dirt-s-sw");
-      two[4] = screen->getImage("terrain/flat/dirt-sw-nw");
-      two[5] = screen->getImage("terrain/flat/dirt-nw-n");
+      two[0] = screen->getImage("terrain/desert/sand-n-ne", OPAQUE, NONE, 0);
+      two[1] = screen->getImage("terrain/desert/sand-ne-se", OPAQUE, NONE, 0);
+      two[2] = screen->getImage("terrain/desert/sand-se-s", OPAQUE, NONE, 0);
+      two[3] = screen->getImage("terrain/desert/sand-s-sw", OPAQUE, NONE, 0);
+      two[4] = screen->getImage("terrain/desert/sand-sw-nw", OPAQUE, NONE, 0);
+      two[5] = screen->getImage("terrain/desert/sand-nw-n", OPAQUE, NONE, 0);
 
-      three[0] = screen->getImage("terrain/flat/dirt-n-ne-se");
-      three[1] = screen->getImage("terrain/flat/dirt-ne-se-s");
-      three[2] = screen->getImage("terrain/flat/dirt-se-s-sw");
-      three[3] = screen->getImage("terrain/flat/dirt-s-sw-nw");
-      three[4] = screen->getImage("terrain/flat/dirt-sw-nw-n");
-      three[5] = screen->getImage("terrain/flat/dirt-nw-n-ne");
-
-      *four = NULL;
-   } else if (type == ADD_FLAT_GRASS) {
-      one[0] = screen->getImage("terrain/flat/grass-n");
-      one[1] = screen->getImage("terrain/flat/grass-ne");
-      one[2] = screen->getImage("terrain/flat/grass-se");
-      one[3] = screen->getImage("terrain/flat/grass-s");
-      one[4] = screen->getImage("terrain/flat/grass-sw");
-      one[5] = screen->getImage("terrain/flat/grass-nw");
-
-      two[0] = screen->getImage("terrain/flat/grass-n-ne");
-      two[1] = screen->getImage("terrain/flat/grass-ne-se");
-      two[2] = screen->getImage("terrain/flat/grass-se-s");
-      two[3] = screen->getImage("terrain/flat/grass-s-sw");
-      two[4] = screen->getImage("terrain/flat/grass-sw-nw");
-      two[5] = screen->getImage("terrain/flat/grass-nw-n");
-
-      three[0] = screen->getImage("terrain/flat/grass-n-ne-se");
-      three[1] = screen->getImage("terrain/flat/grass-ne-se-s");
-      three[2] = screen->getImage("terrain/flat/grass-se-s-sw");
-      three[3] = screen->getImage("terrain/flat/grass-s-sw-nw");
-      three[4] = screen->getImage("terrain/flat/grass-sw-nw-n");
-      three[5] = screen->getImage("terrain/flat/grass-nw-n-ne");
+      three[0] = screen->getImage("terrain/desert/sand-n-ne-se", OPAQUE, NONE, 0);
+      three[1] = screen->getImage("terrain/desert/sand-ne-se-s", OPAQUE, NONE, 0);
+      three[2] = screen->getImage("terrain/desert/sand-se-s-sw", OPAQUE, NONE, 0);
+      three[3] = screen->getImage("terrain/desert/sand-s-sw-nw", OPAQUE, NONE, 0);
+      three[4] = screen->getImage("terrain/desert/sand-sw-nw-n", OPAQUE, NONE, 0);
+      three[5] = screen->getImage("terrain/desert/sand-nw-n-ne", OPAQUE, NONE, 0);
 
       *four = NULL;
-   } else if (type == ADD_FLAT_GRASS_TO_WATER) {
-      one[0] = screen->getImage("terrain/flat/grass-to-water-n");
-      one[1] = screen->getImage("terrain/flat/grass-to-water-ne");
-      one[2] = screen->getImage("terrain/flat/grass-to-water-se");
-      one[3] = screen->getImage("terrain/flat/grass-to-water-s");
-      one[4] = screen->getImage("terrain/flat/grass-to-water-sw");
-      one[5] = screen->getImage("terrain/flat/grass-to-water-nw");
+      break;
+    case ADD_FLAT_DIRT:
+      one[0] = screen->getImage("terrain/flat/dirt-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/flat/dirt-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/flat/dirt-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/flat/dirt-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/flat/dirt-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/flat/dirt-nw", OPAQUE, NONE, 0);
 
-      two[0] = screen->getImage("terrain/flat/grass-to-water-n-ne");
-      two[1] = screen->getImage("terrain/flat/grass-to-water-ne-se");
-      two[2] = screen->getImage("terrain/flat/grass-to-water-se-s");
-      two[3] = screen->getImage("terrain/flat/grass-to-water-s-sw");
-      two[4] = screen->getImage("terrain/flat/grass-to-water-sw-nw");
-      two[5] = screen->getImage("terrain/flat/grass-to-water-nw-n");
+      two[0] = screen->getImage("terrain/flat/dirt-n-ne", OPAQUE, NONE, 0);
+      two[1] = screen->getImage("terrain/flat/dirt-ne-se", OPAQUE, NONE, 0);
+      two[2] = screen->getImage("terrain/flat/dirt-se-s", OPAQUE, NONE, 0);
+      two[3] = screen->getImage("terrain/flat/dirt-s-sw", OPAQUE, NONE, 0);
+      two[4] = screen->getImage("terrain/flat/dirt-sw-nw", OPAQUE, NONE, 0);
+      two[5] = screen->getImage("terrain/flat/dirt-nw-n", OPAQUE, NONE, 0);
 
-      three[0] = screen->getImage("terrain/flat/grass-to-water-n-ne-se");
-      three[1] = screen->getImage("terrain/flat/grass-to-water-ne-se-s");
-      three[2] = screen->getImage("terrain/flat/grass-to-water-se-s-sw");
-      three[3] = screen->getImage("terrain/flat/grass-to-water-s-sw-nw");
-      three[4] = screen->getImage("terrain/flat/grass-to-water-sw-nw-n");
-      three[5] = screen->getImage("terrain/flat/grass-to-water-nw-n-ne");
+      three[0] = screen->getImage("terrain/flat/dirt-n-ne-se", OPAQUE, NONE, 0);
+      three[1] = screen->getImage("terrain/flat/dirt-ne-se-s", OPAQUE, NONE, 0);
+      three[2] = screen->getImage("terrain/flat/dirt-se-s-sw", OPAQUE, NONE, 0);
+      three[3] = screen->getImage("terrain/flat/dirt-s-sw-nw", OPAQUE, NONE, 0);
+      three[4] = screen->getImage("terrain/flat/dirt-sw-nw-n", OPAQUE, NONE, 0);
+      three[5] = screen->getImage("terrain/flat/dirt-nw-n-ne", OPAQUE, NONE, 0);
 
-      four[0] = screen->getImage("terrain/flat/grass-to-water-n-ne-se-s");
-      four[1] = screen->getImage("terrain/flat/grass-to-water-ne-se-s-sw");
-      four[2] = screen->getImage("terrain/flat/grass-to-water-se-s-sw-nw");
-      four[3] = screen->getImage("terrain/flat/grass-to-water-s-sw-nw-n");
-      four[4] = screen->getImage("terrain/flat/grass-to-water-sw-nw-n-ne");
-      four[5] = screen->getImage("terrain/flat/grass-to-water-nw-n-ne-se");
-   } else if (type == ADD_FLAT_ROAD) {
-      one[0] = screen->getImage("terrain/flat/road-n");
-      one[1] = screen->getImage("terrain/flat/road-ne");
-      one[2] = screen->getImage("terrain/flat/road-se");
-      one[3] = screen->getImage("terrain/flat/road-s");
-      one[4] = screen->getImage("terrain/flat/road-sw");
-      one[5] = screen->getImage("terrain/flat/road-nw");
+      *four = NULL;
+      break;
+    case ADD_FLAT_GRASS:
+      one[0] = screen->getImage("terrain/flat/grass-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/flat/grass-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/flat/grass-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/flat/grass-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/flat/grass-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/flat/grass-nw", OPAQUE, NONE, 0);
 
-      two[0] = screen->getImage("terrain/flat/road-n-ne");
-      two[1] = screen->getImage("terrain/flat/road-ne-se");
-      two[2] = screen->getImage("terrain/flat/road-se-s");
-      two[3] = screen->getImage("terrain/flat/road-s-sw");
-      two[4] = screen->getImage("terrain/flat/road-sw-nw");
-      two[5] = screen->getImage("terrain/flat/road-nw-n");
+      two[0] = screen->getImage("terrain/flat/grass-n-ne", OPAQUE, NONE, 0);
+      two[1] = screen->getImage("terrain/flat/grass-ne-se", OPAQUE, NONE, 0);
+      two[2] = screen->getImage("terrain/flat/grass-se-s", OPAQUE, NONE, 0);
+      two[3] = screen->getImage("terrain/flat/grass-s-sw", OPAQUE, NONE, 0);
+      two[4] = screen->getImage("terrain/flat/grass-sw-nw", OPAQUE, NONE, 0);
+      two[5] = screen->getImage("terrain/flat/grass-nw-n", OPAQUE, NONE, 0);
+
+      three[0] = screen->getImage("terrain/flat/grass-n-ne-se", OPAQUE, NONE, 0);
+      three[1] = screen->getImage("terrain/flat/grass-ne-se-s", OPAQUE, NONE, 0);
+      three[2] = screen->getImage("terrain/flat/grass-se-s-sw", OPAQUE, NONE, 0);
+      three[3] = screen->getImage("terrain/flat/grass-s-sw-nw", OPAQUE, NONE, 0);
+      three[4] = screen->getImage("terrain/flat/grass-sw-nw-n", OPAQUE, NONE, 0);
+      three[5] = screen->getImage("terrain/flat/grass-nw-n-ne", OPAQUE, NONE, 0);
+
+      *four = NULL;
+      break;
+    case ADD_FLAT_GRASS_TO_WATER:
+      one[0] = screen->getImage("terrain/flat/grass-to-water-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/flat/grass-to-water-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/flat/grass-to-water-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/flat/grass-to-water-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/flat/grass-to-water-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/flat/grass-to-water-nw", OPAQUE, NONE, 0);
+
+      two[0] = screen->getImage("terrain/flat/grass-to-water-n-ne", OPAQUE, NONE, 0);
+      two[1] = screen->getImage("terrain/flat/grass-to-water-ne-se", OPAQUE, NONE, 0);
+      two[2] = screen->getImage("terrain/flat/grass-to-water-se-s", OPAQUE, NONE, 0);
+      two[3] = screen->getImage("terrain/flat/grass-to-water-s-sw", OPAQUE, NONE, 0);
+      two[4] = screen->getImage("terrain/flat/grass-to-water-sw-nw", OPAQUE, NONE, 0);
+      two[5] = screen->getImage("terrain/flat/grass-to-water-nw-n", OPAQUE, NONE, 0);
+
+      three[0] = screen->getImage("terrain/flat/grass-to-water-n-ne-se", OPAQUE, NONE, 0);
+      three[1] = screen->getImage("terrain/flat/grass-to-water-ne-se-s", OPAQUE, NONE, 0);
+      three[2] = screen->getImage("terrain/flat/grass-to-water-se-s-sw", OPAQUE, NONE, 0);
+      three[3] = screen->getImage("terrain/flat/grass-to-water-s-sw-nw", OPAQUE, NONE, 0);
+      three[4] = screen->getImage("terrain/flat/grass-to-water-sw-nw-n", OPAQUE, NONE, 0);
+      three[5] = screen->getImage("terrain/flat/grass-to-water-nw-n-ne", OPAQUE, NONE, 0);
+
+      four[0] = screen->getImage("terrain/flat/grass-to-water-n-ne-se-s", OPAQUE, NONE, 0);
+      four[1] = screen->getImage("terrain/flat/grass-to-water-ne-se-s-sw", OPAQUE, NONE, 0);
+      four[2] = screen->getImage("terrain/flat/grass-to-water-se-s-sw-nw", OPAQUE, NONE, 0);
+      four[3] = screen->getImage("terrain/flat/grass-to-water-s-sw-nw-n", OPAQUE, NONE, 0);
+      four[4] = screen->getImage("terrain/flat/grass-to-water-sw-nw-n-ne", OPAQUE, NONE, 0);
+      four[5] = screen->getImage("terrain/flat/grass-to-water-nw-n-ne-se", OPAQUE, NONE, 0);
+      break;
+    case ADD_FLAT_ROAD:
+      one[0] = screen->getImage("terrain/flat/road-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/flat/road-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/flat/road-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/flat/road-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/flat/road-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/flat/road-nw", OPAQUE, NONE, 0);
+
+      two[0] = screen->getImage("terrain/flat/road-n-ne", OPAQUE, NONE, 0);
+      two[1] = screen->getImage("terrain/flat/road-ne-se", OPAQUE, NONE, 0);
+      two[2] = screen->getImage("terrain/flat/road-se-s", OPAQUE, NONE, 0);
+      two[3] = screen->getImage("terrain/flat/road-s-sw", OPAQUE, NONE, 0);
+      two[4] = screen->getImage("terrain/flat/road-sw-nw", OPAQUE, NONE, 0);
+      two[5] = screen->getImage("terrain/flat/road-nw-n", OPAQUE, NONE, 0);
 
       *three = NULL;
       *four = NULL;
-   } else if (type == ADD_FLAT_SAVANNA) {
-      one[0] = screen->getImage("terrain/flat/savanna-n");
-      one[1] = screen->getImage("terrain/flat/savanna-ne");
-      one[2] = screen->getImage("terrain/flat/savanna-se");
-      one[3] = screen->getImage("terrain/flat/savanna-s");
-      one[4] = screen->getImage("terrain/flat/savanna-sw");
-      one[5] = screen->getImage("terrain/flat/savanna-nw");
+      break;
+    case ADD_FLAT_SAVANNA:
+      one[0] = screen->getImage("terrain/flat/savanna-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/flat/savanna-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/flat/savanna-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/flat/savanna-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/flat/savanna-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/flat/savanna-nw", OPAQUE, NONE, 0);
 
-      two[0] = screen->getImage("terrain/flat/savanna-n-ne");
-      two[1] = screen->getImage("terrain/flat/savanna-ne-se");
-      two[2] = screen->getImage("terrain/flat/savanna-se-s");
-      two[3] = screen->getImage("terrain/flat/savanna-s-sw");
-      two[4] = screen->getImage("terrain/flat/savanna-sw-nw");
-      two[5] = screen->getImage("terrain/flat/savanna-nw-n");
+      two[0] = screen->getImage("terrain/flat/savanna-n-ne", OPAQUE, NONE, 0);
+      two[1] = screen->getImage("terrain/flat/savanna-ne-se", OPAQUE, NONE, 0);
+      two[2] = screen->getImage("terrain/flat/savanna-se-s", OPAQUE, NONE, 0);
+      two[3] = screen->getImage("terrain/flat/savanna-s-sw", OPAQUE, NONE, 0);
+      two[4] = screen->getImage("terrain/flat/savanna-sw-nw", OPAQUE, NONE, 0);
+      two[5] = screen->getImage("terrain/flat/savanna-nw-n", OPAQUE, NONE, 0);
 
-      three[0] = screen->getImage("terrain/flat/savanna-n-ne-se");
-      three[1] = screen->getImage("terrain/flat/savanna-ne-se-s");
-      three[2] = screen->getImage("terrain/flat/savanna-se-s-sw");
-      three[3] = screen->getImage("terrain/flat/savanna-s-sw-nw");
-      three[4] = screen->getImage("terrain/flat/savanna-sw-nw-n");
-      three[5] = screen->getImage("terrain/flat/savanna-nw-n-ne");
-
-      *four = NULL;
-   } else if (type == ADD_FLAT_SAVANNA_TO_WATER) {
-      one[0] = screen->getImage("terrain/flat/savanna-to-water-n");
-      one[1] = screen->getImage("terrain/flat/savanna-to-water-ne");
-      one[2] = screen->getImage("terrain/flat/savanna-to-water-se");
-      one[3] = screen->getImage("terrain/flat/savanna-to-water-s");
-      one[4] = screen->getImage("terrain/flat/savanna-to-water-sw");
-      one[5] = screen->getImage("terrain/flat/savanna-to-water-nw");
-
-      two[0] = screen->getImage("terrain/flat/savanna-to-water-n-ne");
-      two[1] = screen->getImage("terrain/flat/savanna-to-water-ne-se");
-      two[2] = screen->getImage("terrain/flat/savanna-to-water-se-s");
-      two[3] = screen->getImage("terrain/flat/savanna-to-water-s-sw");
-      two[4] = screen->getImage("terrain/flat/savanna-to-water-sw-nw");
-      two[5] = screen->getImage("terrain/flat/savanna-to-water-nw-n");
-
-      three[0] = screen->getImage("terrain/flat/savanna-to-water-n-ne-se");
-      three[1] = screen->getImage("terrain/flat/savanna-to-water-ne-se-s");
-      three[2] = screen->getImage("terrain/flat/savanna-to-water-se-s-sw");
-      three[3] = screen->getImage("terrain/flat/savanna-to-water-s-sw-nw");
-      three[4] = screen->getImage("terrain/flat/savanna-to-water-sw-nw-n");
-      three[5] = screen->getImage("terrain/flat/savanna-to-water-nw-n-ne");
+      three[0] = screen->getImage("terrain/flat/savanna-n-ne-se", OPAQUE, NONE, 0);
+      three[1] = screen->getImage("terrain/flat/savanna-ne-se-s", OPAQUE, NONE, 0);
+      three[2] = screen->getImage("terrain/flat/savanna-se-s-sw", OPAQUE, NONE, 0);
+      three[3] = screen->getImage("terrain/flat/savanna-s-sw-nw", OPAQUE, NONE, 0);
+      three[4] = screen->getImage("terrain/flat/savanna-sw-nw-n", OPAQUE, NONE, 0);
+      three[5] = screen->getImage("terrain/flat/savanna-nw-n-ne", OPAQUE, NONE, 0);
 
       *four = NULL;
-   } else if (type == ADD_FLAT_STONE_PATH) {
-      one[0] = screen->getImage("terrain/flat/stone-path-n");
-      one[1] = screen->getImage("terrain/flat/stone-path-ne");
-      one[2] = screen->getImage("terrain/flat/stone-path-se");
-      one[3] = screen->getImage("terrain/flat/stone-path-s");
-      one[4] = screen->getImage("terrain/flat/stone-path-sw");
-      one[5] = screen->getImage("terrain/flat/stone-path-nw");
+      break;
+    case ADD_FLAT_SAVANNA_TO_WATER:
+      one[0] = screen->getImage("terrain/flat/savanna-to-water-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/flat/savanna-to-water-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/flat/savanna-to-water-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/flat/savanna-to-water-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/flat/savanna-to-water-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/flat/savanna-to-water-nw", OPAQUE, NONE, 0);
 
-      two[0] = screen->getImage("terrain/flat/stone-path-n-ne");
-      two[1] = screen->getImage("terrain/flat/stone-path-ne-se");
-      two[2] = screen->getImage("terrain/flat/stone-path-se-s");
-      two[3] = screen->getImage("terrain/flat/stone-path-s-sw");
-      two[4] = screen->getImage("terrain/flat/stone-path-sw-nw");
-      two[5] = screen->getImage("terrain/flat/stone-path-nw-n");
+      two[0] = screen->getImage("terrain/flat/savanna-to-water-n-ne", OPAQUE, NONE, 0);
+      two[1] = screen->getImage("terrain/flat/savanna-to-water-ne-se", OPAQUE, NONE, 0);
+      two[2] = screen->getImage("terrain/flat/savanna-to-water-se-s", OPAQUE, NONE, 0);
+      two[3] = screen->getImage("terrain/flat/savanna-to-water-s-sw", OPAQUE, NONE, 0);
+      two[4] = screen->getImage("terrain/flat/savanna-to-water-sw-nw", OPAQUE, NONE, 0);
+      two[5] = screen->getImage("terrain/flat/savanna-to-water-nw-n", OPAQUE, NONE, 0);
+
+      three[0] = screen->getImage("terrain/flat/savanna-to-water-n-ne-se", OPAQUE, NONE, 0);
+      three[1] = screen->getImage("terrain/flat/savanna-to-water-ne-se-s", OPAQUE, NONE, 0);
+      three[2] = screen->getImage("terrain/flat/savanna-to-water-se-s-sw", OPAQUE, NONE, 0);
+      three[3] = screen->getImage("terrain/flat/savanna-to-water-s-sw-nw", OPAQUE, NONE, 0);
+      three[4] = screen->getImage("terrain/flat/savanna-to-water-sw-nw-n", OPAQUE, NONE, 0);
+      three[5] = screen->getImage("terrain/flat/savanna-to-water-nw-n-ne", OPAQUE, NONE, 0);
+
+      *four = NULL;
+      break;
+    case ADD_FLAT_STONE_PATH:
+      one[0] = screen->getImage("terrain/flat/stone-path-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/flat/stone-path-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/flat/stone-path-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/flat/stone-path-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/flat/stone-path-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/flat/stone-path-nw", OPAQUE, NONE, 0);
+
+      two[0] = screen->getImage("terrain/flat/stone-path-n-ne", OPAQUE, NONE, 0);
+      two[1] = screen->getImage("terrain/flat/stone-path-ne-se", OPAQUE, NONE, 0);
+      two[2] = screen->getImage("terrain/flat/stone-path-se-s", OPAQUE, NONE, 0);
+      two[3] = screen->getImage("terrain/flat/stone-path-s-sw", OPAQUE, NONE, 0);
+      two[4] = screen->getImage("terrain/flat/stone-path-sw-nw", OPAQUE, NONE, 0);
+      two[5] = screen->getImage("terrain/flat/stone-path-nw-n", OPAQUE, NONE, 0);
 
       *three = NULL;
       *four = NULL;
-   } else if (type == ADD_HILLS) {
-      one[0] = screen->getImage("terrain/hills-n");
-      one[1] = screen->getImage("terrain/hills-ne");
-      one[2] = screen->getImage("terrain/hills-se");
-      one[3] = screen->getImage("terrain/hills-s");
-      one[4] = screen->getImage("terrain/hills-sw");
-      one[5] = screen->getImage("terrain/hills-nw");
+      break;
+    case ADD_HILLS:
+      one[0] = screen->getImage("terrain/hills-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/hills-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/hills-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/hills-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/hills-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/hills-nw", OPAQUE, NONE, 0);
 
       *two = NULL;
       *three = NULL;
       *four = NULL;
-   } else if (type == ADD_LAVA) {
-      one[0] = screen->getImage("terrain/lava-n");
-      one[1] = screen->getImage("terrain/lava-ne");
-      one[2] = screen->getImage("terrain/lava-se");
-      one[3] = screen->getImage("terrain/lava-s");
-      one[4] = screen->getImage("terrain/lava-sw");
-      one[5] = screen->getImage("terrain/lava-nw");
+      break;
+    case ADD_LAVA:
+      one[0] = screen->getImage("terrain/lava-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/lava-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/lava-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/lava-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/lava-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/lava-nw", OPAQUE, NONE, 0);
 
-      two[0] = screen->getImage("terrain/lava-n-ne");
-      two[1] = screen->getImage("terrain/lava-ne-se");
-      two[2] = screen->getImage("terrain/lava-se-s");
-      two[3] = screen->getImage("terrain/lava-s-sw");
-      two[4] = screen->getImage("terrain/lava-sw-nw");
-      two[5] = screen->getImage("terrain/lava-nw-n");
+      two[0] = screen->getImage("terrain/lava-n-ne", OPAQUE, NONE, 0);
+      two[1] = screen->getImage("terrain/lava-ne-se", OPAQUE, NONE, 0);
+      two[2] = screen->getImage("terrain/lava-se-s", OPAQUE, NONE, 0);
+      two[3] = screen->getImage("terrain/lava-s-sw", OPAQUE, NONE, 0);
+      two[4] = screen->getImage("terrain/lava-sw-nw", OPAQUE, NONE, 0);
+      two[5] = screen->getImage("terrain/lava-nw-n", OPAQUE, NONE, 0);
 
       *three = NULL;
       *four = NULL;
-   } else if (type == ADD_WATER_COAST) {
-      one[0] = screen->getImage("terrain/water/coast-n");
-      one[1] = screen->getImage("terrain/water/coast-ne");
-      one[2] = screen->getImage("terrain/water/coast-se");
-      one[3] = screen->getImage("terrain/water/coast-s");
-      one[4] = screen->getImage("terrain/water/coast-sw");
-      one[5] = screen->getImage("terrain/water/coast-nw");
+      break;
+    case ADD_WATER_COAST:
+      one[0] = screen->getImage("terrain/water/coast-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/water/coast-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/water/coast-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/water/coast-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/water/coast-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/water/coast-nw", OPAQUE, NONE, 0);
 
       *two = NULL;
       *three = NULL;
       *four = NULL;
-   } else if (type == ADD_WATER_FORD) {
-      one[0] = screen->getImage("terrain/water/ford-n");
-      one[1] = screen->getImage("terrain/water/ford-ne");
-      one[2] = screen->getImage("terrain/water/ford-se");
-      one[3] = screen->getImage("terrain/water/ford-s");
-      one[4] = screen->getImage("terrain/water/ford-sw");
-      one[5] = screen->getImage("terrain/water/ford-nw");
+      break;
+    case ADD_WATER_FORD:
+      one[0] = screen->getImage("terrain/water/ford-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/water/ford-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/water/ford-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/water/ford-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/water/ford-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/water/ford-nw", OPAQUE, NONE, 0);
 
       *two = NULL;
       *three = NULL;
       *four = NULL;
-   } else if (type == ADD_WATER_ICE) {
-      one[0] = screen->getImage("terrain/water/ice-n");
-      one[1] = screen->getImage("terrain/water/ice-ne");
-      one[2] = screen->getImage("terrain/water/ice-se");
-      one[3] = screen->getImage("terrain/water/ice-s");
-      one[4] = screen->getImage("terrain/water/ice-sw");
-      one[5] = screen->getImage("terrain/water/ice-nw");
+      break;
+    case ADD_WATER_ICE:
+      one[0] = screen->getImage("terrain/water/ice-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/water/ice-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/water/ice-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/water/ice-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/water/ice-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/water/ice-nw", OPAQUE, NONE, 0);
 
-      two[0] = screen->getImage("terrain/water/ice-n-ne");
-      two[1] = screen->getImage("terrain/water/ice-ne-se");
-      two[2] = screen->getImage("terrain/water/ice-se-s");
-      two[3] = screen->getImage("terrain/water/ice-s-sw");
-      two[4] = screen->getImage("terrain/water/ice-sw-nw");
-      two[5] = screen->getImage("terrain/water/ice-nw-n");
-
-      *three = NULL;
-      *four = NULL;
-   } else if (type == ADD_WATER_ICE_TO_WATER) {
-      one[0] = screen->getImage("terrain/water/ice-to-water-n");
-      one[1] = screen->getImage("terrain/water/ice-to-water-ne");
-      one[2] = screen->getImage("terrain/water/ice-to-water-se");
-      one[3] = screen->getImage("terrain/water/ice-to-water-s");
-      one[4] = screen->getImage("terrain/water/ice-to-water-sw");
-      one[5] = screen->getImage("terrain/water/ice-to-water-nw");
-
-      two[0] = screen->getImage("terrain/water/ice-to-water-n-ne");
-      two[1] = screen->getImage("terrain/water/ice-to-water-ne-se");
-      two[2] = screen->getImage("terrain/water/ice-to-water-se-s");
-      two[3] = screen->getImage("terrain/water/ice-to-water-s-sw");
-      two[4] = screen->getImage("terrain/water/ice-to-water-sw-nw");
-      two[5] = screen->getImage("terrain/water/ice-to-water-nw-n");
+      two[0] = screen->getImage("terrain/water/ice-n-ne", OPAQUE, NONE, 0);
+      two[1] = screen->getImage("terrain/water/ice-ne-se", OPAQUE, NONE, 0);
+      two[2] = screen->getImage("terrain/water/ice-se-s", OPAQUE, NONE, 0);
+      two[3] = screen->getImage("terrain/water/ice-s-sw", OPAQUE, NONE, 0);
+      two[4] = screen->getImage("terrain/water/ice-sw-nw", OPAQUE, NONE, 0);
+      two[5] = screen->getImage("terrain/water/ice-nw-n", OPAQUE, NONE, 0);
 
       *three = NULL;
       *four = NULL;
-   } else if (type == ADD_WATER_SNOW) {
-      one[0] = screen->getImage("terrain/water/snow-n");
-      one[1] = screen->getImage("terrain/water/snow-ne");
-      one[2] = screen->getImage("terrain/water/snow-se");
-      one[3] = screen->getImage("terrain/water/snow-s");
-      one[4] = screen->getImage("terrain/water/snow-sw");
-      one[5] = screen->getImage("terrain/water/snow-nw");
+      break;
+    case ADD_WATER_ICE_TO_WATER:
+      one[0] = screen->getImage("terrain/water/ice-to-water-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/water/ice-to-water-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/water/ice-to-water-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/water/ice-to-water-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/water/ice-to-water-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/water/ice-to-water-nw", OPAQUE, NONE, 0);
 
-      two[0] = screen->getImage("terrain/water/snow-n-ne");
-      two[1] = screen->getImage("terrain/water/snow-ne-se");
-      two[2] = screen->getImage("terrain/water/snow-se-s");
-      two[3] = screen->getImage("terrain/water/snow-s-sw");
-      two[4] = screen->getImage("terrain/water/snow-sw-nw");
-      two[5] = screen->getImage("terrain/water/snow-nw-n");
+      two[0] = screen->getImage("terrain/water/ice-to-water-n-ne", OPAQUE, NONE, 0);
+      two[1] = screen->getImage("terrain/water/ice-to-water-ne-se", OPAQUE, NONE, 0);
+      two[2] = screen->getImage("terrain/water/ice-to-water-se-s", OPAQUE, NONE, 0);
+      two[3] = screen->getImage("terrain/water/ice-to-water-s-sw", OPAQUE, NONE, 0);
+      two[4] = screen->getImage("terrain/water/ice-to-water-sw-nw", OPAQUE, NONE, 0);
+      two[5] = screen->getImage("terrain/water/ice-to-water-nw-n", OPAQUE, NONE, 0);
 
-      three[0] = screen->getImage("terrain/water/snow-n-ne-se");
-      three[1] = screen->getImage("terrain/water/snow-ne-se-s");
-      three[2] = screen->getImage("terrain/water/snow-se-s-sw");
-      three[3] = screen->getImage("terrain/water/snow-s-sw-nw");
-      three[4] = screen->getImage("terrain/water/snow-sw-nw-n");
-      three[5] = screen->getImage("terrain/water/snow-nw-n-ne");
+      *three = NULL;
+      *four = NULL;
+      break;
+    case ADD_WATER_SNOW:
+      one[0] = screen->getImage("terrain/water/snow-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/water/snow-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/water/snow-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/water/snow-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/water/snow-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/water/snow-nw", OPAQUE, NONE, 0);
 
-      four[0] = screen->getImage("terrain/water/snow-n-ne-se-s");
-      four[1] = screen->getImage("terrain/water/snow-ne-se-s-sw");
-      four[2] = screen->getImage("terrain/water/snow-se-s-sw-nw");
-      four[3] = screen->getImage("terrain/water/snow-s-sw-nw-n");
-      four[4] = screen->getImage("terrain/water/snow-sw-nw-n-ne");
-      four[5] = screen->getImage("terrain/water/snow-nw-n-ne-se");
-   } else if (type == ADD_WATER_SNOW_HILLS) {
-      one[0] = screen->getImage("terrain/water/snow-hills-n");
-      one[1] = screen->getImage("terrain/water/snow-hills-ne");
-      one[2] = screen->getImage("terrain/water/snow-hills-se");
-      one[3] = screen->getImage("terrain/water/snow-hills-s");
-      one[4] = screen->getImage("terrain/water/snow-hills-sw");
-      one[5] = screen->getImage("terrain/water/snow-hills-nw");
+      two[0] = screen->getImage("terrain/water/snow-n-ne", OPAQUE, NONE, 0);
+      two[1] = screen->getImage("terrain/water/snow-ne-se", OPAQUE, NONE, 0);
+      two[2] = screen->getImage("terrain/water/snow-se-s", OPAQUE, NONE, 0);
+      two[3] = screen->getImage("terrain/water/snow-s-sw", OPAQUE, NONE, 0);
+      two[4] = screen->getImage("terrain/water/snow-sw-nw", OPAQUE, NONE, 0);
+      two[5] = screen->getImage("terrain/water/snow-nw-n", OPAQUE, NONE, 0);
+
+      three[0] = screen->getImage("terrain/water/snow-n-ne-se", OPAQUE, NONE, 0);
+      three[1] = screen->getImage("terrain/water/snow-ne-se-s", OPAQUE, NONE, 0);
+      three[2] = screen->getImage("terrain/water/snow-se-s-sw", OPAQUE, NONE, 0);
+      three[3] = screen->getImage("terrain/water/snow-s-sw-nw", OPAQUE, NONE, 0);
+      three[4] = screen->getImage("terrain/water/snow-sw-nw-n", OPAQUE, NONE, 0);
+      three[5] = screen->getImage("terrain/water/snow-nw-n-ne", OPAQUE, NONE, 0);
+
+      four[0] = screen->getImage("terrain/water/snow-n-ne-se-s", OPAQUE, NONE, 0);
+      four[1] = screen->getImage("terrain/water/snow-ne-se-s-sw", OPAQUE, NONE, 0);
+      four[2] = screen->getImage("terrain/water/snow-se-s-sw-nw", OPAQUE, NONE, 0);
+      four[3] = screen->getImage("terrain/water/snow-s-sw-nw-n", OPAQUE, NONE, 0);
+      four[4] = screen->getImage("terrain/water/snow-sw-nw-n-ne", OPAQUE, NONE, 0);
+      four[5] = screen->getImage("terrain/water/snow-nw-n-ne-se", OPAQUE, NONE, 0);
+      break;
+    case ADD_WATER_SNOW_HILLS:
+      one[0] = screen->getImage("terrain/water/snow-hills-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/water/snow-hills-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/water/snow-hills-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/water/snow-hills-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/water/snow-hills-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/water/snow-hills-nw", OPAQUE, NONE, 0);
 
       *two = NULL;
       *three = NULL;
       *four = NULL;
-   }
+  }
 }
 
 // Adds the necesary images to soften the map.
-void addImages(bool *terrain, cell &mapCell, SDL_Surface **one, SDL_Surface **two, SDL_Surface **three, SDL_Surface **four) {
-   int position = 0;
-   while (!terrain[position] && position<6) position++;
-   while (position<6) {
-      terrain[position] = false;
-      if (position!=0 || !terrain[NW]) {
-         if (terrain[position+1] && *two!=NULL) {
-            terrain[position+1] = false;
-            if (terrain[position+2] && *three!=NULL) {
-               terrain[position+2] = false;
-               if (terrain[position+3] && *four!=NULL) {
-                  terrain[position+3] = false;
-                  mapCell.addImage( *four[position] );
-               } else
-                  mapCell.addImage( *three[position] );
-            } else
-               mapCell.addImage( *two[position] );
-         } else
-            mapCell.addImage( *one[position] );
-      } else if (*two!=NULL){
-         terrain[NW] = false;
-         if (terrain[SW] && *three!=NULL) {
-            terrain[SW] = false;
-            if (terrain[S] && *four!=NULL) {
-               terrain[S] = false;
-               mapCell.addImage( *four[S] );
-            } else if (terrain[NE] && *four!=NULL) {
-               terrain[NE] = false;
-               mapCell.addImage( *four[SW] );
-            } else
-               mapCell.addImage( *three[SW] );
-         } else if (terrain[NE] && *three!=NULL) {
-            terrain[NE] = false;
-            if (terrain[SE] && *four!=NULL) {
-               terrain[SE] = false;
-               mapCell.addImage( *four[NW] );
-            } else
-               mapCell.addImage( *three[NW] );
-         } else
-            mapCell.addImage( *two[NW] );
-      } else mapCell.addImage( *one[position] );
-      while (!terrain[position] && position<7) position++;
-   }
+void addImages(bool *terrain, Cell &map_cell, SDL_Surface **one, SDL_Surface **two, SDL_Surface **three, SDL_Surface **four) {
+  int position = 0;
+  while (!terrain[position] && position<6) position++;
+  while (position<6) {
+    terrain[position] = false;
+    if (position!=0 || !terrain[NW]) {
+      if (terrain[position+1] && *two!=NULL) {
+        terrain[position+1] = false;
+        if (terrain[position+2] && *three!=NULL) {
+          terrain[position+2] = false;
+          if (terrain[position+3] && *four!=NULL) {
+            terrain[position+3] = false;
+            map_cell.addImage( *four[position], -1 );
+          } else
+            map_cell.addImage( *three[position], -1 );
+        } else
+          map_cell.addImage( *two[position], -1 );
+      } else
+        map_cell.addImage( *one[position], -1 );
+    } else if (*two!=NULL){
+      terrain[NW] = false;
+      if (terrain[SW] && *three!=NULL) {
+        terrain[SW] = false;
+        if (terrain[S] && *four!=NULL) {
+          terrain[S] = false;
+          map_cell.addImage( *four[S], -1 );
+        } else if (terrain[NE] && *four!=NULL) {
+          terrain[NE] = false;
+          map_cell.addImage( *four[SW], -1 );
+        } else
+          map_cell.addImage( *three[SW], -1 );
+      } else if (terrain[NE] && *three!=NULL) {
+        terrain[NE] = false;
+        if (terrain[SE] && *four!=NULL) {
+          terrain[SE] = false;
+          map_cell.addImage( *four[NW], -1 );
+        } else
+          map_cell.addImage( *three[NW], -1 );
+      } else
+        map_cell.addImage( *two[NW], -1 );
+    } else map_cell.addImage( *one[position], -1 );
+    while (!terrain[position] && position<7) position++;
+  }
 }
 
 // Softens a type of terrain.
-void map::softenTerrain(const char cellTerrain, char *terrain, const int numberTerrains, const int softImages) {
-   SDL_Surface *one[6];
-   SDL_Surface *two[6];
-   SDL_Surface *three[6];
-   SDL_Surface *four[6];
-   cell *temp;
-   bool differentTerrain[6];
-   bool needSoft = false; // Indicates if the cell needs to be soften
+void Map::softenTerrain(const char cell_terrain, char *terrain, const int number_terrains, const int soft_images) {
+  SDL_Surface *one[6];
+  SDL_Surface *two[6];
+  SDL_Surface *three[6];
+  SDL_Surface *four[6];
+  Cell *temp;
+  bool differentTerrain[6];
+  bool need_soft = false; // Indicates if the cell needs to be soften
 
-   initializeVariables(one, two, three, four, ADD_WATER_ICE_TO_WATER);
-   for (int j=0; j<6; j++) differentTerrain[j] = false;
-   /// @todo Initialize variables only when they are needed.
-   initializeVariables(one, two, three, four, softImages);
+  for (int j=0; j<6; j++) differentTerrain[j] = false;
+  /// @todo Initialize variables only when they are needed.
+  initializeVariables(one, two, three, four, soft_images);
 
-   for (int x=0; x<width; x++)
-      for (int y=0; y<height; y++) {
-         for (int i=0; i<numberTerrains; i++)
-            needSoft = ( needSoft || (battleMap[x][y].getTerrain() == terrain[i]) );
-         if (needSoft) {
-            needSoft = false; // Reset for next cell
-            for (int i=N; i<=NW; i++) {
-               temp = battleMap[x][y].getConnectedCell(i);
-               if (temp != NULL)
-                  if(temp->getTerrain() == cellTerrain) differentTerrain[i] = true;
-            }
-            addImages(differentTerrain, battleMap[x][y], one, two, three, four);
-         }
+  for (int x=0; x<width; x++)
+    for (int y=0; y<height; y++) {
+      for (int i=0; i<number_terrains; i++)
+        need_soft = ( need_soft || (battle_map[x][y].getTerrain() == terrain[i]) );
+      if (need_soft) {
+        need_soft = false; // Reset for next cell
+        for (int i=N; i<=NW; i++) {
+          temp = battle_map[x][y].getConnectedCell(i);
+          if (temp != NULL)
+            if(temp->getTerrain() == cell_terrain) differentTerrain[i] = true;
+        }
+        addImages(differentTerrain, battle_map[x][y], one, two, three, four);
       }
+    }
 }
 
 // Softens the map to make it look nicer.
-void map::softenMap(void) {
-   /// @todo Put a bit of order and check if every thing is ok.
-   char *terrain;
+void Map::softenMap(void) {
+  /// @todo Put a bit of order and check if every thing is ok.
+  char *terrain;
 
-   terrain = new char[1];
-   terrain[0] = WATER_OCEAN;
-   softenTerrain(WATER_FORD, terrain, 1, ADD_WATER_FORD);
+  terrain = new char[1];
+  terrain[0] = WATER_OCEAN;
+  softenTerrain(WATER_FORD, terrain, 1, ADD_WATER_FORD);
 
-   delete [] terrain;
-   terrain = new char[2];
-   terrain[0] = WATER_FORD;
-   terrain[1] = WATER_OCEAN;
-   softenTerrain(WATER_COAST, terrain, 2, ADD_WATER_COAST);
+  // WATER_COAST
+  delete [] terrain;
+  terrain = new char[2];
+  terrain[0] = WATER_FORD;
+  terrain[1] = WATER_OCEAN;
+  softenTerrain(WATER_COAST, terrain, 2, ADD_WATER_COAST);
 
-   delete [] terrain;
-   terrain = new char[3];
-   terrain[0] = WATER_COAST;
-   terrain[1] = WATER_FORD;
-   terrain[2] = WATER_OCEAN;
-   softenTerrain(WATER_ICE, terrain, 3, ADD_WATER_ICE);
+  // WATER_ICE
+  delete [] terrain;
+  terrain = new char[3];
+  terrain[0] = WATER_COAST;
+  terrain[1] = WATER_FORD;
+  terrain[2] = WATER_OCEAN;
+  softenTerrain(WATER_ICE, terrain, 3, ADD_WATER_ICE);
 
-   delete [] terrain;
-   terrain = new char[3];
-   terrain[0] = WATER_COAST;
-   terrain[1] = WATER_FORD;
-   terrain[2] = WATER_OCEAN;
-   softenTerrain(WATER_ICE, terrain, 3, ADD_WATER_ICE_TO_WATER);
+  // WATER_ICE_TO_WATER
+  delete [] terrain;
+  terrain = new char[3];
+  terrain[0] = WATER_COAST;
+  terrain[1] = WATER_FORD;
+  terrain[2] = WATER_OCEAN;
+  softenTerrain(WATER_ICE, terrain, 3, ADD_WATER_ICE_TO_WATER);
 
-   delete [] terrain;
-   terrain = new char[4];
-   terrain[0] = WATER_COAST;
-   terrain[1] = WATER_FORD;
-   terrain[2] = WATER_ICE;
-   terrain[3] = WATER_OCEAN;
-   softenTerrain(DESERT_ROAD, terrain, 4, ADD_DESERT_ROAD);
+  // DESERT_ROAD
+  delete [] terrain;
+  terrain = new char[4];
+  terrain[0] = WATER_COAST;
+  terrain[1] = WATER_FORD;
+  terrain[2] = WATER_ICE;
+  terrain[3] = WATER_OCEAN;
+  softenTerrain(DESERT_ROAD, terrain, 4, ADD_DESERT_ROAD);
 
-   delete [] terrain;
-   terrain = new char[5];
-   terrain[0] = DESERT_ROAD;
-   terrain[1] = WATER_COAST;
-   terrain[2] = WATER_FORD;
-   terrain[3] = WATER_ICE;
-   terrain[4] = WATER_OCEAN;
-   softenTerrain(DESERT, terrain, 5, ADD_DESERT);
+  // DESERT
+  delete [] terrain;
+  terrain = new char[5];
+  terrain[0] = DESERT_ROAD;
+  terrain[1] = WATER_COAST;
+  terrain[2] = WATER_FORD;
+  terrain[3] = WATER_ICE;
+  terrain[4] = WATER_OCEAN;
+  softenTerrain(DESERT, terrain, 5, ADD_DESERT);
 
-   delete [] terrain;
-   terrain = new char[7];
-   terrain[0] = DESERT;
-   terrain[1] = DESERT_ROAD;
-   terrain[2] = DESERT_SAND;
-   terrain[3] = FLAT_DIRT;
-   terrain[4] = FLAT_ROAD;
-   terrain[5] = FLAT_STONE_PATH;
-   terrain[6] = WATER_ICE;
-   softenTerrain(FLAT_SAVANNA, terrain, 7, ADD_FLAT_SAVANNA);
+  // FLAT_SAVANNA
+  delete [] terrain;
+  terrain = new char[7];
+  terrain[0] = DESERT;
+  terrain[1] = DESERT_ROAD;
+  terrain[2] = DESERT_SAND;
+  terrain[3] = FLAT_DIRT;
+  terrain[4] = FLAT_ROAD;
+  terrain[5] = FLAT_STONE_PATH;
+  terrain[6] = WATER_ICE;
+  softenTerrain(FLAT_SAVANNA, terrain, 7, ADD_FLAT_SAVANNA);
 
-   delete [] terrain;
-   terrain = new char[6];
-   terrain[0] = DESERT;
-   terrain[1] = DESERT_ROAD;
-   terrain[2] = WATER_COAST;
-   terrain[3] = WATER_FORD;
-   terrain[4] = WATER_ICE;
-   terrain[5] = WATER_OCEAN;
-   softenTerrain(DESERT_SAND, terrain, 6, ADD_DESERT_SAND);
+  // DESERT_SAND
+  delete [] terrain;
+  terrain = new char[6];
+  terrain[0] = DESERT;
+  terrain[1] = DESERT_ROAD;
+  terrain[2] = WATER_COAST;
+  terrain[3] = WATER_FORD;
+  terrain[4] = WATER_ICE;
+  terrain[5] = WATER_OCEAN;
+  softenTerrain(DESERT_SAND, terrain, 6, ADD_DESERT_SAND);
 
-   delete [] terrain;
-   terrain = new char[8];
-   terrain[0] = DESERT;
-   terrain[1] = DESERT_ROAD;
-   terrain[2] = DESERT_SAND;
-   terrain[3] = FLAT_DIRT;
-   terrain[4] = FLAT_ROAD;
-   terrain[5] = FLAT_SAVANNA;
-   terrain[6] = FLAT_STONE_PATH;
-   terrain[7] = WATER_ICE;
-   softenTerrain(FLAT_GRASS, terrain, 8, ADD_FLAT_GRASS);
+  // FLAT_GRASS
+  delete [] terrain;
+  terrain = new char[8];
+  terrain[0] = DESERT;
+  terrain[1] = DESERT_ROAD;
+  terrain[2] = DESERT_SAND;
+  terrain[3] = FLAT_DIRT;
+  terrain[4] = FLAT_ROAD;
+  terrain[5] = FLAT_SAVANNA;
+  terrain[6] = FLAT_STONE_PATH;
+  terrain[7] = WATER_ICE;
+  softenTerrain(FLAT_GRASS, terrain, 8, ADD_FLAT_GRASS);
 
-   delete [] terrain;
-   terrain = new char[3];
-   terrain[0] = WATER_COAST;
-   terrain[1] = WATER_FORD;
-   terrain[2] = WATER_OCEAN;
-   softenTerrain(FLAT_GRASS, terrain, 3, ADD_FLAT_GRASS_TO_WATER);
+  // FLAT_GRASS_TO_WATER
+  delete [] terrain;
+  terrain = new char[3];
+  terrain[0] = WATER_COAST;
+  terrain[1] = WATER_FORD;
+  terrain[2] = WATER_OCEAN;
+  softenTerrain(FLAT_GRASS, terrain, 3, ADD_FLAT_GRASS_TO_WATER);
 
-   delete [] terrain;
-   terrain = new char[3];
-   terrain[0] = WATER_COAST;
-   terrain[1] = WATER_FORD;
-   terrain[2] = WATER_OCEAN;
-   softenTerrain(FLAT_SAVANNA, terrain, 3, ADD_FLAT_SAVANNA_TO_WATER);
+  // FLAT_SAVANNA_TO_WATER
+  delete [] terrain;
+  terrain = new char[3];
+  terrain[0] = WATER_COAST;
+  terrain[1] = WATER_FORD;
+  terrain[2] = WATER_OCEAN;
+  softenTerrain(FLAT_SAVANNA, terrain, 3, ADD_FLAT_SAVANNA_TO_WATER);
 
-   delete [] terrain;
-   terrain = new char[7];
-   terrain[0] = DESERT;
-   terrain[1] = DESERT_ROAD;
-   terrain[2] = DESERT_SAND;
-   terrain[3] = WATER_COAST;
-   terrain[4] = WATER_FORD;
-   terrain[5] = WATER_ICE;
-   terrain[6] = WATER_OCEAN;
-   softenTerrain(FLAT_ROAD, terrain, 7, ADD_FLAT_ROAD);
+  // FLAT_ROAD
+  delete [] terrain;
+  terrain = new char[7];
+  terrain[0] = DESERT;
+  terrain[1] = DESERT_ROAD;
+  terrain[2] = DESERT_SAND;
+  terrain[3] = WATER_COAST;
+  terrain[4] = WATER_FORD;
+  terrain[5] = WATER_ICE;
+  terrain[6] = WATER_OCEAN;
+  softenTerrain(FLAT_ROAD, terrain, 7, ADD_FLAT_ROAD);
 
-   delete [] terrain;
-   terrain = new char[8];
-   terrain[0] = DESERT;
-   terrain[1] = DESERT_ROAD;
-   terrain[2] = DESERT_SAND;
-   terrain[3] = FLAT_DIRT;
-   terrain[4] = WATER_COAST;
-   terrain[5] = WATER_FORD;
-   terrain[6] = WATER_ICE;
-   terrain[7] = WATER_OCEAN;
-   softenTerrain(FLAT_STONE_PATH, terrain, 8, ADD_FLAT_STONE_PATH);
+  // FLAT_STONE_PATH
+  delete [] terrain;
+  terrain = new char[8];
+  terrain[0] = DESERT;
+  terrain[1] = DESERT_ROAD;
+  terrain[2] = DESERT_SAND;
+  terrain[3] = FLAT_DIRT;
+  terrain[4] = WATER_COAST;
+  terrain[5] = WATER_FORD;
+  terrain[6] = WATER_ICE;
+  terrain[7] = WATER_OCEAN;
+  softenTerrain(FLAT_STONE_PATH, terrain, 8, ADD_FLAT_STONE_PATH);
 
-   delete [] terrain;
-   terrain = new char[8];
-   terrain[0] = DESERT;
-   terrain[1] = DESERT_ROAD;
-   terrain[2] = DESERT_SAND;
-   terrain[3] = FLAT_ROAD;
-   terrain[4] = WATER_COAST;
-   terrain[5] = WATER_FORD;
-   terrain[6] = WATER_ICE;
-   terrain[7] = WATER_OCEAN;
-   softenTerrain(FLAT_DIRT, terrain, 8, ADD_FLAT_DIRT);
+  // FLAT_DIRT
+  delete [] terrain;
+  terrain = new char[8];
+  terrain[0] = DESERT;
+  terrain[1] = DESERT_ROAD;
+  terrain[2] = DESERT_SAND;
+  terrain[3] = FLAT_ROAD;
+  terrain[4] = WATER_COAST;
+  terrain[5] = WATER_FORD;
+  terrain[6] = WATER_ICE;
+  terrain[7] = WATER_OCEAN;
+  softenTerrain(FLAT_DIRT, terrain, 8, ADD_FLAT_DIRT);
 
-   delete [] terrain;
-   terrain = new char[12];
-   terrain[0] = DESERT;
-   terrain[1] = DESERT_ROAD;
-   terrain[2] = DESERT_SAND;
-   terrain[3] = FLAT_DIRT;
-   terrain[4] = FLAT_GRASS;
-   terrain[5] = FLAT_ROAD;
-   terrain[6] = FLAT_SAVANNA;
-   terrain[7] = FLAT_STONE_PATH;
-   terrain[8] = WATER_COAST;
-   terrain[9] = WATER_FORD;
-   terrain[10] = WATER_ICE;
-   terrain[11] = WATER_OCEAN;
-   softenTerrain(WATER_SNOW, terrain, 12, ADD_WATER_SNOW);
+  // WATER_SNOW
+  delete [] terrain;
+  terrain = new char[12];
+  terrain[0] = DESERT;
+  terrain[1] = DESERT_ROAD;
+  terrain[2] = DESERT_SAND;
+  terrain[3] = FLAT_DIRT;
+  terrain[4] = FLAT_GRASS;
+  terrain[5] = FLAT_ROAD;
+  terrain[6] = FLAT_SAVANNA;
+  terrain[7] = FLAT_STONE_PATH;
+  terrain[8] = WATER_COAST;
+  terrain[9] = WATER_FORD;
+  terrain[10] = WATER_ICE;
+  terrain[11] = WATER_OCEAN;
+  softenTerrain(WATER_SNOW, terrain, 12, ADD_WATER_SNOW);
 
-   delete [] terrain;
-   terrain = new char[13];
-   terrain[0] = DESERT;
-   terrain[1] = DESERT_ROAD;
-   terrain[2] = DESERT_SAND;
-   terrain[3] = FLAT_DIRT;
-   terrain[4] = FLAT_GRASS;
-   terrain[5] = FLAT_ROAD;
-   terrain[6] = FLAT_SAVANNA;
-   terrain[7] = FLAT_STONE_PATH;
-   terrain[8] = WATER_COAST;
-   terrain[9] = WATER_FORD;
-   terrain[10] = WATER_ICE;
-   terrain[11] = WATER_OCEAN;
-   terrain[12] = WATER_SNOW;
-   softenTerrain(CAVE_FLOOR, terrain, 13, ADD_CAVE_FLOOR);
+  // CAVE_FLOOR
+  delete [] terrain;
+  terrain = new char[13];
+  terrain[0] = DESERT;
+  terrain[1] = DESERT_ROAD;
+  terrain[2] = DESERT_SAND;
+  terrain[3] = FLAT_DIRT;
+  terrain[4] = FLAT_GRASS;
+  terrain[5] = FLAT_ROAD;
+  terrain[6] = FLAT_SAVANNA;
+  terrain[7] = FLAT_STONE_PATH;
+  terrain[8] = WATER_COAST;
+  terrain[9] = WATER_FORD;
+  terrain[10] = WATER_ICE;
+  terrain[11] = WATER_OCEAN;
+  terrain[12] = WATER_SNOW;
+  softenTerrain(CAVE_FLOOR, terrain, 13, ADD_CAVE_FLOOR);
 
-   delete [] terrain;
-   terrain = new char[14];
-   terrain[0] = CAVE_FLOOR;
-   terrain[1] = DESERT;
-   terrain[2] = DESERT_ROAD;
-   terrain[3] = DESERT_SAND;
-   terrain[4] = FLAT_DIRT;
-   terrain[5] = FLAT_GRASS;
-   terrain[6] = FLAT_ROAD;
-   terrain[7] = FLAT_SAVANNA;
-   terrain[8] = FLAT_STONE_PATH;
-   terrain[9] = WATER_COAST;
-   terrain[10] = WATER_FORD;
-   terrain[11] = WATER_ICE;
-   terrain[12] = WATER_OCEAN;
-   terrain[13] = WATER_SNOW;
-   softenTerrain(LAVA, terrain, 14, ADD_LAVA);
+  // LAVA
+  delete [] terrain;
+  terrain = new char[14];
+  terrain[0] = CAVE_FLOOR;
+  terrain[1] = DESERT;
+  terrain[2] = DESERT_ROAD;
+  terrain[3] = DESERT_SAND;
+  terrain[4] = FLAT_DIRT;
+  terrain[5] = FLAT_GRASS;
+  terrain[6] = FLAT_ROAD;
+  terrain[7] = FLAT_SAVANNA;
+  terrain[8] = FLAT_STONE_PATH;
+  terrain[9] = WATER_COAST;
+  terrain[10] = WATER_FORD;
+  terrain[11] = WATER_ICE;
+  terrain[12] = WATER_OCEAN;
+  terrain[13] = WATER_SNOW;
+  softenTerrain(LAVA, terrain, 14, ADD_LAVA);
 
-   delete [] terrain;
-   terrain = new char[15];
-   terrain[0] = CAVE_FLOOR;
-   terrain[1] = DESERT;
-   terrain[2] = DESERT_ROAD;
-   terrain[3] = DESERT_SAND;
-   terrain[4] = FLAT_DIRT;
-   terrain[5] = FLAT_GRASS;
-   terrain[6] = FLAT_ROAD;
-   terrain[7] = FLAT_SAVANNA;
-   terrain[8] = FLAT_STONE_PATH;
-   terrain[9] = LAVA;
-   terrain[10] = WATER_COAST;
-   terrain[11] = WATER_FORD;
-   terrain[12] = WATER_ICE;
-   terrain[13] = WATER_OCEAN;
-   terrain[14] = WATER_SNOW;
-   softenTerrain(CAVE_HILLS, terrain, 15, ADD_CAVE_HILLS);
+  // CAVE_HILLS
+  delete [] terrain;
+  terrain = new char[15];
+  terrain[0] = CAVE_FLOOR;
+  terrain[1] = DESERT;
+  terrain[2] = DESERT_ROAD;
+  terrain[3] = DESERT_SAND;
+  terrain[4] = FLAT_DIRT;
+  terrain[5] = FLAT_GRASS;
+  terrain[6] = FLAT_ROAD;
+  terrain[7] = FLAT_SAVANNA;
+  terrain[8] = FLAT_STONE_PATH;
+  terrain[9] = LAVA;
+  terrain[10] = WATER_COAST;
+  terrain[11] = WATER_FORD;
+  terrain[12] = WATER_ICE;
+  terrain[13] = WATER_OCEAN;
+  terrain[14] = WATER_SNOW;
+  softenTerrain(CAVE_HILLS, terrain, 15, ADD_CAVE_HILLS);
 
-   delete [] terrain;
-   terrain = new char[16];
-   terrain[0] = CAVE_FLOOR;
-   terrain[1] = CAVE_HILLS;
-   terrain[2] = DESERT;
-   terrain[3] = DESERT_ROAD;
-   terrain[4] = DESERT_SAND;
-   terrain[5] = FLAT_DIRT;
-   terrain[6] = FLAT_GRASS;
-   terrain[7] = FLAT_ROAD;
-   terrain[8] = FLAT_SAVANNA;
-   terrain[9] = FLAT_STONE_PATH;
-   terrain[10] = LAVA;
-   terrain[11] = WATER_COAST;
-   terrain[12] = WATER_FORD;
-   terrain[13] = WATER_ICE;
-   terrain[14] = WATER_OCEAN;
-   terrain[15] = WATER_SNOW;
-   softenTerrain(DESERT_HILLS, terrain, 16, ADD_DESERT_HILLS);
+  // DESERT_HILLS
+  delete [] terrain;
+  terrain = new char[16];
+  terrain[0] = CAVE_FLOOR;
+  terrain[1] = CAVE_HILLS;
+  terrain[2] = DESERT;
+  terrain[3] = DESERT_ROAD;
+  terrain[4] = DESERT_SAND;
+  terrain[5] = FLAT_DIRT;
+  terrain[6] = FLAT_GRASS;
+  terrain[7] = FLAT_ROAD;
+  terrain[8] = FLAT_SAVANNA;
+  terrain[9] = FLAT_STONE_PATH;
+  terrain[10] = LAVA;
+  terrain[11] = WATER_COAST;
+  terrain[12] = WATER_FORD;
+  terrain[13] = WATER_ICE;
+  terrain[14] = WATER_OCEAN;
+  terrain[15] = WATER_SNOW;
+  softenTerrain(DESERT_HILLS, terrain, 16, ADD_DESERT_HILLS);
 
-   delete [] terrain;
-   terrain = new char[17];
-   terrain[0] = CAVE_FLOOR;
-   terrain[1] = CAVE_HILLS;
-   terrain[2] = DESERT;
-   terrain[3] = DESERT_HILLS;
-   terrain[4] = DESERT_ROAD;
-   terrain[5] = DESERT_SAND;
-   terrain[6] = FLAT_DIRT;
-   terrain[7] = FLAT_GRASS;
-   terrain[8] = FLAT_ROAD;
-   terrain[9] = FLAT_SAVANNA;
-   terrain[10] = FLAT_STONE_PATH;
-   terrain[11] = LAVA;
-   terrain[12] = WATER_COAST;
-   terrain[13] = WATER_FORD;
-   terrain[14] = WATER_ICE;
-   terrain[15] = WATER_OCEAN;
-   terrain[16] = WATER_SNOW;
-   softenTerrain(HILLS, terrain, 17, ADD_HILLS);
+  // HILLS
+  delete [] terrain;
+  terrain = new char[17];
+  terrain[0] = CAVE_FLOOR;
+  terrain[1] = CAVE_HILLS;
+  terrain[2] = DESERT;
+  terrain[3] = DESERT_HILLS;
+  terrain[4] = DESERT_ROAD;
+  terrain[5] = DESERT_SAND;
+  terrain[6] = FLAT_DIRT;
+  terrain[7] = FLAT_GRASS;
+  terrain[8] = FLAT_ROAD;
+  terrain[9] = FLAT_SAVANNA;
+  terrain[10] = FLAT_STONE_PATH;
+  terrain[11] = LAVA;
+  terrain[12] = WATER_COAST;
+  terrain[13] = WATER_FORD;
+  terrain[14] = WATER_ICE;
+  terrain[15] = WATER_OCEAN;
+  terrain[16] = WATER_SNOW;
+  softenTerrain(HILLS, terrain, 17, ADD_HILLS);
 
-   delete [] terrain;
-   terrain = new char[18];
-   terrain[0] = CAVE_FLOOR;
-   terrain[1] = CAVE_HILLS;
-   terrain[2] = DESERT;
-   terrain[3] = DESERT_HILLS;
-   terrain[4] = DESERT_ROAD;
-   terrain[5] = DESERT_SAND;
-   terrain[6] = FLAT_DIRT;
-   terrain[7] = FLAT_GRASS;
-   terrain[8] = FLAT_ROAD;
-   terrain[9] = FLAT_SAVANNA;
-   terrain[10] = FLAT_STONE_PATH;
-   terrain[11] = HILLS;
-   terrain[12] = LAVA;
-   terrain[13] = WATER_COAST;
-   terrain[14] = WATER_FORD;
-   terrain[15] = WATER_ICE;
-   terrain[16] = WATER_OCEAN;
-   terrain[17] = WATER_SNOW;
-   softenTerrain(WATER_SNOW_HILLS, terrain, 18, ADD_WATER_SNOW_HILLS);
+  // WATER_SNOW_HILLS
+  delete [] terrain;
+  terrain = new char[18];
+  terrain[0] = CAVE_FLOOR;
+  terrain[1] = CAVE_HILLS;
+  terrain[2] = DESERT;
+  terrain[3] = DESERT_HILLS;
+  terrain[4] = DESERT_ROAD;
+  terrain[5] = DESERT_SAND;
+  terrain[6] = FLAT_DIRT;
+  terrain[7] = FLAT_GRASS;
+  terrain[8] = FLAT_ROAD;
+  terrain[9] = FLAT_SAVANNA;
+  terrain[10] = FLAT_STONE_PATH;
+  terrain[11] = HILLS;
+  terrain[12] = LAVA;
+  terrain[13] = WATER_COAST;
+  terrain[14] = WATER_FORD;
+  terrain[15] = WATER_ICE;
+  terrain[16] = WATER_OCEAN;
+  terrain[17] = WATER_SNOW;
+  softenTerrain(WATER_SNOW_HILLS, terrain, 18, ADD_WATER_SNOW_HILLS);
 
-   delete [] terrain;
-   terrain = new char[19];
-   terrain[0] = CAVE_FLOOR;
-   terrain[1] = CAVE_HILLS;
-   terrain[2] = DESERT;
-   terrain[3] = DESERT_HILLS;
-   terrain[4] = DESERT_ROAD;
-   terrain[5] = DESERT_SAND;
-   terrain[6] = FLAT_DIRT;
-   terrain[7] = FLAT_GRASS;
-   terrain[8] = FLAT_ROAD;
-   terrain[9] = FLAT_SAVANNA;
-   terrain[10] = FLAT_STONE_PATH;
-   terrain[11] = HILLS;
-   terrain[12] = LAVA;
-   terrain[13] = WATER_COAST;
-   terrain[14] = WATER_FORD;
-   terrain[15] = WATER_ICE;
-   terrain[16] = WATER_OCEAN;
-   terrain[17] = WATER_SNOW;
-   terrain[18] = WATER_SNOW_HILLS;
-   softenTerrain(DESERT_MOUNTAIN, terrain, 19, ADD_DESERT_MOUNTAIN);
+  // DESERT_MOUNTAIN
+  delete [] terrain;
+  terrain = new char[19];
+  terrain[0] = CAVE_FLOOR;
+  terrain[1] = CAVE_HILLS;
+  terrain[2] = DESERT;
+  terrain[3] = DESERT_HILLS;
+  terrain[4] = DESERT_ROAD;
+  terrain[5] = DESERT_SAND;
+  terrain[6] = FLAT_DIRT;
+  terrain[7] = FLAT_GRASS;
+  terrain[8] = FLAT_ROAD;
+  terrain[9] = FLAT_SAVANNA;
+  terrain[10] = FLAT_STONE_PATH;
+  terrain[11] = HILLS;
+  terrain[12] = LAVA;
+  terrain[13] = WATER_COAST;
+  terrain[14] = WATER_FORD;
+  terrain[15] = WATER_ICE;
+  terrain[16] = WATER_OCEAN;
+  terrain[17] = WATER_SNOW;
+  terrain[18] = WATER_SNOW_HILLS;
+  softenTerrain(DESERT_MOUNTAIN, terrain, 19, ADD_DESERT_MOUNTAIN);
 
-   delete [] terrain;
+  delete [] terrain;
 }

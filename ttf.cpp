@@ -15,45 +15,46 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+#include "ttf.hpp"
+
 #include <cstdlib>
 #include <iostream>
 
-#include "ttf.hpp"
-
-using namespace std;
+// video_engine
+using video_engine::Graphics;
 
 // Constructor
-ttf::ttf(void) {
-   font = TTF_OpenFont("font/DejaVuSans.ttf", 14);
-   if (font == NULL) {
-      cout << "\n\t" << SDL_GetError() << "\n\n";
-      exit(EXIT_FAILURE);
-   }
+Graphics::Ttf::Ttf(void) {
+  font = TTF_OpenFont("font/DejaVuSans.ttf", 14);
+  if (font == NULL) {
+    std::cout << "\n\t" << SDL_GetError() << "\n\n";
+    exit(EXIT_FAILURE);
+  }
 
-   // Initialize position
-   position.x = 0;
-   position.y = 0;
-   position.w = 0;
-   position.h = 0;
+  // Initialize position
+  position.x = 0;
+  position.y = 0;
+  position.w = 0;
+  position.h = 0;
 
-   color.r = color.g = color.b = 255; // Put color to white
+  color.r = color.g = color.b = 255; // Put color to white
 }
 
 // Destructor
-ttf::~ttf(void) {
-   TTF_CloseFont(font);
+Graphics::Ttf::~Ttf(void) {
+  TTF_CloseFont(font);
 }
 
 // Writes a text into a surface.
-void ttf::write(const char *text, SDL_Surface *surface, const int x, const int y) {
-   textSurface = TTF_RenderText_Solid(font, text, color);
+void Graphics::Ttf::write(const char *text, SDL_Surface *surface, const int x, const int y) {
+  text_surface = TTF_RenderText_Solid(font, text, color);
 
-   position.x = x;
-   position.y = y;
-   position.w = textSurface->w;
-   position.h = textSurface->h;
+  position.x = x;
+  position.y = y;
+  position.w = text_surface->w;
+  position.h = text_surface->h;
 
-   SDL_BlitSurface(textSurface, NULL, surface, &position);
-   // After being used, free the surface
-   SDL_FreeSurface(textSurface);
+  SDL_BlitSurface(text_surface, NULL, surface, &position);
+  // After being used, free the surface
+  SDL_FreeSurface(text_surface);
 }

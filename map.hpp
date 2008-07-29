@@ -22,107 +22,109 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef MAP_HPP
 #define MAP_HPP
 
-// @{
-/// Types of terrain.
-#define CAVE_FLOOR       '0'
-#define CAVE_HILLS       '1'
-#define DESERT           '2'
-#define DESERT_HILLS     '3'
-#define DESERT_MOUNTAIN  '4'
-#define DESERT_ROAD      '5'
-#define DESERT_SAND      '6'
-#define FLAT_DIRT        '7'
-#define FLAT_GRASS       '8'
-#define FLAT_ROAD        '9'
-#define FLAT_SAVANNA     'a'
-#define FLAT_STONE_PATH  'b'
-#define HILLS            'c'
-#define LAVA             'd'
-#define WATER_COAST      'e'
-#define WATER_FORD       'f'
-#define WATER_ICE        'g'
-#define WATER_OCEAN      'h'
-#define WATER_SNOW       'i'
-#define WATER_SNOW_HILLS 'j'
-#define LAST_TERRAIN     'j'
-// @}
+#include "macros.hpp"
 
-class cell;
-class unit;
+/// Types of terrain.
+enum {CAVE_FLOOR = '0',
+      CAVE_HILLS,
+      DESERT,
+      DESERT_HILLS,
+      DESERT_MOUNTAIN,
+      DESERT_ROAD,
+      DESERT_SAND,
+      FLAT_DIRT,
+      FLAT_GRASS,
+      FLAT_ROAD,
+      FLAT_SAVANNA = 'a',
+      FLAT_STONE_PATH,
+      HILLS,
+      LAVA,
+      WATER_COAST,
+      WATER_FORD,
+      WATER_ICE,
+      WATER_OCEAN,
+      WATER_SNOW,
+      WATER_SNOW_HILLS,
+      LAST_TERRAIN = WATER_SNOW_HILLS};
 
 // Struct to store coordinates.
-struct coordinates {
-   int x;
-   int y;
+struct Coordinates {
+  int x;
+  int y;
 };
+
+class Cell;
+class Unit;
 
 /// Controls all the attributes of a map.
 ///
 /// Basically consist of lots of cell classes working
 /// together to create a map an to be able to use it.
 /// (This class is meant to be inherit, not to be used directly)
-class map {
-   private:
-      coordinates firstCellCoor; // Map coordinates of the top left visible cell.
-      coordinates firstCellPos; // Position of the top left visible cell in the screen.
-      int horizontalCells, verticalCells; // Number of visible cells
+class Map {
+  public:
+    /// Starts the map.
+    ///
+    /// -no detailed description-
+    virtual void start(void);
 
-      // Softens a type of terrain.
-      // (Implemented in map_smooth.cpp)
-      void softenTerrain(const char cellTerrain, char *terrain, const int numberTerrains, const int softImages);
+    /// Indicates the terrain image of a cell.
+    ///
+    /// If both coordinates are -1 applies
+    /// the terrain to all the cells in the map.
+    ///
+    /// @param[in] terrain_name Type of terrain.
+    /// @param[in] x X coordinate of the cell.
+    /// @param[in] y Y coordinate of the cell.
+    // (Implemented in map_terrain.cpp)
+    void setTerrain(const char terrain_name, const int x, const int y);
 
-   protected:
-      int width, height; // The map's size.
-      cell **battleMap;
-      unit *selectedUnit; // The unit that's selected.
-      cell *mouseOverCell; // The cell where the mouse is.
+  protected:
+    Map(const int width, const int height); // Constructor
+    virtual ~Map(void); // Destructor
 
-      map(const int width, const int height); // Constructor
-      virtual ~map(void); // Destructor
+    // Returns a cell where the creature can attack.
+    Cell* getAttackCell(void);
 
-      // Returns a cell where the creature can attack.
-      cell* getAttackCell(void);
+    // Tells the map the mouse's position.
+    void moveMouse(const int x, const int y, const int button);
+    // Function to execute when the user clicks on a cell.
+    virtual void mouseClick(const int x, const int y) = 0;
 
-      // Tells the map the mouse's position.
-      void moveMouse(const int x, const int y, const int button);
-      // Function to execute when the user clicks on a cell.
-      virtual void mouseClick(const int x, const int y) = 0;
+    // Starts the next turn.
+    virtual void nextTurn(void) = 0;
 
-      // Starts the next turn.
-      virtual void nextTurn(void) = 0;
+    // This function is executed in the main loop. If
+    // it returns true, the loop ends, else it continues.
+    virtual bool frame(void) = 0;
 
-      // This function is executed in the main loop. If
-      // it returns true, the loop ends, else it continues.
-      virtual bool frame(void) = 0;
+    // Moves a creature to a cell.
+    void moveCreature(Cell &endPosition);
 
-      // Moves a creature to a cell.
-      void moveCreature(cell &endPosition);
+    // Connects all the cells in the map.
+    void connectCells(void);
+    // Softens the map to make it look nicer.
+    // (Implemented in map_smooth.cpp)
+    void softenMap(void);
 
-      // Connects all the cells in the map.
-      void connectCells(void);
-      // Softens the map to make it look nicer.
-      // (Implemented in map_smooth.cpp)
-      void softenMap(void);
+    // Draws the map in the screen.
+    virtual void draw(void);
 
-      // Draws the map in the screen.
-      virtual void draw(void);
+    int width, height; // The map's size.
+    Cell **battle_map;
+    Unit *selected_unit; // The unit that's selected.
+    Cell *mouse_over_cell; // The cell where the mouse is.
 
-   public:
-      /// Starts the map.
-      ///
-      /// -no detailed description-
-      virtual void start(void);
+  private:
+    // Softens a type of terrain.
+    // (Implemented in map_smooth.cpp)
+    void softenTerrain(const char cell_terrain, char *terrain, const int number_terrains, const int soft_images);
 
-      /// Indicates the terrain image of a cell.
-      ///
-      /// Specify only the terrainName attribute to
-      /// apply the terrain to all the cells of the map.
-      ///
-      /// @param[in] terrainName Type of terrain.
-      /// @param[in] x X coordinate of the cell.
-      /// @param[in] y Y coordinate of the cell.
-      // (Implemented in map_terrain.cpp)
-      void setTerrain(const char terrainName, const int x = -1, const int y = -1);
+    Coordinates first_cell_coor; // Map coordinates of the top left visible cell.
+    Coordinates first_cell_pos; // Position of the top left visible cell in the screen.
+    int horizontal_cells, vertical_cells; // Number of visible cells
+
+    DISALLOW_COPY_AND_ASSIGN(Map);
 };
 
 #endif // MAP_HPP
