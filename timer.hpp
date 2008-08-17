@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// The timer class.
+/// The Timer class.
 /// @author Jonan
 
 #ifndef TIMER_HPP
@@ -29,7 +29,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// Controls the game's speed.
 ///
 /// This class alows you to control the time
-/// that passes bettwen to points of the program.
+/// that passes between to points of the program.
 class Timer {
   public:
     Timer(void); // Constructor
@@ -43,7 +43,7 @@ class Timer {
     ///
     /// -no detailed description-
     ///
-    /// @param[in] ms milliseconds that should pass bettwen the two points.
+    /// @param[in] ms milliseconds that should pass between the two points.
     void end(const Uint32 ms);
 
   private:

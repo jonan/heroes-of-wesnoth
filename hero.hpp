@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// The hero class.
+/// The Hero class.
 /// @author Jonan
 
 #ifndef HERO_HPP
@@ -24,30 +24,18 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "unit.hpp"
 
-#include "macros.hpp"
-
 /// Types of heros
-enum {FIGHTER = '0', WIZARD};
+enum {ELF , HUMAN, UNDEAD};
 
-/// Types of AI
-enum {HUMAN, COMPUTER};
-
-/// Stores the hero's atributes.
+/// Stores the hero's attributes.
 ///
 /// -no detailed description-
 class Hero : public Unit {
   public:
     /// @param[in] type Type of hero.
-    /// @param[in] ai Type of AI.
-    Hero(const int type, const int ai); // Constructor
+    Hero(const int type); // Constructor
     ~Hero(void); // Destructor
 
-    /// Returns the hero's type of AI.
-    ///
-    /// -no detailed description-
-    ///
-    /// @return The hero's type of AI
-    int getAI(void) {return ai;}
     /// Returns the hero's visibility.
     ///
     /// -no detailed description-
@@ -89,14 +77,13 @@ class Hero : public Unit {
   private:
     static const int MAX_UNITS = 9;
 
-    // Sets the heros attributes acording to his type.
+    // Sets the hero's attributes acording to his type.
     // (Implemented in hero_type.cpp)
     virtual void setCreaturesAttributes(void);
 
-    int ai; // Type of Artificial Intelligence
     int visibility; // How far the hero sees
 
-    Unit *creature[MAX_UNITS]; // The creatures a hero can control
+    Unit *creature[MAX_UNITS]; // The creatures a hero controls
 
     DISALLOW_COPY_AND_ASSIGN(Hero);
 };

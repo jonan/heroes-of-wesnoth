@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -17,12 +17,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "world.hpp"
 
-#include <cstdlib>
+//#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <string>
-
-#include <SDL/SDL.h>
 
 #include "battle.hpp"
 #include "cell.hpp"
@@ -33,15 +31,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 using std::cout;
 using std::ifstream;
 using std::string;
-
 // events_engine
 using events_engine::input;
 using events_engine::keys;
 using events_engine::mouse;
-
 using events_engine::POSITION_X;
 using events_engine::POSITION_Y;
 using events_engine::BUTTON;
+using events_engine::NORMAL;
 
 // Constructor
 World::World(const char *map_file, const int width, const int height) : Map(width, height) {
@@ -51,7 +48,7 @@ World::World(const char *map_file, const int width, const int height) : Map(widt
   string file_name(map_file);
   string file_dir = map + file_name;
 
-  ifstream file(file_dir.c_str(), ifstream::in);
+  ifstream file(file_dir.c_str());
   if (file.fail()) {
     cout << "Error opening map \"" << map_file << "\"\n\n";
     exit(EXIT_FAILURE);
@@ -64,7 +61,7 @@ World::World(const char *map_file, const int width, const int height) : Map(widt
   while (j<height) {
     file.get(temp);
     if (temp != '\n') {
-      setTerrain(temp, i, j);
+      setTerrain(temp, &battle_map[i][j]);
       i++;
       if (i == width) {
         i = 0;
@@ -76,10 +73,22 @@ World::World(const char *map_file, const int width, const int height) : Map(widt
   file.close();
 
   setEnemies(map_file);
+  setItems(map_file);
   softenMap();
 
   turn = -1;
   end_world = false;
+}
+
+// Destructor
+World::~World(void) {
+  for (int x=0; x<width; x++)
+    for (int y=0; y<height; y++)
+      if (battle_map[x][y].getCreature())
+        delete battle_map[x][y].getCreature();
+
+  // Make sure the cursors's type is normal
+  input->setCursorType(NORMAL);
 }
 
 // Puts a hero in the map.
@@ -92,18 +101,20 @@ void World::setHero(Hero &player, const int x, const int y) {
 // This function is executed in the main loop. If
 // it returns true, the loop ends, else it continues.
 bool World::frame(void) {
+  Map::frame();
   if (keys[SDLK_ESCAPE]) {
     keys[SDLK_ESCAPE] = false;
     end_world = true;
   } else if (!end_world) {
+    if (keys[SDLK_c]) centerView(*selected_unit);
     draw();
     moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
   }
   return end_world;
 }
 
-// Function to execute when the user clicks on a cell.
-void World::mouseClick(const int x, const int y) {
+// Function to execute when the user left clicks on a cell.
+void World::mouseLeftClick(const int x, const int y) {
   if ( selected_unit->getPosition() != &battle_map[x][y] ) {
     if ( battle_map[x][y].canMoveHere() ) {
       moveCreature(battle_map[x][y]);
@@ -121,7 +132,8 @@ void World::mouseClick(const int x, const int y) {
         // Start the battle
         if ( createBattle(*player, creatureType, terrain) )
           deleteCreature(battle_map[x][y]);
-        else players[turn] = NULL;
+        else
+          players[turn] = NULL;
 
         nextTurn();
       }
@@ -141,19 +153,19 @@ void World::nextTurn(void) {
     selected_unit->getPosition()->select();
     // Wait until the mouse button is released.
     while (mouse[BUTTON]) input->readInput();
+    centerView(*selected_unit);
   }
 }
-
 
 // Puts the enemies in the map.
 void World::setEnemies(const char *map_file) {
   // Create a string with the fisical location of the file
-  // "map/" + name
+  // "map/" + name + "_creatures"
   string map = "maps/";
   string fileName(map_file);
   string fileDir = map + map_file + "_creatures";
 
-  ifstream file(fileDir.c_str(), ifstream::in);
+  ifstream file(fileDir.c_str());
   if (file.fail()) {
     cout << "Error opening map \"" << map_file << "\"\n\n";
     exit(EXIT_FAILURE);
@@ -169,11 +181,44 @@ void World::setEnemies(const char *map_file) {
     if (temp != '\n') {
       if (temp != '-') {
         Unit *creature;
-        /// @todo Free this units if they are not killed.
         creature = new Unit(temp, 0);
         battle_map[i][j].setCreature(creature);
         number_enemies++;
       }
+      i++;
+      if (i == width) {
+        i = 0;
+        j++;
+      }
+    }
+  }
+
+  file.close();
+}
+
+// Puts the items on the map.
+void World::setItems(const char *map_file) {
+  // Create a string with the fisical location of the file
+  // "map/" + name + "_items"
+  string map = "maps/";
+  string fileName(map_file);
+  string fileDir = map + map_file + "_items";
+
+  ifstream file(fileDir.c_str());
+  if (file.fail()) {
+    cout << "Error opening map \"" << map_file << "\"\n\n";
+    exit(EXIT_FAILURE);
+  }
+
+  // Set the items
+  char temp;
+  int i = 0;
+  int j = 0;
+  while (j<height) {
+    file.get(temp);
+    if (temp != '\n') {
+      if (temp != '-')
+        setItem(temp, battle_map[i][j]);
       i++;
       if (i == width) {
         i = 0;

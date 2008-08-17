@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -15,17 +15,18 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-#include "graphics.hpp"
-
-#include <cstdlib>
+//#include <cstdlib>
 #include <iostream>
 
+#include "events.hpp"
 #include "image.hpp"
 #include "timer.hpp"
 #include "ttf.hpp"
 
 // std
 using std::cout;
+// events_engine
+using events_engine::input;
 
 namespace video_engine {
 
@@ -64,6 +65,14 @@ SDL_Surface* Graphics::getImage(const char *image_name, const int alpha,
 void Graphics::getScreenSize(int &width, int &height) {
   width = this->width;
   height = this->height;
+}
+
+// This function should only be called inside the
+// Events class after a SDL_VIDEORESIZE event.
+void Graphics::resize(const int width, const int height) {
+  this->width = width;
+  this->height = height;
+  screen = SDL_SetVideoMode(width, height, bpp, SDL_flags);
 }
 
 // Makes an image face the given side.
@@ -113,6 +122,13 @@ void Graphics::write(const char *text,  const int x, const int y) {
   this->text->write(text, screen, x, y);
 }
 
+// The text is centered in between the given positions.
+void Graphics::writeCentered(const char *text,
+                             const int left_x, const int right_x,
+                             const int top_y, const int bottom_y) {
+  this->text->writeCentered(text, screen, right_x, left_x, top_y, bottom_y);
+}
+
 // Puts the screen black.
 void Graphics::erase(void) {
   SDL_FillRect(screen, NULL, 0);
@@ -120,6 +136,7 @@ void Graphics::erase(void) {
 
 // Refreshes the screen.
 void Graphics::update(void) {
+  input->drawMouse();
   SDL_Flip(screen);
 }
 
@@ -145,25 +162,14 @@ void Graphics::transitionEffect(int effect) {
         SDL_UpdateRect(screen, 0, y, width, 5);
         fps.end(10);
       }
+    default: {} // Imposible case
   }
 }
 
 // Constructor
 Graphics::Graphics(const bool fullscreen, int width, int height) {
   init();
-
-  // Validate the resolution input by user.
-  // Only check with SDL_FULLSCREEN is neccessary and useful.
-  // Without SDL_FULLSCREEN _all_ screen formats would be valid.
-  int bpp = SDL_VideoModeOK( width, height, 16, SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN );
-  if (!bpp) {
-    cout << "The choosen resolution (" << width << "x" << height 
-         << ") is not valid on your system. Trying default (1024x768%16)...\n";
-    width = 1024;
-    height = 768;
-    bpp = 16;
-  }
-  createWindow(fullscreen, width, height, bpp);
+  createWindow(fullscreen, width, height);
 
   images = new ImageList;
   text = new Ttf;
@@ -186,17 +192,28 @@ void Graphics::init(void) {
 }
 
 // Creates the surface that will be drawn directly to the screen
-void Graphics::createWindow(const bool fullscreen, const int width, const int height, const int bpp) {
+void Graphics::createWindow(const bool fullscreen, int width, int height) {
+  SDL_flags = (SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_VIDEORESIZE);
+  // Validate the resolution in case user changed default.
+  // Only check with SDL_FULLSCREEN is neccessary and useful.
+  // Without SDL_FULLSCREEN all screen formats would be valid.
+  bpp = SDL_VideoModeOK( width, height, 16, SDL_flags | SDL_FULLSCREEN);
+  if (!bpp) {
+    cout << "The choosen resolution (" << width << "x" << height 
+         << ") is not valid on your system. Trying default (1024x768%16)...\n";
+    width = 1024;
+    height = 768;
+    bpp = 16;
+  }
+
   cout << "Opening " << width << "x" << height << "%" << bpp << " window...\t";
   this->width = width;
   this->height = height;
 
   // Set the video mode
-  Uint32 SDLflags;
-  SDLflags = (SDL_DOUBLEBUF | SDL_ANYFORMAT);
-  if (fullscreen) SDLflags |= SDL_FULLSCREEN;
-  screen = SDL_SetVideoMode (width, height, bpp, SDLflags);
-  SDL_WM_SetCaption ("Heroes of Wesnoth", NULL);
+  if (fullscreen) SDL_flags |= SDL_FULLSCREEN;
+  screen = SDL_SetVideoMode(width, height, bpp, SDL_flags);
+  SDL_WM_SetCaption("Heroes of Wesnoth", NULL);
 
   if (screen == NULL) {
     cout << "[fail]\n\n" << SDL_GetError() << "\n\n";

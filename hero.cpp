@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -22,13 +22,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 // video_engine
 using video_engine::screen;
 
-using video_engine::RIGHT;
-
 // Constructor
-Hero::Hero(const int type, const int ai) : Unit(-1, 1) {
+Hero::Hero(const int type) : Unit(-1, 1) {
   master = this;
   this->type = type;
-  this->ai = ai;
   setCreaturesAttributes();
   // The hero starts controling no creatures
   for (int i=0; i<MAX_UNITS; i++) {
@@ -87,6 +84,17 @@ void Hero::draw(SDL_Rect &position) {
     if ( (sprite/NUM_FRAMES_FOR_SPRITE) == static_cast<int>(animations[actual_animation].size()) ) {
       sprite = 0;
       actual_animation = STANDING;
+    }
+    // Draw a spell if it's needed.
+    if (magic_spell) {
+      position.x += magic_spell->position.x;
+      position.y += magic_spell->position.y;
+      screen->draw(magic_spell->image_list[magic_spell->sprite/NUM_FRAMES_FOR_SPRITE], position);
+      magic_spell->sprite++;
+      if (magic_spell->sprite/NUM_FRAMES_FOR_SPRITE == magic_spell->image_list.size()) {
+        delete magic_spell;
+        magic_spell = NULL;
+      }
     }
   } else { // The animation is ATTACKING
     // If there's no animation for attack simply get the creature closer to the enemy

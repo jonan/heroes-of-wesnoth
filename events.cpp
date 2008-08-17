@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -16,6 +16,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 #include "events.hpp"
+
+#include "graphics.hpp"
+
+using video_engine::screen;
+using video_engine::OPAQUE;
+using video_engine::NONE;
 
 namespace events_engine {
 
@@ -60,7 +66,20 @@ void Events::readInput(void) {
     else if (event.type == SDL_KEYUP) {
       keys[event.key.keysym.sym] = false;
     }
+    // RESIZE
+    else if (event.type == SDL_VIDEORESIZE) {
+      screen->resize(event.resize.w, event.resize.h);
+    }
   }
+}
+
+// It's called every time the screen is updated,
+// so it should only be called from graphics.
+void Events::drawMouse(void) {
+  SDL_Rect position;
+  position.x = mouse[POSITION_X];
+  position.y = mouse[POSITION_Y];
+  screen->draw(cursor_image[cursor_type], position);
 }
 
 // Constructor
@@ -77,6 +96,17 @@ Events::Events(void) {
 
   // Mouse motion events won't go to the SDL queue
   SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
+  // Hide default cursor
+  SDL_ShowCursor(SDL_DISABLE);
+
+  // Set the cursor's images
+  cursor_image[NORMAL] = screen->getImage("cursors/normal", OPAQUE, NONE, 0);
+  cursor_image[ATTACK] = screen->getImage("cursors/attack", OPAQUE, NONE, 0);
+  cursor_image[MOVE] = screen->getImage("cursors/move", OPAQUE, NONE, 0);
+  cursor_image[ILLEGAL] = screen->getImage("cursors/select-illegal", OPAQUE, NONE, 0);
+  cursor_image[WAIT] = screen->getImage("cursors/wait", OPAQUE, NONE, 0);
+
+  cursor_type = NORMAL;
 }
 
 Events *input = NULL;

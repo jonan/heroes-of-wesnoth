@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// The world class.
+/// The World class.
 /// @author Jonan
 
 #ifndef WORLD_HPP
@@ -25,8 +25,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include <deque>
 
 #include "map.hpp"
-
-#include "macros.hpp"
 
 class Hero;
 
@@ -39,6 +37,7 @@ class World : public Map {
     /// @param[in] width Map's width.
     /// @param[in] height Map's height 
     World(const char *map_file, const int width, const int height); // Constructor
+    ~World(void); // Destructor
 
     /// Puts a hero in the map.
     ///
@@ -54,14 +53,16 @@ class World : public Map {
     // it returns true, the loop ends, else it continues.
     virtual bool frame(void);
 
-    // Function to execute when the user clicks on a cell.
-    virtual void mouseClick(const int x, const int y);
+    // Function to execute when the user left clicks on a cell.
+    virtual void mouseLeftClick(const int x, const int y);
 
     // Starts the next turn.
     virtual void nextTurn(void);
 
     // Puts the enemies in the map.
     void setEnemies(const char *map_file);
+    // Puts the items on the map.
+    void setItems(const char *map_file);
     // Removes a unit from the world and deletes it.
     void deleteCreature(Cell &position);
 

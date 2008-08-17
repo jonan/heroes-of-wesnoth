@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -21,9 +21,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // video_engine
 using video_engine::screen;
-
 using video_engine::OPAQUE;
-
 using video_engine::NONE;
 
 const int DISTANCE = 30; // Distance between two buttons
@@ -66,7 +64,6 @@ Menu::Menu(SDL_Rect position) {
   active_button = -1; //  The mouse is over no button.
   pressed_button = -1; //  No button is being pressed.
   background = false;
-  draw_background = false;
 }
 
 // Destructor
@@ -87,7 +84,6 @@ void Menu::addButton(const char *text, void (&function)(void)) {
 // for drawing the menu every time this is needed.
 void Menu::addBackground(void (&drawBackgroundFunction)(void)) {
   background = true;
-  draw_background = true;
   this->drawBackgroundFunction = drawBackgroundFunction;
 }
 
@@ -111,10 +107,8 @@ void Menu::moveMouse(const int x, const int y, const bool pressed) {
           pressed_button = i;
         } else {
           if (pressed_button != -1) {
-            if (pressed_button == i) {
-              if (background) draw_background = true;
+            if (pressed_button == i)
               buttons[i]->getFunction();
-            }
             buttons[pressed_button]->setState(NORMAL);
             pressed_button = -1;
           }
@@ -146,16 +140,18 @@ void Menu::moveMouse(const int x, const int y, const bool pressed) {
 
 // Draws the menu.
 void Menu::draw(void) {
-  if (draw_background) {
+  if (background)
     drawBackgroundFunction();
-    draw_background = false;
-  }
   for (unsigned int i=0; i<buttons.size(); i++) {
     screen->draw( button_surface[ buttons[i]->getState() ], position );
     if (buttons[i]->getState() != PRESSED)
-      screen->write(buttons[i]->getText() , position.x+28, position.y+3);
+      screen->writeCentered(buttons[i]->getText(),
+                            position.x, position.x+BUTTON_WIDTH,
+                            position.y, position.y+BUTTON_HEIGHT);
     else
-      screen->write(buttons[i]->getText() , position.x+30, position.y+4);
+      screen->writeCentered(buttons[i]->getText(),
+                            position.x+2, position.x+BUTTON_WIDTH,
+                            position.y+2, position.y+BUTTON_HEIGHT);
     position.y += DISTANCE; // Set the position of the next button
   }
   // Put the position back to normal

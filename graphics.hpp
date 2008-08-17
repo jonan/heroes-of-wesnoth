@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// The graphic class and global graphics variables.
+/// The Graphics class and global graphics variables.
 /// @author Jonan
 
 #ifndef GRAPHICS_HPP
@@ -31,8 +31,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// -no detailed description-
 namespace video_engine {
 
-/// Alpha value
+// @{
+/// Alpha values
 const int OPAQUE = 255;
+const int TRANSPARENT = 0;
+// @}
 
 /// Mirror
 enum {NONE, X, Y};
@@ -77,6 +80,15 @@ class Graphics {
     /// @param[out] height The screen's height.
     void getScreenSize(int &width, int &height);
 
+    /// Changes the size of the actual screen.
+    ///
+    /// This function should only be called inside the
+    /// Events class after a SDL_VIDEORESIZE event.
+    ///
+    /// @param[in] width New screen width.
+    /// @param[in] height New screen height.
+    void resize(const int width, const int height);
+
     /// Makes an image face the given side.
     ///
     ///  -no detailed description-
@@ -120,6 +132,18 @@ class Graphics {
     /// @param[in] x The x coordinate of the top left corner of the text.
     /// @param[in] y The y coordinate of the top left corner of the text.
     void write(const char *text,  const int x, const int y);
+    /// Writes text in the screen.
+    ///
+    /// The text is centered in between the given positions.
+    ///
+    /// @param[in] text A string with the text to write.
+    /// @param[in] left_x The x coordinate of the left margen of the text.
+    /// @param[in] right_x The x coordinate of the right margen of the text.
+    /// @param[in] top_y The y coordinate of the top margen of the text.
+    /// @param[in] bottom_y The y coordinate of the bottom margen of the text.
+    void writeCentered(const char *text,
+                       const int left_x, const int right_x,
+                       const int top_y, const int bottom_y);
 
     /// Puts the screen black.
     ///
@@ -150,15 +174,16 @@ class Graphics {
     // Initializes SDL, SDL_ttf and SDL_mixer.
     void init(void);
     // Creates the surface that will be drawn directly to the screen.
-    void createWindow(const bool fullscreen, const int width, const int height, const int bpp);
+    void createWindow(const bool fullscreen, int width, int height);
 
     // Declaration of nested classes
     class Image;
     class ImageList;
     class Ttf;
 
+    Uint32 SDL_flags; // SDL flags of the actual screen
     SDL_Surface *screen; // The surface that represents the screen
-    int width, height; // The screen's witdh and height
+    int width, height, bpp; // The screen's witdh, height and bpp
     ImageList *images; // List with all the images used
     Ttf *text; // Used to write text into the screen
 

@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// The button and menu classes.
+/// The Button and Menu classes.
 /// @author Jonan
 
 #ifndef MENU_HPP
@@ -118,7 +118,6 @@ class Menu {
     int active_button; // Number of the button with the mouse over.
     int pressed_button; // Number of the button pressed.
     bool background; // Indicates if the menu has a background.
-    bool draw_background; // Indicates if drawing the background is needed.
     void (*drawBackgroundFunction)(void); // Function that draws the background.
 
     DISALLOW_COPY_AND_ASSIGN(Menu);

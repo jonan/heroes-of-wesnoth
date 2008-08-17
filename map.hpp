@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -16,13 +16,17 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// The map class.
+/// The Map class.
 /// @author Jonan
 
 #ifndef MAP_HPP
 #define MAP_HPP
 
 #include "macros.hpp"
+#include "structs.hpp"
+
+class Cell;
+class Unit;
 
 /// Types of terrain.
 enum {CAVE_FLOOR = '0',
@@ -37,6 +41,11 @@ enum {CAVE_FLOOR = '0',
       FLAT_ROAD,
       FLAT_SAVANNA = 'a',
       FLAT_STONE_PATH,
+      FOREST_GREAT_TREE,
+      FOREST_MUSHROOMS,
+      FOREST_PINE,
+      FOREST_SNOW,
+      FOREST_TROPICAL,
       HILLS,
       LAVA,
       WATER_COAST,
@@ -47,14 +56,41 @@ enum {CAVE_FLOOR = '0',
       WATER_SNOW_HILLS,
       LAST_TERRAIN = WATER_SNOW_HILLS};
 
-// Struct to store coordinates.
-struct Coordinates {
-  int x;
-  int y;
-};
-
-class Cell;
-class Unit;
+/// Types of items.
+enum {ALTAR = '0',
+      ALTAR_EVIL,
+      BONES,
+      BONE_STACK,
+      BOX,
+      BRAZIER,
+      BURIAL,
+      DRAGON_STATUE,
+      FIRE,
+      ICEPACK,
+      ORCISH_FLAG = 'a',
+      SCARECROW,
+      SIGNPOST,
+      STRAW_BALE,
+      VILLAGE_CAVE,
+      VILLAGE_COAST,
+      VILLAGE_DESERT,
+      VILLAGE_DESERT_CAMP,
+      VILLAGE_DWARF,
+      VILLAGE_ELF,
+      VILLAGE_ELF_SNOW,
+      VILLAGE_HUMAN,
+      VILLAGE_HUMAN_BURNED,
+      VILLAGE_HUMAN_CITY,
+      VILLAGE_HUMAN_HILLS,
+      VILLAGE_HUMAN_SNOW,
+      VILLAGE_HUMAN_SNOW_HILLS,
+      VILLAGE_HUT,
+      VILLAGE_SWAMP,
+      VILLAGE_TROPICAL,
+      WELL,
+      WHIRLPOOL,
+      WINDMILL,
+      LAST_ITEM = WINDMILL};
 
 /// Controls all the attributes of a map.
 ///
@@ -68,38 +104,38 @@ class Map {
     /// -no detailed description-
     virtual void start(void);
 
-    /// Indicates the terrain image of a cell.
-    ///
-    /// If both coordinates are -1 applies
-    /// the terrain to all the cells in the map.
-    ///
-    /// @param[in] terrain_name Type of terrain.
-    /// @param[in] x X coordinate of the cell.
-    /// @param[in] y Y coordinate of the cell.
-    // (Implemented in map_terrain.cpp)
-    void setTerrain(const char terrain_name, const int x, const int y);
-
   protected:
     Map(const int width, const int height); // Constructor
     virtual ~Map(void); // Destructor
+
+    // Puts an item on a cell.
+    // (Implemented in map_item.cpp)
+    void setItem(char item_name, Cell &position);
+    // If position is NULL, applies the terrain to all the cells in the map.
+    // (Implemented in map_terrain.cpp)
+    void setTerrain(char terrain_name, Cell *position);
 
     // Returns a cell where the creature can attack.
     Cell* getAttackCell(void);
 
     // Tells the map the mouse's position.
     void moveMouse(const int x, const int y, const int button);
-    // Function to execute when the user clicks on a cell.
-    virtual void mouseClick(const int x, const int y) = 0;
+    // Function to execute when the mouse is over a cell.
+    virtual void mouseOverCell(const int x, const int y);
+    // Function to execute when the user left clicks on a cell.
+    virtual void mouseLeftClick(const int x, const int y) {}
+    // Function to execute when the user right clicks on a cell.
+    virtual void mouseRightClick(const int x, const int y) {}
 
     // Starts the next turn.
     virtual void nextTurn(void) = 0;
 
     // This function is executed in the main loop. If
     // it returns true, the loop ends, else it continues.
-    virtual bool frame(void) = 0;
+    virtual bool frame(void);
 
     // Moves a creature to a cell.
-    void moveCreature(Cell &endPosition);
+    void moveCreature(Cell &end_position);
 
     // Connects all the cells in the map.
     void connectCells(void);
@@ -109,6 +145,9 @@ class Map {
 
     // Draws the map in the screen.
     virtual void draw(void);
+
+    // Centers the map view in a given creature
+    void centerView(Unit& creature);
 
     int width, height; // The map's size.
     Cell **battle_map;
@@ -122,6 +161,7 @@ class Map {
 
     Coordinates first_cell_coor; // Map coordinates of the top left visible cell.
     Coordinates first_cell_pos; // Position of the top left visible cell in the screen.
+    int window_width, window_height; // Size of the map's window
     int horizontal_cells, vertical_cells; // Number of visible cells
 
     DISALLOW_COPY_AND_ASSIGN(Map);

@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -26,14 +26,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 // events_engine
 using events_engine::input;
 using events_engine::keys;
-
 using events_engine::BUTTON_LEFT;
-
+using events_engine::BUTTON_RIGHT;
+using events_engine::NORMAL;
+using events_engine::ATTACK;
+using events_engine::MOVE;
 // video_engine
 using video_engine::screen;
-
-using video_engine::RIGHT;
-using video_engine::LEFT;
 
 // Starts the map.
 void Map::start(void) {
@@ -71,16 +70,15 @@ Map::Map(const int width, const int height) {
 
   first_cell_coor.x = 0;
   first_cell_coor.y = 0;
-  // Calculate the size of the visible map
-  int screen_width, screen_height;
-  screen->getScreenSize(screen_width, screen_height);
-  horizontal_cells = (screen_width/54);
-  vertical_cells = (screen_height/72)-1;
+  // Calculate the size of the map's window
+  screen->getScreenSize(window_width, window_height);
+  horizontal_cells = (window_width/108)*2+2; // +2 cells that don't fit compleatly
+  vertical_cells = (window_height/72)+2; // +2 cells that don't fit compleatly
   if (horizontal_cells > width) horizontal_cells = width;
   if (vertical_cells > height) vertical_cells = height;
-  // Center the map in the screen
-  first_cell_pos.x = (screen_width-(horizontal_cells*54+18))/2;
-  first_cell_pos.y = (screen_height-(vertical_cells*72+36))/2;
+  // Adjust the first cell's coordinates
+  first_cell_pos.x = -53;
+  first_cell_pos.y = -72;
 
   selected_unit=NULL;
   mouse_over_cell=NULL;
@@ -103,9 +101,10 @@ Cell* Map::getAttackCell(void) {
   y=0;
 
   while (!temp && x<width) {
-    if (battle_map[x][y].canAttackHere() && battle_map[x][y].getCreature()->getMaster() != NULL)
+    if (battle_map[x][y].canAttackHere() &&
+        battle_map[x][y].getCreature()->getMaster() != selected_unit->getMaster()) {
       temp = &battle_map[x][y];
-    else {
+    } else {
       y++;
       if (y == height) {
         y=0;
@@ -123,8 +122,10 @@ void Map::moveMouse(const int x, const int y, const int button) {
   SDL_Rect cellPosition;
 
   cellPosition.x=first_cell_pos.x;
-  if ( (first_cell_coor.x%2)==1 ) cellPosition.y = first_cell_pos.y+36;
-  else cellPosition.y = first_cell_pos.y;
+  if ( (first_cell_coor.x%2)==1 )
+    cellPosition.y = first_cell_pos.y+36;
+  else
+    cellPosition.y = first_cell_pos.y;
 
   if (mouse_over_cell)
     mouse_over_cell->removeMouse();
@@ -135,46 +136,86 @@ void Map::moveMouse(const int x, const int y, const int button) {
     i++;
   }
   i--;
-  if (i>=first_cell_coor.x && i<horizontal_cells+first_cell_coor.x) {
-    if ( (i%2)==1 ) cellPosition.y = first_cell_pos.y+36;
-    else cellPosition.y = first_cell_pos.y;
-    while (y > cellPosition.y){
-      cellPosition.y += 72;
-      j++;
-    }
-    j--;
-    if (j>=first_cell_coor.y && j<vertical_cells+first_cell_coor.y) { // battle_map[i][j] is a valid cell and the mouse is over it
+  if ( (i%2)==1 )
+    cellPosition.y = first_cell_pos.y+36;
+  else
+    cellPosition.y = first_cell_pos.y;
+  while (y > cellPosition.y){
+    cellPosition.y += 72;
+    j++;
+  }
+  j--;
+  if (i>0 && i<width && j>0 && j<height) {
+    // battle_map[i][j] is a valid cell and the mouse is over it
+    if (i!=0 && i!=width-1 && j!=0 && j!=height-1) { // Cell is not in one of the map's borders
       battle_map[i][j].putMouse();
       mouse_over_cell = &battle_map[i][j];
-      if (button == BUTTON_LEFT) mouseClick(i, j);
+      mouseOverCell(i, j);
+      if (button == BUTTON_LEFT) mouseLeftClick(i, j);
+      if (button == BUTTON_RIGHT) mouseRightClick(i, j);
     }
   }
+
   // move visible map
-  if ( (i<first_cell_coor.x || keys[SDLK_LEFT]) && first_cell_coor.x!=0)
+  if ( (x==0 || keys[SDLK_LEFT]) && first_cell_coor.x!=0)
     first_cell_coor.x--;
-  else if ( (i>first_cell_coor.x+(horizontal_cells-1) || keys[SDLK_RIGHT]) && first_cell_coor.x!=width-horizontal_cells)
+  else if ( (x==window_width-1 || keys[SDLK_RIGHT]) && first_cell_coor.x!=width-horizontal_cells)
     first_cell_coor.x++;
-  if ( (j<first_cell_coor.y || keys[SDLK_UP]) && first_cell_coor.y!=0)
+  if ( (y==0 || keys[SDLK_UP]) && first_cell_coor.y!=0)
     first_cell_coor.y--;
-  else if ( (j>first_cell_coor.y+(vertical_cells-1) || keys[SDLK_DOWN]) && first_cell_coor.y!=height-vertical_cells)
+  else if ( (y==window_height-1 || keys[SDLK_DOWN]) && first_cell_coor.y!=height-vertical_cells)
     first_cell_coor.y++;
 }
 
+// Function to execute when the mouse is over a cell.
+void Map::mouseOverCell(const int x, const int y) {
+  if (battle_map[x][y].canAttackHere() && selected_unit->getPosition() != &battle_map[x][y])
+    input->setCursorType(ATTACK);
+  else if (battle_map[x][y].canMoveHere())
+    input->setCursorType(MOVE);
+  else
+    input->setCursorType(NORMAL);
+}
+
+// This function is executed in the main loop. If
+// it returns true, the loop ends, else it continues.
+bool Map::frame(void) {
+  /* This function just does the necessary operations any type of map
+     will need every frame, but every inhereted class will need to re-implement
+     it and (probably) call Map::frame().
+     The return value is not important, so it's set to false. */
+
+  // Calculate the size of the map's window (might have changed)
+  int new_width, new_height;
+  bool changed = false; // To check if the window size changed
+  screen->getScreenSize(new_width, new_height);
+  if (new_width != window_width) {
+    changed = true;
+    window_width = new_width;
+    horizontal_cells = (window_width/108)*2+2; // +2 cells that don't fit compleatly
+    if (horizontal_cells > width) horizontal_cells = width;
+  }
+  if (new_height != window_height) {
+    changed = true;
+    window_height = new_height;
+    vertical_cells = (window_height/72)+2; // +2 cells that don't fit compleatly
+    if (vertical_cells > height) vertical_cells = height;
+  }
+  // If the window size has change, center the view
+  if (changed && selected_unit) centerView(*selected_unit);
+
+  return false;
+}
+
 // Moves a creature to a cell.
-void Map::moveCreature(Cell &endPosition) {
+void Map::moveCreature(Cell &end_position) {
   int *path;
   int movements;
-  Cell *actualPosition;
   Cell *temp;
-  int actualX, actualY; // Coordinates of the actual cell
-  int endX, endY; // Coordinates of the cell where to move
 
-  actualPosition = selected_unit->getPosition();
+  Cell* actual_position = selected_unit->getPosition();
+  end_position.getPath(path, movements);
 
-  actualPosition->getCoordinates(actualX, actualY);
-  endPosition.getCoordinates(endX, endY);
-
-  endPosition.getPath(path, movements);
   /// @note This isn't too elegant
   for (int i=0; i<movements; i++) {
     // Make the creature face the same direction as moving
@@ -190,7 +231,7 @@ void Map::moveCreature(Cell &endPosition) {
     screen->wait(100);
   }
 
-  actualPosition->unselect(selected_unit->getMovement());
+  actual_position->unselect();
 }
 
 // Connects all the cells in the map.
@@ -200,23 +241,23 @@ void Map::connectCells(void) {
       if ( (coor1%2)==1 ) { // coor1 is an odd number
         if (coor1 == width-1) { // The last colum of the map
           if (coor2 == 0) {
-            battle_map[coor1][coor2].connectCell(N, NULL);
+            // battle_map[coor1][coor2].connectCell(N, NULL);
             battle_map[coor1][coor2].connectCell(S, &battle_map[coor1][coor2+1]);
             battle_map[coor1][coor2].connectCell(SW, &battle_map[coor1-1][coor2+1]);
           } else if (coor2 == height-1) {
             battle_map[coor1][coor2].connectCell(N, &battle_map[coor1][coor2-1]);
-            battle_map[coor1][coor2].connectCell(S, NULL);
-            battle_map[coor1][coor2].connectCell(SW, NULL);
+            // battle_map[coor1][coor2].connectCell(S, NULL);
+            // battle_map[coor1][coor2].connectCell(SW, NULL);
           } else {
             battle_map[coor1][coor2].connectCell(N, &battle_map[coor1][coor2-1]);
             battle_map[coor1][coor2].connectCell(S, &battle_map[coor1][coor2+1]);
             battle_map[coor1][coor2].connectCell(SW, &battle_map[coor1-1][coor2+1]);
           }
-          battle_map[coor1][coor2].connectCell(NE, NULL);
-          battle_map[coor1][coor2].connectCell(SE, NULL);
+          // battle_map[coor1][coor2].connectCell(NE, NULL);
+          // battle_map[coor1][coor2].connectCell(SE, NULL);
           battle_map[coor1][coor2].connectCell(NW, &battle_map[coor1-1][coor2]);
         } else if (coor2 == 0) { // The first row of the map
-          battle_map[coor1][coor2].connectCell(N, NULL);
+          // battle_map[coor1][coor2].connectCell(N, NULL);
           battle_map[coor1][coor2].connectCell(S, &battle_map[coor1][coor2+1]);
           battle_map[coor1][coor2].connectCell(NE, &battle_map[coor1+1][coor2]);
           battle_map[coor1][coor2].connectCell(SE, &battle_map[coor1+1][coor2+1]);
@@ -224,11 +265,11 @@ void Map::connectCells(void) {
           battle_map[coor1][coor2].connectCell(SW, &battle_map[coor1-1][coor2+1]);
         } else if (coor2 == height-1) { // Last row of the map
           battle_map[coor1][coor2].connectCell(N, &battle_map[coor1][coor2-1]);
-          battle_map[coor1][coor2].connectCell(S, NULL);
+          // battle_map[coor1][coor2].connectCell(S, NULL);
           battle_map[coor1][coor2].connectCell(NE, &battle_map[coor1+1][coor2]);
-          battle_map[coor1][coor2].connectCell(SE, NULL);
+          // battle_map[coor1][coor2].connectCell(SE, NULL);
           battle_map[coor1][coor2].connectCell(NW, &battle_map[coor1-1][coor2]);
-          battle_map[coor1][coor2].connectCell(SW, NULL);
+          // battle_map[coor1][coor2].connectCell(SW, NULL);
         } else {
           battle_map[coor1][coor2].connectCell(N, &battle_map[coor1][coor2-1]);
           battle_map[coor1][coor2].connectCell(S, &battle_map[coor1][coor2+1]);
@@ -240,48 +281,48 @@ void Map::connectCells(void) {
       } else { // coor1 is an even number
         if (coor1 == 0) { // The first colum of the map
           if (coor2 == 0) {
-            battle_map[coor1][coor2].connectCell(N, NULL);
+            // battle_map[coor1][coor2].connectCell(N, NULL);
             battle_map[coor1][coor2].connectCell(S, &battle_map[coor1][coor2+1]);
-            battle_map[coor1][coor2].connectCell(NE, NULL);
+            // battle_map[coor1][coor2].connectCell(NE, NULL);
           } else if (coor2 == height-1) {
             battle_map[coor1][coor2].connectCell(N, &battle_map[coor1][coor2-1]);
-            battle_map[coor1][coor2].connectCell(S, NULL);
+            // battle_map[coor1][coor2].connectCell(S, NULL);
             battle_map[coor1][coor2].connectCell(NE, &battle_map[coor1+1][coor2-1]);
           } else {
             battle_map[coor1][coor2].connectCell(N, &battle_map[coor1][coor2-1]);
             battle_map[coor1][coor2].connectCell(S, &battle_map[coor1][coor2+1]);
             battle_map[coor1][coor2].connectCell(NE, &battle_map[coor1+1][coor2-1]);
           }
-          battle_map[coor1][coor2].connectCell(NW, NULL);
-          battle_map[coor1][coor2].connectCell(SW, NULL);
+          // battle_map[coor1][coor2].connectCell(NW, NULL);
+          // battle_map[coor1][coor2].connectCell(SW, NULL);
           battle_map[coor1][coor2].connectCell(SE, &battle_map[coor1+1][coor2]);
         } else if (coor1 == width-1) { // The last colum of the map
           if (coor2 == 0) {
-            battle_map[coor1][coor2].connectCell(N, NULL);
+            // battle_map[coor1][coor2].connectCell(N, NULL);
             battle_map[coor1][coor2].connectCell(S, &battle_map[coor1][coor2+1]);
-            battle_map[coor1][coor2].connectCell(NW, NULL);
+            // battle_map[coor1][coor2].connectCell(NW, NULL);
           } else if (coor2 == height-1) {
             battle_map[coor1][coor2].connectCell(N, &battle_map[coor1][coor2-1]);
-            battle_map[coor1][coor2].connectCell(S, NULL);
+            // battle_map[coor1][coor2].connectCell(S, NULL);
             battle_map[coor1][coor2].connectCell(NW,&battle_map[coor1-1][coor2-1]);
           } else {
             battle_map[coor1][coor2].connectCell(N, &battle_map[coor1][coor2-1]);
             battle_map[coor1][coor2].connectCell(S, &battle_map[coor1][coor2+1]);
             battle_map[coor1][coor2].connectCell(NW, &battle_map[coor1-1][coor2-1]);
           }
-          battle_map[coor1][coor2].connectCell(NE, NULL);
-          battle_map[coor1][coor2].connectCell(SE, NULL);
+          // battle_map[coor1][coor2].connectCell(NE, NULL);
+          // battle_map[coor1][coor2].connectCell(SE, NULL);
           battle_map[coor1][coor2].connectCell(SW, &battle_map[coor1-1][coor2]);
         } else if (coor2 == 0) { // The first row of the map
-          battle_map[coor1][coor2].connectCell(N, NULL);
+          //  battle_map[coor1][coor2].connectCell(N, NULL);
           battle_map[coor1][coor2].connectCell(S, &battle_map[coor1][coor2+1]);
-          battle_map[coor1][coor2].connectCell(NE, NULL);
+          // battle_map[coor1][coor2].connectCell(NE, NULL);
           battle_map[coor1][coor2].connectCell(SE, &battle_map[coor1+1][coor2]);
-          battle_map[coor1][coor2].connectCell(NW, NULL);
+          // battle_map[coor1][coor2].connectCell(NW, NULL);
           battle_map[coor1][coor2].connectCell(SW, &battle_map[coor1-1][coor2]);
         } else if (coor2 == height-1) { // Last row of the map
           battle_map[coor1][coor2].connectCell(N, &battle_map[coor1][coor2-1]);
-          battle_map[coor1][coor2].connectCell(S, NULL);
+          // battle_map[coor1][coor2].connectCell(S, NULL);
           battle_map[coor1][coor2].connectCell(NE, &battle_map[coor1+1][coor2-1]);
           battle_map[coor1][coor2].connectCell(SE, &battle_map[coor1+1][coor2]);
           battle_map[coor1][coor2].connectCell(NW, &battle_map[coor1-1][coor2-1]);
@@ -303,22 +344,44 @@ void Map::connectCells(void) {
 void Map::draw(void) {
   SDL_Rect position;
 
-  // Position of the firts cell (top-left)
-  position.x = first_cell_pos.x;
-  if ( (first_cell_coor.x%2)==1 ) position.y = first_cell_pos.y+36;
-  else position.y = first_cell_pos.y;
-  position.w = 72;
-  position.h = 72;
-
   screen->erase();
   // Draws the visible cells.
-  for (int x=first_cell_coor.x; x<horizontal_cells+first_cell_coor.x; x++) {
-    for (int y=first_cell_coor.y; y<vertical_cells+first_cell_coor.y; y++) {
-      battle_map[x][y].draw(position);
-      position.y+=72;
+  for (int i=TERRAIN; i<=UNIT; i++) {
+    // Position of the firts cell (top-left)
+    position.x = first_cell_pos.x;
+    if ( (first_cell_coor.x%2)==1 )
+      position.y = first_cell_pos.y+36;
+    else
+      position.y = first_cell_pos.y;
+    position.w = 72;
+    position.h = 72;
+    // Draw
+    for (int x=first_cell_coor.x; position.x<window_width && x<width; x++) {
+      for (int y=first_cell_coor.y; position.y<window_height && y<height; y++) {
+        battle_map[x][y].draw(position, i);
+        position.y+=72;
+      }
+      if ( (x%2)==1 ) // x is an odd number
+        position.y=first_cell_pos.y;
+      else
+        position.y=first_cell_pos.y+36;
+      position.x+=54;
     }
-    if ( (x%2)==1 ) position.y=first_cell_pos.y; // x is an odd number
-    else position.y=first_cell_pos.y+36;
-    position.x+=54;
   }
+}
+
+// Centers the map view in a given creature
+void Map::centerView(Unit& creature) {
+  int x, y;
+  creature.getPosition()->getCoordinates(x, y);
+
+  x -= horizontal_cells/2;
+  y -= vertical_cells/2;
+  if (x<0) x=0;
+  if (y<0) y=0;
+  if (width-x < horizontal_cells) x -= horizontal_cells-(width-x);
+  if (height-y < vertical_cells) y -= vertical_cells-(height-y);
+
+  first_cell_coor.x = x;
+  first_cell_coor.y = y;
 }

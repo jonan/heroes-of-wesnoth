@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// The ttf class (can only be used why graphics).
+/// The Ttf class (can only be used why graphics).
 /// @author Jonan
 
 #ifndef TTF_HPP
@@ -25,8 +25,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include <SDL/SDL_ttf.h>
 
 #include "graphics.hpp"
-
-#include "macros.hpp"
 
 /// @todo Add options to change color, size, etc.
 
@@ -47,6 +45,19 @@ class video_engine::Graphics::Ttf {
     /// @param[in] x The x coordinate of the top left corner of the text.
     /// @param[in] y The y coordinate of the top left corner of the text.
     void write(const char *text, SDL_Surface *surface, const int x, const int y);
+    /// Writes a text into a surface.
+    ///
+    /// The text is centered in between the given positions.
+    ///
+    /// @param[in] text A string with the text to write.
+    /// @param[in] surface The surface where to draw the text.
+    /// @param[in] left_x The x coordinate of the left margen of the text.
+    /// @param[in] right_x The x coordinate of the right margen of the text.
+    /// @param[in] top_y The y coordinate of the top margen of the text.
+    /// @param[in] bottom_y The y coordinate of the bottom margen of the text.
+    void writeCentered(const char *text, SDL_Surface *surface,
+                       const int left_x, const int right_x,
+                       const int top_y, const int bottom_y);
 
   private:
     TTF_Font *font;

@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -18,19 +18,16 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "boot.hpp"
 
 #include <ctime>
-#include <cstdlib>
+//#include <cstdlib>
 
 #include "events.hpp"
 #include "graphics.hpp"
 
 // events_engine
 using events_engine::input;
-
 // video_engine
 using video_engine::screen;
-
 using video_engine::OPAQUE;
-
 using video_engine::NONE;
 
 // Loads the engine's global objects.
@@ -49,9 +46,11 @@ void loadMainImages(void) {
   screen->newImage("button-pressed", OPAQUE, NONE, 0);
   screen->newImage("heroes-logo", OPAQUE, NONE, 0);
   screen->newImage("wesnoth", OPAQUE, NONE, 0);
-  // Images to soften terrains.
-  // They are always loaded and it shouldn't be like that,
-  // but until that is fixed, better loading them at boot time.
+  screen->newImage("cursors/normal", OPAQUE, NONE, 0);
+  screen->newImage("cursors/attack", OPAQUE, NONE, 0);
+  screen->newImage("cursors/move", OPAQUE, NONE, 0);
+  screen->newImage("cursors/select-illegal", OPAQUE, NONE, 0);
+  screen->newImage("cursors/wait", OPAQUE, NONE, 0);
 }
 
 // Starts the engine and loads the main images.

@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// The battle class and a function to create battles.
+/// The Battle class and a function to create battles.
 /// @author Jonan
 
 #ifndef BATTLE_HPP
@@ -24,10 +24,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "map.hpp"
 
-#include "macros.hpp"
-
 class Hero;
-class Unit;
 
 /// Controls all the aspects of a battle.
 ///
@@ -37,7 +34,12 @@ class Battle : public Map {
     /// @param[in] player The player's hero.
     /// @param[in] enemies Array with all the enemies.
     /// @param[in] num_enemies Number of enemies in the array.
-    Battle(Hero &player, Unit **enemies, const int num_enemies); // Constructor
+    /// @param[in] terrain Type of terrain.
+    Battle(Hero &player, Unit **enemies, const int num_enemies, const int terrain); // Constructor
+    /// @param[in] player The player's hero.
+    /// @param[in] enemies The enemy's hero.
+    /// @param[in] terrain Type of terrain.
+    Battle(Hero &player, Hero &enemy, const int terrain); // Constructor
 
     /// Starts the battle.
     ///
@@ -53,15 +55,20 @@ class Battle : public Map {
 
   private:
     static const int MAX_TEAM_UNITS = 9; // Not counting the hero.
-    static const int MAX_BATTLE_UNITS = 19;
+    static const int MAX_BATTLE_UNITS = 20;
     static const int TURN = 10; // Agility needed to get a turn
+
+    // Things to do no matter what constructor was called.
+    void init(const int terrain);
 
     // This function is executed in the main loop. If
     // it returns true, the loop ends, else it continues.
     virtual bool frame(void);
 
-    // Function to execute when the user clicks on a cell.
-    virtual void mouseClick(const int x, const int y);
+    // Function to execute when the mouse is over a cell.
+    virtual void mouseOverCell(const int x, const int y);
+    // Function to execute when the user left clicks on a cell.
+    virtual void mouseLeftClick(const int x, const int y);
 
     // Starts the next turn.
     virtual void nextTurn(void);
@@ -75,8 +82,8 @@ class Battle : public Map {
     // Function to call whenever there is an animation.
     void animation(const int sprites);
 
-    Hero *player;
-    Unit *creatures[MAX_TEAM_UNITS];
+    Hero *player, *enemy;
+    Unit *enemy_creatures[MAX_TEAM_UNITS];
     int turns[MAX_BATTLE_UNITS];
     int turn;
     bool end_battle;
@@ -97,5 +104,14 @@ void createDefaultBattle(void);
 /// @param[in] terrain_type Type of terrain where to fight.
 /// @return true if the battle was won, false if it wasn't.
 bool createBattle(Hero &player, const char enemy_type, const char terrain_type);
+/// Creates and starts a battle.
+///
+/// -no detailed description-
+///
+/// @param[in] player The player's hero.
+/// @param[in] enemy The enemy's hero.
+/// @param[in] terrain_type Type of terrain where to fight.
+/// @return true if the battle was won, false if it wasn't.
+bool createBattle(Hero &player, Hero &enemy, const char terrain_type);
 
 #endif // BATTLE_HPP

@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -17,18 +17,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "map.hpp"
 
-#include <SDL/SDL.h>
-
 #include "cell.hpp"
 #include "graphics.hpp"
 
 // video_engine
 using video_engine::screen;
-
 using video_engine::OPAQUE;
-
 using video_engine::NONE;
 
+// Terrains to add to soften the map
 enum {ADD_CAVE_FLOOR,
       ADD_CAVE_HILLS,
       ADD_DESERT,
@@ -50,6 +47,7 @@ enum {ADD_CAVE_FLOOR,
       ADD_WATER_ICE,
       ADD_WATER_ICE_TO_WATER,
       ADD_WATER_SNOW,
+      ADD_WATER_SNOW_TO_WATER,
       ADD_WATER_SNOW_HILLS};
 
 // Sets the images needed to soften the map.
@@ -464,6 +462,24 @@ void initializeVariables(SDL_Surface **one, SDL_Surface **two,
       four[4] = screen->getImage("terrain/water/snow-sw-nw-n-ne", OPAQUE, NONE, 0);
       four[5] = screen->getImage("terrain/water/snow-nw-n-ne-se", OPAQUE, NONE, 0);
       break;
+    case ADD_WATER_SNOW_TO_WATER:
+      one[0] = screen->getImage("terrain/water/snow-to-water-n", OPAQUE, NONE, 0);
+      one[1] = screen->getImage("terrain/water/snow-to-water-ne", OPAQUE, NONE, 0);
+      one[2] = screen->getImage("terrain/water/snow-to-water-se", OPAQUE, NONE, 0);
+      one[3] = screen->getImage("terrain/water/snow-to-water-s", OPAQUE, NONE, 0);
+      one[4] = screen->getImage("terrain/water/snow-to-water-sw", OPAQUE, NONE, 0);
+      one[5] = screen->getImage("terrain/water/snow-to-water-nw", OPAQUE, NONE, 0);
+
+      two[0] = screen->getImage("terrain/water/snow-to-water-n-ne", OPAQUE, NONE, 0);
+      two[1] = screen->getImage("terrain/water/snow-to-water-ne-se", OPAQUE, NONE, 0);
+      two[2] = screen->getImage("terrain/water/snow-to-water-se-s", OPAQUE, NONE, 0);
+      two[3] = screen->getImage("terrain/water/snow-to-water-s-sw", OPAQUE, NONE, 0);
+      two[4] = screen->getImage("terrain/water/snow-to-water-sw-nw", OPAQUE, NONE, 0);
+      two[5] = screen->getImage("terrain/water/snow-to-water-nw-n", OPAQUE, NONE, 0);
+
+      *three = NULL;
+      *four = NULL;
+      break;
     case ADD_WATER_SNOW_HILLS:
       one[0] = screen->getImage("terrain/water/snow-hills-n", OPAQUE, NONE, 0);
       one[1] = screen->getImage("terrain/water/snow-hills-ne", OPAQUE, NONE, 0);
@@ -475,6 +491,7 @@ void initializeVariables(SDL_Surface **one, SDL_Surface **two,
       *two = NULL;
       *three = NULL;
       *four = NULL;
+    default: {} // Imposible case
   }
 }
 
@@ -535,21 +552,25 @@ void Map::softenTerrain(const char cell_terrain, char *terrain, const int number
   bool need_soft = false; // Indicates if the cell needs to be soften
 
   for (int j=0; j<6; j++) differentTerrain[j] = false;
-  /// @todo Initialize variables only when they are needed.
-  initializeVariables(one, two, three, four, soft_images);
 
   for (int x=0; x<width; x++)
     for (int y=0; y<height; y++) {
       for (int i=0; i<number_terrains; i++)
         need_soft = ( need_soft || (battle_map[x][y].getTerrain() == terrain[i]) );
       if (need_soft) {
-        need_soft = false; // Reset for next cell
+        need_soft = false; // Reset for next comprovation
         for (int i=N; i<=NW; i++) {
           temp = battle_map[x][y].getConnectedCell(i);
           if (temp != NULL)
             if(temp->getTerrain() == cell_terrain) differentTerrain[i] = true;
         }
-        addImages(differentTerrain, battle_map[x][y], one, two, three, four);
+        for (int i=N; i<=NW; i++)
+          need_soft = need_soft || differentTerrain[i];
+        if (need_soft) {
+          need_soft = false; // Reset for next cell
+          initializeVariables(one, two, three, four, soft_images);
+          addImages(differentTerrain, battle_map[x][y], one, two, three, four);
+        }
       }
     }
 }
@@ -559,6 +580,7 @@ void Map::softenMap(void) {
   /// @todo Put a bit of order and check if every thing is ok.
   char *terrain;
 
+  // WATER_FORD
   terrain = new char[1];
   terrain[0] = WATER_OCEAN;
   softenTerrain(WATER_FORD, terrain, 1, ADD_WATER_FORD);
@@ -585,6 +607,22 @@ void Map::softenMap(void) {
   terrain[1] = WATER_FORD;
   terrain[2] = WATER_OCEAN;
   softenTerrain(WATER_ICE, terrain, 3, ADD_WATER_ICE_TO_WATER);
+  // WATER_SNOW_TO_WATER
+  softenTerrain(WATER_SNOW, terrain, 3, ADD_WATER_ICE);
+  softenTerrain(WATER_SNOW, terrain, 3, ADD_WATER_ICE_TO_WATER);
+  softenTerrain(WATER_SNOW, terrain, 3, ADD_WATER_SNOW_TO_WATER);
+  // FOREST_SNOW_TO_WATER
+  softenTerrain(FOREST_SNOW, terrain, 3, ADD_WATER_ICE);
+  softenTerrain(FOREST_SNOW, terrain, 3, ADD_WATER_ICE_TO_WATER);
+  softenTerrain(FOREST_SNOW, terrain, 3, ADD_WATER_SNOW_TO_WATER);
+  // FLAT_GRASS_TO_WATER
+  softenTerrain(FLAT_GRASS, terrain, 3, ADD_FLAT_GRASS_TO_WATER);
+  // FOREST_GREAT_TREE_TO_WATER
+  softenTerrain(FOREST_GREAT_TREE, terrain, 3, ADD_FLAT_GRASS_TO_WATER);
+  // FLAT_SAVANNA_TO_WATER
+  softenTerrain(FLAT_SAVANNA, terrain, 3, ADD_FLAT_SAVANNA_TO_WATER);
+  // FOREST_PINE_TO_WATER
+  softenTerrain(FOREST_PINE, terrain, 3, ADD_FLAT_SAVANNA_TO_WATER);
 
   // DESERT_ROAD
   delete [] terrain;
@@ -607,15 +645,18 @@ void Map::softenMap(void) {
 
   // FLAT_SAVANNA
   delete [] terrain;
-  terrain = new char[7];
+  terrain = new char[8];
   terrain[0] = DESERT;
   terrain[1] = DESERT_ROAD;
   terrain[2] = DESERT_SAND;
   terrain[3] = FLAT_DIRT;
   terrain[4] = FLAT_ROAD;
   terrain[5] = FLAT_STONE_PATH;
-  terrain[6] = WATER_ICE;
-  softenTerrain(FLAT_SAVANNA, terrain, 7, ADD_FLAT_SAVANNA);
+  terrain[6] = FOREST_TROPICAL;
+  terrain[7] = WATER_ICE;
+  softenTerrain(FLAT_SAVANNA, terrain, 8, ADD_FLAT_SAVANNA);
+  // FOREST_PINE
+  softenTerrain(FOREST_PINE, terrain, 8, ADD_FLAT_SAVANNA);
 
   // DESERT_SAND
   delete [] terrain;
@@ -627,10 +668,12 @@ void Map::softenMap(void) {
   terrain[4] = WATER_ICE;
   terrain[5] = WATER_OCEAN;
   softenTerrain(DESERT_SAND, terrain, 6, ADD_DESERT_SAND);
+  // FOREST_TROPICAL
+  softenTerrain(FOREST_TROPICAL, terrain, 6, ADD_DESERT_SAND);
 
   // FLAT_GRASS
   delete [] terrain;
-  terrain = new char[8];
+  terrain = new char[10];
   terrain[0] = DESERT;
   terrain[1] = DESERT_ROAD;
   terrain[2] = DESERT_SAND;
@@ -638,62 +681,53 @@ void Map::softenMap(void) {
   terrain[4] = FLAT_ROAD;
   terrain[5] = FLAT_SAVANNA;
   terrain[6] = FLAT_STONE_PATH;
-  terrain[7] = WATER_ICE;
-  softenTerrain(FLAT_GRASS, terrain, 8, ADD_FLAT_GRASS);
-
-  // FLAT_GRASS_TO_WATER
-  delete [] terrain;
-  terrain = new char[3];
-  terrain[0] = WATER_COAST;
-  terrain[1] = WATER_FORD;
-  terrain[2] = WATER_OCEAN;
-  softenTerrain(FLAT_GRASS, terrain, 3, ADD_FLAT_GRASS_TO_WATER);
-
-  // FLAT_SAVANNA_TO_WATER
-  delete [] terrain;
-  terrain = new char[3];
-  terrain[0] = WATER_COAST;
-  terrain[1] = WATER_FORD;
-  terrain[2] = WATER_OCEAN;
-  softenTerrain(FLAT_SAVANNA, terrain, 3, ADD_FLAT_SAVANNA_TO_WATER);
+  terrain[7] = FOREST_PINE;
+  terrain[8] = FOREST_TROPICAL;
+  terrain[9] = WATER_ICE;
+  softenTerrain(FLAT_GRASS, terrain, 10, ADD_FLAT_GRASS);
+  // FOREST_GREAT_TREE
+  softenTerrain(FOREST_GREAT_TREE, terrain, 10, ADD_FLAT_GRASS);
 
   // FLAT_ROAD
   delete [] terrain;
-  terrain = new char[7];
+  terrain = new char[8];
   terrain[0] = DESERT;
   terrain[1] = DESERT_ROAD;
   terrain[2] = DESERT_SAND;
-  terrain[3] = WATER_COAST;
-  terrain[4] = WATER_FORD;
-  terrain[5] = WATER_ICE;
-  terrain[6] = WATER_OCEAN;
-  softenTerrain(FLAT_ROAD, terrain, 7, ADD_FLAT_ROAD);
+  terrain[3] = FOREST_TROPICAL;
+  terrain[4] = WATER_COAST;
+  terrain[5] = WATER_FORD;
+  terrain[6] = WATER_ICE;
+  terrain[7] = WATER_OCEAN;
+  softenTerrain(FLAT_ROAD, terrain, 8, ADD_FLAT_ROAD);
 
   // FLAT_STONE_PATH
   delete [] terrain;
-  terrain = new char[8];
+  terrain = new char[9];
   terrain[0] = DESERT;
   terrain[1] = DESERT_ROAD;
   terrain[2] = DESERT_SAND;
   terrain[3] = FLAT_DIRT;
-  terrain[4] = WATER_COAST;
-  terrain[5] = WATER_FORD;
-  terrain[6] = WATER_ICE;
-  terrain[7] = WATER_OCEAN;
-  softenTerrain(FLAT_STONE_PATH, terrain, 8, ADD_FLAT_STONE_PATH);
+  terrain[4] = FOREST_TROPICAL;
+  terrain[5] = WATER_COAST;
+  terrain[6] = WATER_FORD;
+  terrain[7] = WATER_ICE;
+  terrain[8] = WATER_OCEAN;
+  softenTerrain(FLAT_STONE_PATH, terrain, 9, ADD_FLAT_STONE_PATH);
 
   // FLAT_DIRT
   delete [] terrain;
-  terrain = new char[8];
+  terrain = new char[9];
   terrain[0] = DESERT;
   terrain[1] = DESERT_ROAD;
   terrain[2] = DESERT_SAND;
   terrain[3] = FLAT_ROAD;
-  terrain[4] = WATER_COAST;
-  terrain[5] = WATER_FORD;
-  terrain[6] = WATER_ICE;
-  terrain[7] = WATER_OCEAN;
-  softenTerrain(FLAT_DIRT, terrain, 8, ADD_FLAT_DIRT);
+  terrain[4] = FOREST_TROPICAL;
+  terrain[5] = WATER_COAST;
+  terrain[6] = WATER_FORD;
+  terrain[7] = WATER_ICE;
+  terrain[8] = WATER_OCEAN;
+  softenTerrain(FLAT_DIRT, terrain, 9, ADD_FLAT_DIRT);
 
   // WATER_SNOW
   delete [] terrain;
@@ -706,15 +740,17 @@ void Map::softenMap(void) {
   terrain[5] = FLAT_ROAD;
   terrain[6] = FLAT_SAVANNA;
   terrain[7] = FLAT_STONE_PATH;
-  terrain[8] = WATER_COAST;
-  terrain[9] = WATER_FORD;
-  terrain[10] = WATER_ICE;
-  terrain[11] = WATER_OCEAN;
+  terrain[8] = FOREST_GREAT_TREE;
+  terrain[9] = FOREST_PINE;
+  terrain[10] = FOREST_TROPICAL;
+  terrain[11] = WATER_ICE;
   softenTerrain(WATER_SNOW, terrain, 12, ADD_WATER_SNOW);
+  // FOREST_SNOW
+  softenTerrain(FOREST_SNOW, terrain, 12, ADD_WATER_SNOW);
 
   // CAVE_FLOOR
   delete [] terrain;
-  terrain = new char[13];
+  terrain = new char[17];
   terrain[0] = DESERT;
   terrain[1] = DESERT_ROAD;
   terrain[2] = DESERT_SAND;
@@ -723,16 +759,22 @@ void Map::softenMap(void) {
   terrain[5] = FLAT_ROAD;
   terrain[6] = FLAT_SAVANNA;
   terrain[7] = FLAT_STONE_PATH;
-  terrain[8] = WATER_COAST;
-  terrain[9] = WATER_FORD;
-  terrain[10] = WATER_ICE;
-  terrain[11] = WATER_OCEAN;
-  terrain[12] = WATER_SNOW;
-  softenTerrain(CAVE_FLOOR, terrain, 13, ADD_CAVE_FLOOR);
+  terrain[8] = FOREST_GREAT_TREE;
+  terrain[9] = FOREST_PINE;
+  terrain[10] = FOREST_SNOW;
+  terrain[11] = FOREST_TROPICAL;
+  terrain[12] = WATER_COAST;
+  terrain[13] = WATER_FORD;
+  terrain[14] = WATER_ICE;
+  terrain[15] = WATER_OCEAN;
+  terrain[16] = WATER_SNOW;
+  softenTerrain(CAVE_FLOOR, terrain, 17, ADD_CAVE_FLOOR);
+  // FOREST_MUSHROOMS
+  softenTerrain(FOREST_MUSHROOMS, terrain, 17, ADD_CAVE_FLOOR);
 
   // LAVA
   delete [] terrain;
-  terrain = new char[14];
+  terrain = new char[19];
   terrain[0] = CAVE_FLOOR;
   terrain[1] = DESERT;
   terrain[2] = DESERT_ROAD;
@@ -742,16 +784,21 @@ void Map::softenMap(void) {
   terrain[6] = FLAT_ROAD;
   terrain[7] = FLAT_SAVANNA;
   terrain[8] = FLAT_STONE_PATH;
-  terrain[9] = WATER_COAST;
-  terrain[10] = WATER_FORD;
-  terrain[11] = WATER_ICE;
-  terrain[12] = WATER_OCEAN;
-  terrain[13] = WATER_SNOW;
-  softenTerrain(LAVA, terrain, 14, ADD_LAVA);
+  terrain[9] = FOREST_GREAT_TREE;
+  terrain[10] = FOREST_MUSHROOMS;
+  terrain[11] = FOREST_PINE;
+  terrain[12] = FOREST_SNOW;
+  terrain[13] = FOREST_TROPICAL;
+  terrain[14] = WATER_COAST;
+  terrain[15] = WATER_FORD;
+  terrain[16] = WATER_ICE;
+  terrain[17] = WATER_OCEAN;
+  terrain[18] = WATER_SNOW;
+  softenTerrain(LAVA, terrain, 19, ADD_LAVA);
 
   // CAVE_HILLS
   delete [] terrain;
-  terrain = new char[15];
+  terrain = new char[20];
   terrain[0] = CAVE_FLOOR;
   terrain[1] = DESERT;
   terrain[2] = DESERT_ROAD;
@@ -761,17 +808,22 @@ void Map::softenMap(void) {
   terrain[6] = FLAT_ROAD;
   terrain[7] = FLAT_SAVANNA;
   terrain[8] = FLAT_STONE_PATH;
-  terrain[9] = LAVA;
-  terrain[10] = WATER_COAST;
-  terrain[11] = WATER_FORD;
-  terrain[12] = WATER_ICE;
-  terrain[13] = WATER_OCEAN;
-  terrain[14] = WATER_SNOW;
-  softenTerrain(CAVE_HILLS, terrain, 15, ADD_CAVE_HILLS);
+  terrain[9] = FOREST_GREAT_TREE;
+  terrain[10] = FOREST_MUSHROOMS;
+  terrain[11] = FOREST_PINE;
+  terrain[12] = FOREST_SNOW;
+  terrain[13] = FOREST_TROPICAL;
+  terrain[14] = LAVA;
+  terrain[15] = WATER_COAST;
+  terrain[16] = WATER_FORD;
+  terrain[17] = WATER_ICE;
+  terrain[18] = WATER_OCEAN;
+  terrain[19] = WATER_SNOW;
+  softenTerrain(CAVE_HILLS, terrain, 20, ADD_CAVE_HILLS);
 
   // DESERT_HILLS
   delete [] terrain;
-  terrain = new char[16];
+  terrain = new char[21];
   terrain[0] = CAVE_FLOOR;
   terrain[1] = CAVE_HILLS;
   terrain[2] = DESERT;
@@ -782,17 +834,22 @@ void Map::softenMap(void) {
   terrain[7] = FLAT_ROAD;
   terrain[8] = FLAT_SAVANNA;
   terrain[9] = FLAT_STONE_PATH;
-  terrain[10] = LAVA;
-  terrain[11] = WATER_COAST;
-  terrain[12] = WATER_FORD;
-  terrain[13] = WATER_ICE;
-  terrain[14] = WATER_OCEAN;
-  terrain[15] = WATER_SNOW;
-  softenTerrain(DESERT_HILLS, terrain, 16, ADD_DESERT_HILLS);
+  terrain[10] = FOREST_GREAT_TREE;
+  terrain[11] = FOREST_MUSHROOMS;
+  terrain[12] = FOREST_PINE;
+  terrain[13] = FOREST_SNOW;
+  terrain[14] = FOREST_TROPICAL;
+  terrain[15] = LAVA;
+  terrain[16] = WATER_COAST;
+  terrain[17] = WATER_FORD;
+  terrain[18] = WATER_ICE;
+  terrain[19] = WATER_OCEAN;
+  terrain[20] = WATER_SNOW;
+  softenTerrain(DESERT_HILLS, terrain, 21, ADD_DESERT_HILLS);
 
   // HILLS
   delete [] terrain;
-  terrain = new char[17];
+  terrain = new char[22];
   terrain[0] = CAVE_FLOOR;
   terrain[1] = CAVE_HILLS;
   terrain[2] = DESERT;
@@ -804,17 +861,22 @@ void Map::softenMap(void) {
   terrain[8] = FLAT_ROAD;
   terrain[9] = FLAT_SAVANNA;
   terrain[10] = FLAT_STONE_PATH;
-  terrain[11] = LAVA;
-  terrain[12] = WATER_COAST;
-  terrain[13] = WATER_FORD;
-  terrain[14] = WATER_ICE;
-  terrain[15] = WATER_OCEAN;
-  terrain[16] = WATER_SNOW;
-  softenTerrain(HILLS, terrain, 17, ADD_HILLS);
+  terrain[11] = FOREST_GREAT_TREE;
+  terrain[12] = FOREST_MUSHROOMS;
+  terrain[13] = FOREST_PINE;
+  terrain[14] = FOREST_SNOW;
+  terrain[15] = FOREST_TROPICAL;
+  terrain[16] = LAVA;
+  terrain[17] = WATER_COAST;
+  terrain[18] = WATER_FORD;
+  terrain[19] = WATER_ICE;
+  terrain[20] = WATER_OCEAN;
+  terrain[21] = WATER_SNOW;
+  softenTerrain(HILLS, terrain, 22, ADD_HILLS);
 
   // WATER_SNOW_HILLS
   delete [] terrain;
-  terrain = new char[18];
+  terrain = new char[23];
   terrain[0] = CAVE_FLOOR;
   terrain[1] = CAVE_HILLS;
   terrain[2] = DESERT;
@@ -826,18 +888,23 @@ void Map::softenMap(void) {
   terrain[8] = FLAT_ROAD;
   terrain[9] = FLAT_SAVANNA;
   terrain[10] = FLAT_STONE_PATH;
-  terrain[11] = HILLS;
-  terrain[12] = LAVA;
-  terrain[13] = WATER_COAST;
-  terrain[14] = WATER_FORD;
-  terrain[15] = WATER_ICE;
-  terrain[16] = WATER_OCEAN;
-  terrain[17] = WATER_SNOW;
-  softenTerrain(WATER_SNOW_HILLS, terrain, 18, ADD_WATER_SNOW_HILLS);
+  terrain[11] = FOREST_GREAT_TREE;
+  terrain[12] = FOREST_MUSHROOMS;
+  terrain[13] = FOREST_PINE;
+  terrain[14] = FOREST_SNOW;
+  terrain[15] = FOREST_TROPICAL;
+  terrain[16] = HILLS;
+  terrain[17] = LAVA;
+  terrain[18] = WATER_COAST;
+  terrain[19] = WATER_FORD;
+  terrain[20] = WATER_ICE;
+  terrain[21] = WATER_OCEAN;
+  terrain[22] = WATER_SNOW;
+  softenTerrain(WATER_SNOW_HILLS, terrain, 23, ADD_WATER_SNOW_HILLS);
 
   // DESERT_MOUNTAIN
   delete [] terrain;
-  terrain = new char[19];
+  terrain = new char[24];
   terrain[0] = CAVE_FLOOR;
   terrain[1] = CAVE_HILLS;
   terrain[2] = DESERT;
@@ -849,15 +916,20 @@ void Map::softenMap(void) {
   terrain[8] = FLAT_ROAD;
   terrain[9] = FLAT_SAVANNA;
   terrain[10] = FLAT_STONE_PATH;
-  terrain[11] = HILLS;
-  terrain[12] = LAVA;
-  terrain[13] = WATER_COAST;
-  terrain[14] = WATER_FORD;
-  terrain[15] = WATER_ICE;
-  terrain[16] = WATER_OCEAN;
-  terrain[17] = WATER_SNOW;
-  terrain[18] = WATER_SNOW_HILLS;
-  softenTerrain(DESERT_MOUNTAIN, terrain, 19, ADD_DESERT_MOUNTAIN);
+  terrain[11] = FOREST_GREAT_TREE;
+  terrain[12] = FOREST_MUSHROOMS;
+  terrain[13] = FOREST_PINE;
+  terrain[14] = FOREST_SNOW;
+  terrain[15] = FOREST_TROPICAL;
+  terrain[16] = HILLS;
+  terrain[17] = LAVA;
+  terrain[18] = WATER_COAST;
+  terrain[19] = WATER_FORD;
+  terrain[20] = WATER_ICE;
+  terrain[21] = WATER_OCEAN;
+  terrain[22] = WATER_SNOW;
+  terrain[23] = WATER_SNOW_HILLS;
+  softenTerrain(DESERT_MOUNTAIN, terrain, 24, ADD_DESERT_MOUNTAIN);
 
   delete [] terrain;
 }

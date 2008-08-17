@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -18,14 +18,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "mission.hpp"
 
 #include "hero.hpp"
+#include "world.hpp"
 
 // Constructor
 Mission::Mission(const char *map, const int number_allies,
-            const int width, const int height,
-            const int hero_position_x, const int hero_position_y
-           ) {
-  war = new World( map, width, height );
-  player = new Hero( FIGHTER, HUMAN );
+                 const int width, const int height,
+                 const int hero_position_x, const int hero_position_y
+                ) {
+  war = new World(map, width, height);
+  player = new Hero(HUMAN);
   this->number_allies = number_allies;
   this->hero_position_x = hero_position_x;
   this->hero_position_y = hero_position_y;
@@ -34,7 +35,6 @@ Mission::Mission(const char *map, const int number_allies,
 // Destructor
 Mission::~Mission() {
   delete war;
-  delete player;
 }
 
 // Launches the mission
@@ -42,28 +42,28 @@ void Mission::startMission() {
   Unit *temp;
 
   for ( int i=0; i < 9; i++ ) {
-    temp = new Unit( SERGEANT, number_allies );
-    player->recruitCreature( temp );
+    temp = new Unit(SERGEANT, number_allies);
+    player->recruitCreature(temp);
   }
 
-  war->setHero( *player, hero_position_x, hero_position_y );
+  war->setHero(*player, hero_position_x, hero_position_y);
   war->start();
 }
 
 // Creates and starts mission 1.
 void mission1(void) {
-  Mission *mission_1 = new Mission("mission1", 10, 30, 15, 1, 1);
-  mission_1->startMission();
+  Mission mission_1("mission1", 10, 32, 17, 2, 2);
+  mission_1.startMission();
 }
 
 // Creates and starts mission 2.
 void mission2(void) {
-  Mission *mission_2 = new Mission("mission2", 15, 30, 26, 3, 5);
-  mission_2->startMission();
+  Mission mission_2("mission2", 15, 32, 28, 3, 6);
+  mission_2.startMission();
 }
 
 // Creates and starts mission 3.
 void mission3(void) {
-  Mission *mission_3 = new Mission("mission3", 25, 30, 20, 4, 8);
-  mission_3->startMission();
+  Mission mission_3("mission3", 25, 32, 22, 4, 9);
+  mission_3.startMission();
 }

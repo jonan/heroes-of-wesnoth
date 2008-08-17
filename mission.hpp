@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -22,9 +22,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef MISSION_HPP
 #define MISSION_HPP
 
-#include "world.hpp"
-
 #include "macros.hpp"
+
+class Hero;
+class World;
 
 /// Represents a scenario.
 ///
@@ -38,8 +39,8 @@ class Mission {
     /// @param[in] hero_position_x Starting position of the hero - x-coordinate.
     /// @param[in] hero_position_y Starting position of the hero - y-coordinate.
     Mission(const char *map, const int number_allies,
-          const int width, const int height,
-          const int hero_position_x, const int hero_position_y); // Constructor
+            const int width, const int height,
+            const int hero_position_x, const int hero_position_y); // Constructor
     ~Mission(); // Destructor
 
     /// Launches the mission.

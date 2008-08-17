@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// The cell class.
+/// The Cell class.
 /// @author Jonan
 
 #ifndef CELL_HPP
@@ -27,11 +27,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include <SDL/SDL.h>
 
 #include "macros.hpp"
+#include "structs.hpp"
 
 class Unit;
 
 /// The six relative positions to a cell
 enum {N, NE, SE, S, SW, NW};
+
+/// Parts of the drawing of a cell
+enum {TERRAIN, SPECIAL, UNIT};
 
 /// Cells of the map.
 ///
@@ -49,6 +53,13 @@ class Cell {
     /// @param[in] terrain Surface of the terrain.
     /// @param[in] type Type of terrain (-1 to maintain actual type)
     void addImage(SDL_Surface &terrain, const char type);
+    /// Adds a special image to the cell's terrain.
+    ///
+    /// -no detailed description-
+    ///
+    /// @param[in] terrain Surface of the terrain.
+    void addSpecialImage(SDL_Surface &terrain);
+
     /// Sets the image used to outstand a cell.
     ///
     /// -no detailed description-
@@ -67,6 +78,12 @@ class Cell {
     ///
     /// @param[in] creature Creature to put in the cell.
     void setCreature(Unit *creature);
+    /// Puts an item on the cell.
+    ///
+    /// -no detailed description-
+    ///
+    /// @param[in] type Type of item to put on the cell.
+    void setItem(char type);
     /// Sets the movement penalty for the cell.
     ///
     /// If penalty is 1000 a creature
@@ -88,6 +105,12 @@ class Cell {
     ///
     /// @return Type of terrain of the cell.
     char getTerrain(void) {return type;}
+    /// Returns item on the cell.
+    ///
+    /// -no detailed description-
+    ///
+    /// @return Type of item on the cell.
+    char getItem(void) {return item;}
     /// Returns the creature in the cell.
     ///
     /// -no detailed description-
@@ -137,10 +160,7 @@ class Cell {
     ///
     /// Marks the cell as not being selected and tells all the cells
     /// where the unit could move that now it can not move there.
-    /// (To use when the creature has been erased but you know the movement)
-    ///
-    /// @param[in] movement Movement of the creature.
-    void unselect(int movement);
+    void unselect(void);
 
     /// Calculates which cells are visible.
     ///
@@ -161,7 +181,10 @@ class Cell {
     /// Draws the cell in the screen.
     ///
     /// -no detailed description-
-    void draw(SDL_Rect position);
+    ///
+    /// @param[in] position Position where to draw the cell.
+    /// @param[in] part Part of the cell to draw.
+    void draw(SDL_Rect position, const int part);
 
     /// Indicates if the selected creature can move to this cell.
     ///
@@ -180,14 +203,16 @@ class Cell {
     // Calculates to what cells can a creature move.
     void creatureMovement(const int movement, int *path, const int movements);
     // Erases previos calculations about a creatures movement.
-    void eraseMovement(const int movement);
+    void eraseMovement(void);
 
     std::deque<SDL_Surface*> terrain; // Surfaces of the terrain
+    SpecialImage *special_terrain;
     SDL_Surface *stars, *alpha;
     char type; // Type of terrain of the cell
+    char item;
     Unit *creature; // Creature in the cell
     Cell *connected_cell[6]; // The six cells that are next to it
-    int map_x, map_y; // Map coordinates of the cell
+    Coordinates map_position; // Map coordinates of the cell
     int *path; // Path to follow in a units movement
     int movements; // Number of cells to go through to follow the path
     int movement_penalty; // Amount of movement needed to go throw this cell
@@ -198,9 +223,7 @@ class Cell {
     bool can_attack; // Indicates if the unit in the cell can be attacked
     bool visible; // Indicates if the cell is visible or not
 
-    // Not disallowed because it's used in the
-    // editor, but this should change soon.
-    // DISALLOW_COPY_AND_ASSIGN(Cell);
+    DISALLOW_COPY_AND_ASSIGN(Cell);
 };
 
 #endif // CELL_HPP

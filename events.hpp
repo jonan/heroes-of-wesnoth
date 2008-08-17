@@ -1,6 +1,6 @@
 /*
 Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008  Jon Ander Peñalba <jonan88@gmail.com>
+Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// The events class and global events variables.
+/// The Events class and global events variables.
 /// @author Jonan
 
 #ifndef EVENTS_HPP
@@ -37,6 +37,9 @@ enum {POSITION_X, POSITION_Y, BUTTON};
 /// Mouse buttons
 enum {NONE, BUTTON_LEFT, BUTTON_MIDDLE, BUTTON_RIGHT, WHEEL_UP, WHEEL_DOWN};
 
+/// Types of cursors
+enum {NORMAL, ATTACK, MOVE, ILLEGAL, WAIT, NUMBER_OF_TYPES};
+
 /// Event control.
 ///
 /// Tells you when has an event has occur. This event can be a system event (redimension,
@@ -47,11 +50,24 @@ class Events {
     static Events* instance(void); // Singleton pattern constructor
     ~Events(void); // Destructor
 
+    /// Sets the cursor's type.
+    ///
+    /// -no detailed description-
+    ///
+    /// @param[in] type Type of cursor.
+    void setCursorType(const int type) {cursor_type = type;}
+
     /// Reads the input from mouse, keyboard and system.
     ///
     /// Gets the input and stores the information obtained
     /// (must be called before any other events function).
     void readInput(void);
+
+    /// Draws the mouse on the screen.
+    ///
+    /// It's called every time the screen is updated,
+    /// so it should only be called from graphics.
+    void drawMouse(void);
 
   private:
     static const int NUM_KEYS = 323;
@@ -59,6 +75,8 @@ class Events {
     Events(void); // Constructor
 
     SDL_Event event;
+    SDL_Surface *cursor_image[NUMBER_OF_TYPES];
+    int cursor_type;
 
     DISALLOW_COPY_AND_ASSIGN(Events);
 };
