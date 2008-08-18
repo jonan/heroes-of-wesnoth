@@ -18,7 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "boot.hpp"
 
 #include <ctime>
-//#include <cstdlib>
+#include <cstdlib>
 
 #include "events.hpp"
 #include "graphics.hpp"

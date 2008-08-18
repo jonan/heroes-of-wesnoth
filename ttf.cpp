@@ -17,7 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "ttf.hpp"
 
-//#include <cstdlib>
+#include <cstdlib>
 #include <iostream>
 
 // video_engine

@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "unit.hpp"
 
 #include <cmath>
+#include <cstdlib>
 
 #include "cell.hpp"
 #include "graphics.hpp"

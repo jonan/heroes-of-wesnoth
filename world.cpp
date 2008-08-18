@@ -17,7 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "world.hpp"
 
-//#include <cstdlib>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <string>

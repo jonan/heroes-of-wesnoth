@@ -17,7 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "hero.hpp"
 
-//#include <cstdlib>
+#include <cstdlib>
 #include <iostream>
 
 // Sets the hero's attributes acording to his type.
