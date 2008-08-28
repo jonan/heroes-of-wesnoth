@@ -66,6 +66,19 @@ void Map::setItem(char item_name, Cell &position) {
       item = new SDL_Surface*[images];
       item[0] = screen->getImage("items/brazier", OPAQUE, NONE, 0);
       break;
+    case BRAZIER_LIT:
+      images = 8;
+      item = new SDL_Surface*[images];
+      item[0] = screen->getImage("items/brazier-lit1", OPAQUE, NONE, 0);
+      item[1] = screen->getImage("items/brazier-lit2", OPAQUE, NONE, 0);
+      item[2] = screen->getImage("items/brazier-lit3", OPAQUE, NONE, 0);
+      item[3] = screen->getImage("items/brazier-lit4", OPAQUE, NONE, 0);
+      item[4] = screen->getImage("items/brazier-lit5", OPAQUE, NONE, 0);
+      item[5] = screen->getImage("items/brazier-lit6", OPAQUE, NONE, 0);
+      item[6] = screen->getImage("items/brazier-lit7", OPAQUE, NONE, 0);
+      item[7] = screen->getImage("items/brazier-lit8", OPAQUE, NONE, 0);
+      animation = true;
+      break;
     case BURIAL:
       images = 1;
       item = new SDL_Surface*[images];
@@ -210,6 +223,12 @@ void Map::setItem(char item_name, Cell &position) {
       item = new SDL_Surface*[images];
       item[0] = screen->getImage("items/villages/hut", OPAQUE, NONE, 0);
       item[1] = screen->getImage("items/villages/hut2", OPAQUE, NONE, 0);
+      break;
+    case VILLAGE_HUT_SNOW:
+      images = 2;
+      item = new SDL_Surface*[images];
+      item[0] = screen->getImage("items/villages/hut-snow", OPAQUE, NONE, 0);
+      item[1] = screen->getImage("items/villages/hut-snow2", OPAQUE, NONE, 0);
       break;
     case VILLAGE_SWAMP:
       images = 2;

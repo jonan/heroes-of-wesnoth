@@ -26,7 +26,31 @@ using events_engine::input;
 // video_engine
 using video_engine::screen;
 
-// Controls a general game loop.
+// Constructor
+GameLoop::GameLoop(void) {
+  fps = new Timer;
+}
+
+// Destructor
+GameLoop::~GameLoop(void) {
+  delete fps;
+}
+
+// Starts the loop
+void GameLoop::loop(void) {
+  done = false;
+
+  while (!done) {
+    fps->start();
+    input->readInput();
+    done = frame();
+    screen->update();
+    fps->end(30);
+  }
+}
+
+// This function is deprecate and will be erased
+// as soon as all code depending on it is updated.
 void loop(bool (&function)(void)) {
   bool done = false;
   Timer fps;

@@ -47,7 +47,7 @@ Graphics::Ttf::~Ttf(void) {
 
 // Writes a text into a surface.
 void Graphics::Ttf::write(const char *text, SDL_Surface *surface, const int x, const int y) {
-  text_surface = TTF_RenderText_Solid(font, text, color);
+  text_surface = TTF_RenderUTF8_Blended(font, text, color);
 
   position.x = x;
   position.y = y;
@@ -64,7 +64,7 @@ void Graphics::Ttf::writeCentered(const char *text, SDL_Surface *surface,
                                   const int left_x, const int right_x,
                                   const int top_y, const int bottom_y
                                  ) {
-  text_surface = TTF_RenderText_Solid(font, text, color);
+  text_surface = TTF_RenderUTF8_Blended(font, text, color);
 
   position.x = ((right_x-left_x-text_surface->w)/2)+left_x;
   position.y = ((bottom_y-top_y-text_surface->h)/2)+top_y;

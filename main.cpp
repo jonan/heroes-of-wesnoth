@@ -65,6 +65,7 @@ int main(int argc, char *argv[]) {
       return EXIT_SUCCESS;
     }
   }
+
   // Start the game engine
   boot(fullscreen, width, height);
   // Start the main menu

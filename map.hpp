@@ -22,6 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef MAP_HPP
 #define MAP_HPP
 
+#include "loop.hpp"
 #include "macros.hpp"
 #include "structs.hpp"
 
@@ -63,11 +64,12 @@ enum {ALTAR = '0',
       BONE_STACK,
       BOX,
       BRAZIER,
+      BRAZIER_LIT,
       BURIAL,
       DRAGON_STATUE,
       FIRE,
-      ICEPACK,
-      ORCISH_FLAG = 'a',
+      ICEPACK = 'a',
+      ORCISH_FLAG,
       SCARECROW,
       SIGNPOST,
       STRAW_BALE,
@@ -85,6 +87,7 @@ enum {ALTAR = '0',
       VILLAGE_HUMAN_SNOW,
       VILLAGE_HUMAN_SNOW_HILLS,
       VILLAGE_HUT,
+      VILLAGE_HUT_SNOW,
       VILLAGE_SWAMP,
       VILLAGE_TROPICAL,
       WELL,
@@ -97,7 +100,7 @@ enum {ALTAR = '0',
 /// Basically consist of lots of cell classes working
 /// together to create a map an to be able to use it.
 /// (This class is meant to be inherit, not to be used directly)
-class Map {
+class Map : public GameLoop {
   public:
     /// Starts the map.
     ///

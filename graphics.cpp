@@ -175,7 +175,7 @@ Graphics::Graphics(const bool fullscreen, int width, int height) {
   text = new Ttf;
 }
 
-// Initializes SDL, SDL_ttf and SDL_mixer
+// Initializes SDL and SDL_ttf.
 void Graphics::init(void) {
   cout << "Starting SDL...\t\t\t";
   if ( SDL_Init (SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0 ) { // SDL_INIT_AUDIO not yet needed
@@ -194,10 +194,9 @@ void Graphics::init(void) {
 // Creates the surface that will be drawn directly to the screen
 void Graphics::createWindow(const bool fullscreen, int width, int height) {
   SDL_flags = (SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_VIDEORESIZE);
-  // Validate the resolution in case user changed default.
-  // Only check with SDL_FULLSCREEN is neccessary and useful.
-  // Without SDL_FULLSCREEN all screen formats would be valid.
-  bpp = SDL_VideoModeOK( width, height, 16, SDL_flags | SDL_FULLSCREEN);
+  if (fullscreen) SDL_flags |= SDL_FULLSCREEN;
+
+  bpp = SDL_VideoModeOK( width, height, 16, SDL_flags);
   if (!bpp) {
     cout << "The choosen resolution (" << width << "x" << height 
          << ") is not valid on your system. Trying default (1024x768%16)...\n";
@@ -211,7 +210,6 @@ void Graphics::createWindow(const bool fullscreen, int width, int height) {
   this->height = height;
 
   // Set the video mode
-  if (fullscreen) SDL_flags |= SDL_FULLSCREEN;
   screen = SDL_SetVideoMode(width, height, bpp, SDL_flags);
   SDL_WM_SetCaption("Heroes of Wesnoth", NULL);
 

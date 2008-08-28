@@ -171,7 +171,7 @@ class Graphics {
   private:
     Graphics(const bool fullscreen, int width, int height); // Constructor
 
-    // Initializes SDL, SDL_ttf and SDL_mixer.
+    // Initializes SDL and SDL_ttf.
     void init(void);
     // Creates the surface that will be drawn directly to the screen.
     void createWindow(const bool fullscreen, int width, int height);

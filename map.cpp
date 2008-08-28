@@ -20,7 +20,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "cell.hpp"
 #include "events.hpp"
 #include "graphics.hpp"
-#include "timer.hpp"
 #include "unit.hpp"
 
 // events_engine
@@ -38,18 +37,7 @@ using video_engine::screen;
 void Map::start(void) {
   // Set first turn.
   nextTurn();
-
-  /// @todo Use the loop function in loop.hpp
-  bool done = false;
-  Timer fps;
-
-  while (!done) {
-    fps.start();
-    input->readInput();
-    done = frame();
-    screen->update();
-    fps.end(30);
-  }
+  loop();
 }
 
 // Constructor

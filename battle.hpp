@@ -37,7 +37,7 @@ class Battle : public Map {
     /// @param[in] terrain Type of terrain.
     Battle(Hero &player, Unit **enemies, const int num_enemies, const int terrain); // Constructor
     /// @param[in] player The player's hero.
-    /// @param[in] enemies The enemy's hero.
+    /// @param[in] enemy The enemy's hero.
     /// @param[in] terrain Type of terrain.
     Battle(Hero &player, Hero &enemy, const int terrain); // Constructor
 

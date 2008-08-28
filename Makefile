@@ -23,8 +23,8 @@ CC = g++
 heroes : $(OBJECTS)
 	$(CC) -g -Wall $(SDL_LIBS) -o heroes $(OBJECTS)
 
-battle.o : battle.cpp battle.hpp cell.hpp events.hpp graphics.hpp hero.hpp macros.hpp \
-	map.hpp structs.hpp timer.hpp unit.hpp
+battle.o : battle.cpp battle.hpp cell.hpp events.hpp graphics.hpp loop.hpp hero.hpp \
+	macros.hpp map.hpp structs.hpp timer.hpp unit.hpp
 	$(CC) $(CFLAGS) battle.cpp
 
 boot.o : boot.cpp boot.hpp events.hpp graphics.hpp macros.hpp
@@ -33,8 +33,8 @@ boot.o : boot.cpp boot.hpp events.hpp graphics.hpp macros.hpp
 cell.o : cell.cpp cell.hpp graphics.hpp macros.hpp structs.hpp unit.hpp
 	$(CC) $(CFLAGS) cell.cpp
 
-editor.o : editor.cpp editor.hpp cell.hpp events.hpp graphics.hpp macros.hpp map.hpp \
-	structs.hpp unit.hpp
+editor.o : editor.cpp editor.hpp cell.hpp events.hpp graphics.hpp loop.hpp macros.hpp \
+	map.hpp structs.hpp unit.hpp
 	$(CC) $(CFLAGS) editor.cpp
 
 events.o : events.cpp events.hpp graphics.hpp macros.hpp
@@ -58,17 +58,17 @@ loop.o : loop.cpp loop.hpp events.hpp graphics.hpp timer.hpp macros.hpp
 main.o : main.cpp boot.hpp menu_main.hpp
 	$(CC) $(CFLAGS) main.cpp
 
-map.o : map.cpp map.hpp cell.hpp events.hpp graphics.hpp macros.hpp structs.hpp timer.hpp \
+map.o : map.cpp map.hpp cell.hpp events.hpp graphics.hpp loop.hpp macros.hpp structs.hpp \
 	unit.hpp
 	$(CC) $(CFLAGS) map.cpp
 
-map_item.o : map_item.cpp map.hpp cell.hpp graphics.hpp macros.hpp structs.hpp
+map_item.o : map_item.cpp map.hpp cell.hpp graphics.hpp loop.hpp macros.hpp structs.hpp
 	$(CC) $(CFLAGS) map_item.cpp
 
-map_soft.o : map_soft.cpp map.hpp cell.hpp graphics.hpp macros.hpp structs.hpp
+map_soft.o : map_soft.cpp map.hpp cell.hpp graphics.hpp loop.hpp macros.hpp structs.hpp
 	$(CC) $(CFLAGS) map_soft.cpp
 
-map_terrain.o : map_terrain.cpp map.hpp cell.hpp graphics.hpp macros.hpp structs.hpp
+map_terrain.o : map_terrain.cpp map.hpp cell.hpp graphics.hpp loop.hpp macros.hpp structs.hpp
 	$(CC) $(CFLAGS) map_terrain.cpp
 
 menu.o : menu.cpp menu.hpp graphics.hpp macros.hpp
@@ -78,7 +78,8 @@ menu_main.o : menu_main.cpp menu_main.hpp battle.hpp boot.hpp editor.hpp events.
 	graphics.hpp loop.hpp macros.hpp map.hpp menu.hpp mission.hpp structs.hpp
 	$(CC) $(CFLAGS) menu_main.cpp
 
-mission.o : mission.cpp mission.hpp hero.hpp macros.hpp map.hpp structs.hpp unit.hpp world.hpp
+mission.o : mission.cpp mission.hpp hero.hpp loop.hpp macros.hpp map.hpp structs.hpp unit.hpp \
+	world.hpp
 	$(CC) $(CFLAGS) mission.cpp
 
 timer.o : timer.cpp timer.hpp macros.hpp
@@ -96,8 +97,8 @@ unit_magic.o : unit_magic.cpp unit.hpp graphics.hpp macros.hpp structs.hpp
 unit_type.o : unit_type.cpp unit.hpp macros.hpp structs.hpp
 	$(CC) $(CFLAGS) unit_type.cpp
 
-world.o : world.cpp world.hpp battle.hpp cell.hpp events.hpp hero.hpp macros.hpp map.hpp \
-	structs.hpp unit.hpp
+world.o : world.cpp world.hpp battle.hpp cell.hpp events.hpp hero.hpp loop.hpp macros.hpp \
+	map.hpp structs.hpp unit.hpp
 	$(CC) $(CFLAGS) world.cpp
 
 .PHONY : clean

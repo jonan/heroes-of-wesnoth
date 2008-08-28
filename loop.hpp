@@ -16,15 +16,38 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// Funtion to control general game loops.
+/// The GameLoop class.
 /// @author Jonan
 
 #ifndef LOOP_HPP
 #define LOOP_HPP
 
+class Timer;
+
+/// Creates a normal game loop.
+///
+/// This class is meant to be inherit by any class
+/// that needs a loop, it can't be used directly.
+class GameLoop {
+  protected:
+    GameLoop(void); // Constructor
+    virtual ~GameLoop(void); // Destructor
+
+    // Starts the loop
+    void loop(void);
+
+  private:
+    bool done;
+    Timer *fps;
+
+    // Funtion that will be called inside the loop
+    virtual bool frame(void) = 0;
+};
+
 /// Controls a general game loop.
 ///
-/// -no detailed description-
+/// This function is deprecate and will be erased
+/// as soon as all code depending on it is updated.
 ///
 /// @param[in] function Funtion to execute in the loop.
 ///                     This function should return false to

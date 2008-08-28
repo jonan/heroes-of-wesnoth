@@ -72,9 +72,9 @@ bool drawMenu(void) {
 // Creates the menu.
 void createMenu(void) {
   main_menu = new Menu(menu_pos);
-  main_menu->addButton("Mission1", mission1);
-  main_menu->addButton("Mission2", mission2);
-  main_menu->addButton("Mission3", mission3);
+  main_menu->addButton("Mission 1", mission1);
+  main_menu->addButton("Mission 2", mission2);
+  main_menu->addButton("Mission 3", mission3);
   main_menu->addButton("Battle", createDefaultBattle);
   main_menu->addButton("Editor", startEditor);
   main_menu->addButton("Quit", quit);
