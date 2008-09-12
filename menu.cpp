@@ -140,8 +140,11 @@ void Menu::moveMouse(const int x, const int y, const bool pressed) {
 
 // Draws the menu.
 void Menu::draw(void) {
-  if (background)
+  if (background) {
+    screen->erase();
     drawBackgroundFunction();
+  }
+
   for (unsigned int i=0; i<buttons.size(); i++) {
     screen->draw( button_surface[ buttons[i]->getState() ], position );
     if (buttons[i]->getState() != PRESSED)

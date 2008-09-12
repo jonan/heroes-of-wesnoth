@@ -22,6 +22,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef LOOP_HPP
 #define LOOP_HPP
 
+#include "macros.hpp"
+
 class Timer;
 
 /// Creates a normal game loop.
@@ -42,6 +44,8 @@ class GameLoop {
 
     // Funtion that will be called inside the loop
     virtual bool frame(void) = 0;
+
+    DISALLOW_COPY_AND_ASSIGN(GameLoop);
 };
 
 /// Controls a general game loop.

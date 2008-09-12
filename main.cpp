@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
       }
     } else {
       /// @todo Change version
-      cout << "\nHeroes of Wesnoth SVN\n"
+      cout << "\nHeroes of Wesnoth 0.1.1\n"
            << "\nusage: heroes [OPTIONS]\n"
            << "  -fs, --full-screen\n"
            << "      starts the game in full screen mode.\n\n"

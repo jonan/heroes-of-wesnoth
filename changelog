@@ -1,0 +1,56 @@
+Version 0.1.1:
+  -Video:
+    * fullscreen support (command line option).
+    * users can now change the screen resolution (command line option).
+    * resizeable window.
+    * images can be rotated and mirrored.
+    * custom cursor support added.
+    * new cursors:
+        attack, move, normal, illegal, wait.
+  -Maps:
+    * added attacking, defending, dying and idle animations.
+    * creatures face the side they move to.
+    * map soften.
+    * maps fill the screen.
+    * camera moves to follow the hero
+    * added item support.
+    * transition effects before battle.
+    * keyboard's arrows move the map.
+    * added visibility.
+    * new terrains:
+        cave hills, desert, desert hills, desert mountain, desert road,
+        desert sand, flat dirt, flat road, forest great tree, forest mushrooms,
+        forest pine, forest snow, forest tropical, hills, lava, ice, water coast,
+        water ocean, water snow, water snow hills.
+    * updated terrains:
+        desert sand, flat grass, water ford.
+    * new items:
+        altar, altar evil, bones, bone stack, box, brazier, brazier lit,
+        burial, dragon statue, fire, icepack, orcish flag, scarecrow,
+        signpost, straw bale, village cave, village coast, village desert,
+        village desert camp, village dwarf, village elf, village elf snow,
+        village human, village human burned, village human city,
+        village human hills, village human snow, village human snow hills,
+        village hut, village hut snow, village swamp, village tropical,
+        weel, whirlpool, windmill.
+  -Battles:
+    * hero vs hero support added.
+    * first basic magic support added.
+  -Units:
+    * new creatures:
+        archer, blood bat, champion, death blade, fighter, ranger, shyde.
+    * new heroes:
+        elf, undead.
+  -Editor:
+    * editor created.
+  -Other:
+    * new dependency SDL_glx.
+    * code clean-up and optimizations.
+    * lots of bugs and memory leaks fixed.
+    * erased unnecessary output.
+    * general balancing.
+    * missions updated.
+    * updated DejavuSans font from version 2.19 to version 2.26.
+
+Version 0.1:
+  * initial release.
