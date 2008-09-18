@@ -189,9 +189,13 @@ void Unit::setCreaturesAttributes(void) {
       setAllAttributes(10, 4, 17, 4, 10, WHITE_MISSILE);
       break;
     case SKELETON:
-      addAnimationImage("units/skeleton-attack", ATTACKING);
-      addAnimationImage("units/skeleton-attackb", ATTACKING);
-      addAnimationImage("units/skeleton-defend", DEFENDING);
+      addAnimationImage("units/skeleton-attack-1", ATTACKING);
+      addAnimationImage("units/skeleton-attack-2", ATTACKING);
+      addAnimationImage("units/skeleton-attack-3", ATTACKING);
+      addAnimationImage("units/skeleton-attack-4", ATTACKING);
+      addAnimationImage("units/skeleton-attack-5", ATTACKING);
+      addAnimationImage("units/skeleton-defend-1", DEFENDING);
+      addAnimationImage("units/skeleton-defend-2", DEFENDING);
       addAnimationImage("units/skeleton-dying-1", DYING);
       addAnimationImage("units/skeleton-dying-2", DYING);
       addAnimationImage("units/skeleton-dying-3", DYING);
