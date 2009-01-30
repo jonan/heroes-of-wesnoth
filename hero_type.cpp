@@ -1,12 +1,12 @@
 /*
-Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
+This file is part of Heroes of Wesnoth.
+Copyright (C) 2007, 2008, 2009 Jon Ander Peñalba <jonan88@gmail.com>
 
-This program is free software: you can redistribute it and/or modify
+Heroes of Wesnoth is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
 published by the Free Software Foundation.
 
-This program is distributed in the hope that it will be useful,
+Heroes of Wesnoth is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
