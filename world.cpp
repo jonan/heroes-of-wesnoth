@@ -35,8 +35,6 @@ using std::string;
 using events_engine::input;
 using events_engine::keys;
 using events_engine::mouse;
-using events_engine::POSITION_X;
-using events_engine::POSITION_Y;
 using events_engine::BUTTON;
 using events_engine::NORMAL;
 
@@ -108,7 +106,7 @@ bool World::frame(void) {
   } else if (!end_world) {
     if (keys[SDLK_c]) centerView(*selected_unit);
     draw();
-    moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
+    moveMouse();
   }
   return end_world;
 }

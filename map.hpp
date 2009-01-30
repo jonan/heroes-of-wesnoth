@@ -23,7 +23,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #define MAP_HPP
 
 #include "loop.hpp"
-#include "macros.hpp"
 #include "structs.hpp"
 
 class Cell;
@@ -122,7 +121,7 @@ class Map : public GameLoop {
     Cell* getAttackCell(void);
 
     // Tells the map the mouse's position.
-    void moveMouse(const int x, const int y, const int button);
+    void moveMouse(void);
     // Function to execute when the mouse is over a cell.
     virtual void mouseOverCell(const int x, const int y);
     // Function to execute when the user left clicks on a cell.
@@ -156,6 +155,7 @@ class Map : public GameLoop {
     Cell **battle_map;
     Unit *selected_unit; // The unit that's selected.
     Cell *mouse_over_cell; // The cell where the mouse is.
+    bool creature_animation_active;
 
   private:
     // Softens a type of terrain.

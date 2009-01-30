@@ -25,6 +25,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 // events_engine
 using events_engine::input;
 using events_engine::keys;
+using events_engine::mouse;
+using events_engine::POSITION_X;
+using events_engine::POSITION_Y;
+using events_engine::BUTTON;
 using events_engine::BUTTON_LEFT;
 using events_engine::BUTTON_RIGHT;
 using events_engine::NORMAL;
@@ -70,6 +74,7 @@ Map::Map(const int width, const int height) {
 
   selected_unit=NULL;
   mouse_over_cell=NULL;
+  creature_animation_active = false;
 }
 
 // Destructor
@@ -105,7 +110,7 @@ Cell* Map::getAttackCell(void) {
 }
 
 // Tells the map the mouse's position.
-void Map::moveMouse(const int x, const int y, const int button) {
+void Map::moveMouse(void) {
   int i=first_cell_coor.x, j=first_cell_coor.y;
   SDL_Rect cellPosition;
 
@@ -119,7 +124,7 @@ void Map::moveMouse(const int x, const int y, const int button) {
     mouse_over_cell->removeMouse();
 
   // Find out which cell is the mouse over
-  while (x > cellPosition.x){
+  while (mouse[POSITION_X] > cellPosition.x){
     cellPosition.x += 54;
     i++;
   }
@@ -128,7 +133,7 @@ void Map::moveMouse(const int x, const int y, const int button) {
     cellPosition.y = first_cell_pos.y+36;
   else
     cellPosition.y = first_cell_pos.y;
-  while (y > cellPosition.y){
+  while (mouse[POSITION_Y] > cellPosition.y){
     cellPosition.y += 72;
     j++;
   }
@@ -139,19 +144,19 @@ void Map::moveMouse(const int x, const int y, const int button) {
       battle_map[i][j].putMouse();
       mouse_over_cell = &battle_map[i][j];
       mouseOverCell(i, j);
-      if (button == BUTTON_LEFT) mouseLeftClick(i, j);
-      if (button == BUTTON_RIGHT) mouseRightClick(i, j);
+      if (mouse[BUTTON] == BUTTON_LEFT) mouseLeftClick(i, j);
+      if (mouse[BUTTON] == BUTTON_RIGHT) mouseRightClick(i, j);
     }
   }
 
   // move visible map
-  if ( (x==0 || keys[SDLK_LEFT]) && first_cell_coor.x!=0)
+  if ( (mouse[POSITION_X]==0 || keys[SDLK_LEFT]) && first_cell_coor.x!=0)
     first_cell_coor.x--;
-  else if ( (x==window_width-1 || keys[SDLK_RIGHT]) && first_cell_coor.x!=width-horizontal_cells)
+  else if ( (mouse[POSITION_X]==window_width-1 || keys[SDLK_RIGHT]) && first_cell_coor.x!=width-horizontal_cells)
     first_cell_coor.x++;
-  if ( (y==0 || keys[SDLK_UP]) && first_cell_coor.y!=0)
+  if ( (mouse[POSITION_Y]==0 || keys[SDLK_UP]) && first_cell_coor.y!=0)
     first_cell_coor.y--;
-  else if ( (y==window_height-1 || keys[SDLK_DOWN]) && first_cell_coor.y!=height-vertical_cells)
+  else if ( (mouse[POSITION_Y]==window_height-1 || keys[SDLK_DOWN]) && first_cell_coor.y!=height-vertical_cells)
     first_cell_coor.y++;
 }
 

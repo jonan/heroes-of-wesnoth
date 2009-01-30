@@ -22,7 +22,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "editor.hpp"
 #include "events.hpp"
 #include "graphics.hpp"
-#include "loop.hpp"
 #include "menu.hpp"
 #include "mission.hpp"
 

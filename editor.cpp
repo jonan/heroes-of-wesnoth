@@ -28,8 +28,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 // events_engine
 using events_engine::keys;
 using events_engine::mouse;
-using events_engine::POSITION_X;
-using events_engine::POSITION_Y;
 using events_engine::BUTTON;
 using events_engine::NONE;
 using events_engine::WHEEL_UP;
@@ -155,7 +153,7 @@ bool Editor::frame(void) {
       }
     }
 
-    moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
+    moveMouse();
     draw();
   }
   return end_editor;

@@ -151,6 +151,12 @@ class Unit {
     ///
     /// @return Number of sprites of the animation.
     int getNumSprites(const int animation) {return animations[animation].size();}
+    /// Returns the actual animation type.
+    ///
+    /// -no detailed description-
+    ///
+    /// @return Type of the actual animation.
+    int getActualAnimation(void) {return actual_animation;}
 
     /// Attacks a given unit.
     ///

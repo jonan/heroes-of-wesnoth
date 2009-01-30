@@ -29,8 +29,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 using events_engine::input;
 using events_engine::keys;
 using events_engine::mouse;
-using events_engine::POSITION_X;
-using events_engine::POSITION_Y;
 using events_engine::BUTTON;
 using events_engine::NORMAL;
 using events_engine::ATTACK;
@@ -134,17 +132,42 @@ bool Battle::frame(void) {
     deleteCreature(*player);
     end_battle = true;
   } else if (!end_battle) { // If the battle wasn't ended continue.
-    if (selected_unit->getMaster() == enemy) {
-      input->setCursorType(WAIT);
-      ai();
-    } else {
-      // This controls only work when a friendly creature is moving
-      if (keys[SDLK_SPACE]) {
-        keys[SDLK_SPACE] = false;
-        selected_unit->getPosition()->unselect();
-        nextTurn();
+    if (!creature_animation_active) {
+      if (selected_unit->getMaster() == enemy) {
+        ai();
+      } else {
+        // This controls only work when a friendly creature is moving
+        if (keys[SDLK_SPACE]) {
+          keys[SDLK_SPACE] = false;
+          selected_unit->getPosition()->unselect();
+          nextTurn();
+        }
+        moveMouse();
       }
-      moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]);
+    } else { // An animation is taking place
+      // Check if the animation has ended
+      bool animation_ended = true;
+      for (int j=0; j<MAX_BATTLE_UNITS && animation_ended; j++) {
+        if (j==0) {
+          animation_ended &= player->getActualAnimation() == STANDING;
+        } else if (j<MAX_TEAM_UNITS+1) {
+          if (player->getCreature(j-1))
+            animation_ended &= player->getCreature(j-1)->getActualAnimation() == STANDING;
+        } else if (j==10) {
+          if (enemy) {
+            animation_ended &= enemy->getActualAnimation() == STANDING;
+          }
+        } else if ( j<MAX_BATTLE_UNITS ) {
+          if (enemy) {
+            if (enemy->getCreature(j-MAX_TEAM_UNITS-2))
+              animation_ended &= enemy->getCreature(j-MAX_TEAM_UNITS-2)->getActualAnimation() == STANDING;
+          } else {
+            if (enemy_creatures[j-MAX_TEAM_UNITS-2])
+              animation_ended &= enemy_creatures[j-MAX_TEAM_UNITS-2]->getActualAnimation() == STANDING;
+          }
+        }
+      }
+      creature_animation_active = !animation_ended;
     }
     draw();
   }
@@ -154,7 +177,10 @@ bool Battle::frame(void) {
 
 // Function to execute when the mouse is over a cell.
 void Battle::mouseOverCell(const int x, const int y) {
-  if (battle_map[x][y].getCreature()) {
+  // Set the type of cursor needed
+  if (selected_unit->getMaster() == enemy) {
+    input->setCursorType(WAIT);
+  } else if (battle_map[x][y].getCreature()) {
     if (battle_map[x][y].getCreature()->getMaster() != selected_unit->getMaster()) {
       if (battle_map[x][y].canAttackHere() || selected_unit->getProjectiles())
         input->setCursorType(ATTACK);
@@ -180,6 +206,7 @@ void Battle::mouseLeftClick(const int x, const int y) {
       if ( battle_map[x][y].getCreature()->getMaster() != selected_unit->getMaster() ) {
         selected_unit->getPosition()->unselect();
         selected_unit->attackCreature( *battle_map[x][y].getCreature() );
+        //creature_animation_active = true;
         animation(selected_unit->getNumSprites(ATTACKING));
         // Check if the creatures is dead.
         if ( battle_map[x][y].getCreature()->getNumber() == 0 ) {
@@ -196,6 +223,7 @@ void Battle::mouseLeftClick(const int x, const int y) {
       if ( battle_map[x][y].getCreature()->getMaster() != selected_unit->getMaster() ) {
         moveCreature(battle_map[x][y]);
         selected_unit->attackCreature( *battle_map[x][y].getCreature() );
+        //creature_animation_active = true;
         animation(selected_unit->getNumSprites(ATTACKING)); // The attacking animation
         // Check if the creatures is dead.
         if ( battle_map[x][y].getCreature()->getNumber() == 0 ) {
@@ -284,7 +312,7 @@ void Battle::nextTurn(void) {
               turns[j] += enemy->getCreature(j-MAX_TEAM_UNITS-2)->getAgility();
           } else {
             if (enemy_creatures[j-MAX_TEAM_UNITS-2])
-            turns[j] += enemy_creatures[j-MAX_TEAM_UNITS-2]->getAgility();
+              turns[j] += enemy_creatures[j-MAX_TEAM_UNITS-2]->getAgility();
           }
         }
       }
