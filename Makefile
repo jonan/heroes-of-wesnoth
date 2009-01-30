@@ -1,7 +1,7 @@
-# Heroes of Wesnoth - http://heroesofwesnoth.sf.net
-# Copyright (C) 2007-2008 Jon Ander Peñalba <jonan88@gmail.com>
+# This file is part of Heroes of Wesnoth.
+# Copyright (C) 2007, 2008, 2009 Jon Ander Peñalba <jonan88@gmail.com>
 #
-# This program is free software: you can redistribute it and/or modify
+# Heroes of Wesnoth is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
 # published by the Free Software Foundation.
 #
@@ -13,94 +13,117 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
+# Global variables
 OBJECTS = battle.o boot.o cell.o editor.o events.o graphics.o hero.o hero_type.o \
-	image.o loop.o main.o map.o map_item.o map_soft.o map_terrain.o menu.o \
-	menu_main.o mission.o timer.o ttf.o unit.o unit_magic.o unit_type.o world.o
+          image.o loop.o main.o map.o map_item.o map_soft.o map_terrain.o menu.o \
+          menu_main.o mission.o timer.o ttf.o unit.o unit_magic.o unit_type.o world.o
 SDL_LIBS = -lSDL -lSDL_ttf -lSDL_image -lSDL_gfx
 CFLAGS = -c -g -Wall
 CC = g++
 
+# Headers dependencies
+BATTLE = battle.hpp $(MAP)
+BOOT = boot.hpp
+CELL = cell.hpp $(MACROS) $(STRUCTS)
+EDITOR = editor.hpp $(MAP)
+EVENTS = events.hpp $(MACROS)
+GRAPHICS = graphics.hpp $(MACROS)
+HERO = hero.hpp $(UNIT)
+IMAGE = image.hpp $(GRAPHICS)
+LOOP = loop.hpp $(MACROS)
+MACROS = macros.hpp
+MAP = map.hpp $(LOOP) $(STRUCTS)
+MENU = menu.hpp $(MACROS)
+MENU_MAIN = menu_main.hpp
+MISSION = mission.hpp $(MACROS)
+STRUCTS = structs.hpp
+TIMER = timer.hpp $(MACROS)
+TTF = ttf.hpp $(GRAPHICS)
+UNIT = unit.hpp $(MACROS) $(STRUCTS)
+WORLD = world.hpp $(MAP)
+
+# Build dependencies
 heroes : $(OBJECTS)
 	$(CC) -g -Wall $(SDL_LIBS) -o heroes $(OBJECTS)
 
-battle.o : battle.cpp battle.hpp cell.hpp events.hpp graphics.hpp loop.hpp hero.hpp \
-	macros.hpp map.hpp structs.hpp timer.hpp unit.hpp
+battle.o : battle.cpp $(BATTLE) $(CELL) $(EVENTS) $(GRAPHICS) $(HERO) $(TIMER)
 	$(CC) $(CFLAGS) battle.cpp
 
-boot.o : boot.cpp boot.hpp events.hpp graphics.hpp macros.hpp
+boot.o : boot.cpp $(BOOT) $(EVENTS) $(GRAPHICS)
 	$(CC) $(CFLAGS) boot.cpp
 
-cell.o : cell.cpp cell.hpp graphics.hpp macros.hpp structs.hpp unit.hpp
+cell.o : cell.cpp $(CELL) $(GRAPHICS) $(UNIT)
 	$(CC) $(CFLAGS) cell.cpp
 
-editor.o : editor.cpp editor.hpp cell.hpp events.hpp graphics.hpp loop.hpp macros.hpp \
-	map.hpp structs.hpp unit.hpp
+editor.o : editor.cpp $(EDITOR) $(CELL) $(EVENTS) $(GRAPHICS) $(UNIT)
 	$(CC) $(CFLAGS) editor.cpp
 
-events.o : events.cpp events.hpp graphics.hpp macros.hpp
+events.o : events.cpp $(EVENTS) $(GRAPHICS)
 	$(CC) $(CFLAGS) events.cpp
 
-graphics.o : graphics.cpp graphics.hpp events.hpp image.hpp macros.hpp timer.hpp ttf.hpp
+graphics.o : graphics.cpp $(GRAPHICS) $(EVENTS) $(IMAGE) $(TIMER) $(TTF)
 	$(CC) $(CFLAGS) graphics.cpp
 
-hero.o : hero.cpp hero.hpp graphics.hpp macros.hpp structs.hpp unit.hpp
+hero.o : hero.cpp $(HERO) $(GRAPHICS)
 	$(CC) $(CFLAGS) hero.cpp
 
-hero_type.o : hero_type.cpp hero.hpp macros.hpp structs.hpp unit.hpp
+hero_type.o : hero_type.cpp $(HERO)
 	$(CC) $(CFLAGS) hero_type.cpp
 
-image.o : image.cpp image.hpp graphics.hpp macros.hpp
+image.o : image.cpp $(IMAGE)
 	$(CC) $(CFLAGS) image.cpp
 
-loop.o : loop.cpp loop.hpp events.hpp graphics.hpp timer.hpp macros.hpp
+loop.o : loop.cpp $(LOOP) $(EVENTS) $(GRAPHICS) $(TIMER)
 	$(CC) $(CFLAGS) loop.cpp
 
-main.o : main.cpp boot.hpp menu_main.hpp
+main.o : main.cpp $(BOOT) $(MENU_MAIN)
 	$(CC) $(CFLAGS) main.cpp
 
-map.o : map.cpp map.hpp cell.hpp events.hpp graphics.hpp loop.hpp macros.hpp structs.hpp \
-	unit.hpp
+map.o : map.cpp $(MAP) $(CELL) $(EVENTS) $(GRAPHICS) $(UNIT)
 	$(CC) $(CFLAGS) map.cpp
 
-map_item.o : map_item.cpp map.hpp cell.hpp graphics.hpp loop.hpp macros.hpp structs.hpp
+map_item.o : map_item.cpp $(MAP) $(CELL) $(GRAPHICS)
 	$(CC) $(CFLAGS) map_item.cpp
 
-map_soft.o : map_soft.cpp map.hpp cell.hpp graphics.hpp loop.hpp macros.hpp structs.hpp
+map_soft.o : map_soft.cpp $(MAP) $(CELL) $(GRAPHICS)
 	$(CC) $(CFLAGS) map_soft.cpp
 
-map_terrain.o : map_terrain.cpp map.hpp cell.hpp graphics.hpp loop.hpp macros.hpp structs.hpp
+map_terrain.o : map_terrain.cpp $(MAP) $(CELL) $(GRAPHICS)
 	$(CC) $(CFLAGS) map_terrain.cpp
 
-menu.o : menu.cpp menu.hpp graphics.hpp macros.hpp
+menu.o : menu.cpp $(MENU) $(GRAPHICS)
 	$(CC) $(CFLAGS) menu.cpp
 
-menu_main.o : menu_main.cpp menu_main.hpp battle.hpp boot.hpp editor.hpp events.hpp \
-	graphics.hpp loop.hpp macros.hpp map.hpp menu.hpp mission.hpp structs.hpp
+menu_main.o : menu_main.cpp $(MENU_MAIN) $(BATTLE) $(BOOT) $(EDITOR) $(EVENTS) $(GRAPHICS) $(MENU) $(MISSION)
 	$(CC) $(CFLAGS) menu_main.cpp
 
-mission.o : mission.cpp mission.hpp hero.hpp loop.hpp macros.hpp map.hpp structs.hpp unit.hpp \
-	world.hpp
+mission.o : mission.cpp $(MISSION) $(HERO) $(WORLD)
 	$(CC) $(CFLAGS) mission.cpp
 
-timer.o : timer.cpp timer.hpp macros.hpp
+timer.o : timer.cpp $(TIMER)
 	$(CC) $(CFLAGS) timer.cpp
 
-ttf.o : ttf.cpp ttf.hpp graphics.hpp macros.hpp
+ttf.o : ttf.cpp $(TTF)
 	$(CC) $(CFLAGS) ttf.cpp
 
-unit.o : unit.cpp unit.hpp cell.hpp graphics.hpp macros.hpp structs.hpp
+unit.o : unit.cpp $(UNIT) $(CELL) $(GRAPHICS)
 	$(CC) $(CFLAGS) unit.cpp
 
-unit_magic.o : unit_magic.cpp unit.hpp graphics.hpp macros.hpp structs.hpp
+unit_magic.o : unit_magic.cpp $(UNIT) $(GRAPHICS)
 	$(CC) $(CFLAGS) unit_magic.cpp
 
-unit_type.o : unit_type.cpp unit.hpp macros.hpp structs.hpp
+unit_type.o : unit_type.cpp $(UNIT)
 	$(CC) $(CFLAGS) unit_type.cpp
 
-world.o : world.cpp world.hpp battle.hpp cell.hpp events.hpp hero.hpp loop.hpp macros.hpp \
-	map.hpp structs.hpp unit.hpp
+world.o : world.cpp $(WORLD) $(BATTLE) $(CELL) $(EVENTS) $(HERO)
 	$(CC) $(CFLAGS) world.cpp
 
-.PHONY : clean
+# Make options
+.PHONY : all clean
+
+all: clean
+	make
+
 clean :
-	-rm heroes $(OBJECTS) *~
+	rm -f heroes *~ $(OBJECTS)
+
