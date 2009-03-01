@@ -61,13 +61,6 @@ void drawBackground(void) {
   screen->draw("heroes-logo", logo_pos);
 }
 
-// Draws the menu.
-bool drawMenu(void) {
-  main_menu->moveMouse(mouse[POSITION_X], mouse[POSITION_Y], mouse[BUTTON]==BUTTON_LEFT);
-  main_menu->draw();
-  return false; // To continue in the loop.
-}
-
 // Creates the menu.
 void createMenu(void) {
   main_menu = new Menu(menu_pos);
@@ -77,13 +70,13 @@ void createMenu(void) {
   main_menu->addButton("Battle", createDefaultBattle);
   main_menu->addButton("Editor", startEditor);
   main_menu->addButton("Quit", quit);
-  main_menu->addBackground(drawBackground);
+  main_menu->setBackground(drawBackground);
 }
 
 // Creates and starts the main menu.
 void startMainMenu(void) {
   setPositions();
   createMenu();
-  loop(drawMenu);
+  main_menu->start();
   delete main_menu;
 }

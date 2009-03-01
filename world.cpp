@@ -42,9 +42,9 @@ using events_engine::NORMAL;
 World::World(const char *map_file, const int width, const int height) : Map(width, height) {
   // Create a string with the fisical location of the file
   // "map/" + name
-  string map = "maps/";
+  string map_path = "maps/";
   string file_name(map_file);
-  string file_dir = map + file_name;
+  string file_dir = map_path + file_name;
 
   ifstream file(file_dir.c_str());
   if (file.fail()) {
@@ -59,7 +59,7 @@ World::World(const char *map_file, const int width, const int height) : Map(widt
   while (j<height) {
     file.get(temp);
     if (temp != '\n') {
-      setTerrain(temp, &battle_map[i][j]);
+      setTerrain(temp, &map[i][j]);
       i++;
       if (i == width) {
         i = 0;
@@ -82,8 +82,8 @@ World::World(const char *map_file, const int width, const int height) : Map(widt
 World::~World(void) {
   for (int x=0; x<width; x++)
     for (int y=0; y<height; y++)
-      if (battle_map[x][y].getCreature())
-        delete battle_map[x][y].getCreature();
+      if (map[x][y].getCreature())
+        delete map[x][y].getCreature();
 
   // Make sure the cursors's type is normal
   input->setCursorType(NORMAL);
@@ -92,44 +92,29 @@ World::~World(void) {
 // Puts a hero in the map.
 void World::setHero(Hero &player, const int x, const int y) {
   players.push_back(&player);
-  battle_map[x][y].setCreature(&player);
-  battle_map[x][y].calculateView(player.getVisibility());
-}
-
-// This function is executed in the main loop. If
-// it returns true, the loop ends, else it continues.
-bool World::frame(void) {
-  Map::frame();
-  if (keys[SDLK_ESCAPE]) {
-    keys[SDLK_ESCAPE] = false;
-    end_world = true;
-  } else if (!end_world) {
-    if (keys[SDLK_c]) centerView(*selected_unit);
-    draw();
-    moveMouse();
-  }
-  return end_world;
+  map[x][y].setCreature(&player);
+  map[x][y].calculateView(player.getVisibility());
 }
 
 // Function to execute when the user left clicks on a cell.
 void World::mouseLeftClick(const int x, const int y) {
-  if ( selected_unit->getPosition() != &battle_map[x][y] ) {
-    if ( battle_map[x][y].canMoveHere() ) {
-      moveCreature(battle_map[x][y]);
-      battle_map[x][y].calculateView(players[turn]->getVisibility());
+  if ( selected_unit->getPosition() != &map[x][y] ) {
+    if ( map[x][y].canMoveHere() ) {
+      moveSelectedCreature(map[x][y]);
+      map[x][y].calculateView(players[turn]->getVisibility());
       nextTurn();
-    } else if ( battle_map[x][y].canAttackHere() ) {
-      if ( battle_map[x][y].getCreature()->getMaster() != selected_unit->getMaster() ) {
-        moveCreature(battle_map[x][y]);
-        battle_map[x][y].calculateView(players[turn]->getVisibility());
+    } else if ( map[x][y].canAttackHere() ) {
+      if ( map[x][y].getCreature()->getMaster() != selected_unit->getMaster() ) {
+        moveSelectedCreature(map[x][y]);
+        map[x][y].calculateView(players[turn]->getVisibility());
 
         // Set the battle information
         Hero *player = static_cast<Hero*>(selected_unit);
-        char creatureType = battle_map[x][y].getCreature()->getType();
-        char terrain = battle_map[x][y].getTerrain();
+        char creatureType = map[x][y].getCreature()->getType();
+        char terrain = map[x][y].getTerrain();
         // Start the battle
         if ( createBattle(*player, creatureType, terrain) )
-          deleteCreature(battle_map[x][y]);
+          deleteCreature(map[x][y]);
         else
           players[turn] = NULL;
 
@@ -159,9 +144,9 @@ void World::nextTurn(void) {
 void World::setEnemies(const char *map_file) {
   // Create a string with the fisical location of the file
   // "map/" + name + "_creatures"
-  string map = "maps/";
+  string map_path = "maps/";
   string fileName(map_file);
-  string fileDir = map + map_file + "_creatures";
+  string fileDir = map_path + map_file + "_creatures";
 
   ifstream file(fileDir.c_str());
   if (file.fail()) {
@@ -180,7 +165,7 @@ void World::setEnemies(const char *map_file) {
       if (temp != '-') {
         Unit *creature;
         creature = new Unit(temp, 0);
-        battle_map[i][j].setCreature(creature);
+        map[i][j].setCreature(creature);
         number_enemies++;
       }
       i++;
@@ -198,9 +183,9 @@ void World::setEnemies(const char *map_file) {
 void World::setItems(const char *map_file) {
   // Create a string with the fisical location of the file
   // "map/" + name + "_items"
-  string map = "maps/";
+  string map_path = "maps/";
   string fileName(map_file);
-  string fileDir = map + map_file + "_items";
+  string fileDir = map_path + map_file + "_items";
 
   ifstream file(fileDir.c_str());
   if (file.fail()) {
@@ -216,7 +201,7 @@ void World::setItems(const char *map_file) {
     file.get(temp);
     if (temp != '\n') {
       if (temp != '-')
-        setItem(temp, battle_map[i][j]);
+        setItem(temp, map[i][j]);
       i++;
       if (i == width) {
         i = 0;
@@ -233,4 +218,19 @@ void World::deleteCreature(Cell &position) {
   delete position.getCreature();
   position.setCreature(NULL);
   number_enemies--;
+}
+
+// This function is executed in the main loop. If
+// it returns true, the loop ends, else it continues.
+bool World::frame(void) {
+  Map::frame();
+  if (keys[SDLK_ESCAPE]) {
+    keys[SDLK_ESCAPE] = false;
+    end_world = true;
+  } else if (!end_world) {
+    if (keys[SDLK_c]) centerView(*selected_unit);
+    draw();
+    updateMouse();
+  }
+  return end_world;
 }

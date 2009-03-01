@@ -27,16 +27,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include <SDL/SDL.h>
 
 /// Struct to store coordinates.
-///
-/// -no detailed description-
 struct Coordinates {
   int x;
   int y;
 };
 
 /// Stores information of special terrains
-///
-/// -no detailed description-
 struct SpecialImage {
   std::deque<SDL_Surface*> image_list;
   Coordinates position;

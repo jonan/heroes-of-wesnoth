@@ -25,23 +25,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "boot.hpp"
 #include "menu_main.hpp"
 
-// std
-using std::cout;
-using std::endl;
-using std::string;
-
 int main(int argc, char *argv[]) {
   // Default options
+  bool start_game = true;
   bool fullscreen = false;
   int width = 1024;
   int height = 768;
 
   // Check the programs arguments
   for (int i=1; i<argc; i++) {
-    const string val(argv[i]);
-    if (val == "-fs" || val == "--full-screen") {
+    const std::string argument(argv[i]);
+    if (argument == "-fs" || argument == "--full-screen") {
       fullscreen = true;
-    } else if ( val == "-r" || val == "--resolution") {
+    } else if ( argument == "-r" || argument == "--resolution") {
       if ( argc > i+2 ) {
         width = atoi(argv[i+1]);
         height = atoi(argv[i+2]);
@@ -53,23 +49,25 @@ int main(int argc, char *argv[]) {
       }
     } else {
       /// @todo Change version
-      cout << "\nHeroes of Wesnoth SVN\n"
-           << "\nusage: heroes [OPTIONS]\n"
-           << "  -fs, --full-screen\n"
-           << "      starts the game in full screen mode.\n\n"
-           << "  -r HORIZONTAL_RESOLUTION VERTICAL_RESOLUTION\n"
-           << "      starts the game with the given resolution.\n\n"
-           << "  -h, --help\n"
-           << "      prints this message and exits.\n"
-           << endl;
-      return EXIT_SUCCESS;
+      std::cout << "\nHeroes of Wesnoth SVN\n"
+                << "\nusage: heroes [OPTIONS]\n"
+                << "  -fs, --full-screen\n"
+                << "      starts the game in full screen mode.\n\n"
+                << "  -r HORIZONTAL_RESOLUTION VERTICAL_RESOLUTION\n"
+                << "      starts the game with the given resolution.\n\n"
+                << "  -h, --help\n"
+                << "      prints this message and exits.\n"
+                << std::endl;
+      start_game = false;
     }
   }
 
-  // Start the game engine
-  boot(fullscreen, width, height);
-  // Start the main menu
-  startMainMenu();
+  if (start_game) {
+    // Start the game engine
+    boot(fullscreen, width, height);
+    // Start the main menu
+    startMainMenu();
+  }
 
   return EXIT_SUCCESS;
 }

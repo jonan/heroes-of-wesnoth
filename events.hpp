@@ -27,8 +27,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "macros.hpp"
 
 /// All functions related to events.
-///
-/// -no detailed description-
 namespace events_engine {
 
 /// Mouse info
@@ -41,30 +39,24 @@ enum {NONE, BUTTON_LEFT, BUTTON_MIDDLE, BUTTON_RIGHT, WHEEL_UP, WHEEL_DOWN};
 enum {NORMAL, ATTACK, MOVE, ILLEGAL, WAIT, NUMBER_OF_TYPES};
 
 /// Event control.
-///
-/// Tells you when has an event has occur. This event can be a system event (redimension,
-/// close, redraw, etc.) or user event (keyboard or mouse). Once the event has occur,
+/// Tells you when has an event has occurred. This event can be a system event (resize,
+/// close, redraw, etc.) or user event (keyboard or mouse). Once the event has occurred,
 /// gives you complete information about it.
 class Events {
   public:
-    static Events* instance(void); // Singleton pattern constructor
+    static Events* getInstance(void); // Singleton pattern constructor
     ~Events(void); // Destructor
 
     /// Sets the cursor's type.
-    ///
-    /// -no detailed description-
-    ///
     /// @param[in] type Type of cursor.
     void setCursorType(const int type) {cursor_type = type;}
 
     /// Reads the input from mouse, keyboard and system.
-    ///
     /// Gets the input and stores the information obtained
     /// (must be called before any other events function).
     void readInput(void);
 
     /// Draws the mouse on the screen.
-    ///
     /// It's called every time the screen is updated,
     /// so it should only be called from graphics.
     void drawMouse(void);
@@ -75,6 +67,8 @@ class Events {
     Events(void); // Constructor
 
     SDL_Event event;
+
+    SDL_Rect mouse_position;
     SDL_Surface *cursor_image[NUMBER_OF_TYPES];
     int cursor_type;
 
@@ -82,8 +76,9 @@ class Events {
 };
 
 extern Events *input;
-extern bool *keys; // Stores the state of each keyboard key
-extern int *mouse; // Mouse info
+
+extern bool *keys;  // Stores the state of each keyboard key
+extern int  *mouse; // Stores all the mouse info
 
 } // namespace events_engine
 

@@ -20,10 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "cell.hpp"
 #include "graphics.hpp"
 
-// video_engine
 using video_engine::screen;
-using video_engine::OPAQUE;
-using video_engine::NONE;
 
 // Terrains to add to soften the map
 enum {ADD_CAVE_FLOOR,
@@ -57,436 +54,436 @@ void initializeVariables(SDL_Surface **one, SDL_Surface **two,
                         ) {
   switch (type) {
     case ADD_CAVE_FLOOR:
-      one[0] = screen->getImage("terrain/cave/floor-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/cave/floor-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/cave/floor-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/cave/floor-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/cave/floor-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/cave/floor-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/cave/floor-n");
+      one[1] = screen->getImage("terrain/cave/floor-ne");
+      one[2] = screen->getImage("terrain/cave/floor-se");
+      one[3] = screen->getImage("terrain/cave/floor-s");
+      one[4] = screen->getImage("terrain/cave/floor-sw");
+      one[5] = screen->getImage("terrain/cave/floor-nw");
 
-      two[0] = screen->getImage("terrain/cave/floor-n-ne", OPAQUE, NONE, 0);
-      two[1] = screen->getImage("terrain/cave/floor-ne-se", OPAQUE, NONE, 0);
-      two[2] = screen->getImage("terrain/cave/floor-se-s", OPAQUE, NONE, 0);
-      two[3] = screen->getImage("terrain/cave/floor-s-sw", OPAQUE, NONE, 0);
-      two[4] = screen->getImage("terrain/cave/floor-sw-nw", OPAQUE, NONE, 0);
-      two[5] = screen->getImage("terrain/cave/floor-nw-n", OPAQUE, NONE, 0);
+      two[0] = screen->getImage("terrain/cave/floor-n-ne");
+      two[1] = screen->getImage("terrain/cave/floor-ne-se");
+      two[2] = screen->getImage("terrain/cave/floor-se-s");
+      two[3] = screen->getImage("terrain/cave/floor-s-sw");
+      two[4] = screen->getImage("terrain/cave/floor-sw-nw");
+      two[5] = screen->getImage("terrain/cave/floor-nw-n");
 
       *three = NULL;
       *four = NULL;
       break;
     case ADD_CAVE_HILLS:
-      one[0] = screen->getImage("terrain/cave/hills-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/cave/hills-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/cave/hills-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/cave/hills-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/cave/hills-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/cave/hills-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/cave/hills-n");
+      one[1] = screen->getImage("terrain/cave/hills-ne");
+      one[2] = screen->getImage("terrain/cave/hills-se");
+      one[3] = screen->getImage("terrain/cave/hills-s");
+      one[4] = screen->getImage("terrain/cave/hills-sw");
+      one[5] = screen->getImage("terrain/cave/hills-nw");
 
       *two = NULL;
       *three = NULL;
       *four = NULL;
       break;
     case ADD_DESERT:
-      one[0] = screen->getImage("terrain/desert/desert-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/desert/desert-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/desert/desert-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/desert/desert-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/desert/desert-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/desert/desert-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/desert/desert-n");
+      one[1] = screen->getImage("terrain/desert/desert-ne");
+      one[2] = screen->getImage("terrain/desert/desert-se");
+      one[3] = screen->getImage("terrain/desert/desert-s");
+      one[4] = screen->getImage("terrain/desert/desert-sw");
+      one[5] = screen->getImage("terrain/desert/desert-nw");
 
-      two[0] = screen->getImage("terrain/desert/desert-n-ne", OPAQUE, NONE, 0);
-      two[1] = screen->getImage("terrain/desert/desert-ne-se", OPAQUE, NONE, 0);
-      two[2] = screen->getImage("terrain/desert/desert-se-s", OPAQUE, NONE, 0);
-      two[3] = screen->getImage("terrain/desert/desert-s-sw", OPAQUE, NONE, 0);
-      two[4] = screen->getImage("terrain/desert/desert-sw-nw", OPAQUE, NONE, 0);
-      two[5] = screen->getImage("terrain/desert/desert-nw-n", OPAQUE, NONE, 0);
+      two[0] = screen->getImage("terrain/desert/desert-n-ne");
+      two[1] = screen->getImage("terrain/desert/desert-ne-se");
+      two[2] = screen->getImage("terrain/desert/desert-se-s");
+      two[3] = screen->getImage("terrain/desert/desert-s-sw");
+      two[4] = screen->getImage("terrain/desert/desert-sw-nw");
+      two[5] = screen->getImage("terrain/desert/desert-nw-n");
 
-      three[0] = screen->getImage("terrain/desert/desert-n-ne-se", OPAQUE, NONE, 0);
-      three[1] = screen->getImage("terrain/desert/desert-ne-se-s", OPAQUE, NONE, 0);
-      three[2] = screen->getImage("terrain/desert/desert-se-s-sw", OPAQUE, NONE, 0);
-      three[3] = screen->getImage("terrain/desert/desert-s-sw-nw", OPAQUE, NONE, 0);
-      three[4] = screen->getImage("terrain/desert/desert-sw-nw-n", OPAQUE, NONE, 0);
-      three[5] = screen->getImage("terrain/desert/desert-nw-n-ne", OPAQUE, NONE, 0);
+      three[0] = screen->getImage("terrain/desert/desert-n-ne-se");
+      three[1] = screen->getImage("terrain/desert/desert-ne-se-s");
+      three[2] = screen->getImage("terrain/desert/desert-se-s-sw");
+      three[3] = screen->getImage("terrain/desert/desert-s-sw-nw");
+      three[4] = screen->getImage("terrain/desert/desert-sw-nw-n");
+      three[5] = screen->getImage("terrain/desert/desert-nw-n-ne");
 
       *four = NULL;
       break;
     case ADD_DESERT_HILLS:
-      one[0] = screen->getImage("terrain/desert/desert-hills-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/desert/desert-hills-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/desert/desert-hills-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/desert/desert-hills-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/desert/desert-hills-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/desert/desert-hills-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/desert/desert-hills-n");
+      one[1] = screen->getImage("terrain/desert/desert-hills-ne");
+      one[2] = screen->getImage("terrain/desert/desert-hills-se");
+      one[3] = screen->getImage("terrain/desert/desert-hills-s");
+      one[4] = screen->getImage("terrain/desert/desert-hills-sw");
+      one[5] = screen->getImage("terrain/desert/desert-hills-nw");
 
       *two = NULL;
       *three = NULL;
       *four = NULL;
       break;
     case ADD_DESERT_MOUNTAIN:
-      one[0] = screen->getImage("terrain/desert/desert-mountains-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/desert/desert-mountains-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/desert/desert-mountains-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/desert/desert-mountains-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/desert/desert-mountains-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/desert/desert-mountains-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/desert/desert-mountains-n");
+      one[1] = screen->getImage("terrain/desert/desert-mountains-ne");
+      one[2] = screen->getImage("terrain/desert/desert-mountains-se");
+      one[3] = screen->getImage("terrain/desert/desert-mountains-s");
+      one[4] = screen->getImage("terrain/desert/desert-mountains-sw");
+      one[5] = screen->getImage("terrain/desert/desert-mountains-nw");
 
       *two = NULL;
       *three = NULL;
       *four = NULL;
       break;
     case ADD_DESERT_ROAD:
-      one[0] = screen->getImage("terrain/desert/desert-road-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/desert/desert-road-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/desert/desert-road-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/desert/desert-road-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/desert/desert-road-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/desert/desert-road-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/desert/desert-road-n");
+      one[1] = screen->getImage("terrain/desert/desert-road-ne");
+      one[2] = screen->getImage("terrain/desert/desert-road-se");
+      one[3] = screen->getImage("terrain/desert/desert-road-s");
+      one[4] = screen->getImage("terrain/desert/desert-road-sw");
+      one[5] = screen->getImage("terrain/desert/desert-road-nw");
 
-      two[0] = screen->getImage("terrain/desert/desert-road-n-ne", OPAQUE, NONE, 0);
-      two[1] = screen->getImage("terrain/desert/desert-road-ne-se", OPAQUE, NONE, 0);
-      two[2] = screen->getImage("terrain/desert/desert-road-se-s", OPAQUE, NONE, 0);
-      two[3] = screen->getImage("terrain/desert/desert-road-s-sw", OPAQUE, NONE, 0);
-      two[4] = screen->getImage("terrain/desert/desert-road-sw-nw", OPAQUE, NONE, 0);
-      two[5] = screen->getImage("terrain/desert/desert-road-nw-n", OPAQUE, NONE, 0);
+      two[0] = screen->getImage("terrain/desert/desert-road-n-ne");
+      two[1] = screen->getImage("terrain/desert/desert-road-ne-se");
+      two[2] = screen->getImage("terrain/desert/desert-road-se-s");
+      two[3] = screen->getImage("terrain/desert/desert-road-s-sw");
+      two[4] = screen->getImage("terrain/desert/desert-road-sw-nw");
+      two[5] = screen->getImage("terrain/desert/desert-road-nw-n");
 
-      three[0] = screen->getImage("terrain/desert/desert-road-n-ne-se", OPAQUE, NONE, 0);
-      three[1] = screen->getImage("terrain/desert/desert-road-ne-se-s", OPAQUE, NONE, 0);
-      three[2] = screen->getImage("terrain/desert/desert-road-se-s-sw", OPAQUE, NONE, 0);
-      three[3] = screen->getImage("terrain/desert/desert-road-s-sw-nw", OPAQUE, NONE, 0);
-      three[4] = screen->getImage("terrain/desert/desert-road-sw-nw-n", OPAQUE, NONE, 0);
-      three[5] = screen->getImage("terrain/desert/desert-road-nw-n-ne", OPAQUE, NONE, 0);
+      three[0] = screen->getImage("terrain/desert/desert-road-n-ne-se");
+      three[1] = screen->getImage("terrain/desert/desert-road-ne-se-s");
+      three[2] = screen->getImage("terrain/desert/desert-road-se-s-sw");
+      three[3] = screen->getImage("terrain/desert/desert-road-s-sw-nw");
+      three[4] = screen->getImage("terrain/desert/desert-road-sw-nw-n");
+      three[5] = screen->getImage("terrain/desert/desert-road-nw-n-ne");
 
       *four = NULL;
       break;
     case ADD_DESERT_SAND:
-      one[0] = screen->getImage("terrain/desert/sand-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/desert/sand-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/desert/sand-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/desert/sand-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/desert/sand-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/desert/sand-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/desert/sand-n");
+      one[1] = screen->getImage("terrain/desert/sand-ne");
+      one[2] = screen->getImage("terrain/desert/sand-se");
+      one[3] = screen->getImage("terrain/desert/sand-s");
+      one[4] = screen->getImage("terrain/desert/sand-sw");
+      one[5] = screen->getImage("terrain/desert/sand-nw");
 
-      two[0] = screen->getImage("terrain/desert/sand-n-ne", OPAQUE, NONE, 0);
-      two[1] = screen->getImage("terrain/desert/sand-ne-se", OPAQUE, NONE, 0);
-      two[2] = screen->getImage("terrain/desert/sand-se-s", OPAQUE, NONE, 0);
-      two[3] = screen->getImage("terrain/desert/sand-s-sw", OPAQUE, NONE, 0);
-      two[4] = screen->getImage("terrain/desert/sand-sw-nw", OPAQUE, NONE, 0);
-      two[5] = screen->getImage("terrain/desert/sand-nw-n", OPAQUE, NONE, 0);
+      two[0] = screen->getImage("terrain/desert/sand-n-ne");
+      two[1] = screen->getImage("terrain/desert/sand-ne-se");
+      two[2] = screen->getImage("terrain/desert/sand-se-s");
+      two[3] = screen->getImage("terrain/desert/sand-s-sw");
+      two[4] = screen->getImage("terrain/desert/sand-sw-nw");
+      two[5] = screen->getImage("terrain/desert/sand-nw-n");
 
-      three[0] = screen->getImage("terrain/desert/sand-n-ne-se", OPAQUE, NONE, 0);
-      three[1] = screen->getImage("terrain/desert/sand-ne-se-s", OPAQUE, NONE, 0);
-      three[2] = screen->getImage("terrain/desert/sand-se-s-sw", OPAQUE, NONE, 0);
-      three[3] = screen->getImage("terrain/desert/sand-s-sw-nw", OPAQUE, NONE, 0);
-      three[4] = screen->getImage("terrain/desert/sand-sw-nw-n", OPAQUE, NONE, 0);
-      three[5] = screen->getImage("terrain/desert/sand-nw-n-ne", OPAQUE, NONE, 0);
+      three[0] = screen->getImage("terrain/desert/sand-n-ne-se");
+      three[1] = screen->getImage("terrain/desert/sand-ne-se-s");
+      three[2] = screen->getImage("terrain/desert/sand-se-s-sw");
+      three[3] = screen->getImage("terrain/desert/sand-s-sw-nw");
+      three[4] = screen->getImage("terrain/desert/sand-sw-nw-n");
+      three[5] = screen->getImage("terrain/desert/sand-nw-n-ne");
 
       *four = NULL;
       break;
     case ADD_FLAT_DIRT:
-      one[0] = screen->getImage("terrain/flat/dirt-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/flat/dirt-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/flat/dirt-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/flat/dirt-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/flat/dirt-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/flat/dirt-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/flat/dirt-n");
+      one[1] = screen->getImage("terrain/flat/dirt-ne");
+      one[2] = screen->getImage("terrain/flat/dirt-se");
+      one[3] = screen->getImage("terrain/flat/dirt-s");
+      one[4] = screen->getImage("terrain/flat/dirt-sw");
+      one[5] = screen->getImage("terrain/flat/dirt-nw");
 
-      two[0] = screen->getImage("terrain/flat/dirt-n-ne", OPAQUE, NONE, 0);
-      two[1] = screen->getImage("terrain/flat/dirt-ne-se", OPAQUE, NONE, 0);
-      two[2] = screen->getImage("terrain/flat/dirt-se-s", OPAQUE, NONE, 0);
-      two[3] = screen->getImage("terrain/flat/dirt-s-sw", OPAQUE, NONE, 0);
-      two[4] = screen->getImage("terrain/flat/dirt-sw-nw", OPAQUE, NONE, 0);
-      two[5] = screen->getImage("terrain/flat/dirt-nw-n", OPAQUE, NONE, 0);
+      two[0] = screen->getImage("terrain/flat/dirt-n-ne");
+      two[1] = screen->getImage("terrain/flat/dirt-ne-se");
+      two[2] = screen->getImage("terrain/flat/dirt-se-s");
+      two[3] = screen->getImage("terrain/flat/dirt-s-sw");
+      two[4] = screen->getImage("terrain/flat/dirt-sw-nw");
+      two[5] = screen->getImage("terrain/flat/dirt-nw-n");
 
-      three[0] = screen->getImage("terrain/flat/dirt-n-ne-se", OPAQUE, NONE, 0);
-      three[1] = screen->getImage("terrain/flat/dirt-ne-se-s", OPAQUE, NONE, 0);
-      three[2] = screen->getImage("terrain/flat/dirt-se-s-sw", OPAQUE, NONE, 0);
-      three[3] = screen->getImage("terrain/flat/dirt-s-sw-nw", OPAQUE, NONE, 0);
-      three[4] = screen->getImage("terrain/flat/dirt-sw-nw-n", OPAQUE, NONE, 0);
-      three[5] = screen->getImage("terrain/flat/dirt-nw-n-ne", OPAQUE, NONE, 0);
+      three[0] = screen->getImage("terrain/flat/dirt-n-ne-se");
+      three[1] = screen->getImage("terrain/flat/dirt-ne-se-s");
+      three[2] = screen->getImage("terrain/flat/dirt-se-s-sw");
+      three[3] = screen->getImage("terrain/flat/dirt-s-sw-nw");
+      three[4] = screen->getImage("terrain/flat/dirt-sw-nw-n");
+      three[5] = screen->getImage("terrain/flat/dirt-nw-n-ne");
 
       *four = NULL;
       break;
     case ADD_FLAT_GRASS:
-      one[0] = screen->getImage("terrain/flat/grass-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/flat/grass-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/flat/grass-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/flat/grass-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/flat/grass-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/flat/grass-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/flat/grass-n");
+      one[1] = screen->getImage("terrain/flat/grass-ne");
+      one[2] = screen->getImage("terrain/flat/grass-se");
+      one[3] = screen->getImage("terrain/flat/grass-s");
+      one[4] = screen->getImage("terrain/flat/grass-sw");
+      one[5] = screen->getImage("terrain/flat/grass-nw");
 
-      two[0] = screen->getImage("terrain/flat/grass-n-ne", OPAQUE, NONE, 0);
-      two[1] = screen->getImage("terrain/flat/grass-ne-se", OPAQUE, NONE, 0);
-      two[2] = screen->getImage("terrain/flat/grass-se-s", OPAQUE, NONE, 0);
-      two[3] = screen->getImage("terrain/flat/grass-s-sw", OPAQUE, NONE, 0);
-      two[4] = screen->getImage("terrain/flat/grass-sw-nw", OPAQUE, NONE, 0);
-      two[5] = screen->getImage("terrain/flat/grass-nw-n", OPAQUE, NONE, 0);
+      two[0] = screen->getImage("terrain/flat/grass-n-ne");
+      two[1] = screen->getImage("terrain/flat/grass-ne-se");
+      two[2] = screen->getImage("terrain/flat/grass-se-s");
+      two[3] = screen->getImage("terrain/flat/grass-s-sw");
+      two[4] = screen->getImage("terrain/flat/grass-sw-nw");
+      two[5] = screen->getImage("terrain/flat/grass-nw-n");
 
-      three[0] = screen->getImage("terrain/flat/grass-n-ne-se", OPAQUE, NONE, 0);
-      three[1] = screen->getImage("terrain/flat/grass-ne-se-s", OPAQUE, NONE, 0);
-      three[2] = screen->getImage("terrain/flat/grass-se-s-sw", OPAQUE, NONE, 0);
-      three[3] = screen->getImage("terrain/flat/grass-s-sw-nw", OPAQUE, NONE, 0);
-      three[4] = screen->getImage("terrain/flat/grass-sw-nw-n", OPAQUE, NONE, 0);
-      three[5] = screen->getImage("terrain/flat/grass-nw-n-ne", OPAQUE, NONE, 0);
+      three[0] = screen->getImage("terrain/flat/grass-n-ne-se");
+      three[1] = screen->getImage("terrain/flat/grass-ne-se-s");
+      three[2] = screen->getImage("terrain/flat/grass-se-s-sw");
+      three[3] = screen->getImage("terrain/flat/grass-s-sw-nw");
+      three[4] = screen->getImage("terrain/flat/grass-sw-nw-n");
+      three[5] = screen->getImage("terrain/flat/grass-nw-n-ne");
 
       *four = NULL;
       break;
     case ADD_FLAT_GRASS_TO_WATER:
-      one[0] = screen->getImage("terrain/flat/grass-to-water-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/flat/grass-to-water-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/flat/grass-to-water-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/flat/grass-to-water-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/flat/grass-to-water-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/flat/grass-to-water-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/flat/grass-to-water-n");
+      one[1] = screen->getImage("terrain/flat/grass-to-water-ne");
+      one[2] = screen->getImage("terrain/flat/grass-to-water-se");
+      one[3] = screen->getImage("terrain/flat/grass-to-water-s");
+      one[4] = screen->getImage("terrain/flat/grass-to-water-sw");
+      one[5] = screen->getImage("terrain/flat/grass-to-water-nw");
 
-      two[0] = screen->getImage("terrain/flat/grass-to-water-n-ne", OPAQUE, NONE, 0);
-      two[1] = screen->getImage("terrain/flat/grass-to-water-ne-se", OPAQUE, NONE, 0);
-      two[2] = screen->getImage("terrain/flat/grass-to-water-se-s", OPAQUE, NONE, 0);
-      two[3] = screen->getImage("terrain/flat/grass-to-water-s-sw", OPAQUE, NONE, 0);
-      two[4] = screen->getImage("terrain/flat/grass-to-water-sw-nw", OPAQUE, NONE, 0);
-      two[5] = screen->getImage("terrain/flat/grass-to-water-nw-n", OPAQUE, NONE, 0);
+      two[0] = screen->getImage("terrain/flat/grass-to-water-n-ne");
+      two[1] = screen->getImage("terrain/flat/grass-to-water-ne-se");
+      two[2] = screen->getImage("terrain/flat/grass-to-water-se-s");
+      two[3] = screen->getImage("terrain/flat/grass-to-water-s-sw");
+      two[4] = screen->getImage("terrain/flat/grass-to-water-sw-nw");
+      two[5] = screen->getImage("terrain/flat/grass-to-water-nw-n");
 
-      three[0] = screen->getImage("terrain/flat/grass-to-water-n-ne-se", OPAQUE, NONE, 0);
-      three[1] = screen->getImage("terrain/flat/grass-to-water-ne-se-s", OPAQUE, NONE, 0);
-      three[2] = screen->getImage("terrain/flat/grass-to-water-se-s-sw", OPAQUE, NONE, 0);
-      three[3] = screen->getImage("terrain/flat/grass-to-water-s-sw-nw", OPAQUE, NONE, 0);
-      three[4] = screen->getImage("terrain/flat/grass-to-water-sw-nw-n", OPAQUE, NONE, 0);
-      three[5] = screen->getImage("terrain/flat/grass-to-water-nw-n-ne", OPAQUE, NONE, 0);
+      three[0] = screen->getImage("terrain/flat/grass-to-water-n-ne-se");
+      three[1] = screen->getImage("terrain/flat/grass-to-water-ne-se-s");
+      three[2] = screen->getImage("terrain/flat/grass-to-water-se-s-sw");
+      three[3] = screen->getImage("terrain/flat/grass-to-water-s-sw-nw");
+      three[4] = screen->getImage("terrain/flat/grass-to-water-sw-nw-n");
+      three[5] = screen->getImage("terrain/flat/grass-to-water-nw-n-ne");
 
-      four[0] = screen->getImage("terrain/flat/grass-to-water-n-ne-se-s", OPAQUE, NONE, 0);
-      four[1] = screen->getImage("terrain/flat/grass-to-water-ne-se-s-sw", OPAQUE, NONE, 0);
-      four[2] = screen->getImage("terrain/flat/grass-to-water-se-s-sw-nw", OPAQUE, NONE, 0);
-      four[3] = screen->getImage("terrain/flat/grass-to-water-s-sw-nw-n", OPAQUE, NONE, 0);
-      four[4] = screen->getImage("terrain/flat/grass-to-water-sw-nw-n-ne", OPAQUE, NONE, 0);
-      four[5] = screen->getImage("terrain/flat/grass-to-water-nw-n-ne-se", OPAQUE, NONE, 0);
+      four[0] = screen->getImage("terrain/flat/grass-to-water-n-ne-se-s");
+      four[1] = screen->getImage("terrain/flat/grass-to-water-ne-se-s-sw");
+      four[2] = screen->getImage("terrain/flat/grass-to-water-se-s-sw-nw");
+      four[3] = screen->getImage("terrain/flat/grass-to-water-s-sw-nw-n");
+      four[4] = screen->getImage("terrain/flat/grass-to-water-sw-nw-n-ne");
+      four[5] = screen->getImage("terrain/flat/grass-to-water-nw-n-ne-se");
       break;
     case ADD_FLAT_ROAD:
-      one[0] = screen->getImage("terrain/flat/road-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/flat/road-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/flat/road-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/flat/road-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/flat/road-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/flat/road-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/flat/road-n");
+      one[1] = screen->getImage("terrain/flat/road-ne");
+      one[2] = screen->getImage("terrain/flat/road-se");
+      one[3] = screen->getImage("terrain/flat/road-s");
+      one[4] = screen->getImage("terrain/flat/road-sw");
+      one[5] = screen->getImage("terrain/flat/road-nw");
 
-      two[0] = screen->getImage("terrain/flat/road-n-ne", OPAQUE, NONE, 0);
-      two[1] = screen->getImage("terrain/flat/road-ne-se", OPAQUE, NONE, 0);
-      two[2] = screen->getImage("terrain/flat/road-se-s", OPAQUE, NONE, 0);
-      two[3] = screen->getImage("terrain/flat/road-s-sw", OPAQUE, NONE, 0);
-      two[4] = screen->getImage("terrain/flat/road-sw-nw", OPAQUE, NONE, 0);
-      two[5] = screen->getImage("terrain/flat/road-nw-n", OPAQUE, NONE, 0);
+      two[0] = screen->getImage("terrain/flat/road-n-ne");
+      two[1] = screen->getImage("terrain/flat/road-ne-se");
+      two[2] = screen->getImage("terrain/flat/road-se-s");
+      two[3] = screen->getImage("terrain/flat/road-s-sw");
+      two[4] = screen->getImage("terrain/flat/road-sw-nw");
+      two[5] = screen->getImage("terrain/flat/road-nw-n");
 
       *three = NULL;
       *four = NULL;
       break;
     case ADD_FLAT_SAVANNA:
-      one[0] = screen->getImage("terrain/flat/savanna-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/flat/savanna-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/flat/savanna-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/flat/savanna-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/flat/savanna-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/flat/savanna-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/flat/savanna-n");
+      one[1] = screen->getImage("terrain/flat/savanna-ne");
+      one[2] = screen->getImage("terrain/flat/savanna-se");
+      one[3] = screen->getImage("terrain/flat/savanna-s");
+      one[4] = screen->getImage("terrain/flat/savanna-sw");
+      one[5] = screen->getImage("terrain/flat/savanna-nw");
 
-      two[0] = screen->getImage("terrain/flat/savanna-n-ne", OPAQUE, NONE, 0);
-      two[1] = screen->getImage("terrain/flat/savanna-ne-se", OPAQUE, NONE, 0);
-      two[2] = screen->getImage("terrain/flat/savanna-se-s", OPAQUE, NONE, 0);
-      two[3] = screen->getImage("terrain/flat/savanna-s-sw", OPAQUE, NONE, 0);
-      two[4] = screen->getImage("terrain/flat/savanna-sw-nw", OPAQUE, NONE, 0);
-      two[5] = screen->getImage("terrain/flat/savanna-nw-n", OPAQUE, NONE, 0);
+      two[0] = screen->getImage("terrain/flat/savanna-n-ne");
+      two[1] = screen->getImage("terrain/flat/savanna-ne-se");
+      two[2] = screen->getImage("terrain/flat/savanna-se-s");
+      two[3] = screen->getImage("terrain/flat/savanna-s-sw");
+      two[4] = screen->getImage("terrain/flat/savanna-sw-nw");
+      two[5] = screen->getImage("terrain/flat/savanna-nw-n");
 
-      three[0] = screen->getImage("terrain/flat/savanna-n-ne-se", OPAQUE, NONE, 0);
-      three[1] = screen->getImage("terrain/flat/savanna-ne-se-s", OPAQUE, NONE, 0);
-      three[2] = screen->getImage("terrain/flat/savanna-se-s-sw", OPAQUE, NONE, 0);
-      three[3] = screen->getImage("terrain/flat/savanna-s-sw-nw", OPAQUE, NONE, 0);
-      three[4] = screen->getImage("terrain/flat/savanna-sw-nw-n", OPAQUE, NONE, 0);
-      three[5] = screen->getImage("terrain/flat/savanna-nw-n-ne", OPAQUE, NONE, 0);
+      three[0] = screen->getImage("terrain/flat/savanna-n-ne-se");
+      three[1] = screen->getImage("terrain/flat/savanna-ne-se-s");
+      three[2] = screen->getImage("terrain/flat/savanna-se-s-sw");
+      three[3] = screen->getImage("terrain/flat/savanna-s-sw-nw");
+      three[4] = screen->getImage("terrain/flat/savanna-sw-nw-n");
+      three[5] = screen->getImage("terrain/flat/savanna-nw-n-ne");
 
       *four = NULL;
       break;
     case ADD_FLAT_SAVANNA_TO_WATER:
-      one[0] = screen->getImage("terrain/flat/savanna-to-water-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/flat/savanna-to-water-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/flat/savanna-to-water-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/flat/savanna-to-water-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/flat/savanna-to-water-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/flat/savanna-to-water-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/flat/savanna-to-water-n");
+      one[1] = screen->getImage("terrain/flat/savanna-to-water-ne");
+      one[2] = screen->getImage("terrain/flat/savanna-to-water-se");
+      one[3] = screen->getImage("terrain/flat/savanna-to-water-s");
+      one[4] = screen->getImage("terrain/flat/savanna-to-water-sw");
+      one[5] = screen->getImage("terrain/flat/savanna-to-water-nw");
 
-      two[0] = screen->getImage("terrain/flat/savanna-to-water-n-ne", OPAQUE, NONE, 0);
-      two[1] = screen->getImage("terrain/flat/savanna-to-water-ne-se", OPAQUE, NONE, 0);
-      two[2] = screen->getImage("terrain/flat/savanna-to-water-se-s", OPAQUE, NONE, 0);
-      two[3] = screen->getImage("terrain/flat/savanna-to-water-s-sw", OPAQUE, NONE, 0);
-      two[4] = screen->getImage("terrain/flat/savanna-to-water-sw-nw", OPAQUE, NONE, 0);
-      two[5] = screen->getImage("terrain/flat/savanna-to-water-nw-n", OPAQUE, NONE, 0);
+      two[0] = screen->getImage("terrain/flat/savanna-to-water-n-ne");
+      two[1] = screen->getImage("terrain/flat/savanna-to-water-ne-se");
+      two[2] = screen->getImage("terrain/flat/savanna-to-water-se-s");
+      two[3] = screen->getImage("terrain/flat/savanna-to-water-s-sw");
+      two[4] = screen->getImage("terrain/flat/savanna-to-water-sw-nw");
+      two[5] = screen->getImage("terrain/flat/savanna-to-water-nw-n");
 
-      three[0] = screen->getImage("terrain/flat/savanna-to-water-n-ne-se", OPAQUE, NONE, 0);
-      three[1] = screen->getImage("terrain/flat/savanna-to-water-ne-se-s", OPAQUE, NONE, 0);
-      three[2] = screen->getImage("terrain/flat/savanna-to-water-se-s-sw", OPAQUE, NONE, 0);
-      three[3] = screen->getImage("terrain/flat/savanna-to-water-s-sw-nw", OPAQUE, NONE, 0);
-      three[4] = screen->getImage("terrain/flat/savanna-to-water-sw-nw-n", OPAQUE, NONE, 0);
-      three[5] = screen->getImage("terrain/flat/savanna-to-water-nw-n-ne", OPAQUE, NONE, 0);
+      three[0] = screen->getImage("terrain/flat/savanna-to-water-n-ne-se");
+      three[1] = screen->getImage("terrain/flat/savanna-to-water-ne-se-s");
+      three[2] = screen->getImage("terrain/flat/savanna-to-water-se-s-sw");
+      three[3] = screen->getImage("terrain/flat/savanna-to-water-s-sw-nw");
+      three[4] = screen->getImage("terrain/flat/savanna-to-water-sw-nw-n");
+      three[5] = screen->getImage("terrain/flat/savanna-to-water-nw-n-ne");
 
       *four = NULL;
       break;
     case ADD_FLAT_STONE_PATH:
-      one[0] = screen->getImage("terrain/flat/stone-path-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/flat/stone-path-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/flat/stone-path-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/flat/stone-path-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/flat/stone-path-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/flat/stone-path-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/flat/stone-path-n");
+      one[1] = screen->getImage("terrain/flat/stone-path-ne");
+      one[2] = screen->getImage("terrain/flat/stone-path-se");
+      one[3] = screen->getImage("terrain/flat/stone-path-s");
+      one[4] = screen->getImage("terrain/flat/stone-path-sw");
+      one[5] = screen->getImage("terrain/flat/stone-path-nw");
 
-      two[0] = screen->getImage("terrain/flat/stone-path-n-ne", OPAQUE, NONE, 0);
-      two[1] = screen->getImage("terrain/flat/stone-path-ne-se", OPAQUE, NONE, 0);
-      two[2] = screen->getImage("terrain/flat/stone-path-se-s", OPAQUE, NONE, 0);
-      two[3] = screen->getImage("terrain/flat/stone-path-s-sw", OPAQUE, NONE, 0);
-      two[4] = screen->getImage("terrain/flat/stone-path-sw-nw", OPAQUE, NONE, 0);
-      two[5] = screen->getImage("terrain/flat/stone-path-nw-n", OPAQUE, NONE, 0);
+      two[0] = screen->getImage("terrain/flat/stone-path-n-ne");
+      two[1] = screen->getImage("terrain/flat/stone-path-ne-se");
+      two[2] = screen->getImage("terrain/flat/stone-path-se-s");
+      two[3] = screen->getImage("terrain/flat/stone-path-s-sw");
+      two[4] = screen->getImage("terrain/flat/stone-path-sw-nw");
+      two[5] = screen->getImage("terrain/flat/stone-path-nw-n");
 
       *three = NULL;
       *four = NULL;
       break;
     case ADD_HILLS:
-      one[0] = screen->getImage("terrain/hills-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/hills-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/hills-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/hills-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/hills-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/hills-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/hills-n");
+      one[1] = screen->getImage("terrain/hills-ne");
+      one[2] = screen->getImage("terrain/hills-se");
+      one[3] = screen->getImage("terrain/hills-s");
+      one[4] = screen->getImage("terrain/hills-sw");
+      one[5] = screen->getImage("terrain/hills-nw");
 
       *two = NULL;
       *three = NULL;
       *four = NULL;
       break;
     case ADD_LAVA:
-      one[0] = screen->getImage("terrain/lava-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/lava-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/lava-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/lava-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/lava-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/lava-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/lava-n");
+      one[1] = screen->getImage("terrain/lava-ne");
+      one[2] = screen->getImage("terrain/lava-se");
+      one[3] = screen->getImage("terrain/lava-s");
+      one[4] = screen->getImage("terrain/lava-sw");
+      one[5] = screen->getImage("terrain/lava-nw");
 
-      two[0] = screen->getImage("terrain/lava-n-ne", OPAQUE, NONE, 0);
-      two[1] = screen->getImage("terrain/lava-ne-se", OPAQUE, NONE, 0);
-      two[2] = screen->getImage("terrain/lava-se-s", OPAQUE, NONE, 0);
-      two[3] = screen->getImage("terrain/lava-s-sw", OPAQUE, NONE, 0);
-      two[4] = screen->getImage("terrain/lava-sw-nw", OPAQUE, NONE, 0);
-      two[5] = screen->getImage("terrain/lava-nw-n", OPAQUE, NONE, 0);
+      two[0] = screen->getImage("terrain/lava-n-ne");
+      two[1] = screen->getImage("terrain/lava-ne-se");
+      two[2] = screen->getImage("terrain/lava-se-s");
+      two[3] = screen->getImage("terrain/lava-s-sw");
+      two[4] = screen->getImage("terrain/lava-sw-nw");
+      two[5] = screen->getImage("terrain/lava-nw-n");
 
       *three = NULL;
       *four = NULL;
       break;
     case ADD_WATER_COAST:
-      one[0] = screen->getImage("terrain/water/coast-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/water/coast-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/water/coast-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/water/coast-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/water/coast-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/water/coast-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/water/coast-n");
+      one[1] = screen->getImage("terrain/water/coast-ne");
+      one[2] = screen->getImage("terrain/water/coast-se");
+      one[3] = screen->getImage("terrain/water/coast-s");
+      one[4] = screen->getImage("terrain/water/coast-sw");
+      one[5] = screen->getImage("terrain/water/coast-nw");
 
       *two = NULL;
       *three = NULL;
       *four = NULL;
       break;
     case ADD_WATER_FORD:
-      one[0] = screen->getImage("terrain/water/ford-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/water/ford-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/water/ford-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/water/ford-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/water/ford-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/water/ford-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/water/ford-n");
+      one[1] = screen->getImage("terrain/water/ford-ne");
+      one[2] = screen->getImage("terrain/water/ford-se");
+      one[3] = screen->getImage("terrain/water/ford-s");
+      one[4] = screen->getImage("terrain/water/ford-sw");
+      one[5] = screen->getImage("terrain/water/ford-nw");
 
       *two = NULL;
       *three = NULL;
       *four = NULL;
       break;
     case ADD_WATER_ICE:
-      one[0] = screen->getImage("terrain/water/ice-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/water/ice-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/water/ice-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/water/ice-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/water/ice-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/water/ice-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/water/ice-n");
+      one[1] = screen->getImage("terrain/water/ice-ne");
+      one[2] = screen->getImage("terrain/water/ice-se");
+      one[3] = screen->getImage("terrain/water/ice-s");
+      one[4] = screen->getImage("terrain/water/ice-sw");
+      one[5] = screen->getImage("terrain/water/ice-nw");
 
-      two[0] = screen->getImage("terrain/water/ice-n-ne", OPAQUE, NONE, 0);
-      two[1] = screen->getImage("terrain/water/ice-ne-se", OPAQUE, NONE, 0);
-      two[2] = screen->getImage("terrain/water/ice-se-s", OPAQUE, NONE, 0);
-      two[3] = screen->getImage("terrain/water/ice-s-sw", OPAQUE, NONE, 0);
-      two[4] = screen->getImage("terrain/water/ice-sw-nw", OPAQUE, NONE, 0);
-      two[5] = screen->getImage("terrain/water/ice-nw-n", OPAQUE, NONE, 0);
+      two[0] = screen->getImage("terrain/water/ice-n-ne");
+      two[1] = screen->getImage("terrain/water/ice-ne-se");
+      two[2] = screen->getImage("terrain/water/ice-se-s");
+      two[3] = screen->getImage("terrain/water/ice-s-sw");
+      two[4] = screen->getImage("terrain/water/ice-sw-nw");
+      two[5] = screen->getImage("terrain/water/ice-nw-n");
 
       *three = NULL;
       *four = NULL;
       break;
     case ADD_WATER_ICE_TO_WATER:
-      one[0] = screen->getImage("terrain/water/ice-to-water-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/water/ice-to-water-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/water/ice-to-water-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/water/ice-to-water-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/water/ice-to-water-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/water/ice-to-water-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/water/ice-to-water-n");
+      one[1] = screen->getImage("terrain/water/ice-to-water-ne");
+      one[2] = screen->getImage("terrain/water/ice-to-water-se");
+      one[3] = screen->getImage("terrain/water/ice-to-water-s");
+      one[4] = screen->getImage("terrain/water/ice-to-water-sw");
+      one[5] = screen->getImage("terrain/water/ice-to-water-nw");
 
-      two[0] = screen->getImage("terrain/water/ice-to-water-n-ne", OPAQUE, NONE, 0);
-      two[1] = screen->getImage("terrain/water/ice-to-water-ne-se", OPAQUE, NONE, 0);
-      two[2] = screen->getImage("terrain/water/ice-to-water-se-s", OPAQUE, NONE, 0);
-      two[3] = screen->getImage("terrain/water/ice-to-water-s-sw", OPAQUE, NONE, 0);
-      two[4] = screen->getImage("terrain/water/ice-to-water-sw-nw", OPAQUE, NONE, 0);
-      two[5] = screen->getImage("terrain/water/ice-to-water-nw-n", OPAQUE, NONE, 0);
+      two[0] = screen->getImage("terrain/water/ice-to-water-n-ne");
+      two[1] = screen->getImage("terrain/water/ice-to-water-ne-se");
+      two[2] = screen->getImage("terrain/water/ice-to-water-se-s");
+      two[3] = screen->getImage("terrain/water/ice-to-water-s-sw");
+      two[4] = screen->getImage("terrain/water/ice-to-water-sw-nw");
+      two[5] = screen->getImage("terrain/water/ice-to-water-nw-n");
 
       *three = NULL;
       *four = NULL;
       break;
     case ADD_WATER_SNOW:
-      one[0] = screen->getImage("terrain/water/snow-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/water/snow-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/water/snow-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/water/snow-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/water/snow-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/water/snow-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/water/snow-n");
+      one[1] = screen->getImage("terrain/water/snow-ne");
+      one[2] = screen->getImage("terrain/water/snow-se");
+      one[3] = screen->getImage("terrain/water/snow-s");
+      one[4] = screen->getImage("terrain/water/snow-sw");
+      one[5] = screen->getImage("terrain/water/snow-nw");
 
-      two[0] = screen->getImage("terrain/water/snow-n-ne", OPAQUE, NONE, 0);
-      two[1] = screen->getImage("terrain/water/snow-ne-se", OPAQUE, NONE, 0);
-      two[2] = screen->getImage("terrain/water/snow-se-s", OPAQUE, NONE, 0);
-      two[3] = screen->getImage("terrain/water/snow-s-sw", OPAQUE, NONE, 0);
-      two[4] = screen->getImage("terrain/water/snow-sw-nw", OPAQUE, NONE, 0);
-      two[5] = screen->getImage("terrain/water/snow-nw-n", OPAQUE, NONE, 0);
+      two[0] = screen->getImage("terrain/water/snow-n-ne");
+      two[1] = screen->getImage("terrain/water/snow-ne-se");
+      two[2] = screen->getImage("terrain/water/snow-se-s");
+      two[3] = screen->getImage("terrain/water/snow-s-sw");
+      two[4] = screen->getImage("terrain/water/snow-sw-nw");
+      two[5] = screen->getImage("terrain/water/snow-nw-n");
 
-      three[0] = screen->getImage("terrain/water/snow-n-ne-se", OPAQUE, NONE, 0);
-      three[1] = screen->getImage("terrain/water/snow-ne-se-s", OPAQUE, NONE, 0);
-      three[2] = screen->getImage("terrain/water/snow-se-s-sw", OPAQUE, NONE, 0);
-      three[3] = screen->getImage("terrain/water/snow-s-sw-nw", OPAQUE, NONE, 0);
-      three[4] = screen->getImage("terrain/water/snow-sw-nw-n", OPAQUE, NONE, 0);
-      three[5] = screen->getImage("terrain/water/snow-nw-n-ne", OPAQUE, NONE, 0);
+      three[0] = screen->getImage("terrain/water/snow-n-ne-se");
+      three[1] = screen->getImage("terrain/water/snow-ne-se-s");
+      three[2] = screen->getImage("terrain/water/snow-se-s-sw");
+      three[3] = screen->getImage("terrain/water/snow-s-sw-nw");
+      three[4] = screen->getImage("terrain/water/snow-sw-nw-n");
+      three[5] = screen->getImage("terrain/water/snow-nw-n-ne");
 
-      four[0] = screen->getImage("terrain/water/snow-n-ne-se-s", OPAQUE, NONE, 0);
-      four[1] = screen->getImage("terrain/water/snow-ne-se-s-sw", OPAQUE, NONE, 0);
-      four[2] = screen->getImage("terrain/water/snow-se-s-sw-nw", OPAQUE, NONE, 0);
-      four[3] = screen->getImage("terrain/water/snow-s-sw-nw-n", OPAQUE, NONE, 0);
-      four[4] = screen->getImage("terrain/water/snow-sw-nw-n-ne", OPAQUE, NONE, 0);
-      four[5] = screen->getImage("terrain/water/snow-nw-n-ne-se", OPAQUE, NONE, 0);
+      four[0] = screen->getImage("terrain/water/snow-n-ne-se-s");
+      four[1] = screen->getImage("terrain/water/snow-ne-se-s-sw");
+      four[2] = screen->getImage("terrain/water/snow-se-s-sw-nw");
+      four[3] = screen->getImage("terrain/water/snow-s-sw-nw-n");
+      four[4] = screen->getImage("terrain/water/snow-sw-nw-n-ne");
+      four[5] = screen->getImage("terrain/water/snow-nw-n-ne-se");
       break;
     case ADD_WATER_SNOW_TO_WATER:
-      one[0] = screen->getImage("terrain/water/snow-to-water-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/water/snow-to-water-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/water/snow-to-water-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/water/snow-to-water-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/water/snow-to-water-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/water/snow-to-water-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/water/snow-to-water-n");
+      one[1] = screen->getImage("terrain/water/snow-to-water-ne");
+      one[2] = screen->getImage("terrain/water/snow-to-water-se");
+      one[3] = screen->getImage("terrain/water/snow-to-water-s");
+      one[4] = screen->getImage("terrain/water/snow-to-water-sw");
+      one[5] = screen->getImage("terrain/water/snow-to-water-nw");
 
-      two[0] = screen->getImage("terrain/water/snow-to-water-n-ne", OPAQUE, NONE, 0);
-      two[1] = screen->getImage("terrain/water/snow-to-water-ne-se", OPAQUE, NONE, 0);
-      two[2] = screen->getImage("terrain/water/snow-to-water-se-s", OPAQUE, NONE, 0);
-      two[3] = screen->getImage("terrain/water/snow-to-water-s-sw", OPAQUE, NONE, 0);
-      two[4] = screen->getImage("terrain/water/snow-to-water-sw-nw", OPAQUE, NONE, 0);
-      two[5] = screen->getImage("terrain/water/snow-to-water-nw-n", OPAQUE, NONE, 0);
+      two[0] = screen->getImage("terrain/water/snow-to-water-n-ne");
+      two[1] = screen->getImage("terrain/water/snow-to-water-ne-se");
+      two[2] = screen->getImage("terrain/water/snow-to-water-se-s");
+      two[3] = screen->getImage("terrain/water/snow-to-water-s-sw");
+      two[4] = screen->getImage("terrain/water/snow-to-water-sw-nw");
+      two[5] = screen->getImage("terrain/water/snow-to-water-nw-n");
 
       *three = NULL;
       *four = NULL;
       break;
     case ADD_WATER_SNOW_HILLS:
-      one[0] = screen->getImage("terrain/water/snow-hills-n", OPAQUE, NONE, 0);
-      one[1] = screen->getImage("terrain/water/snow-hills-ne", OPAQUE, NONE, 0);
-      one[2] = screen->getImage("terrain/water/snow-hills-se", OPAQUE, NONE, 0);
-      one[3] = screen->getImage("terrain/water/snow-hills-s", OPAQUE, NONE, 0);
-      one[4] = screen->getImage("terrain/water/snow-hills-sw", OPAQUE, NONE, 0);
-      one[5] = screen->getImage("terrain/water/snow-hills-nw", OPAQUE, NONE, 0);
+      one[0] = screen->getImage("terrain/water/snow-hills-n");
+      one[1] = screen->getImage("terrain/water/snow-hills-ne");
+      one[2] = screen->getImage("terrain/water/snow-hills-se");
+      one[3] = screen->getImage("terrain/water/snow-hills-s");
+      one[4] = screen->getImage("terrain/water/snow-hills-sw");
+      one[5] = screen->getImage("terrain/water/snow-hills-nw");
 
       *two = NULL;
       *three = NULL;
@@ -556,11 +553,11 @@ void Map::softenTerrain(const char cell_terrain, char *terrain, const int number
   for (int x=0; x<width; x++)
     for (int y=0; y<height; y++) {
       for (int i=0; i<number_terrains; i++)
-        need_soft = ( need_soft || (battle_map[x][y].getTerrain() == terrain[i]) );
+        need_soft = ( need_soft || (map[x][y].getTerrain() == terrain[i]) );
       if (need_soft) {
         need_soft = false; // Reset for next comprovation
         for (int i=N; i<=NW; i++) {
-          temp = battle_map[x][y].getConnectedCell(i);
+          temp = map[x][y].getConnectedCell(i);
           if (temp != NULL)
             if(temp->getTerrain() == cell_terrain) differentTerrain[i] = true;
         }
@@ -569,7 +566,7 @@ void Map::softenTerrain(const char cell_terrain, char *terrain, const int number
         if (need_soft) {
           need_soft = false; // Reset for next cell
           initializeVariables(one, two, three, four, soft_images);
-          addImages(differentTerrain, battle_map[x][y], one, two, three, four);
+          addImages(differentTerrain, map[x][y], one, two, three, four);
         }
       }
     }

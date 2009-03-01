@@ -18,11 +18,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "unit.hpp"
 
 #include "graphics.hpp"
+#include "structs.hpp"
 
-// video_engine
 using video_engine::screen;
-using video_engine::OPAQUE;
-using video_engine::NONE;
 
 // Adds a magic animation.
 void Unit::addMagicAnimation(const int spell) {
@@ -34,14 +32,14 @@ void Unit::addMagicAnimation(const int spell) {
   // Set the varibles depending of the tipe of item.
   switch (spell) {
     case WHITE_MISSILE:
-      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-1", OPAQUE, NONE, 0));
-      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-2", OPAQUE, NONE, 0));
-      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-3", OPAQUE, NONE, 0));
-      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-4", OPAQUE, NONE, 0));
-      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-5", OPAQUE, NONE, 0));
-      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-6", OPAQUE, NONE, 0));
-      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-7", OPAQUE, NONE, 0));
-      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-8", OPAQUE, NONE, 0));
+      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-1"));
+      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-2"));
+      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-3"));
+      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-4"));
+      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-5"));
+      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-6"));
+      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-7"));
+      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-8"));
       break;
     default: {} // Imposible case
   }

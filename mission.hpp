@@ -28,8 +28,6 @@ class Hero;
 class World;
 
 /// Represents a scenario.
-///
-/// -no detailed description-
 class Mission {
   public:
     /// @param[in] map The name of the map to use in the mission.
@@ -44,8 +42,6 @@ class Mission {
     ~Mission(); // Destructor
 
     /// Launches the mission.
-    ///
-    /// -no detailed description-
     void startMission();
 
   private:
@@ -58,17 +54,11 @@ class Mission {
     DISALLOW_COPY_AND_ASSIGN(Mission);
 };
 
-/// Creates and starts mission 1.
-///
-/// -no detailed description-
+// @{
+/// Create and start a mission.
 void mission1(void);
-/// Creates and starts mission 2.
-///
-/// -no detailed description-
 void mission2(void);
-/// Creates and starts mission 3.
-///
-/// -no detailed description-
 void mission3(void);
+// @}
 
 #endif // MISSION_HPP

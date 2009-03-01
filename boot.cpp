@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "boot.hpp"
 
 #include <ctime>
-#include <cstdlib>
 
 #include "events.hpp"
 #include "graphics.hpp"
@@ -27,30 +26,30 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 using events_engine::input;
 // video_engine
 using video_engine::screen;
-using video_engine::OPAQUE;
 using video_engine::NONE;
 
 // Loads the engine's global objects.
 void startEngine(const bool fullscreen, const int width, const int height) {
   srand( time(NULL) ); // Set seed for random numbers
-  screen = video_engine::Graphics::instance(fullscreen, width, height);
-  input = events_engine::Events::instance();
+  screen = video_engine::Graphics::getInstance();
+  screen->createWindow(fullscreen, width, height);
+  input = events_engine::Events::getInstance();
 }
 
 // Loads the images that will be used almost every
 // time the game is executed.
 void loadMainImages(void) {
   screen->newImage("alpha", 50, NONE, 0);
-  screen->newImage("button", OPAQUE, NONE, 0);
-  screen->newImage("button-active", OPAQUE, NONE, 0);
-  screen->newImage("button-pressed", OPAQUE, NONE, 0);
-  screen->newImage("heroes-logo", OPAQUE, NONE, 0);
-  screen->newImage("wesnoth", OPAQUE, NONE, 0);
-  screen->newImage("cursors/normal", OPAQUE, NONE, 0);
-  screen->newImage("cursors/attack", OPAQUE, NONE, 0);
-  screen->newImage("cursors/move", OPAQUE, NONE, 0);
-  screen->newImage("cursors/select-illegal", OPAQUE, NONE, 0);
-  screen->newImage("cursors/wait", OPAQUE, NONE, 0);
+  screen->newImage("button");
+  screen->newImage("button-active");
+  screen->newImage("button-pressed");
+  screen->newImage("heroes-logo");
+  screen->newImage("wesnoth");
+  screen->newImage("cursors/normal");
+  screen->newImage("cursors/attack");
+  screen->newImage("cursors/move");
+  screen->newImage("cursors/select-illegal");
+  screen->newImage("cursors/wait");
 }
 
 // Starts the engine and loads the main images.

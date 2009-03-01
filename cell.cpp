@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "cell.hpp"
 
 #include "graphics.hpp"
+#include "structs.hpp"
 #include "unit.hpp"
 
 using video_engine::screen;
@@ -25,23 +26,28 @@ using video_engine::screen;
 // Constructor
 Cell::Cell(void) {
   special_terrain = NULL;
-  item = '-';
+
   creature = NULL;
+  item = '-';
+
   path = NULL;
-  map_position.x = map_position.y = -1;
 
   for (int i=N; i<=NW; i++)
     connected_cell[i] = NULL;
+  map_position = NULL;
 
   mouse_over = false;
   selected = false;
+
   can_move = false;
   can_attack = false;
+
   visible = false;
 }
 
 // Destructor
 Cell::~Cell(void) {
+  if (map_position) delete map_position;
   if (path) delete [] path;
   if (special_terrain) delete special_terrain;
 }
@@ -90,14 +96,21 @@ void Cell::setItem(char type) {
 
 // Sets the cells map coordinates.
 void Cell::setCoordinates(const int x, const int y) {
-  map_position.x = x;
-  map_position.y = y;
+  if (!map_position) {
+    map_position = new Coordinates;
+    map_position->x = x;
+    map_position->y = y;
+  }
 }
 
 // Returns the cells map coordinates.
 void Cell::getCoordinates(int &x, int &y) {
-  x = map_position.x;
-  y = map_position.y;
+  if (map_position) {
+    x = map_position->x;
+    y = map_position->y;
+  } else {
+    x = y = -1;
+  }
 }
 
 // Returns the path that the unit has to follow to

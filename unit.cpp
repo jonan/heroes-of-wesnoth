@@ -18,15 +18,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "unit.hpp"
 
 #include <cmath>
-#include <cstdlib>
 
 #include "cell.hpp"
 #include "graphics.hpp"
+#include "structs.hpp"
 
-// video_engine
 using video_engine::screen;
-using video_engine::OPAQUE;
-using video_engine::NONE;
 
 // Constructor
 Unit::Unit(const char type, const int number) {
@@ -44,6 +41,22 @@ Unit::Unit(const char type, const int number) {
   }
 
   position = NULL;
+}
+
+// Destructor
+Unit::~Unit(void) {
+ if (magic_spell) delete magic_spell;
+}
+
+// Starts a given animation.
+void Unit::setAnimation(const int animation) {
+  actual_animation = animation;
+  /* If this unit has no sprite for the given animation
+    go back to STANDING (ATTACKING has a default animation). */
+  if (animations[actual_animation].size() > 0 || actual_animation == ATTACKING)
+    sprite = 0;
+  else
+    actual_animation = STANDING;
 }
 
 // Makes the unit face the given side
@@ -78,22 +91,47 @@ void Unit::attackCreature(Unit &creature) {
     creature.number--;
   }
   // Check if it's a close or distant attack
-  bool is_next = false;
-  for (int i=N; i<=NW && !is_next; i++)
-    is_next = is_next || (position->getConnectedCell(i)->getCreature() == &creature);
+  bool is_close_attack = false;
+  for (int i=N; i<=NW && !is_close_attack; i++)
+    is_close_attack = is_close_attack || (position->getConnectedCell(i)->getCreature() == &creature);
   // Set the animations
-  if (is_next) {
-    startAnimation(ATTACKING);
-    creature.startAnimation(DEFENDING);
-  } else {
-    startAnimation(ATTACKING);
-    creature.addMagicAnimation(projectiles_type);
-    creature.startAnimation(DEFENDING);
-  }
+  setAnimation(ATTACKING);
+  if (!is_close_attack) creature.addMagicAnimation(projectiles_type);
+  creature.setAnimation(DEFENDING);
 }
 
 // Draws the creature in the given position.
 void Unit::draw(SDL_Rect &position) {
+  drawUnit(position);
+  // Draw the number of units
+  if (number>0) {
+    char text[3];
+    sprintf(text, "%i", number);
+    screen->write(text, position.x+17, position.y+52);
+  }
+}
+
+// Sets all the unit's attributes.
+void Unit::setAllAttributes(const int live, const int movement,
+                            const int attack, const int agility,
+                            const int projectiles, const int projectiles_type
+                           ) {
+  this->live = live;
+  live_max = live;
+  this->movement = movement;
+  this->attack = attack;
+  this->agility = agility;
+  this->projectiles = projectiles;
+  this->projectiles_type = projectiles_type;
+}
+
+// Adds an image to the standing animation.
+void Unit::addAnimationImage(const char *imageName, const int animation) {
+  animations[animation].push_back( screen->getImage(imageName) );
+}
+
+// Draws the creature in the given position.
+void Unit::drawUnit(SDL_Rect &position) {
   // Get closer to the enemy when attacking
   if (actual_animation == ATTACKING) {
     if (facing_side == RIGHT)
@@ -102,8 +140,9 @@ void Unit::draw(SDL_Rect &position) {
       position.x -= 10;
   } else if (actual_animation == STANDING) { // Might start idle animation
     int random_number = rand() % 1000;
-    if (random_number == 0) startAnimation(IDLE);
+    if (random_number == 0) setAnimation(IDLE);
   }
+
   if (animations[actual_animation].size() > 0) {
     // Draw the corresponding sprite.
     screen->draw(animations[actual_animation][sprite/NUM_FRAMES_FOR_SPRITE], position);
@@ -135,40 +174,4 @@ void Unit::draw(SDL_Rect &position) {
       actual_animation = STANDING;
     }
   }
-  // Draw the number of units
-  if (number>0) {
-    char text[3];
-    sprintf(text, "%i", number);
-    screen->write(text, position.x+17, position.y+52);
-  }
-}
-
-// Starts a given animation.
-void Unit::startAnimation(const int animation) {
-  actual_animation = animation;
-  /* If this unit has no sprite for the given animation
-    go back to STANDIGN (ATTACKING has a default animation). */
-  if (animations[actual_animation].size() > 0 || actual_animation == ATTACKING)
-    sprite = 0;
-  else
-    actual_animation = STANDING;
-}
-
-// Sets all the unit's attributes.
-void Unit::setAllAttributes(const int live, const int movement,
-                            const int attack, const int agility,
-                            const int projectiles, const int projectiles_type
-                           ) {
-  this->live = live;
-  live_max = live;
-  this->movement = movement;
-  this->attack = attack;
-  this->agility = agility;
-  this->projectiles = projectiles;
-  this->projectiles_type = projectiles_type;
-}
-
-// Adds an image to the standing animation.
-void Unit::addAnimationImage(const char *imageName, const int animation) {
-  animations[animation].push_back( screen->getImage(imageName, OPAQUE, NONE, 0) );
 }

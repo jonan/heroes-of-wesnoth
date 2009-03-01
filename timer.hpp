@@ -27,22 +27,17 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "macros.hpp"
 
 /// Controls the game's speed.
-///
 /// This class alows you to control the time
 /// that passes between to points of the program.
 class Timer {
   public:
-    Timer(void); // Constructor
+    Timer(void) {} // Constructor
 
     /// Indicates the starting point.
-    ///
     /// The moment from which to start counting time. Make
-    /// sure you call end(int) one time every time you use it.
-    void start(void);
+    /// sure you call end() one time every time you use it.
+    void start(void) {now = before = SDL_GetTicks();}
     /// Indicates the ending point.
-    ///
-    /// -no detailed description-
-    ///
     /// @param[in] ms milliseconds that should pass between the two points.
     void end(const Uint32 ms);
 

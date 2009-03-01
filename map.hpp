@@ -95,33 +95,30 @@ enum {ALTAR = '0',
       LAST_ITEM = WINDMILL};
 
 /// Controls all the attributes of a map.
-///
-/// Basically consist of lots of cell classes working
+/// Basically consist of lots of Cell classes working
 /// together to create a map an to be able to use it.
 /// (This class is meant to be inherit, not to be used directly)
 class Map : public GameLoop {
   public:
     /// Starts the map.
-    ///
-    /// -no detailed description-
     virtual void start(void);
 
   protected:
     Map(const int width, const int height); // Constructor
     virtual ~Map(void); // Destructor
 
-    // Puts an item on a cell.
-    // (Implemented in map_item.cpp)
-    void setItem(char item_name, Cell &position);
     // If position is NULL, applies the terrain to all the cells in the map.
     // (Implemented in map_terrain.cpp)
     void setTerrain(char terrain_name, Cell *position);
+    // Puts an item on a cell.
+    // (Implemented in map_item.cpp)
+    void setItem(char item_name, Cell &position);
 
     // Returns a cell where the creature can attack.
     Cell* getAttackCell(void);
 
-    // Tells the map the mouse's position.
-    void moveMouse(void);
+    // Updates the map according to the mouse state
+    void updateMouse(void);
     // Function to execute when the mouse is over a cell.
     virtual void mouseOverCell(const int x, const int y);
     // Function to execute when the user left clicks on a cell.
@@ -132,30 +129,32 @@ class Map : public GameLoop {
     // Starts the next turn.
     virtual void nextTurn(void) = 0;
 
-    // This function is executed in the main loop. If
-    // it returns true, the loop ends, else it continues.
-    virtual bool frame(void);
-
-    // Moves a creature to a cell.
-    void moveCreature(Cell &end_position);
+    // Moves the selected creature to a cell.
+    void moveSelectedCreature(Cell &end_position);
 
     // Connects all the cells in the map.
     void connectCells(void);
+
     // Softens the map to make it look nicer.
     // (Implemented in map_smooth.cpp)
     void softenMap(void);
 
-    // Draws the map in the screen.
-    virtual void draw(void);
-
     // Centers the map view in a given creature
     void centerView(Unit& creature);
 
+    // Draws the map in the screen.
+    virtual void draw(void);
+
+    // This function is executed in the main loop. If
+    // it returns true, the loop ends, else it continues.
+    virtual bool frame(void);
+
     int width, height; // The map's size.
-    Cell **battle_map;
+    Cell **map;
+
     Unit *selected_unit; // The unit that's selected.
+
     Cell *mouse_over_cell; // The cell where the mouse is.
-    bool creature_animation_active;
 
   private:
     // Softens a type of terrain.
@@ -163,9 +162,10 @@ class Map : public GameLoop {
     void softenTerrain(const char cell_terrain, char *terrain, const int number_terrains, const int soft_images);
 
     Coordinates first_cell_coor; // Map coordinates of the top left visible cell.
-    Coordinates first_cell_pos; // Position of the top left visible cell in the screen.
+    Coordinates first_cell_pos;  // Position of the top left visible cell in the screen.
+
     int window_width, window_height; // Size of the map's window
-    int horizontal_cells, vertical_cells; // Number of visible cells
+    int window_horizontal_cells, window_vertical_cells; // Number of visible cells
 
     DISALLOW_COPY_AND_ASSIGN(Map);
 };

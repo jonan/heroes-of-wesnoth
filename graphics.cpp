@@ -33,18 +33,55 @@ using events_engine::input;
 namespace video_engine {
 
 // Singleton pattern constructor
-Graphics* Graphics::instance(const bool fullscreen, int width, int height) {
-  static Graphics inst(fullscreen, width, height);
-  return &inst;
+Graphics* Graphics::getInstance(void) {
+  static Graphics instance;
+  return &instance;
 }
 
 // Destructor
 Graphics::~Graphics(void) {
   delete images;
   delete text;
-  SDL_FreeSurface(screen);
   TTF_Quit();
   SDL_Quit();
+}
+
+// Creates the surface that will be drawn directly to the screen
+void Graphics::createWindow(const bool fullscreen, int width, int height) {
+  if (!screen) {
+    SDL_flags = (SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_VIDEORESIZE);
+    if (fullscreen) SDL_flags |= SDL_FULLSCREEN;
+
+    bpp = SDL_VideoModeOK( width, height, 16, SDL_flags);
+    if (!bpp) {
+      cout << "The choosen resolution (" << width << "x" << height 
+	   << ") is not valid on your system. Trying default (1024x768%16)...\n";
+      width = 1024;
+      height = 768;
+      bpp = 16;
+    }
+
+    cout << "Opening " << width << "x" << height << "%" << bpp << " window...\t";
+    this->width = width;
+    this->height = height;
+
+    // Set the video mode
+    screen = SDL_SetVideoMode(width, height, bpp, SDL_flags);
+    SDL_WM_SetCaption("Heroes of Wesnoth", NULL);
+
+    if (screen == NULL) {
+      cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
+      exit(EXIT_FAILURE);
+    }
+    cout << "[ ok ]\n";
+  }
+}
+
+// Adds a new image to the list
+void Graphics::newImage(const char *image_name, const int alpha,
+                        const int mirror, const int angle
+                       ) {
+  images->addImage(image_name, alpha, mirror, angle);
 }
 
 // Looks for the image in the list of loaded
@@ -63,10 +100,24 @@ SDL_Surface* Graphics::getImage(const char *image_name, const int alpha,
   return temp;
 }
 
-// Returns the actual screen's size.
-void Graphics::getScreenSize(int &width, int &height) {
-  width = this->width;
-  height = this->height;
+// Makes an image face the given side.
+SDL_Surface* Graphics::face(const int side, SDL_Surface *image_surface) {
+  Image* temp;
+
+  temp = images->getImage(image_surface);
+  if (temp->getMirror() == X) {
+    if (side == RIGHT)
+      return getImage(temp->getName(), temp->getAlphaValue(),
+                      NONE, temp->getAngle());
+    else
+      return image_surface;
+  } else {
+    if (side == RIGHT)
+      return image_surface;
+    else
+      return getImage(temp->getName(), temp->getAlphaValue(),
+                      X, temp->getAngle());
+  }
 }
 
 // This function should only be called inside the
@@ -77,31 +128,10 @@ void Graphics::resize(const int width, const int height) {
   screen = SDL_SetVideoMode(width, height, bpp, SDL_flags);
 }
 
-// Makes an image face the given side.
-SDL_Surface* Graphics::face(const int side, SDL_Surface *image_surface) {
-  Image* temp;
-
-  temp = images->getImage(image_surface);
-  if (temp->getMirror() == X) {
-    if (side == RIGHT)
-      return getImage(temp->getName(), temp->getAlpha(),
-                      NONE, temp->getAngle());
-    else
-      return image_surface;
-  } else {
-    if (side == RIGHT)
-      return image_surface;
-    else
-      return getImage(temp->getName(), temp->getAlpha(),
-                      X, temp->getAngle());
-  }
-}
-
-// Adds a new image to the list
-void Graphics::newImage(const char *image_name, const int alpha,
-                        const int mirror, const int angle
-                       ) {
-  images->addImage(image_name, alpha, mirror, angle);
+// Returns the actual screen's size.
+void Graphics::getScreenSize(int &width, int &height) {
+  width = this->width;
+  height = this->height;
 }
 
 // Before drawing looks for the image in the list
@@ -109,7 +139,7 @@ void Graphics::newImage(const char *image_name, const int alpha,
 void Graphics::draw(const char *image_name, SDL_Rect &position) {
   SDL_Surface *temp;
 
-  temp = getImage(image_name, OPAQUE, NONE, 0);
+  temp = getImage(image_name);
 
   SDL_BlitSurface(temp, NULL, screen, &position);
 }
@@ -164,15 +194,15 @@ void Graphics::transitionEffect(int effect) {
         SDL_UpdateRect(screen, 0, y, width, 5);
         fps.end(10);
       }
+      break;
     default: {} // Imposible case
   }
 }
 
 // Constructor
-Graphics::Graphics(const bool fullscreen, int width, int height) {
+Graphics::Graphics(void) {
+  screen = NULL;
   init();
-  createWindow(fullscreen, width, height);
-
   images = new ImageList;
   text = new Ttf;
 }
@@ -187,35 +217,6 @@ void Graphics::init(void) {
   cout << "[ ok ]\n";
   cout << "Starting SDL_ttf...\t\t";
   if ( TTF_Init() < 0 ) {
-    cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
-    exit(EXIT_FAILURE);
-  }
-  cout << "[ ok ]\n";
-}
-
-// Creates the surface that will be drawn directly to the screen
-void Graphics::createWindow(const bool fullscreen, int width, int height) {
-  SDL_flags = (SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_VIDEORESIZE);
-  if (fullscreen) SDL_flags |= SDL_FULLSCREEN;
-
-  bpp = SDL_VideoModeOK( width, height, 16, SDL_flags);
-  if (!bpp) {
-    cout << "The choosen resolution (" << width << "x" << height 
-         << ") is not valid on your system. Trying default (1024x768%16)...\n";
-    width = 1024;
-    height = 768;
-    bpp = 16;
-  }
-
-  cout << "Opening " << width << "x" << height << "%" << bpp << " window...\t";
-  this->width = width;
-  this->height = height;
-
-  // Set the video mode
-  screen = SDL_SetVideoMode(width, height, bpp, SDL_flags);
-  SDL_WM_SetCaption("Heroes of Wesnoth", NULL);
-
-  if (screen == NULL) {
     cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
     exit(EXIT_FAILURE);
   }

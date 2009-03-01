@@ -23,8 +23,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #define MENU_MAIN_HPP
 
 /// Creates and starts the main menu.
-///
-/// -no detailed description-
 void startMainMenu(void);
 
 #endif // MENU_MAIN_HPP

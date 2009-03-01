@@ -50,19 +50,19 @@ void Mission::startMission() {
   war->start();
 }
 
-// Creates and starts mission 1.
+// Create and start mission 1.
 void mission1(void) {
   Mission mission_1("mission1", 10, 32, 17, 2, 2);
   mission_1.startMission();
 }
 
-// Creates and starts mission 2.
+// Create and start mission 2.
 void mission2(void) {
   Mission mission_2("mission2", 15, 32, 28, 3, 6);
   mission_2.startMission();
 }
 
-// Creates and starts mission 3.
+// Create and start mission 3.
 void mission3(void) {
   Mission mission_3("mission3", 25, 32, 22, 4, 9);
   mission_3.startMission();

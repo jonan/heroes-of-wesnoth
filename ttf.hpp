@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// The Ttf class (can only be used why graphics).
+/// The Ttf class (can only be used by graphics).
 /// @author Jonan
 
 #ifndef TTF_HPP
@@ -29,26 +29,18 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// @todo Add options to change color, size, etc.
 
 /// Represents text on the screen.
-///
-/// -no detailed description-
 class video_engine::Graphics::Ttf {
   public:
     Ttf(void); // Constructor
     ~Ttf(void); // Destrucor
 
     /// Writes a text into a surface.
-    ///
-    /// -no detailed description-
-    ///
     /// @param[in] text A string with the text to write.
     /// @param[in] surface The surface where to draw the text.
     /// @param[in] x The x coordinate of the top left corner of the text.
     /// @param[in] y The y coordinate of the top left corner of the text.
     void write(const char *text, SDL_Surface *surface, const int x, const int y);
-    /// Writes a text into a surface.
-    ///
-    /// The text is centered in between the given positions.
-    ///
+    /// Writes a text centered in a surface.
     /// @param[in] text A string with the text to write.
     /// @param[in] surface The surface where to draw the text.
     /// @param[in] left_x The x coordinate of the left margen of the text.

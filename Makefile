@@ -24,7 +24,7 @@ CC = g++
 # Headers dependencies
 BATTLE = battle.hpp $(MAP)
 BOOT = boot.hpp
-CELL = cell.hpp $(MACROS) $(STRUCTS)
+CELL = cell.hpp $(MACROS)
 EDITOR = editor.hpp $(MAP)
 EVENTS = events.hpp $(MACROS)
 GRAPHICS = graphics.hpp $(MACROS)
@@ -33,13 +33,13 @@ IMAGE = image.hpp $(GRAPHICS)
 LOOP = loop.hpp $(MACROS)
 MACROS = macros.hpp
 MAP = map.hpp $(LOOP) $(STRUCTS)
-MENU = menu.hpp $(MACROS)
+MENU = menu.hpp $(LOOP)
 MENU_MAIN = menu_main.hpp
 MISSION = mission.hpp $(MACROS)
 STRUCTS = structs.hpp
 TIMER = timer.hpp $(MACROS)
 TTF = ttf.hpp $(GRAPHICS)
-UNIT = unit.hpp $(MACROS) $(STRUCTS)
+UNIT = unit.hpp $(MACROS)
 WORLD = world.hpp $(MAP)
 
 # Build dependencies
@@ -52,7 +52,7 @@ battle.o : battle.cpp $(BATTLE) $(CELL) $(EVENTS) $(GRAPHICS) $(HERO) $(TIMER)
 boot.o : boot.cpp $(BOOT) $(EVENTS) $(GRAPHICS)
 	$(CC) $(CFLAGS) boot.cpp
 
-cell.o : cell.cpp $(CELL) $(GRAPHICS) $(UNIT)
+cell.o : cell.cpp $(CELL) $(GRAPHICS) $(STRUCTS) $(UNIT)
 	$(CC) $(CFLAGS) cell.cpp
 
 editor.o : editor.cpp $(EDITOR) $(CELL) $(EVENTS) $(GRAPHICS) $(UNIT)
@@ -64,7 +64,7 @@ events.o : events.cpp $(EVENTS) $(GRAPHICS)
 graphics.o : graphics.cpp $(GRAPHICS) $(EVENTS) $(IMAGE) $(TIMER) $(TTF)
 	$(CC) $(CFLAGS) graphics.cpp
 
-hero.o : hero.cpp $(HERO) $(GRAPHICS)
+hero.o : hero.cpp $(HERO) $(GRAPHICS) $(STRUCTS)
 	$(CC) $(CFLAGS) hero.cpp
 
 hero_type.o : hero_type.cpp $(HERO)
@@ -91,7 +91,7 @@ map_soft.o : map_soft.cpp $(MAP) $(CELL) $(GRAPHICS)
 map_terrain.o : map_terrain.cpp $(MAP) $(CELL) $(GRAPHICS)
 	$(CC) $(CFLAGS) map_terrain.cpp
 
-menu.o : menu.cpp $(MENU) $(GRAPHICS)
+menu.o : menu.cpp $(MENU) $(EVENTS) $(GRAPHICS)
 	$(CC) $(CFLAGS) menu.cpp
 
 menu_main.o : menu_main.cpp $(MENU_MAIN) $(BATTLE) $(BOOT) $(EDITOR) $(EVENTS) $(GRAPHICS) $(MENU) $(MISSION)
@@ -106,10 +106,10 @@ timer.o : timer.cpp $(TIMER)
 ttf.o : ttf.cpp $(TTF)
 	$(CC) $(CFLAGS) ttf.cpp
 
-unit.o : unit.cpp $(UNIT) $(CELL) $(GRAPHICS)
+unit.o : unit.cpp $(UNIT) $(CELL) $(GRAPHICS) $(STRUCTS)
 	$(CC) $(CFLAGS) unit.cpp
 
-unit_magic.o : unit_magic.cpp $(UNIT) $(GRAPHICS)
+unit_magic.o : unit_magic.cpp $(UNIT) $(GRAPHICS) $(STRUCTS)
 	$(CC) $(CFLAGS) unit_magic.cpp
 
 unit_type.o : unit_type.cpp $(UNIT)

@@ -17,17 +17,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "timer.hpp"
 
-// Constructor
-Timer::Timer(void) {
-  start();
-}
-
-// The moment from which to start counting time. Make
-// sure you call endFPS(int) one time every time you use it.
-void Timer::start(void) {
-  now = before = SDL_GetTicks();
-}
-
 // Indicates the ending point.
 void Timer::end(const Uint32 ms) {
   now = SDL_GetTicks();

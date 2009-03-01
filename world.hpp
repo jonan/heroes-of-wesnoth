@@ -29,8 +29,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 class Hero;
 
 /// Controls all the aspects of a world.
-///
-/// -no detailed description-
 class World : public Map {
   public:
     /// @param[in] map_file File where the map is stored.
@@ -40,19 +38,12 @@ class World : public Map {
     ~World(void); // Destructor
 
     /// Puts a hero in the map.
-    ///
-    /// -no detailed description-
-    ///
     /// @param[in] player Hero to put in the map.
     /// @param[in] x X coordinate of the hero's position.
     /// @param[in] y Y coordinate of the hero's position.
     void setHero(Hero &player, const int x, const int y);
 
   private:
-    // This function is executed in the main loop. If
-    // it returns true, the loop ends, else it continues.
-    virtual bool frame(void);
-
     // Function to execute when the user left clicks on a cell.
     virtual void mouseLeftClick(const int x, const int y);
 
@@ -63,8 +54,13 @@ class World : public Map {
     void setEnemies(const char *map_file);
     // Puts the items on the map.
     void setItems(const char *map_file);
+
     // Removes a unit from the world and deletes it.
     void deleteCreature(Cell &position);
+
+    // This function is executed in the main loop. If
+    // it returns true, the loop ends, else it continues.
+    virtual bool frame(void);
 
     std::deque<Hero*> players;
     int turn;

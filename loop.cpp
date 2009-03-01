@@ -21,11 +21,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "graphics.hpp"
 #include "timer.hpp"
 
-// events_engine
-using events_engine::input;
-// video_engine
-using video_engine::screen;
-
 // Constructor
 GameLoop::GameLoop(void) {
   fps = new Timer;
@@ -42,24 +37,9 @@ void GameLoop::loop(void) {
 
   while (!done) {
     fps->start();
-    input->readInput();
+    events_engine::input->readInput();
     done = frame();
-    screen->update();
+    video_engine::screen->update();
     fps->end(30);
-  }
-}
-
-// This function is deprecate and will be erased
-// as soon as all code depending on it is updated.
-void loop(bool (&function)(void)) {
-  bool done = false;
-  Timer fps;
-
-  while (!done) {
-    fps.start();
-    input->readInput();
-    done = function();
-    screen->update();
-    fps.end(30);
   }
 }

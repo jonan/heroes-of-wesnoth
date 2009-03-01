@@ -27,9 +27,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 class Timer;
 
 /// Creates a normal game loop.
-///
-/// This class is meant to be inherit by any class
-/// that needs a loop, it can't be used directly.
 class GameLoop {
   protected:
     GameLoop(void); // Constructor
@@ -47,15 +44,5 @@ class GameLoop {
 
     DISALLOW_COPY_AND_ASSIGN(GameLoop);
 };
-
-/// Controls a general game loop.
-///
-/// This function is deprecate and will be erased
-/// as soon as all code depending on it is updated.
-///
-/// @param[in] function Funtion to execute in the loop.
-///                     This function should return false to
-///                     continue in the loop or true to exit.
-void loop(bool (&function)(void));
 
 #endif // LOOP_HPP

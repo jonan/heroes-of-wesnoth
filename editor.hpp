@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// Editor functions.
+/// The Editor class and a function to start it.
 /// @author Jonan
 
 #ifndef EDITOR_HPP
@@ -25,8 +25,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "map.hpp"
 
 /// The map editor.
-///
-/// -no detailed description-
 class Editor : public Map {
   public:
     /// @param[in] width Map's width.
@@ -44,10 +42,6 @@ class Editor : public Map {
     // Function to execute when the user right clicks on a cell.
     virtual void mouseRightClick(const int x, const int y);
 
-    // This function is executed in the main loop. If
-    // it returns true, the loop ends, else it continues.
-    virtual bool frame(void);
-
     // Does nothing but it's necessary when inheriting from map.
     virtual void nextTurn(void) {};
 
@@ -59,15 +53,19 @@ class Editor : public Map {
     // Draws the editor in the screen.
     virtual void draw(void);
 
+    // This function is executed in the main loop. If
+    // it returns true, the loop ends, else it continues.
+    virtual bool frame(void);
+
     char *map_file;
     char editing_type; // Type of edition selected
-    char selected; // What is selected to draw in the map
+    char selected;     // What is selected to draw in the map
     bool end_editor;
 
     DISALLOW_COPY_AND_ASSIGN(Editor);
 };
 
-// Starts the editor.
+/// Starts the editor.
 void startEditor(void);
 
 #endif // EDITOR_HPP

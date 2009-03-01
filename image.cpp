@@ -30,7 +30,7 @@ using std::string;
 // video_engine
 using video_engine::Graphics;
 
-// class image
+// Class Image
 
 // Constructor
 Graphics::Image::Image(const char *image_name, const int alpha,
@@ -51,13 +51,13 @@ Graphics::Image::~Image(void) {
 }
 
 // Indicates if the given attributes correspond to this image.
-bool Graphics::Image::findImage(const char *image_name, const int alpha,
-                                const int mirror, const int angle
-                               ) {
+bool Graphics::Image::isImage(const char *image_name, const int alpha,
+                              const int mirror, const int angle
+                             ) {
   return ( !strcmp(image_name, name) &&
-           alpha == this->alpha &&
-           mirror == this->mirror &&
-           angle == this->angle );
+           alpha == this->alpha      &&
+           mirror == this->mirror    &&
+           angle == this->angle         );
 }
 
 // Loads an image. If there's an error exits.
@@ -97,7 +97,7 @@ void Graphics::Image::loadImage(void) {
 
 // ---End---
 
-// class imageList
+// Class ImageList
 
 // Destructor
 Graphics::ImageList::~ImageList(void) {
@@ -132,11 +132,6 @@ SDL_Surface* Graphics::ImageList::getSurface(const char *image_name, const int a
     return NULL;
 }
 
-// Returns an image of the list.
-Graphics::Image* Graphics::ImageList::getImage(SDL_Surface *image) {
-  return findImage(image);
-}
-
 // Looks for an image in the list.
 Graphics::Image* Graphics::ImageList::findImage(const char *image_name, const int alpha,
                                                 const int mirror, const int angle
@@ -145,7 +140,7 @@ Graphics::Image* Graphics::ImageList::findImage(const char *image_name, const in
   bool found=false;
 
   while (i<images.size() && !found) {
-    if ( images[i]->findImage(image_name, alpha, mirror, angle) )
+    if ( images[i]->isImage(image_name, alpha, mirror, angle) )
       found = true;
     else
       i++;

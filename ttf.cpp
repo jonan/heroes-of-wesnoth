@@ -31,13 +31,7 @@ Graphics::Ttf::Ttf(void) {
     exit(EXIT_FAILURE);
   }
 
-  // Initialize position
-  position.x = 0;
-  position.y = 0;
-  position.w = 0;
-  position.h = 0;
-
-  color.r = color.g = color.b = 255; // Put color to white
+  color.r = color.g = color.b = 255; // Set color to white
 }
 
 // Destructor
@@ -59,7 +53,7 @@ void Graphics::Ttf::write(const char *text, SDL_Surface *surface, const int x, c
   SDL_FreeSurface(text_surface);
 }
 
-// The text is centered in between the given positions.
+// Writes a text centered in a surface.
 void Graphics::Ttf::writeCentered(const char *text, SDL_Surface *surface,
                                   const int left_x, const int right_x,
                                   const int top_y, const int bottom_y
