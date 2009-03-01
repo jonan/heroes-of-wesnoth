@@ -124,7 +124,7 @@ class Map : public GameLoop {
     // Function to execute when the user left clicks on a cell.
     virtual void mouseLeftClick(const int x, const int y) {}
     // Function to execute when the user right clicks on a cell.
-    virtual void mouseRightClick(const int x, const int y) {}
+    virtual void mouseRightClick(const int x, const int y);
 
     // Starts the next turn.
     virtual void nextTurn(void) = 0;
@@ -139,6 +139,8 @@ class Map : public GameLoop {
     // (Implemented in map_smooth.cpp)
     void softenMap(void);
 
+    // Centers the map view in a given cell
+    void centerView(Cell& position);
     // Centers the map view in a given creature
     void centerView(Unit& creature);
 

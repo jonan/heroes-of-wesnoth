@@ -29,6 +29,7 @@ using events_engine::mouse;
 using events_engine::POSITION_X;
 using events_engine::POSITION_Y;
 using events_engine::BUTTON;
+using events_engine::NONE;
 using events_engine::BUTTON_LEFT;
 using events_engine::BUTTON_RIGHT;
 using events_engine::NORMAL;
@@ -167,6 +168,12 @@ void Map::mouseOverCell(const int x, const int y) {
     input->setCursorType(NORMAL);
 }
 
+// Function to execute when the user right clicks on a cell.
+void Map::mouseRightClick(const int x, const int y) {
+  centerView(map[x][y]);
+  mouse[BUTTON] = NONE; 
+}
+
 // Moves the selected creature to a cell.
 void Map::moveSelectedCreature(Cell &end_position) {
   int *path;
@@ -300,10 +307,10 @@ void Map::connectCells(void) {
   }
 }
 
-// Centers the map view in a given creature
-void Map::centerView(Unit& creature) {
+// Centers the map view in a given cell
+void Map::centerView(Cell& position) {
   int x, y;
-  creature.getPosition()->getCoordinates(x, y);
+  position.getCoordinates(x, y);
 
   x -= window_horizontal_cells/2;
   y -= window_vertical_cells/2;
@@ -314,6 +321,11 @@ void Map::centerView(Unit& creature) {
 
   first_cell_coor.x = x;
   first_cell_coor.y = y;
+}
+
+// Centers the map view in a given creature
+void Map::centerView(Unit& creature) {
+  centerView(*creature.getPosition());
 }
 
 // Draws the map in the screen.
