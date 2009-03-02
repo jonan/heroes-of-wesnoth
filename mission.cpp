@@ -20,50 +20,36 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include "hero.hpp"
 #include "world.hpp"
 
-// Constructor
-Mission::Mission(const char *map, const int number_allies,
-                 const int width, const int height,
-                 const int hero_position_x, const int hero_position_y
-                ) {
-  war = new World(map, width, height);
-  player = new Hero(HUMAN);
-  this->number_allies = number_allies;
-  this->hero_position_x = hero_position_x;
-  this->hero_position_y = hero_position_y;
-}
+// Creates and starts a mission.
+void createMission(const char *map, const int number_allies,
+                   const int width, const int height,
+                   const int hero_position_x, const int hero_position_y
+                  ) {
+   World war(map, width, height);
 
-// Destructor
-Mission::~Mission() {
-  delete war;
-}
+   Hero *player = new Hero(HUMAN);
+   Unit *temp;
+   // Set the hero's units.
+   for (int j=0; j<9; j++) {
+      temp = new Unit(SERGEANT, number_allies);
+      player->recruitCreature(temp);
+   }
 
-// Launches the mission
-void Mission::startMission() {
-  Unit *temp;
-
-  for ( int i=0; i < 9; i++ ) {
-    temp = new Unit(SERGEANT, number_allies);
-    player->recruitCreature(temp);
-  }
-
-  war->setHero(*player, hero_position_x, hero_position_y);
-  war->start();
+   war.setHero(*player, hero_position_x, hero_position_y);
+   war.start();
 }
 
 // Create and start mission 1.
 void mission1(void) {
-  Mission mission_1("mission1", 10, 32, 17, 2, 2);
-  mission_1.startMission();
+   createMission("mission1", 10, 32, 17, 2, 2);
 }
 
 // Create and start mission 2.
 void mission2(void) {
-  Mission mission_2("mission2", 15, 32, 28, 3, 6);
-  mission_2.startMission();
+   createMission("mission2", 15, 32, 28, 3, 6);
 }
 
 // Create and start mission 3.
 void mission3(void) {
-  Mission mission_3("mission3", 25, 32, 22, 4, 9);
-  mission_3.startMission();
+   createMission("mission3", 25, 32, 22, 4, 9);
 }
