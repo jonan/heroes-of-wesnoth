@@ -133,10 +133,12 @@ void Map::setItem(char item_name, Cell &position) {
       item[2] = screen->getImage("items/villages/cave3");
       break;
     case VILLAGE_COAST:
-      images = 2;
+      images = 4;
       item = new SDL_Surface*[images];
       item[0] = screen->getImage("items/villages/coast");
       item[1] = screen->getImage("items/villages/coast2");
+      item[2] = screen->getImage("items/villages/coast3");
+      item[3] = screen->getImage("items/villages/coast4");
       break;
     case VILLAGE_DESERT:
       images = 3;

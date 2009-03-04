@@ -124,6 +124,11 @@ void Unit::setCreaturesAttributes(void) {
       addAnimationImage("units/deathblade-dying-5", DYING);
       addAnimationImage("units/deathblade-dying-6", DYING);
       addAnimationImage("units/deathblade-dying-7", DYING);
+      addAnimationImage("units/deathblade-idle-1", IDLE);
+      addAnimationImage("units/deathblade-idle-2", IDLE);
+      addAnimationImage("units/deathblade-idle-3", IDLE);
+      addAnimationImage("units/deathblade-idle-4", IDLE);
+      addAnimationImage("units/deathblade-idle-5", IDLE);
       addAnimationImage("units/deathblade", STANDING);
       setAllAttributes(35, 2, 18, 3, 0, -1);
       break;
@@ -177,6 +182,17 @@ void Unit::setCreaturesAttributes(void) {
       addAnimationImage("units/sergeant-attack-sword-2", ATTACKING);
       addAnimationImage("units/sergeant-attack-sword-3", ATTACKING);
       addAnimationImage("units/sergeant-defend", DEFENDING);
+      addAnimationImage("units/sergeant-idle-1", IDLE);
+      addAnimationImage("units/sergeant-idle-2", IDLE);
+      addAnimationImage("units/sergeant-idle-3", IDLE);
+      addAnimationImage("units/sergeant-idle-4", IDLE);
+      addAnimationImage("units/sergeant-idle-5", IDLE);
+      addAnimationImage("units/sergeant-idle-6", IDLE);
+      addAnimationImage("units/sergeant-idle-7", IDLE);
+      addAnimationImage("units/sergeant-idle-8", IDLE);
+      addAnimationImage("units/sergeant-idle-9", IDLE);
+      addAnimationImage("units/sergeant-idle-10", IDLE);
+      addAnimationImage("units/sergeant-idle-11", IDLE);
       addAnimationImage("units/sergeant", STANDING);
       setAllAttributes(20, 3, 10, 3, 0, -1);
       break;
@@ -212,6 +228,11 @@ void Unit::setCreaturesAttributes(void) {
     case WOLF_RIDER:
       addAnimationImage("units/wolf-rider-attack", ATTACKING);
       addAnimationImage("units/wolf-rider-defend", DEFENDING);
+      addAnimationImage("units/wolf-rider-idle-1", IDLE);
+      addAnimationImage("units/wolf-rider-idle-2", IDLE);
+      addAnimationImage("units/wolf-rider-idle-3", IDLE);
+      addAnimationImage("units/wolf-rider-idle-4", IDLE);
+      addAnimationImage("units/wolf-rider-idle-5", IDLE);
       addAnimationImage("units/wolf-rider", STANDING);
       setAllAttributes(22, 4, 12, 4, 0, -1);
       break;

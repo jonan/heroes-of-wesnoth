@@ -122,10 +122,16 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       terrain[10] = screen->getImage("terrain/desert/sand-rock3");
       break;
     case FLAT_DIRT:
-      images_terrain = 1;
+      images_terrain = 7;
       movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/flat/dirt");
+      terrain[1] = screen->getImage("terrain/flat/dirt2");
+      terrain[2] = screen->getImage("terrain/flat/dirt3");
+      terrain[3] = screen->getImage("terrain/flat/dirt4");
+      terrain[4] = screen->getImage("terrain/flat/dirt5");
+      terrain[5] = screen->getImage("terrain/flat/dirt6");
+      terrain[6] = screen->getImage("terrain/flat/dirt7");
       break;
     case FLAT_GRASS:
       images_terrain = 10;
