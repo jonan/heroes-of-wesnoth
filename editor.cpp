@@ -42,7 +42,7 @@ Editor::Editor(const int width, const int height, const char *map_file) : Map(wi
   this->map_file = strdup(map_file);
 
   setTerrain(FLAT_GRASS, NULL);
-  editing_type = TERRAINS;
+  editing_type = TERRAIN;
   selected = FLAT_GRASS;
   end_editor = false;
 
@@ -66,7 +66,7 @@ void Editor::mouseLeftClick(const int x, const int y) {
   if (editing_type == ITEMS) {
     if (map[x][y].getItem() != selected)
       setItem(selected, map[x][y]);
-  } else if (editing_type == TERRAINS) {
+  } else if (editing_type == TERRAIN) {
     if (map[x][y].getTerrain() != selected)
       setTerrain(selected, &map[x][y]);
   } else if  (editing_type == UNITS) {
@@ -211,7 +211,7 @@ void Editor::draw(void) {
   if (editing_type == ITEMS) {
     setTerrain(DESERT_ROAD, &temp);
     setItem(selected, temp);
-  } else if (editing_type == TERRAINS) {
+  } else if (editing_type == TERRAIN) {
     setTerrain(selected, &temp);
   } else if (editing_type == UNITS) {
     setTerrain(DESERT_ROAD, &temp);
@@ -233,25 +233,25 @@ bool Editor::frame(void) {
     keys[SDLK_ESCAPE] = false;
     end_editor = true;
   } else { // If the editor is not ended.
-    if (keys[SDLK_F1]) {
+    if (keys[SDLK_F1]) { // save
       keys[SDLK_F1] = false;
       save();
-    } else if (keys[SDLK_F2]) {
+    } else if (keys[SDLK_F2]) { // load
       keys[SDLK_F2] = false;
       load();
-    } else if (keys[SDLK_F3]) {
+    } else if (keys[SDLK_F3]) { // items
       keys[SDLK_F3] = false;
       if (editing_type != ITEMS) {
         editing_type = ITEMS;
         selected = FIRE;
       }
-    } else if (keys[SDLK_F4]) {
+    } else if (keys[SDLK_F4]) { // terrain
       keys[SDLK_F4] = false;
-      if (editing_type != TERRAINS) {
-        editing_type = TERRAINS;
+      if (editing_type != TERRAIN) {
+        editing_type = TERRAIN;
         selected = FLAT_GRASS;
       }
-    } else if (keys[SDLK_F5]) {
+    } else if (keys[SDLK_F5]) { // units
       keys[SDLK_F5] = false;
       if (editing_type != UNITS) {
         editing_type = UNITS;
@@ -259,7 +259,7 @@ bool Editor::frame(void) {
       }
     }
 
-    if (keys[SDLK_SPACE]) {
+    if (keys[SDLK_SPACE]) { // soften map
       keys[SDLK_SPACE] = false;
       softenMap();
     }
@@ -270,7 +270,7 @@ bool Editor::frame(void) {
       if (selected == '9'+1)
         selected = 'a';
       else if ( (selected > LAST_ITEM && editing_type == ITEMS) ||
-                (selected > LAST_TERRAIN && editing_type == TERRAINS) ||
+                (selected > LAST_TERRAIN && editing_type == TERRAIN) ||
                 (selected > LAST_UNIT && editing_type == UNITS)
               )
         selected = '0';
@@ -282,7 +282,7 @@ bool Editor::frame(void) {
       } else if (selected < '0') {
         if (editing_type == ITEMS)
           selected = LAST_ITEM;
-        else if (editing_type == TERRAINS)
+        else if (editing_type == TERRAIN)
           selected = LAST_TERRAIN;
         else if (editing_type == UNITS)
           selected = LAST_UNIT;

@@ -61,9 +61,8 @@ Map::Map(const int width, const int height) {
   // Connect the cells
   connectCells();
 
-  selected_unit=NULL;
-
-  mouse_over_cell=NULL;
+  selected_unit = NULL;
+  mouse_over_cell = NULL;
 
   first_cell_coor.x = 0;
   first_cell_coor.y = 0;

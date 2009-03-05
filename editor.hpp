@@ -35,7 +35,7 @@ class Editor : public Map {
 
   private:
     // Types of editions.
-    enum {ITEMS, TERRAINS, UNITS};
+    enum {ITEMS, TERRAIN, UNITS};
 
     // Function to execute when the user left clicks on a cell.
     virtual void mouseLeftClick(const int x, const int y);
