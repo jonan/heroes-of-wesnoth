@@ -21,6 +21,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 void Timer::end(const Uint32 ms) {
   now = SDL_GetTicks();
 
-  if ( (now-before) < ms )
-    SDL_Delay( ms - (now - before) );
+  Uint32 difference = now - before;
+
+  if (difference < ms)
+    SDL_Delay(ms - difference);
 }
