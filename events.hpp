@@ -22,6 +22,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef EVENTS_HPP
 #define EVENTS_HPP
 
+#include <SDL/SDL_keysym.h>
+#include <SDL/SDL_mouse.h>
+
 #include "macros.hpp"
 
 struct SDL_Rect;
@@ -34,11 +37,8 @@ namespace events_engine {
 /// Mouse info
 enum {POSITION_X, POSITION_Y, BUTTON};
 
-/// Mouse buttons
-enum {NONE, BUTTON_LEFT, BUTTON_MIDDLE, BUTTON_RIGHT, WHEEL_UP, WHEEL_DOWN};
-
 /// Types of cursors
-enum {NORMAL, ATTACK, MOVE, ILLEGAL, WAIT, NUMBER_OF_TYPES};
+enum {NO_CURSOR, NORMAL, ATTACK, MOVE, ILLEGAL, WAIT, NUMBER_OF_TYPES};
 
 /// Event control.
 /// Tells you when has an event has occurred. This event can be a system event (resize,
@@ -64,8 +64,6 @@ class Events {
     void drawMouse(void);
 
   private:
-    static const int NUM_KEYS = 323;
-
     Events(void); // Constructor
 
     SDL_Event *event;

@@ -29,9 +29,6 @@ using events_engine::mouse;
 using events_engine::POSITION_X;
 using events_engine::POSITION_Y;
 using events_engine::BUTTON;
-using events_engine::NONE;
-using events_engine::BUTTON_LEFT;
-using events_engine::BUTTON_RIGHT;
 using events_engine::NORMAL;
 using events_engine::ATTACK;
 using events_engine::MOVE;
@@ -141,8 +138,8 @@ void Map::updateMouse(void) {
       map[i][j].putMouse();
       mouse_over_cell = &map[i][j];
       mouseOverCell(i,j);
-      if (mouse[BUTTON] == BUTTON_LEFT) mouseLeftClick(i,j);
-      if (mouse[BUTTON] == BUTTON_RIGHT) mouseRightClick(i,j);
+      if (mouse[BUTTON] == SDL_BUTTON_LEFT) mouseLeftClick(i,j);
+      if (mouse[BUTTON] == SDL_BUTTON_RIGHT) mouseRightClick(i,j);
     }
   }
 
@@ -170,7 +167,7 @@ void Map::mouseOverCell(const int x, const int y) {
 // Function to execute when the user right clicks on a cell.
 void Map::mouseRightClick(const int x, const int y) {
   centerView(map[x][y]);
-  mouse[BUTTON] = NONE; 
+  mouse[BUTTON] = 0; 
 }
 
 // Moves the selected creature to a cell.

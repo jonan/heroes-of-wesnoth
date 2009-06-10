@@ -31,6 +31,8 @@ Events* Events::getInstance(void) {
 
 // Destructor
 Events::~Events(void) {
+  delete event;
+  delete mouse_position;
   delete [] keys;
   delete [] mouse;
 }
@@ -40,26 +42,26 @@ Events::~Events(void) {
 void Events::readInput(void) {
   SDL_GetMouseState(&mouse[POSITION_X], &mouse[POSITION_Y]);
   while (SDL_PollEvent(event)) {
-    if (event->type == SDL_MOUSEBUTTONDOWN) { // MOUSE
-      if (event->button.button == SDL_BUTTON_LEFT)
-        mouse[BUTTON] = BUTTON_LEFT;
-      else if (event->button.button == SDL_BUTTON_MIDDLE)
-        mouse[BUTTON] = BUTTON_MIDDLE;
-      else if (event->button.button == SDL_BUTTON_RIGHT)
-        mouse[BUTTON] = BUTTON_RIGHT;
-      else if (event->button.button == SDL_BUTTON_WHEELUP)
-        mouse[BUTTON] = WHEEL_UP;
-      else if (event->button.button == SDL_BUTTON_WHEELDOWN)
-        mouse[BUTTON] = WHEEL_DOWN;
-    } else if (event->type == SDL_MOUSEBUTTONUP) {
-      if (mouse[BUTTON] != WHEEL_UP && mouse[BUTTON] != WHEEL_DOWN)
-        mouse[BUTTON] = NONE;
-    } else if (event->type == SDL_KEYDOWN) { // KEYBOARD
-      keys[event->key.keysym.sym] = true;
-    } else if (event->type == SDL_KEYUP) {
-      keys[event->key.keysym.sym] = false;
-    } else if (event->type == SDL_VIDEORESIZE) { // RESIZE
-      screen->resize(event->resize.w, event->resize.h);
+    switch (event->type) {
+      case SDL_MOUSEBUTTONDOWN:
+        mouse[BUTTON] = event->button.button;
+        break;
+      case SDL_MOUSEBUTTONUP:
+        if (mouse[BUTTON] != SDL_BUTTON_WHEELUP && mouse[BUTTON] != SDL_BUTTON_WHEELDOWN)
+          mouse[BUTTON] = 0;
+        break;
+      case SDL_KEYDOWN:
+        keys[event->key.keysym.sym] = true;
+        break;
+      case SDL_KEYUP:
+        keys[event->key.keysym.sym] = false;
+        break;
+      case SDL_VIDEORESIZE:
+        screen->resize(event->resize.w, event->resize.h);
+        break;
+      default:
+        // Nothing to do
+        break;
     }
   }
 }
@@ -67,18 +69,20 @@ void Events::readInput(void) {
 // It's called every time the screen is updated,
 // so it should only be called from graphics.
 void Events::drawMouse(void) {
-  mouse_position->x = mouse[POSITION_X];
-  mouse_position->y = mouse[POSITION_Y];
-  screen->draw(cursor_image[cursor_type], *mouse_position);
+  if (cursor_type != NO_CURSOR) {
+    mouse_position->x = mouse[POSITION_X];
+    mouse_position->y = mouse[POSITION_Y];
+    screen->draw(cursor_image[cursor_type], *mouse_position);
+  }
 }
 
 // Constructor
 Events::Events(void) {
-  keys = new bool[NUM_KEYS];
+  keys = new bool[SDLK_LAST];
   mouse = new int[3];
 
   // Set all keys to false
-  for (int i = 0; i < NUM_KEYS; i++)
+  for (int i = 0; i < SDLK_LAST; i++)
     keys[i] = false;
   // Clear mouse info
   for (int j = 0; j < 3; j++)

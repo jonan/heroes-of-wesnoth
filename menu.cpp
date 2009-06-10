@@ -25,7 +25,6 @@ using events_engine::mouse;
 using events_engine::POSITION_X;
 using events_engine::POSITION_Y;
 using events_engine::BUTTON;
-using events_engine::BUTTON_LEFT;
 // video_engine
 using video_engine::screen;
 
@@ -134,7 +133,7 @@ bool Menu::frame(void) {
     while ( i < static_cast<int>(buttons.size()) && !mouse_over ) {
       if ( y>position.y && y<(position.y+position.h) ) { // Mouse over the button
         mouse_over = true;
-        if (mouse[BUTTON] == BUTTON_LEFT) {
+        if (mouse[BUTTON] == SDL_BUTTON_LEFT) {
           if (active_button != -1) {
             buttons[active_button]->setState(NORMAL);
             active_button = -1;

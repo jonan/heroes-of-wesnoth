@@ -30,7 +30,6 @@ using events_engine::mouse;
 using events_engine::POSITION_X;
 using events_engine::POSITION_Y;
 using events_engine::BUTTON;
-using events_engine::BUTTON_LEFT;
 // video_engine
 using video_engine::screen;
 

@@ -29,9 +29,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 using events_engine::keys;
 using events_engine::mouse;
 using events_engine::BUTTON;
-using events_engine::NONE;
-using events_engine::WHEEL_UP;
-using events_engine::WHEEL_DOWN;
 // std
 using std::string;
 // video_engine
@@ -264,8 +261,8 @@ bool Editor::frame(void) {
       softenMap();
     }
 
-    if (mouse[BUTTON] == WHEEL_UP) {
-      mouse[BUTTON] = NONE;
+    if (mouse[BUTTON] == SDL_BUTTON_WHEELUP) {
+      mouse[BUTTON] = 0;
       selected++;
       if (selected == '9'+1)
         selected = 'a';
@@ -274,8 +271,8 @@ bool Editor::frame(void) {
                 (selected > LAST_UNIT && editing_type == UNITS)
               )
         selected = '0';
-    } else if (mouse[BUTTON] == WHEEL_DOWN) {
-      mouse[BUTTON] = NONE;
+    } else if (mouse[BUTTON] == SDL_BUTTON_WHEELDOWN) {
+      mouse[BUTTON] = 0;
       selected--;
       if (selected == 'a'-1) {
         selected = '9';
