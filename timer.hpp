@@ -36,14 +36,22 @@ class Timer {
     /// Indicates the starting point.
     /// The moment from which to start counting time. Make
     /// sure you call end() one time every time you use it.
-    void start(void) {now = before = SDL_GetTicks();}
+    void start(void) {
+      now = before = SDL_GetTicks();
+    }
     /// Indicates the ending point.
     /// @param[in] ms milliseconds that should pass between the two points.
-    void end(const Uint32 ms);
+    void end(const Uint32 ms) {
+      now = SDL_GetTicks();
+      difference = now - before;
+      if (difference < ms)
+        SDL_Delay(ms - difference);
+    }
 
   private:
     Uint32 now; // Actual time.
     Uint32 before; // The time it was the last time it looked.
+    Uint32 difference;
 
     DISALLOW_COPY_AND_ASSIGN(Timer);
 };

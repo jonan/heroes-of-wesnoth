@@ -32,7 +32,6 @@ OBJECTS = battle.o \
           menu.o \
           menu_main.o \
           mission.o \
-          timer.o \
           ttf.o \
           unit.o \
           unit_magic.o \
@@ -201,9 +200,6 @@ mission.o : mission.cpp $(MISSION) \
             $(HERO) \
             $(WORLD)
 	$(CC) $(CFLAGS) mission.cpp
-
-timer.o : timer.cpp $(TIMER)
-	$(CC) $(CFLAGS) timer.cpp
 
 ttf.o : ttf.cpp $(TTF)
 	$(CC) $(CFLAGS) ttf.cpp
