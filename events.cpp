@@ -39,27 +39,27 @@ Events::~Events(void) {
 // (must be called before any other events function).
 void Events::readInput(void) {
   SDL_GetMouseState(&mouse[POSITION_X], &mouse[POSITION_Y]);
-  while (SDL_PollEvent(&event)) {
-    if (event.type == SDL_MOUSEBUTTONDOWN) { // MOUSE
-      if (event.button.button == SDL_BUTTON_LEFT)
+  while (SDL_PollEvent(event)) {
+    if (event->type == SDL_MOUSEBUTTONDOWN) { // MOUSE
+      if (event->button.button == SDL_BUTTON_LEFT)
         mouse[BUTTON] = BUTTON_LEFT;
-      else if (event.button.button == SDL_BUTTON_MIDDLE)
+      else if (event->button.button == SDL_BUTTON_MIDDLE)
         mouse[BUTTON] = BUTTON_MIDDLE;
-      else if (event.button.button == SDL_BUTTON_RIGHT)
+      else if (event->button.button == SDL_BUTTON_RIGHT)
         mouse[BUTTON] = BUTTON_RIGHT;
-      else if (event.button.button == SDL_BUTTON_WHEELUP)
+      else if (event->button.button == SDL_BUTTON_WHEELUP)
         mouse[BUTTON] = WHEEL_UP;
-      else if (event.button.button == SDL_BUTTON_WHEELDOWN)
+      else if (event->button.button == SDL_BUTTON_WHEELDOWN)
         mouse[BUTTON] = WHEEL_DOWN;
-    } else if (event.type == SDL_MOUSEBUTTONUP) {
+    } else if (event->type == SDL_MOUSEBUTTONUP) {
       if (mouse[BUTTON] != WHEEL_UP && mouse[BUTTON] != WHEEL_DOWN)
         mouse[BUTTON] = NONE;
-    } else if (event.type == SDL_KEYDOWN) { // KEYBOARD
-      keys[event.key.keysym.sym] = true;
-    } else if (event.type == SDL_KEYUP) {
-      keys[event.key.keysym.sym] = false;
-    } else if (event.type == SDL_VIDEORESIZE) { // RESIZE
-      screen->resize(event.resize.w, event.resize.h);
+    } else if (event->type == SDL_KEYDOWN) { // KEYBOARD
+      keys[event->key.keysym.sym] = true;
+    } else if (event->type == SDL_KEYUP) {
+      keys[event->key.keysym.sym] = false;
+    } else if (event->type == SDL_VIDEORESIZE) { // RESIZE
+      screen->resize(event->resize.w, event->resize.h);
     }
   }
 }
@@ -67,9 +67,9 @@ void Events::readInput(void) {
 // It's called every time the screen is updated,
 // so it should only be called from graphics.
 void Events::drawMouse(void) {
-  mouse_position.x = mouse[POSITION_X];
-  mouse_position.y = mouse[POSITION_Y];
-  screen->draw(cursor_image[cursor_type], mouse_position);
+  mouse_position->x = mouse[POSITION_X];
+  mouse_position->y = mouse[POSITION_Y];
+  screen->draw(cursor_image[cursor_type], *mouse_position);
 }
 
 // Constructor
@@ -88,6 +88,9 @@ Events::Events(void) {
   SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
   // Hide default cursor
   SDL_ShowCursor(SDL_DISABLE);
+
+  event = new SDL_Event;
+  mouse_position = new SDL_Rect;
 
   // Set the cursor's images
   cursor_image[NORMAL] = screen->getImage("cursors/normal");

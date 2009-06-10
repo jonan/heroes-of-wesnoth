@@ -22,9 +22,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef EVENTS_HPP
 #define EVENTS_HPP
 
-#include <SDL/SDL.h>
-
 #include "macros.hpp"
+
+struct SDL_Rect;
+struct SDL_Surface;
+union SDL_Event;
 
 /// All functions related to events.
 namespace events_engine {
@@ -66,9 +68,9 @@ class Events {
 
     Events(void); // Constructor
 
-    SDL_Event event;
+    SDL_Event *event;
 
-    SDL_Rect mouse_position;
+    SDL_Rect *mouse_position;
     SDL_Surface *cursor_image[NUMBER_OF_TYPES];
     int cursor_type;
 
