@@ -42,7 +42,6 @@ Graphics* Graphics::getInstance(void) {
 Graphics::~Graphics(void) {
   delete images;
   delete text;
-  TTF_Quit();
   SDL_Quit();
 }
 
@@ -211,12 +210,6 @@ Graphics::Graphics(void) {
 void Graphics::init(void) {
   cout << "Starting SDL...\t\t\t";
   if ( SDL_Init (SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0 ) { // SDL_INIT_AUDIO not yet needed
-    cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
-    exit(EXIT_FAILURE);
-  }
-  cout << "[ ok ]\n";
-  cout << "Starting SDL_ttf...\t\t";
-  if ( TTF_Init() < 0 ) {
     cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
     exit(EXIT_FAILURE);
   }

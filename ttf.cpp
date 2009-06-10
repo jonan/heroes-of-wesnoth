@@ -20,14 +20,25 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #include <cstdlib>
 #include <iostream>
 
+#include <SDL/SDL_ttf.h>
+
+// std
+using std::cout;
 // video_engine
 using video_engine::Graphics;
 
 // Constructor
 Graphics::Ttf::Ttf(void) {
+  cout << "Starting SDL_ttf...\t\t";
+  if ( TTF_Init() < 0 ) {
+    cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
+    exit(EXIT_FAILURE);
+  }
+  cout << "[ ok ]\n";
+
   font = TTF_OpenFont("font/DejaVuSans.ttf", 14);
   if (font == NULL) {
-    std::cout << "\n\t" << SDL_GetError() << "\n\n";
+    cout << "\n\t" << SDL_GetError() << "\n\n";
     exit(EXIT_FAILURE);
   }
 
@@ -37,6 +48,7 @@ Graphics::Ttf::Ttf(void) {
 // Destructor
 Graphics::Ttf::~Ttf(void) {
   TTF_CloseFont(font);
+  TTF_Quit();
 }
 
 // Writes a text into a surface.

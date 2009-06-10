@@ -22,9 +22,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef TTF_HPP
 #define TTF_HPP
 
-#include <SDL/SDL_ttf.h>
-
 #include "graphics.hpp"
+
+typedef struct _TTF_Font TTF_Font;
 
 /// @todo Add options to change color, size, etc.
 
