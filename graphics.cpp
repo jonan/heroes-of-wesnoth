@@ -53,8 +53,8 @@ void Graphics::createWindow(const bool fullscreen, int width, int height) {
 
     bpp = SDL_VideoModeOK( width, height, 16, SDL_flags);
     if (!bpp) {
-      cout << "The choosen resolution (" << width << "x" << height 
-	   << ") is not valid on your system. Trying default (1024x768%16)...\n";
+      cout << "The choosen resolution (" << width << "x" << height
+           << ") is not valid on your system. Trying default (1024x768%16)...\n";
       width = 1024;
       height = 768;
       bpp = 16;
@@ -136,11 +136,8 @@ void Graphics::getScreenSize(int &width, int &height) {
 // Before drawing looks for the image in the list
 // of loaded ones, if it's not there it loads it.
 void Graphics::draw(const char *image_name, SDL_Rect &position) {
-  SDL_Surface *temp;
-
-  temp = getImage(image_name);
-
-  SDL_BlitSurface(temp, NULL, screen, &position);
+  SDL_Surface *temp = getImage(image_name);
+  draw(temp, &position);
 }
 
 // Draws a surface to the indicated position.

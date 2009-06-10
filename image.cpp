@@ -102,7 +102,8 @@ void Graphics::Image::loadImage(void) {
 // Destructor
 Graphics::ImageList::~ImageList(void) {
   cout << "Freeing imageList...\t\t";
-  for (unsigned int i=0; i<images.size(); i++) {
+  unsigned int size = images.size();
+  for (unsigned int i=0; i<size; i++) {
     delete images[i];
   }
   cout << "[ ok ]\n";
@@ -116,7 +117,7 @@ void Graphics::ImageList::addImage(const char *image_name, const int alpha,
   Image *temp;
 
   temp = new Image(image_name, alpha, mirror, angle);
-  images.push_back(temp);
+  images.push_front(temp);
 }
 
 // Returns the surface of an image in the list.
@@ -136,10 +137,11 @@ SDL_Surface* Graphics::ImageList::getSurface(const char *image_name, const int a
 Graphics::Image* Graphics::ImageList::findImage(const char *image_name, const int alpha,
                                                 const int mirror, const int angle
                                                ) {
-  unsigned int i=0;
-  bool found=false;
+  unsigned int i = 0;
+  unsigned int size = images.size();
+  bool found = false;
 
-  while (i<images.size() && !found) {
+  while (i<size && !found) {
     if ( images[i]->isImage(image_name, alpha, mirror, angle) )
       found = true;
     else
@@ -154,13 +156,15 @@ Graphics::Image* Graphics::ImageList::findImage(const char *image_name, const in
 
 // Looks for an image in the list.
 Graphics::Image* Graphics::ImageList::findImage(SDL_Surface *image) {
-  unsigned int i=0;
-  bool found=false;
+  unsigned int i = 0;
+  unsigned int size = images.size();
+  bool found = false;
 
-  while (i<images.size() && !found) {
+  while (i<size && !found) {
     if ( images[i]->getSurface() == image )
       found = true;
-    else i++;
+    else
+      i++;
   }
 
   if (!found)
