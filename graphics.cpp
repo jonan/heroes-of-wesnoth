@@ -137,7 +137,7 @@ void Graphics::getScreenSize(int &width, int &height) {
 // of loaded ones, if it's not there it loads it.
 void Graphics::draw(const char *image_name, SDL_Rect &position) {
   SDL_Surface *temp = getImage(image_name);
-  draw(temp, &position);
+  draw(temp, position);
 }
 
 // Draws a surface to the indicated position.
