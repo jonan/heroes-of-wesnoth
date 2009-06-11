@@ -35,8 +35,9 @@ class Hero : public Unit {
     ~Hero(void); // Destructor
 
     // @{
-    Unit* getCreature   (const int number) const {return creature[number];}
-    int   getVisibility (void)             const {return visibility;      }
+    /// Get functions.
+    Unit* getCreature   (const int number) {return creature[number];}
+    int   getVisibility (void)             {return visibility;      }
     // @}
 
     /// Assings a new creature to the hero.

@@ -49,5 +49,6 @@ void Hero::setCreaturesAttributes(void) {
     default:
       std::cout << "\n\tWrong hero type : " << type << "\n\n";
       exit(EXIT_FAILURE);
+      break;
   }
 }

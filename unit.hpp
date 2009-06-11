@@ -24,9 +24,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include <deque>
 
-#include <SDL/SDL.h>
-
 #include "macros.hpp"
+
+struct SDL_Rect;
+struct SDL_Surface;
 
 class Cell;
 class Hero;
@@ -88,15 +89,15 @@ class Unit {
 
     // @{
     /// Get functions.
-    int   getNumber          (void)                const {return number;                      }
-    int   getMovement        (void)                const {return movement;                    }
-    int   getAgility         (void)                const {return agility;                     }
-    int   getProjectiles     (void)                const {return projectiles;                 }
-    Cell* getPosition        (void)                const {return position;                    }
-    char  getType            (void)                const {return type;                        }
-    Hero* getMaster          (void)                const {return master;                      }
-    int   getNumSprites      (const int animation) const {return animations[animation].size();}
-    int   getActualAnimation (void)                const {return actual_animation;            }
+    int   getNumber          (void)                {return number;                      }
+    int   getMovement        (void)                {return movement;                    }
+    int   getAgility         (void)                {return agility;                     }
+    int   getProjectiles     (void)                {return projectiles;                 }
+    Cell* getPosition        (void)                {return position;                    }
+    char  getType            (void)                {return type;                        }
+    Hero* getMaster          (void)                {return master;                      }
+    int   getNumSprites      (const int animation) {return animations[animation].size();}
+    int   getActualAnimation (void)                {return actual_animation;            }
     // @}
 
     /// Attacks a given unit.

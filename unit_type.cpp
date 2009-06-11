@@ -239,5 +239,6 @@ void Unit::setCreaturesAttributes(void) {
     default:
       std::cout << "\n\tWrong unit type : " << type << "\n\n";
       exit(EXIT_FAILURE);
+      break;
   }
 }

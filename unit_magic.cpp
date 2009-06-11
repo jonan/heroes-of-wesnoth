@@ -41,7 +41,9 @@ void Unit::addMagicAnimation(const int spell) {
       magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-7"));
       magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-8"));
       break;
-    default: {} // Imposible case
+    default:
+      // Imposible case
+      break;
   }
 
   magic_spell->position.x = -(magic_spell->image_list[0]->w-72)/2;
