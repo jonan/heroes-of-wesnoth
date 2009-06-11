@@ -137,9 +137,7 @@ graphics.o : graphics.cpp $(GRAPHICS) \
              $(TTF)
 	$(CC) $(CFLAGS) graphics.cpp
 
-hero.o : hero.cpp $(HERO) \
-         $(GRAPHICS) \
-         $(STRUCTS)
+hero.o : hero.cpp $(HERO)
 	$(CC) $(CFLAGS) hero.cpp
 
 hero_type.o : hero_type.cpp $(HERO)

@@ -17,12 +17,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "hero.hpp"
 
-#include "graphics.hpp"
-#include "structs.hpp"
-
-// video_engine
-using video_engine::screen;
-
 // Constructor
 Hero::Hero(const int type) : Unit(-1, 1) {
   master = this;
