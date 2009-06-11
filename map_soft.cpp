@@ -505,35 +505,35 @@ void addImages(bool *terrain, Cell &map_cell, SDL_Surface **one, SDL_Surface **t
           terrain[position+2] = false;
           if (terrain[position+3] && *four!=NULL) {
             terrain[position+3] = false;
-            map_cell.addImage( *four[position], -1 );
+            map_cell.addImage(*four[position]);
           } else
-            map_cell.addImage( *three[position], -1 );
+            map_cell.addImage(*three[position]);
         } else
-          map_cell.addImage( *two[position], -1 );
+          map_cell.addImage(*two[position]);
       } else
-        map_cell.addImage( *one[position], -1 );
+        map_cell.addImage(*one[position]);
     } else if (*two!=NULL){
       terrain[NW] = false;
       if (terrain[SW] && *three!=NULL) {
         terrain[SW] = false;
         if (terrain[S] && *four!=NULL) {
           terrain[S] = false;
-          map_cell.addImage( *four[S], -1 );
+          map_cell.addImage(*four[S]);
         } else if (terrain[NE] && *four!=NULL) {
           terrain[NE] = false;
-          map_cell.addImage( *four[SW], -1 );
+          map_cell.addImage(*four[SW]);
         } else
-          map_cell.addImage( *three[SW], -1 );
+          map_cell.addImage(*three[SW]);
       } else if (terrain[NE] && *three!=NULL) {
         terrain[NE] = false;
         if (terrain[SE] && *four!=NULL) {
           terrain[SE] = false;
-          map_cell.addImage( *four[NW], -1 );
+          map_cell.addImage(*four[NW]);
         } else
-          map_cell.addImage( *three[NW], -1 );
+          map_cell.addImage(*three[NW]);
       } else
-        map_cell.addImage( *two[NW], -1 );
-    } else map_cell.addImage( *one[position], -1 );
+        map_cell.addImage(*two[NW]);
+    } else map_cell.addImage(*one[position]);
     while (!terrain[position] && position<7) position++;
   }
 }

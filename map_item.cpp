@@ -278,7 +278,7 @@ void Map::setItem(char item_name, Cell &position) {
       exit(EXIT_FAILURE);
   }
 
-  position.setItem(item_name);
+  position.setItemType(item_name);
   if (animation) {
     for (int i=0; i<images; i++)
       position.addSpecialImage(*item[i]);

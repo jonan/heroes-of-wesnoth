@@ -25,7 +25,7 @@ using video_engine::screen;
 
 // Constructor
 Cell::Cell(void) {
-  special_terrain = NULL;
+  special_images = NULL;
 
   creature = NULL;
   item = '-';
@@ -49,7 +49,7 @@ Cell::Cell(void) {
 Cell::~Cell(void) {
   if (map_position) delete map_position;
   if (path) delete [] path;
-  if (special_terrain) delete special_terrain;
+  if (special_images) delete special_images;
 }
 
 // Adds an image to the cell's terrain.
@@ -57,26 +57,26 @@ void Cell::addImage(SDL_Surface &terrain, const char type) {
   if (type != -1) {
     // If a new type is assigned, it means the new surface is
     // the main one, so all previous ones need to be deleted.
-    this->terrain.clear();
+    terrain_images.clear();
     // Erase special image only if it's not an item
-    if (special_terrain && item == '-') {
-      delete special_terrain;
-      special_terrain = NULL;
+    if (special_images && item == '-') {
+      delete special_images;
+      special_images = NULL;
     }
     this->type = type;
   }
-  this->terrain.push_back(&terrain);
+  terrain_images.push_back(&terrain);
 }
 
 // Adds a special image to the cell's terrain.
 void Cell::addSpecialImage(SDL_Surface &terrain) {
-  if (!special_terrain) {
-    special_terrain = new SpecialImage;
-    special_terrain->position.x = -(terrain.w-72)/2;
-    special_terrain->position.y = -(terrain.h-72)/2;
-    special_terrain->sprite = 0;
+  if (!special_images) {
+    special_images = new SpecialImage;
+    special_images->position.x = -(terrain.w-72)/2;
+    special_images->position.y = -(terrain.h-72)/2;
+    special_images->sprite = 0;
   }
-  special_terrain->image_list.push_back(&terrain);
+  special_images->image_list.push_back(&terrain);
 }
 
 // Puts a creature in the cell.
@@ -86,10 +86,10 @@ void Cell::setCreature(Unit *creature) {
 }
 
 // Puts an item on the cell.
-void Cell::setItem(char type) {
-  if (special_terrain) {
-    delete special_terrain;
-    special_terrain = NULL;
+void Cell::setItemType(char type) {
+  if (special_images) {
+    delete special_images;
+    special_images = NULL;
   }
   item = type;
 }
@@ -120,7 +120,7 @@ void Cell::getPath(int* &path, int &movements) {
   movements = this->movements;
 }
 
-// The cell is selected and the cell where
+// The cell is selected and the cells where
 // the unit can move are marked.
 void Cell::select(void) {
   if (creature!=NULL) {
@@ -149,7 +149,7 @@ void Cell::calculateView(int visibility) {
 
 // Indicates which are the cells next to this one
 // in any direction (N, NE, SE, S, SW or NW).
-void Cell::connectCell(const int position, Cell* connected_cell){
+void Cell::connectCell(const int position, Cell* connected_cell) {
   this->connected_cell[position] = connected_cell;
 }
 
@@ -160,55 +160,62 @@ void Cell::draw(SDL_Rect position, const int part) {
   int x = position.x;
   int y = position.y;
   if (visible) {
-    if (part == TERRAIN) {
-      for (unsigned int i=0; i<terrain.size(); i++) {
-        screen->draw(terrain[i], position);
-        position.x = x;
-        position.y = y;
-      }
-    } else if (part == SPECIAL) {
-      if (special_terrain) {
-        position.x += special_terrain->position.x;
-        position.y += special_terrain->position.y;
-        screen->draw(special_terrain->image_list[special_terrain->sprite/NUM_FRAMES_FOR_SPRITE], position);
-        position.x = x;
-        position.y = y;
-        special_terrain->sprite++;
-        if (special_terrain->sprite/NUM_FRAMES_FOR_SPRITE == special_terrain->image_list.size())
-          special_terrain->sprite = 0;
-      }
-    } else if (part == UNIT) {
-      if (mouse_over) {
-        screen->draw(alpha, position);
-        position.x = x;
-        position.y = y;
-      }
-      if (can_move) {
-        screen->draw(alpha, position);
-        position.x = x;
-        position.y = y;
-      }
-      if (creature) {
-        creature->draw(position);
-        position.x = x;
-        position.y = y;
-      }
-      if (selected) {
-        screen->draw(alpha, position);
-        position.x = x;
-        position.y = y;
-      }
+    switch (part) {
+      case TERRAIN:
+        for (unsigned int i=0; i<terrain_images.size(); i++) {
+          screen->draw(terrain_images[i], position);
+          position.x = x;
+          position.y = y;
+        }
+        break;
+      case SPECIAL:
+        if (special_images) {
+          position.x += special_images->position.x;
+          position.y += special_images->position.y;
+          screen->draw(special_images->image_list[special_images->sprite/NUM_FRAMES_FOR_SPRITE], position);
+          position.x = x;
+          position.y = y;
+          special_images->sprite++;
+          if (special_images->sprite/NUM_FRAMES_FOR_SPRITE == special_images->image_list.size())
+            special_images->sprite = 0;
+        }
+        break;
+      case UNIT:
+        if (mouse_over) {
+          screen->draw(alpha, position);
+          position.x = x;
+          position.y = y;
+        }
+        if (can_move) {
+          screen->draw(alpha, position);
+          position.x = x;
+          position.y = y;
+        }
+        if (creature) {
+          creature->draw(position);
+          position.x = x;
+          position.y = y;
+        }
+        if (selected) {
+          screen->draw(alpha, position);
+          position.x = x;
+          position.y = y;
+        }
+        break;
+      default:
+        // Impossible case
+        break;
     }
   } else {
-      screen->draw(stars, position);
-      position.x = x;
-      position.y = y;
-    }
+    screen->draw(stars, position);
+    position.x = x;
+    position.y = y;
+  }
 }
 
 // Calculates to what cells can a creature move.
 void Cell::creatureMovement(const int movement, int *path, const int movements) {
-  if (movement_penalty != 1000) { // A creature can move here
+  if (passable) { // A creature can move here
     if (path == NULL) { // It's the first call to this funtion so the creature is over this cell.
       for (int i=N; i<=NW; i++) {
         if (connected_cell[i]) {
@@ -239,7 +246,7 @@ void Cell::creatureMovement(const int movement, int *path, const int movements) 
             for (int j=0; j<(this->movements); j++)
               temp_path[j] = this->path[j];
             temp_path[this->movements] = i;
-            connected_cell[i]->creatureMovement(movement-movement_penalty, temp_path, movements+1);
+            connected_cell[i]->creatureMovement(movement-1, temp_path, movements+1);
           }
         }
       }

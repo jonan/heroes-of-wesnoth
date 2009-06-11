@@ -47,13 +47,12 @@ void Map::setTerrain(char terrain_name, Cell *position) {
   SDL_Surface **special;
   int images_terrain; // Number of different images of a terrain.
   int images_special = 0; // Number of different special images
-  int movement_penalty;
+  bool passable = true;
 
   // Set the varibles depending of the tipe of terrain.
   switch (terrain_name) {
     case CAVE_FLOOR:
       images_terrain = 6;
-      movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/cave/floor");
       terrain[1] = screen->getImage("terrain/cave/floor2");
@@ -64,7 +63,7 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case CAVE_HILLS:
       images_terrain = 3;
-      movement_penalty = 1000;
+      passable = false;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/cave/hills-variation");
       terrain[1] = screen->getImage("terrain/cave/hills-variation2");
@@ -72,7 +71,6 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case DESERT:
       images_terrain = 8;
-      movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/desert/desert");
       terrain[1] = screen->getImage("terrain/desert/desert2");
@@ -85,7 +83,7 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case DESERT_HILLS:
       images_terrain = 3;
-      movement_penalty = 1000;
+      passable = false;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/desert/desert-hills");
       terrain[1] = screen->getImage("terrain/desert/desert-hills2");
@@ -93,7 +91,7 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case DESERT_MOUNTAIN:
       images_terrain = 3;
-      movement_penalty = 1000;
+      passable = false;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/desert/desert-mountain-peak1");
       terrain[1] = screen->getImage("terrain/desert/desert-mountain-peak2");
@@ -101,13 +99,11 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case DESERT_ROAD:
       images_terrain = 1;
-      movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/desert/desert-road");
       break;
     case DESERT_SAND:
       images_terrain = 11;
-      movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/desert/sand");
       terrain[1] = screen->getImage("terrain/desert/sand2");
@@ -123,7 +119,6 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case FLAT_DIRT:
       images_terrain = 7;
-      movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/flat/dirt");
       terrain[1] = screen->getImage("terrain/flat/dirt2");
@@ -135,7 +130,6 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case FLAT_GRASS:
       images_terrain = 10;
-      movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/flat/grass-r1");
       terrain[1] = screen->getImage("terrain/flat/grass-r2");
@@ -150,7 +144,6 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case FLAT_ROAD:
       images_terrain = 3;
-      movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/flat/road");
       terrain[1] = screen->getImage("terrain/flat/road2");
@@ -158,7 +151,6 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case FLAT_SAVANNA:
       images_terrain = 3;
-      movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/flat/savanna");
       terrain[1] = screen->getImage("terrain/flat/savanna2");
@@ -166,7 +158,6 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case FLAT_STONE_PATH:
       images_terrain = 6;
-      movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/flat/stone-path");
       terrain[1] = screen->getImage("terrain/flat/stone-path2");
@@ -177,7 +168,6 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case FOREST_GREAT_TREE:
       images_terrain = 8;
-      movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/flat/grass-r1");
       terrain[1] = screen->getImage("terrain/flat/grass-r2");
@@ -195,7 +185,6 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case FOREST_MUSHROOMS:
       images_terrain = 6;
-      movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/cave/floor");
       terrain[1] = screen->getImage("terrain/cave/floor2");
@@ -214,7 +203,6 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case FOREST_PINE:
       images_terrain = 3;
-      movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/flat/savanna");
       terrain[1] = screen->getImage("terrain/flat/savanna2");
@@ -230,7 +218,6 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case FOREST_SNOW:
       images_terrain = 2;
-      movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/water/snow");
       terrain[1] = screen->getImage("terrain/water/snow2");
@@ -244,7 +231,6 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case FOREST_TROPICAL:
       images_terrain = 8;
-      movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/desert/sand");
       terrain[1] = screen->getImage("terrain/desert/sand2");
@@ -263,7 +249,7 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case HILLS:
       images_terrain = 3;
-      movement_penalty = 1000;
+      passable = false;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/hills-variation");
       terrain[1] = screen->getImage("terrain/hills-variation2");
@@ -271,7 +257,7 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case LAVA:
       images_terrain = 3;
-      movement_penalty = 1000;
+      passable = false;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/lava");
       terrain[1] = screen->getImage("terrain/lava2");
@@ -279,7 +265,7 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case WATER_COAST:
       images_terrain = 3;
-      movement_penalty = 1000;
+      passable = false;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/water/coast");
       terrain[1] = screen->getImage("terrain/water/coast2");
@@ -287,14 +273,14 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case WATER_FORD:
       images_terrain = 2;
-      movement_penalty = 1000;
+      passable = false;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/water/ford");
       terrain[1] = screen->getImage("terrain/water/ford2");
       break;
     case WATER_OCEAN:
       images_terrain = 3;
-      movement_penalty = 1000;
+      passable = false;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/water/ocean");
       terrain[1] = screen->getImage("terrain/water/ocean2");
@@ -302,7 +288,6 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case WATER_ICE:
       images_terrain = 6;
-      movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/water/ice");
       terrain[1] = screen->getImage("terrain/water/ice2");
@@ -313,14 +298,13 @@ void Map::setTerrain(char terrain_name, Cell *position) {
       break;
     case WATER_SNOW:
       images_terrain = 2;
-      movement_penalty = 1;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/water/snow");
       terrain[1] = screen->getImage("terrain/water/snow2");
       break;
     case WATER_SNOW_HILLS:
       images_terrain = 3;
-      movement_penalty = 1000;
+      passable = false;
       terrain = new SDL_Surface*[images_terrain];
       terrain[0] = screen->getImage("terrain/water/snow-hills");
       terrain[1] = screen->getImage("terrain/water/snow-hills2");
@@ -346,9 +330,9 @@ void Map::setTerrain(char terrain_name, Cell *position) {
         }
         // If the cell is in one of the maps borders, block movement
         if ( i==0 || i==width-1 || j==0 || j==height-1)
-          map[i][j].setMovementPenalty(1000);
+          map[i][j].setPassable(false);
         else
-          map[i][j].setMovementPenalty(movement_penalty);
+          map[i][j].setPassable(passable);
       }
   } else { // Set the attributes to a given cell.
     position->setAlpha(*alpha);
@@ -364,9 +348,9 @@ void Map::setTerrain(char terrain_name, Cell *position) {
     int x, y;
     position->getCoordinates(x, y);
     if ( x==0 || x==width-1 || y==0 || y==height-1)
-      position->setMovementPenalty(1000);
+      position->setPassable(false);
     else
-      position->setMovementPenalty(movement_penalty);
+      position->setPassable(passable);
   }
 
   delete [] stars;

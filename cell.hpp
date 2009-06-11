@@ -45,33 +45,33 @@ class Cell {
     Cell(void);  // Constructor
     ~Cell(void); // Destructor
 
-    /// Adds an image to the cell's terrain.
-    /// @param[in] terrain Surface of the terrain.
-    /// @param[in] type Type of terrain (-1 to maintain actual type)
-    void addImage(SDL_Surface &terrain, const char type);
-    /// Adds a special image to the cell's terrain.
-    /// @param[in] terrain Surface of the terrain.
-    void addSpecialImage(SDL_Surface &terrain);
-
     // @{
     /// Set functions.
-    void setAlpha           (SDL_Surface &alpha)        {this->alpha = &alpha;      }
-    void setStars           (SDL_Surface &stars)        {this->stars = &stars;      }
-    void setMovementPenalty (const int penalty)         {movement_penalty = penalty;} // If penalty is 1000 a creature can never be over this cell.
-    void setCreature        (Unit *creature);
-    void setItem            (char type);
-    void setCoordinates     (const int x, const int y);
+    void setAlpha       (SDL_Surface &alpha)        {this->alpha = &alpha;     }
+    void setStars       (SDL_Surface &stars)        {this->stars = &stars;     }
+    void setPassable    (const bool passable)       {this->passable = passable;}
+    void setCreature    (Unit *creature);
+    void setItemType    (char type);
+    void setCoordinates (const int x, const int y);
     // @}
 
     // @{
     /// Get functions.
     char  getTerrain       (void)                        {return type;                 }
-    char  getItem          (void)                        {return item;                 }
+    char  getItemType      (void)                        {return item;                 }
     Unit* getCreature      (void)                        {return creature;             }
     Cell* getConnectedCell (const int place)             {return connected_cell[place];}
     void  getCoordinates   (int &x, int &y);
     void  getPath          (int* &path, int &movements);
     // @}
+
+    /// Adds an image to the cell's terrain.
+    /// @param[in] terrain Surface of the terrain.
+    /// @param[in] type Type of terrain (-1 to maintain actual type)
+    void addImage(SDL_Surface &terrain, const char type = -1);
+    /// Adds a special image to the cell's terrain.
+    /// @param[in] terrain Surface of the terrain.
+    void addSpecialImage(SDL_Surface &terrain);
 
     // @{
     /// Indicates if the mouse is in the cell or not
@@ -80,7 +80,7 @@ class Cell {
     // @}
 
     /// Indicates that the cell is now selected.
-    /// The cell is selected and the cell where
+    /// The cell is selected and the cells where
     /// the unit can move are marked.
     void select(void);
     /// The cell is no longer selected.
@@ -106,8 +106,8 @@ class Cell {
 
     // @{
     /// Indicates if an action can be performed.
-    bool canMoveHere   (void) const {return can_move;  }
-    bool canAttackHere (void) const {return can_attack;}
+    bool canMoveHere   (void) {return can_move;  }
+    bool canAttackHere (void) {return can_attack;}
     // @}
 
   private:
@@ -117,11 +117,11 @@ class Cell {
     void eraseMovement(void);
 
     char type; // Type of terrain of the cell
-    std::deque<SDL_Surface*> terrain; // Surfaces of the terrain
-    SpecialImage *special_terrain;
+    std::deque<SDL_Surface*> terrain_images; // Surfaces of the terrain
+    SpecialImage *special_images;
     SDL_Surface *stars, *alpha;
 
-    Unit *creature; // Creature in the cell
+    Unit *creature;
     char item;
 
     Cell *connected_cell[6]; // The six cells that are next to this one
@@ -129,7 +129,7 @@ class Cell {
 
     int *path; // Path to follow in a units movement
     int movements; // Number of cells to go through to follow the path
-    int movement_penalty; // Amount of movement needed to go throw this cell
+    bool passable; // Indicates if a unit can move to this cell
 
     bool mouse_over; // Indicates if the mouse is over the cell
     bool selected;   // Indicates if the unit in the cell is selected

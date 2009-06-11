@@ -61,7 +61,7 @@ Editor::~Editor(void) {
 // Function to execute when the user left clicks on a cell.
 void Editor::mouseLeftClick(const int x, const int y) {
   if (editing_type == ITEMS) {
-    if (map[x][y].getItem() != selected)
+    if (map[x][y].getItemType() != selected)
       setItem(selected, map[x][y]);
   } else if (editing_type == TERRAIN) {
     if (map[x][y].getTerrain() != selected)
@@ -77,8 +77,8 @@ void Editor::mouseLeftClick(const int x, const int y) {
 // Function to execute when the user right clicks on a cell.
 void Editor::mouseRightClick(const int x, const int y) {
   if (editing_type == ITEMS) {
-    if (map[x][y].getItem() != '-')
-      map[x][y].setItem('-');
+    if (map[x][y].getItemType() != '-')
+      map[x][y].setItemType('-');
   } else if  (editing_type == UNITS) {
     if (map[x][y].getCreature())
       delete map[x][y].getCreature();
@@ -110,7 +110,7 @@ void Editor::save(void) {
         creatures_file << map[x][y].getCreature()->getType();
       else
         creatures_file << '-';
-      items_file << map[x][y].getItem();
+      items_file << map[x][y].getItemType();
     }
     map_file << '\n';
     creatures_file << '\n';
