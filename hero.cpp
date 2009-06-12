@@ -30,10 +30,10 @@ Hero::Hero(const int type) : Unit(-1, 1) {
   visibility = 8;
 }
 
+// Destructor
 Hero::~Hero(void) {
-  for (int i=0; i<MAX_UNITS; i++) {
-    if (creature[i]) delete creature[i];
-  }
+  for (int i=0; i<MAX_UNITS; i++)
+    delete creature[i];
 }
 
 // Assings a new creature to the hero.
