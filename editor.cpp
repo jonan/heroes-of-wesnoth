@@ -43,19 +43,13 @@ Editor::Editor(const int width, const int height, const char *map_file) : Map(wi
   selected = FLAT_GRASS;
   end_editor = false;
 
-  // Make the hole map visible
-  for (int x=0; x<map_width; x++)
-    for (int y=0; y<map_height; y++)
-      map[x][y].calculateView(1);
+  makeMapVisible();
 }
 
 // Destructor
 Editor::~Editor(void) {
   free(map_file);
-  for (int x=0; x<map_width; x++)
-    for (int y=0; y<map_height; y++)
-      if (map[x][y].getCreature())
-        delete map[x][y].getCreature();
+  deleteCreatures();
 }
 
 // Function to execute when the user left clicks on a cell.
@@ -67,8 +61,7 @@ void Editor::mouseLeftClick(const int x, const int y) {
     if (map[x][y].getTerrain() != selected)
       setTerrain(selected, &map[x][y]);
   } else if  (editing_type == UNITS) {
-    if (map[x][y].getCreature())
-      delete map[x][y].getCreature();
+    delete map[x][y].getCreature();
     Unit *temp = new Unit(selected, 0);
     map[x][y].setCreature(temp);
   }
@@ -80,29 +73,29 @@ void Editor::mouseRightClick(const int x, const int y) {
     if (map[x][y].getItemType() != '-')
       map[x][y].setItemType('-');
   } else if  (editing_type == UNITS) {
-    if (map[x][y].getCreature())
-      delete map[x][y].getCreature();
+    delete map[x][y].getCreature();
     map[x][y].setCreature(NULL);
   }
 }
 
 // Saves the current map in the file.
 void Editor::save(void) {
+  // Load the files
   // Create a string with the fisical location of the map
-  // "maps/" + name
-  string map_path = "maps/";
-  string map_name(map_file);
-  string map_dir = map_path + map_file;
+  // "maps/" + this->map_file
+  string map_dir("maps/");
+  map_dir += this->map_file;
   std::ofstream map_file(map_dir.c_str());
-  // "maps/" + name + "_creatures"
-  string creatures = "_creatures";
-  string map_creatures = map_dir + creatures;
+  // "maps/" + this->map_file + "_creatures"
+  string map_creatures = map_dir + "_creatures";
   std::ofstream creatures_file(map_creatures.c_str());
-  // "maps/" + name + "_items"
-  string items = "_items";
-  string map_items = map_dir + items;
+  // "maps/" + this->map_file + "_items"
+  string map_items = map_dir + "_items";
   std::ofstream items_file(map_items.c_str());
 
+  // Save width and height
+  map_file << map_width << "\n" << map_height << "\n";
+  // Save the map
   for (int y=0; y<map_height; y++) {
     for (int x=0; x<map_width; x++) {
       map_file << map[x][y].getTerrain();
@@ -124,71 +117,12 @@ void Editor::save(void) {
 
 // Loads the map from the file.
 void Editor::load(void) {
-  // Load the files
-  // Create a string with the fisical location of the map
-  // "maps/" + name
-  string map_path = "maps/";
-  string map_name(map_file);
-  string map_dir = map_path + map_file;
-  std::ifstream map_file(map_dir.c_str());
-  // "maps/" + name + "_creatures"
-  string creatures = "_creatures";
-  string map_creatures = map_dir + creatures;
-  std::ifstream creatures_file(map_creatures.c_str());
-  // "maps/" + name + "_items"
-  string items = "_items";
-  string map_items = map_dir + items;
-  std::ifstream items_file(map_items.c_str());
-
-  if (!map_file.fail() && !creatures_file.fail() && !items_file.fail()) {
-    // Delete the current map
-    /// @todo Really need to delete current map?
-    /// @todo Creatures aren't being deleted.
-    for (int i=0; i<map_width; i++)
-      delete [] map[i];
-    delete [] map;
-    // The cell where the mouse was is deleted
-    // so the pointer needs to be removed.
-    mouse_over_cell = NULL;
-    // Create a new map
-    map = new Cell*[map_width];
-    for (int i=0; i<map_width; i++)
-      map[i] = new Cell[map_height];
-    connectCells();
-
-    char map_temp, creatures_temp, item_temp;
-    int i = 0;
-    int j = 0;
-    while (j<map_height) {
-      map_file.get(map_temp);
-      creatures_file.get(creatures_temp);
-      items_file.get(item_temp);
-      // All files should have the '/n' in the
-      // same position, so you only need to check one
-      if (map_temp != '\n') {
-        setTerrain(map_temp, &map[i][j]);
-        if (creatures_temp != '-') {
-          Unit *creature;
-          creature = new Unit(creatures_temp, 0);
-          map[i][j].setCreature(creature);
-        }
-        if (item_temp != '-')
-          setItem(item_temp, map[i][j]);
-        i++;
-      } else {
-        i = 0;
-        j++;
-      }
-    }
-    map_file.close();
-    creatures_file.close();
-    items_file.close();
-
-    // Make the hole map visible
-    for (int x=0; x<map_width; x++)
-      for (int y=0; y<map_height; y++)
-        map[x][y].calculateView(1);
-  }
+  // First delete current map
+  deleteCreatures();
+  deleteCells();
+  // Load new map
+  loadMapFile(map_file);
+  makeMapVisible();
 }
 
 // Draws the editor in the screen.
@@ -219,7 +153,7 @@ void Editor::draw(void) {
   temp.draw(position, ::TERRAIN);
   temp.draw(position, SPECIAL);
   temp.draw(position, UNIT);
-  if (creature) delete creature;
+  delete creature;
 }
 
 // This function is executed in the main loop. If
@@ -268,8 +202,7 @@ bool Editor::frame(void) {
         selected = 'a';
       else if ( (selected > LAST_ITEM && editing_type == ITEMS) ||
                 (selected > LAST_TERRAIN && editing_type == TERRAIN) ||
-                (selected > LAST_UNIT && editing_type == UNITS)
-              )
+                (selected > LAST_UNIT && editing_type == UNITS)         )
         selected = '0';
     } else if (mouse[BUTTON] == SDL_BUTTON_WHEELDOWN) {
       mouse[BUTTON] = 0;
