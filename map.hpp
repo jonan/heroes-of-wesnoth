@@ -22,7 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef MAP_HPP
 #define MAP_HPP
 
-#include "loop.hpp"
+#include "game_loop.hpp"
 #include "structs.hpp"
 
 class Cell;

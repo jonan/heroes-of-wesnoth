@@ -19,11 +19,11 @@ OBJECTS = battle.o \
           cell.o \
           editor.o \
           events.o \
+          game_loop.o \
           graphics.o \
           hero.o \
           hero_type.o \
           image.o \
-          loop.o \
           main.o \
           map.o \
           map_item.o \
@@ -57,6 +57,9 @@ EDITOR = editor.hpp \
 EVENTS = events.hpp \
          $(MACROS)
 
+GAME_LOOP = game_loop.hpp \
+            $(MACROS)
+
 GRAPHICS = graphics.hpp \
            $(MACROS)
 
@@ -66,17 +69,14 @@ HERO = hero.hpp \
 IMAGE = image.hpp \
         $(GRAPHICS)
 
-LOOP = loop.hpp \
-       $(MACROS)
-
 MACROS = macros.hpp
 
 MAP = map.hpp \
-      $(LOOP) \
+      $(GAME_LOOP) \
       $(STRUCTS)
 
 MENU = menu.hpp \
-       $(LOOP)
+       $(GAME_LOOP)
 
 MENU_MAIN = menu_main.hpp
 
@@ -130,6 +130,12 @@ events.o : events.cpp $(EVENTS) \
            $(GRAPHICS)
 	$(CC) $(CFLAGS) events.cpp
 
+game_loop.o : game_loop.cpp $(GAME_LOOP) \
+              $(EVENTS) \
+              $(GRAPHICS) \
+              $(TIMER)
+	$(CC) $(CFLAGS) game_loop.cpp
+
 graphics.o : graphics.cpp $(GRAPHICS) \
              $(EVENTS) \
              $(IMAGE) \
@@ -145,12 +151,6 @@ hero_type.o : hero_type.cpp $(HERO)
 
 image.o : image.cpp $(IMAGE)
 	$(CC) $(CFLAGS) image.cpp
-
-loop.o : loop.cpp $(LOOP) \
-         $(EVENTS) \
-         $(GRAPHICS) \
-         $(TIMER)
-	$(CC) $(CFLAGS) loop.cpp
 
 main.o : main.cpp \
          $(BOOT) \

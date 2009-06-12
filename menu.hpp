@@ -26,7 +26,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include <SDL/SDL.h>
 
-#include "loop.hpp"
+#include "game_loop.hpp"
 
 /// Controls a set of various Button classes as a group.
 class Menu : public GameLoop{
