@@ -44,16 +44,16 @@ Editor::Editor(const int width, const int height, const char *map_file) : Map(wi
   end_editor = false;
 
   // Make the hole map visible
-  for (int x=0; x<width; x++)
-    for (int y=0; y<height; y++)
+  for (int x=0; x<map_width; x++)
+    for (int y=0; y<map_height; y++)
       map[x][y].calculateView(1);
 }
 
 // Destructor
 Editor::~Editor(void) {
   free(map_file);
-  for (int x=0; x<width; x++)
-    for (int y=0; y<height; y++)
+  for (int x=0; x<map_width; x++)
+    for (int y=0; y<map_height; y++)
       if (map[x][y].getCreature())
         delete map[x][y].getCreature();
 }
@@ -103,8 +103,8 @@ void Editor::save(void) {
   string map_items = map_dir + items;
   std::ofstream items_file(map_items.c_str());
 
-  for (int y=0; y<height; y++) {
-    for (int x=0; x<width; x++) {
+  for (int y=0; y<map_height; y++) {
+    for (int x=0; x<map_width; x++) {
       map_file << map[x][y].getTerrain();
       if (map[x][y].getCreature())
         creatures_file << map[x][y].getCreature()->getType();
@@ -144,22 +144,22 @@ void Editor::load(void) {
     // Delete the current map
     /// @todo Really need to delete current map?
     /// @todo Creatures aren't being deleted.
-    for (int i=0; i<width; i++)
+    for (int i=0; i<map_width; i++)
       delete [] map[i];
     delete [] map;
     // The cell where the mouse was is deleted
     // so the pointer needs to be removed.
     mouse_over_cell = NULL;
     // Create a new map
-    map = new Cell*[width];
-    for (int i=0; i<width; i++)
-      map[i] = new Cell[height];
+    map = new Cell*[map_width];
+    for (int i=0; i<map_width; i++)
+      map[i] = new Cell[map_height];
     connectCells();
 
     char map_temp, creatures_temp, item_temp;
     int i = 0;
     int j = 0;
-    while (j<height) {
+    while (j<map_height) {
       map_file.get(map_temp);
       creatures_file.get(creatures_temp);
       items_file.get(item_temp);
@@ -185,8 +185,8 @@ void Editor::load(void) {
     items_file.close();
 
     // Make the hole map visible
-    for (int x=0; x<width; x++)
-      for (int y=0; y<height; y++)
+    for (int x=0; x<map_width; x++)
+      for (int y=0; y<map_height; y++)
         map[x][y].calculateView(1);
   }
 }
@@ -225,7 +225,7 @@ void Editor::draw(void) {
 // This function is executed in the main loop. If
 // it returns true, the loop ends, else it continues.
 bool Editor::frame(void) {
-  Map::frame();
+  adjustVisibleMap();
   if (keys[SDLK_ESCAPE]) {
     keys[SDLK_ESCAPE] = false;
     end_editor = true;

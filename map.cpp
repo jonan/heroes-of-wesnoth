@@ -44,16 +44,16 @@ void Map::start(void) {
 
 // Constructor
 Map::Map(const int width, const int height) {
-  this->width = width;
-  this->height = height;
+  map_width = width;
+  map_height = height;
 
   // Create the array of cells
-  map = new Cell*[width];
-  for (int i=0; i<width; i++)
-    map[i] = new Cell[height];
+  map = new Cell*[map_width];
+  for (int i=0; i<map_width; i++)
+    map[i] = new Cell[map_height];
   // Set the coordinates
-  for (int x=0; x<width; x++)
-    for (int y=0; y<height; y++)
+  for (int x=0; x<map_width; x++)
+    for (int y=0; y<map_height; y++)
       map[x][y].setCoordinates(x, y);
   // Connect the cells
   connectCells();
@@ -68,18 +68,37 @@ Map::Map(const int width, const int height) {
   first_cell_pos.y = -72;
 
   // Calculate the size of the map's window
-  screen->getScreenSize(window_width, window_height);
-  window_horizontal_cells = (window_width/108)*2+2; // +2 cells that don't fit compleatly
-  window_vertical_cells = (window_height/72)+2; // +2 cells that don't fit compleatly
-  if (window_horizontal_cells > width) window_horizontal_cells = width;
-  if (window_vertical_cells > height) window_vertical_cells = height;
+  window_width = window_height = 0;
+  adjustVisibleMap();
 }
 
 // Destructor
 Map::~Map(void) {
-  for (int i=0; i<width; i++)
+  for (int i=0; i<map_width; i++)
     delete [] map[i];
   delete [] map;
+}
+
+// Adjusts the visible map to the window size.
+void Map::adjustVisibleMap(void) {
+  // Calculate the size of the map's window (might have changed)
+  int new_width, new_height;
+  bool changed = false; // To check if the window size changed
+  screen->getScreenSize(new_width, new_height);
+  if (new_width != window_width) {
+    changed = true;
+    window_width = new_width;
+    window_horizontal_cells = (window_width/108)*2+2; // +2 cells that don't fit compleatly
+    if (window_horizontal_cells > map_width) window_horizontal_cells = map_width;
+  }
+  if (new_height != window_height) {
+    changed = true;
+    window_height = new_height;
+    window_vertical_cells = (window_height/72)+2; // +2 cells that don't fit compleatly
+    if (window_vertical_cells > map_height) window_vertical_cells = map_height;
+  }
+  // If the window size has change, center the view
+  if (changed && selected_unit) centerView(*selected_unit);
 }
 
 // Returns a cell where the creature can attack.
@@ -91,13 +110,13 @@ Cell* Map::getAttackCell(void) {
   x=0;
   y=0;
 
-  while (!temp && x<width) {
+  while (!temp && x<map_width) {
     if (map[x][y].canAttackHere() &&
         map[x][y].getCreature()->getMaster() != selected_unit->getMaster()) {
       temp = &map[x][y];
     } else {
       y++;
-      if (y == height) {
+      if (y == map_height) {
         y=0;
         x++;
       }
@@ -132,25 +151,29 @@ void Map::updateMouse(void) {
     j++;
   }
   j--;
-  if (i>0 && i<width && j>0 && j<height) {
+  if (i>0 && i<map_width-1 && j>0 && j<map_height-1) {
     // map[i][j] is a valid cell and the mouse is over it
-    if (i!=0 && i!=width-1 && j!=0 && j!=height-1) { // Cell is not in one of the map's borders
-      map[i][j].putMouse();
-      mouse_over_cell = &map[i][j];
-      mouseOverCell(i,j);
-      if (mouse[BUTTON] == SDL_BUTTON_LEFT) mouseLeftClick(i,j);
-      if (mouse[BUTTON] == SDL_BUTTON_RIGHT) mouseRightClick(i,j);
-    }
+    map[i][j].putMouse();
+    mouse_over_cell = &map[i][j];
+    mouseOverCell(i,j);
+    if (mouse[BUTTON] == SDL_BUTTON_LEFT) mouseLeftClick(i,j);
+    if (mouse[BUTTON] == SDL_BUTTON_RIGHT) mouseRightClick(i,j);
+  } else {
+    input->setCursorType(NORMAL);
   }
 
   // move visible map
-  if ( (mouse[POSITION_X]==0 || keys[SDLK_LEFT]) && first_cell_coor.x!=0)
+  if ( (mouse[POSITION_X] == 0 || keys[SDLK_LEFT]) &&
+        first_cell_coor.x != 0                        )
     first_cell_coor.x--;
-  else if ( (mouse[POSITION_X]==window_width-1 || keys[SDLK_RIGHT]) && first_cell_coor.x!=width-window_horizontal_cells)
+  else if ( (mouse[POSITION_X] == window_width-1 || keys[SDLK_RIGHT]) &&
+             first_cell_coor.x != map_width-window_horizontal_cells      )
     first_cell_coor.x++;
-  if ( (mouse[POSITION_Y]==0 || keys[SDLK_UP]) && first_cell_coor.y!=0)
+  if ( (mouse[POSITION_Y] == 0 || keys[SDLK_UP]) &&
+        first_cell_coor.y != 0                      )
     first_cell_coor.y--;
-  else if ( (mouse[POSITION_Y]==window_height-1 || keys[SDLK_DOWN]) && first_cell_coor.y!=height-window_vertical_cells)
+  else if ( (mouse[POSITION_Y] == window_height-1 || keys[SDLK_DOWN]) &&
+             first_cell_coor.y != map_height-window_vertical_cells       )
     first_cell_coor.y++;
 }
 
@@ -167,7 +190,7 @@ void Map::mouseOverCell(const int x, const int y) {
 // Function to execute when the user right clicks on a cell.
 void Map::mouseRightClick(const int x, const int y) {
   centerView(map[x][y]);
-  mouse[BUTTON] = 0; 
+  mouse[BUTTON] = 0;
 }
 
 // Moves the selected creature to a cell.
@@ -199,15 +222,15 @@ void Map::moveSelectedCreature(Cell &end_position) {
 
 // Connects all the cells in the map.
 void Map::connectCells(void) {
-  for (int coor1=0; coor1<width; coor1++) {
-    for (int coor2=0; coor2<height; coor2++) {
+  for (int coor1=0; coor1<map_width; coor1++) {
+    for (int coor2=0; coor2<map_height; coor2++) {
       if ( (coor1%2)==1 ) { // coor1 is an odd number
-        if (coor1 == width-1) { // The last colum of the map
+        if (coor1 == map_width-1) { // The last colum of the map
           if (coor2 == 0) {
             // map[coor1][coor2].connectCell(N, NULL);
             map[coor1][coor2].connectCell(S, &map[coor1][coor2+1]);
             map[coor1][coor2].connectCell(SW, &map[coor1-1][coor2+1]);
-          } else if (coor2 == height-1) {
+          } else if (coor2 == map_height-1) {
             map[coor1][coor2].connectCell(N, &map[coor1][coor2-1]);
             // map[coor1][coor2].connectCell(S, NULL);
             // map[coor1][coor2].connectCell(SW, NULL);
@@ -226,7 +249,7 @@ void Map::connectCells(void) {
           map[coor1][coor2].connectCell(SE, &map[coor1+1][coor2+1]);
           map[coor1][coor2].connectCell(NW, &map[coor1-1][coor2]);
           map[coor1][coor2].connectCell(SW, &map[coor1-1][coor2+1]);
-        } else if (coor2 == height-1) { // Last row of the map
+        } else if (coor2 == map_height-1) { // Last row of the map
           map[coor1][coor2].connectCell(N, &map[coor1][coor2-1]);
           // map[coor1][coor2].connectCell(S, NULL);
           map[coor1][coor2].connectCell(NE, &map[coor1+1][coor2]);
@@ -247,7 +270,7 @@ void Map::connectCells(void) {
             // map[coor1][coor2].connectCell(N, NULL);
             map[coor1][coor2].connectCell(S, &map[coor1][coor2+1]);
             // map[coor1][coor2].connectCell(NE, NULL);
-          } else if (coor2 == height-1) {
+          } else if (coor2 == map_height-1) {
             map[coor1][coor2].connectCell(N, &map[coor1][coor2-1]);
             // map[coor1][coor2].connectCell(S, NULL);
             map[coor1][coor2].connectCell(NE, &map[coor1+1][coor2-1]);
@@ -259,12 +282,12 @@ void Map::connectCells(void) {
           // map[coor1][coor2].connectCell(NW, NULL);
           // map[coor1][coor2].connectCell(SW, NULL);
           map[coor1][coor2].connectCell(SE, &map[coor1+1][coor2]);
-        } else if (coor1 == width-1) { // The last colum of the map
+        } else if (coor1 == map_width-1) { // The last colum of the map
           if (coor2 == 0) {
             // map[coor1][coor2].connectCell(N, NULL);
             map[coor1][coor2].connectCell(S, &map[coor1][coor2+1]);
             // map[coor1][coor2].connectCell(NW, NULL);
-          } else if (coor2 == height-1) {
+          } else if (coor2 == map_height-1) {
             map[coor1][coor2].connectCell(N, &map[coor1][coor2-1]);
             // map[coor1][coor2].connectCell(S, NULL);
             map[coor1][coor2].connectCell(NW,&map[coor1-1][coor2-1]);
@@ -283,7 +306,7 @@ void Map::connectCells(void) {
           map[coor1][coor2].connectCell(SE, &map[coor1+1][coor2]);
           // map[coor1][coor2].connectCell(NW, NULL);
           map[coor1][coor2].connectCell(SW, &map[coor1-1][coor2]);
-        } else if (coor2 == height-1) { // Last row of the map
+        } else if (coor2 == map_height-1) { // Last row of the map
           map[coor1][coor2].connectCell(N, &map[coor1][coor2-1]);
           // map[coor1][coor2].connectCell(S, NULL);
           map[coor1][coor2].connectCell(NE, &map[coor1+1][coor2-1]);
@@ -312,8 +335,8 @@ void Map::centerView(Cell& position) {
   y -= window_vertical_cells/2;
   if (x<0) x=0;
   if (y<0) y=0;
-  if (width-x < window_horizontal_cells) x -= window_horizontal_cells-(width-x);
-  if (height-y < window_vertical_cells) y -= window_vertical_cells-(height-y);
+  if (map_width-x < window_horizontal_cells) x -= window_horizontal_cells-(map_width-x);
+  if (map_height-y < window_vertical_cells) y -= window_vertical_cells-(map_height-y);
 
   first_cell_coor.x = x;
   first_cell_coor.y = y;
@@ -340,8 +363,8 @@ void Map::draw(void) {
     position.w = 72;
     position.h = 72;
     // Draw
-    for (int x=first_cell_coor.x; position.x<window_width && x<width; x++) {
-      for (int y=first_cell_coor.y; position.y<window_height && y<height; y++) {
+    for (int x=first_cell_coor.x; position.x<window_width && x<map_width; x++) {
+      for (int y=first_cell_coor.y; position.y<window_height && y<map_height; y++) {
         map[x][y].draw(position, i);
         position.y+=72;
       }
@@ -352,34 +375,4 @@ void Map::draw(void) {
       position.x+=54;
     }
   }
-}
-
-// This function is executed in the main loop. If
-// it returns true, the loop ends, else it continues.
-bool Map::frame(void) {
-  /* This function just does the necessary operations any type of map
-     will need every frame, but every inhereted class will need to re-implement
-     it and (probably) call Map::frame().
-     The return value is not important, so it's set to false. */
-
-  // Calculate the size of the map's window (might have changed)
-  int new_width, new_height;
-  bool changed = false; // To check if the window size changed
-  screen->getScreenSize(new_width, new_height);
-  if (new_width != window_width) {
-    changed = true;
-    window_width = new_width;
-    window_horizontal_cells = (window_width/108)*2+2; // +2 cells that don't fit compleatly
-    if (window_horizontal_cells > width) window_horizontal_cells = width;
-  }
-  if (new_height != window_height) {
-    changed = true;
-    window_height = new_height;
-    window_vertical_cells = (window_height/72)+2; // +2 cells that don't fit compleatly
-    if (window_vertical_cells > height) window_vertical_cells = height;
-  }
-  // If the window size has change, center the view
-  if (changed && selected_unit) centerView(*selected_unit);
-
-  return false;
 }

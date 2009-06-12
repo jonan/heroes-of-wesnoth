@@ -42,9 +42,6 @@ class Editor : public Map {
     // Function to execute when the user right clicks on a cell.
     virtual void mouseRightClick(const int x, const int y);
 
-    // Does nothing but it's necessary when inheriting from map.
-    virtual void nextTurn(void) {};
-
     // Saves the current map in the file.
     void save(void);
     // Loads the map from the file.

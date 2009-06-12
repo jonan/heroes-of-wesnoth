@@ -51,7 +51,7 @@ Battle::Battle(Hero &player, Unit **enemies, int num_enemies, const int terrain)
   // Put the enemy creatures in the map.
   for (int i=0; i<num_enemies; i++) {
     enemy_creatures[i]->setFacingSide(LEFT);
-    map[width-3][i+1].setCreature(enemy_creatures[i]);
+    map[map_width-3][i+1].setCreature(enemy_creatures[i]);
   }
 
   // No enemy hero
@@ -70,11 +70,11 @@ Battle::Battle(Hero &player, Hero &enemy, const int terrain) : Map(20, 11) {
 
   // Put the enemy hero and his units in the map.
   enemy.setFacingSide(LEFT);
-  map[width-2][4].setCreature(&enemy);
+  map[map_width-2][4].setCreature(&enemy);
   for (int i=0; i<MAX_TEAM_UNITS; i++) {
     if (enemy.getCreature(i))
       enemy.getCreature(i)->setFacingSide(LEFT);
-    map[width-3][i+1].setCreature(enemy.getCreature(i));
+    map[map_width-3][i+1].setCreature(enemy.getCreature(i));
   }
 
   // No enemy creatures
@@ -102,8 +102,8 @@ void Battle::init(const int terrain) {
   end_battle = false;
 
   // Make the hole map visible
-  for (int x=0; x<width; x++)
-    for (int y=0; y<height; y++)
+  for (int x=0; x<map_width; x++)
+    for (int y=0; y<map_height; y++)
       map[x][y].calculateView(1);
 
   // Put the hero and his units in the map.
@@ -142,8 +142,8 @@ void Battle::ai(void) {
     int x, y;
     selected_unit->getPosition()->getCoordinates(x, y);
     x=0;
-    while(!map[x][y].canMoveHere() && x<width-1) x++;
-    if (x!=width-1) {
+    while(!map[x][y].canMoveHere() && x<map_width-1) x++;
+    if (x!=map_width-1) {
       moveSelectedCreature(map[x][y]);
       nextTurn();
     } else {
@@ -352,7 +352,7 @@ void Battle::deleteCreature(Unit &creature) {
 
 // Function to call whenever there is an animation.
 void Battle::animation(const int sprites) {
-  /// @todo Use the loop function in loop.hpp
+  /// @todo Use the loop function in game_loop.hpp
   int frame = 0;
   Timer fps;
 
@@ -369,7 +369,7 @@ void Battle::animation(const int sprites) {
 // This function is executed in the main loop. If
 // it return_progress true, the loop ends, else it continues.
 bool Battle::frame(void) {
-  Map::frame();
+  adjustVisibleMap();
   if (keys[SDLK_ESCAPE]) {
     keys[SDLK_ESCAPE] = false;
     deleteCreature(*player);

@@ -80,8 +80,8 @@ World::World(const char *map_file, const int width, const int height) : Map(widt
 
 // Destructor
 World::~World(void) {
-  for (int x=0; x<width; x++)
-    for (int y=0; y<height; y++)
+  for (int x=0; x<map_width; x++)
+    for (int y=0; y<map_height; y++)
       if (map[x][y].getCreature())
         delete map[x][y].getCreature();
 
@@ -159,7 +159,7 @@ void World::setEnemies(const char *map_file) {
   char temp;
   int i = 0;
   int j = 0;
-  while (j<height) {
+  while (j<map_height) {
     file.get(temp);
     if (temp != '\n') {
       if (temp != '-') {
@@ -169,7 +169,7 @@ void World::setEnemies(const char *map_file) {
         number_enemies++;
       }
       i++;
-      if (i == width) {
+      if (i == map_width) {
         i = 0;
         j++;
       }
@@ -197,13 +197,13 @@ void World::setItems(const char *map_file) {
   char temp;
   int i = 0;
   int j = 0;
-  while (j<height) {
+  while (j<map_height) {
     file.get(temp);
     if (temp != '\n') {
       if (temp != '-')
         setItem(temp, map[i][j]);
       i++;
-      if (i == width) {
+      if (i == map_width) {
         i = 0;
         j++;
       }
@@ -223,7 +223,7 @@ void World::deleteCreature(Cell &position) {
 // This function is executed in the main loop. If
 // it returns true, the loop ends, else it continues.
 bool World::frame(void) {
-  Map::frame();
+  adjustVisibleMap();
   if (keys[SDLK_ESCAPE]) {
     keys[SDLK_ESCAPE] = false;
     end_world = true;

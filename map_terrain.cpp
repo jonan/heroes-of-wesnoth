@@ -317,8 +317,8 @@ void Map::setTerrain(char terrain_name, Cell *position) {
 
   int random_number;
   if (!position) { // Set the attributes to all the cells.
-    for (int i=0; i<width; i++)
-      for (int j=0; j<height; j++) {
+    for (int i=0; i<map_width; i++)
+      for (int j=0; j<map_height; j++) {
         map[i][j].setAlpha(*alpha);
         random_number = rand() % number_stars;
         map[i][j].setStars(*stars[random_number]);
@@ -329,7 +329,7 @@ void Map::setTerrain(char terrain_name, Cell *position) {
           map[i][j].addSpecialImage(*special[random_number]);
         }
         // If the cell is in one of the maps borders, block movement
-        if ( i==0 || i==width-1 || j==0 || j==height-1)
+        if ( i==0 || i==map_width-1 || j==0 || j==map_height-1)
           map[i][j].setPassable(false);
         else
           map[i][j].setPassable(passable);
@@ -347,7 +347,7 @@ void Map::setTerrain(char terrain_name, Cell *position) {
     // If the cell is in one of the maps borders, block movement
     int x, y;
     position->getCoordinates(x, y);
-    if ( x==0 || x==width-1 || y==0 || y==height-1)
+    if ( x==0 || x==map_width-1 || y==0 || y==map_height-1)
       position->setPassable(false);
     else
       position->setPassable(passable);

@@ -114,6 +114,9 @@ class Map : public GameLoop {
     // (Implemented in map_item.cpp)
     void setItem(char item_name, Cell &position);
 
+    // Adjusts the visible map to the window size.
+    void adjustVisibleMap(void);
+
     // Returns a cell where the creature can attack.
     Cell* getAttackCell(void);
 
@@ -127,7 +130,7 @@ class Map : public GameLoop {
     virtual void mouseRightClick(const int x, const int y);
 
     // Starts the next turn.
-    virtual void nextTurn(void) = 0;
+    virtual void nextTurn(void) {}
 
     // Moves the selected creature to a cell.
     void moveSelectedCreature(Cell &end_position);
@@ -149,9 +152,9 @@ class Map : public GameLoop {
 
     // This function is executed in the main loop. If
     // it returns true, the loop ends, else it continues.
-    virtual bool frame(void);
+    virtual bool frame(void) = 0;
 
-    int width, height; // The map's size.
+    int map_width, map_height; // The map's size.
     Cell **map;
 
     Unit *selected_unit; // The unit that's selected.

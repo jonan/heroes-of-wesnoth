@@ -550,8 +550,8 @@ void Map::softenTerrain(const char cell_terrain, char *terrain, const int number
 
   for (int j=0; j<6; j++) differentTerrain[j] = false;
 
-  for (int x=0; x<width; x++)
-    for (int y=0; y<height; y++) {
+  for (int x=0; x<map_width; x++)
+    for (int y=0; y<map_height; y++) {
       for (int i=0; i<number_terrains; i++)
         need_soft = ( need_soft || (map[x][y].getTerrain() == terrain[i]) );
       if (need_soft) {
