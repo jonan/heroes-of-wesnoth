@@ -216,7 +216,7 @@ void Editor::draw(void) {
     temp.setCreature(creature);
   }
   temp.calculateView(1);
-  temp.draw(position, TERRAIN);
+  temp.draw(position, ::TERRAIN);
   temp.draw(position, SPECIAL);
   temp.draw(position, UNIT);
   if (creature) delete creature;
