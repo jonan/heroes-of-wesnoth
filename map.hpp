@@ -164,6 +164,14 @@ class Map : public GameLoop {
     // it returns true, the loop ends, else it continues.
     virtual bool frame(void) = 0;
 
+    // @{
+    // Functions to delete parts of the map.
+    // This functions shouldn't normally be called (the
+    // desctructor will call them), but they are usefull in some cases.
+    void deleteCells     (void);
+    void deleteCreatures (void);
+    // @}
+
     int map_width, map_height; // The map's size.
     Cell **map;
 

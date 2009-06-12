@@ -92,9 +92,7 @@ Map::Map(const char *map_file) {
 
 // Destructor
 Map::~Map(void) {
-  for (int i=0; i<map_width; i++)
-    delete [] map[i];
-  delete [] map;
+  deleteCells();
 }
 
 // Loads the terrain, creatures and items of the map from a file.
@@ -467,4 +465,20 @@ void Map::draw(void) {
       position.x+=54;
     }
   }
+}
+
+// Delete all the cells of the map
+void Map::deleteCells(void) {
+  for (int i=0; i<map_width; i++)
+    delete [] map[i];
+  delete [] map;
+}
+
+// Delete all the creatures in the map
+void Map::deleteCreatures(void) {
+  for (int x=0; x<map_width; x++)
+    for (int y=0; y<map_height; y++) {
+      delete map[x][y].getCreature();
+      map[x][y].setCreature(NULL);
+    }
 }
