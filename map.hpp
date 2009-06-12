@@ -104,7 +104,11 @@ class Map : public GameLoop {
     virtual void start(void);
 
   protected:
-    Map(const int width, const int height); // Constructor
+    // @{
+    // Constructors
+    Map(const int width, const int height);
+    Map(const char *map_file);
+    // @}
     virtual ~Map(void); // Destructor
 
     // If position is NULL, applies the terrain to all the cells in the map.
@@ -114,8 +118,14 @@ class Map : public GameLoop {
     // (Implemented in map_item.cpp)
     void setItem(char item_name, Cell &position);
 
+    // Loads the terrain, creatures and items of the map from a file.
+    void loadMapFile(const char *file_name);
+
     // Adjusts the visible map to the window size.
     void adjustVisibleMap(void);
+
+    // Makes the hole map visible.
+    void makeMapVisible(void);
 
     // Returns a cell where the creature can attack.
     Cell* getAttackCell(void);

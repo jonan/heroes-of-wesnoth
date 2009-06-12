@@ -17,6 +17,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "map.hpp"
 
+#include <fstream>
+#include <string>
+
 #include "cell.hpp"
 #include "events.hpp"
 #include "graphics.hpp"
@@ -72,11 +75,100 @@ Map::Map(const int width, const int height) {
   adjustVisibleMap();
 }
 
+// Constructor
+Map::Map(const char *map_file) {
+  loadMapFile(map_file);
+
+  first_cell_coor.x = 0;
+  first_cell_coor.y = 0;
+  // Adjust the first cell's coordinates
+  first_cell_pos.x = -53;
+  first_cell_pos.y = -72;
+
+  // Calculate the size of the map's window
+  window_width = window_height = 0;
+  adjustVisibleMap();
+}
+
 // Destructor
 Map::~Map(void) {
   for (int i=0; i<map_width; i++)
     delete [] map[i];
   delete [] map;
+}
+
+// Loads the terrain, creatures and items of the map from a file.
+void Map::loadMapFile(const char *file_name) {
+  using std::string;
+  // Load the files
+  // Create a string with the fisical location of the map
+  // "maps/" + file_name
+  string map_dir("maps/");
+  map_dir += file_name;
+  std::ifstream map_file(map_dir.c_str());
+  // "maps/" + file_name + "_creatures"
+  string map_creatures = map_dir + "_creatures";
+  std::ifstream creatures_file(map_creatures.c_str());
+  // "maps/" + file_name + "_items"
+  string map_items = map_dir + "_items";
+  std::ifstream items_file(map_items.c_str());
+
+  if (!map_file.fail() && !creatures_file.fail() && !items_file.fail()) {
+    // The cells and units haven't been created yet so there's no
+    // cell with the mouse over it and there's no unit selected.
+    mouse_over_cell = NULL;
+    selected_unit = NULL;
+    // Detect map's size
+    char temp[4];
+    map_file.getline(temp, 4);
+    map_width = atoi(temp);
+    map_file.getline(temp, 4);
+    map_height = atoi(temp);
+    // Create a new map
+    map = new Cell*[map_width];
+    for (int i=0; i<map_width; i++)
+      map[i] = new Cell[map_height];
+    // Set the coordinates
+    for (int x=0; x<map_width; x++)
+      for (int y=0; y<map_height; y++)
+        map[x][y].setCoordinates(x, y);
+    connectCells();
+
+    char map_temp, creatures_temp, item_temp;
+    int i = 0;
+    int j = 0;
+    while (j<map_height) {
+      map_file.get(map_temp);
+      creatures_file.get(creatures_temp);
+      items_file.get(item_temp);
+      // All files should have the '/n' in the
+      // same position, so you only need to check one
+      if (map_temp != '\n') {
+        setTerrain(map_temp, &map[i][j]);
+        if (creatures_temp != '-') {
+          Unit *creature;
+          creature = new Unit(creatures_temp, 0);
+          map[i][j].setCreature(creature);
+        }
+        if (item_temp != '-')
+          setItem(item_temp, map[i][j]);
+        i++;
+      } else {
+        i = 0;
+        j++;
+      }
+    }
+    map_file.close();
+    creatures_file.close();
+    items_file.close();
+  }
+}
+
+// Makes the hole map visible
+void Map::makeMapVisible(void) {
+  for (int x=0; x<map_width; x++)
+    for (int y=0; y<map_height; y++)
+      map[x][y].calculateView(1);
 }
 
 // Adjusts the visible map to the window size.
