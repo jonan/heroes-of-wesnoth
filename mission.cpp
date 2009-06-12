@@ -22,10 +22,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // Creates and starts a mission.
 void createMission(const char *map, const int number_allies,
-                   const int width, const int height,
                    const int hero_position_x, const int hero_position_y
                   ) {
-   World war(map, width, height);
+   World war(map);
 
    Hero *player = new Hero(HUMAN);
    Unit *temp;
@@ -41,15 +40,15 @@ void createMission(const char *map, const int number_allies,
 
 // Create and start mission 1.
 void mission1(void) {
-   createMission("mission1", 10, 32, 17, 2, 2);
+   createMission("mission1", 10, 2, 2);
 }
 
 // Create and start mission 2.
 void mission2(void) {
-   createMission("mission2", 15, 32, 28, 3, 6);
+   createMission("mission2", 15, 3, 6);
 }
 
 // Create and start mission 3.
 void mission3(void) {
-   createMission("mission3", 25, 32, 22, 4, 9);
+   createMission("mission3", 25, 4, 9);
 }

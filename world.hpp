@@ -32,9 +32,7 @@ class Hero;
 class World : public Map {
   public:
     /// @param[in] map_file File where the map is stored.
-    /// @param[in] width Map's width.
-    /// @param[in] height Map's height 
-    World(const char *map_file, const int width, const int height); // Constructor
+    World(const char *map_file); // Constructor
     ~World(void); // Destructor
 
     /// Puts a hero in the map.
@@ -50,11 +48,6 @@ class World : public Map {
     // Starts the next turn.
     virtual void nextTurn(void);
 
-    // Puts the enemies in the map.
-    void setEnemies(const char *map_file);
-    // Puts the items on the map.
-    void setItems(const char *map_file);
-
     // Removes a unit from the world and deletes it.
     void deleteCreature(Cell &position);
 
@@ -63,7 +56,7 @@ class World : public Map {
     virtual bool frame(void);
 
     std::deque<Hero*> players;
-    int turn;
+    unsigned int turn;
     int number_enemies;
     bool end_world;
 

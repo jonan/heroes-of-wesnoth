@@ -39,52 +39,16 @@ using events_engine::BUTTON;
 using events_engine::NORMAL;
 
 // Constructor
-World::World(const char *map_file, const int width, const int height) : Map(width, height) {
-  // Create a string with the fisical location of the file
-  // "map/" + name
-  string map_path = "maps/";
-  string file_name(map_file);
-  string file_dir = map_path + file_name;
-
-  ifstream file(file_dir.c_str());
-  if (file.fail()) {
-    cout << "Error opening map \"" << map_file << "\"\n\n";
-    exit(EXIT_FAILURE);
-  }
-
-  // Set the terrain
-  char temp;
-  int i = 0;
-  int j = 0;
-  while (j<height) {
-    file.get(temp);
-    if (temp != '\n') {
-      setTerrain(temp, &map[i][j]);
-      i++;
-      if (i == width) {
-        i = 0;
-        j++;
-      }
-    }
-  }
-
-  file.close();
-
-  setEnemies(map_file);
-  setItems(map_file);
+World::World(const char *map_file) : Map(map_file) {
   softenMap();
-
-  turn = -1;
+  turn = 0;
   end_world = false;
+  makeMapVisible();
 }
 
 // Destructor
 World::~World(void) {
-  for (int x=0; x<map_width; x++)
-    for (int y=0; y<map_height; y++)
-      if (map[x][y].getCreature())
-        delete map[x][y].getCreature();
-
+  deleteCreatures();
   // Make sure the cursors's type is normal
   input->setCursorType(NORMAL);
 }
@@ -104,22 +68,20 @@ void World::mouseLeftClick(const int x, const int y) {
       map[x][y].calculateView(players[turn]->getVisibility());
       nextTurn();
     } else if ( map[x][y].canAttackHere() ) {
-      if ( map[x][y].getCreature()->getMaster() != selected_unit->getMaster() ) {
-        moveSelectedCreature(map[x][y]);
-        map[x][y].calculateView(players[turn]->getVisibility());
+      moveSelectedCreature(map[x][y]);
+      map[x][y].calculateView(players[turn]->getVisibility());
 
-        // Set the battle information
-        Hero *player = static_cast<Hero*>(selected_unit);
-        char creatureType = map[x][y].getCreature()->getType();
-        char terrain = map[x][y].getTerrain();
-        // Start the battle
-        if ( createBattle(*player, creatureType, terrain) )
-          deleteCreature(map[x][y]);
-        else
-          players[turn] = NULL;
+      // Set the battle information
+      Hero *player = static_cast<Hero*>(selected_unit);
+      char creatureType = map[x][y].getCreature()->getType();
+      char terrain = map[x][y].getTerrain();
+      // Start the battle
+      if ( createBattle(*player, creatureType, terrain) )
+        deleteCreature(map[x][y]);
+      else
+        players[turn] = NULL;
 
-        nextTurn();
-      }
+      nextTurn();
     }
   }
 }
@@ -131,86 +93,13 @@ void World::nextTurn(void) {
   // If the battle hasn't ended continue
   if (!end_world) {
     turn++;
-    if (turn == static_cast<int>(players.size())) turn = 0;
+    if (turn == players.size()) turn = 0;
     selected_unit = players[turn];
     selected_unit->getPosition()->select();
     // Wait until the mouse button is released.
     while (mouse[BUTTON]) input->readInput();
     centerView(*selected_unit);
   }
-}
-
-// Puts the enemies in the map.
-void World::setEnemies(const char *map_file) {
-  // Create a string with the fisical location of the file
-  // "map/" + name + "_creatures"
-  string map_path = "maps/";
-  string fileName(map_file);
-  string fileDir = map_path + map_file + "_creatures";
-
-  ifstream file(fileDir.c_str());
-  if (file.fail()) {
-    cout << "Error opening map \"" << map_file << "\"\n\n";
-    exit(EXIT_FAILURE);
-  }
-
-  // Set the enemies
-  number_enemies = 0;
-  char temp;
-  int i = 0;
-  int j = 0;
-  while (j<map_height) {
-    file.get(temp);
-    if (temp != '\n') {
-      if (temp != '-') {
-        Unit *creature;
-        creature = new Unit(temp, 0);
-        map[i][j].setCreature(creature);
-        number_enemies++;
-      }
-      i++;
-      if (i == map_width) {
-        i = 0;
-        j++;
-      }
-    }
-  }
-
-  file.close();
-}
-
-// Puts the items on the map.
-void World::setItems(const char *map_file) {
-  // Create a string with the fisical location of the file
-  // "map/" + name + "_items"
-  string map_path = "maps/";
-  string fileName(map_file);
-  string fileDir = map_path + map_file + "_items";
-
-  ifstream file(fileDir.c_str());
-  if (file.fail()) {
-    cout << "Error opening map \"" << map_file << "\"\n\n";
-    exit(EXIT_FAILURE);
-  }
-
-  // Set the items
-  char temp;
-  int i = 0;
-  int j = 0;
-  while (j<map_height) {
-    file.get(temp);
-    if (temp != '\n') {
-      if (temp != '-')
-        setItem(temp, map[i][j]);
-      i++;
-      if (i == map_width) {
-        i = 0;
-        j++;
-      }
-    }
-  }
-
-  file.close();
 }
 
 // Removes a unit from the world and deletes it.
