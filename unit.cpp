@@ -45,7 +45,7 @@ Unit::Unit(const char type, const int number) {
 
 // Destructor
 Unit::~Unit(void) {
- if (magic_spell) delete magic_spell;
+ delete magic_spell;
 }
 
 // Starts a given animation.

@@ -47,9 +47,9 @@ Cell::Cell(void) {
 
 // Destructor
 Cell::~Cell(void) {
-  if (map_position) delete map_position;
-  if (path) delete [] path;
-  if (special_images) delete special_images;
+  delete map_position;
+  delete [] path;
+  delete special_images;
 }
 
 // Adds an image to the cell's terrain.
@@ -227,7 +227,7 @@ void Cell::creatureMovement(const int movement, int *path, const int movements) 
     } else if (creature) {
       if (this->path == NULL || this->movements > movements-1) {
         can_attack = true;
-        if (this->path != NULL) delete [] this->path;
+        delete [] this->path;
         this->movements = movements-1;
         this->path = new int[this->movements];
         for (int i=0; i<(this->movements); i++)
@@ -237,7 +237,7 @@ void Cell::creatureMovement(const int movement, int *path, const int movements) 
     } else if (movement>0) {
       if (this->path == NULL || this->movements > movements) { // Need to change path
         can_move = true;
-        if (this->path != NULL) delete [] this->path;
+        delete [] this->path;
         this->path = path;
         this->movements = movements;
         for (int i=N; i<=NW; i++) {

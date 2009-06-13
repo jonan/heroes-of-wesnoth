@@ -30,7 +30,6 @@ using video_engine::NONE;
 
 // Loads the engine's global objects.
 void startEngine(const bool fullscreen, const int width, const int height) {
-  srand( time(NULL) ); // Set seed for random numbers
   screen = video_engine::Graphics::getInstance();
   screen->createWindow(fullscreen, width, height);
   input = events_engine::Events::getInstance();
@@ -54,6 +53,7 @@ void loadMainImages(void) {
 
 // Starts the engine and loads the main images.
 void boot(const bool fullscreen, const int width, const int height) {
+  srand( time(NULL) ); // Set seed for random numbers
   startEngine(fullscreen, width, height);
   loadMainImages();
 }

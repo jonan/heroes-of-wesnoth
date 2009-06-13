@@ -19,8 +19,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /// The GameLoop class.
 /// @author Jonan
 
-#ifndef LOOP_HPP
-#define LOOP_HPP
+#ifndef GAME_LOOP_HPP
+#define GAME_LOOP_HPP
 
 #include "macros.hpp"
 
@@ -45,4 +45,4 @@ class GameLoop {
     DISALLOW_COPY_AND_ASSIGN(GameLoop);
 };
 
-#endif // LOOP_HPP
+#endif // GAME_LOOP_HPP

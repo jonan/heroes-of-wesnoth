@@ -24,7 +24,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include <deque>
 
-#include <SDL/SDL.h>
+struct SDL_Surface;
 
 /// Struct to store coordinates.
 struct Coordinates {

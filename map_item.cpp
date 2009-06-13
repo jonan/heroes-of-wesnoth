@@ -276,6 +276,7 @@ void Map::setItem(char item_name, Cell &position) {
     default:
       std::cout << "\n\tWrong item type : " << item_name << "\n\n";
       exit(EXIT_FAILURE);
+      break;
   }
 
   position.setItemType(item_name);

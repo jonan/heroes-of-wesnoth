@@ -488,7 +488,9 @@ void initializeVariables(SDL_Surface **one, SDL_Surface **two,
       *two = NULL;
       *three = NULL;
       *four = NULL;
-    default: {} // Imposible case
+    default:
+      // Imposible case
+      break;
   }
 }
 

@@ -43,9 +43,9 @@ void Map::setTerrain(char terrain_name, Cell *position) {
   stars[6] = screen->getImage("terrain/stars/blue7");
 
   // Set the terrain
-  SDL_Surface **terrain;
-  SDL_Surface **special;
-  int images_terrain; // Number of different images of a terrain.
+  SDL_Surface **terrain = NULL;
+  SDL_Surface **special = NULL;
+  int images_terrain = 0; // Number of different images of a terrain.
   int images_special = 0; // Number of different special images
   bool passable = true;
 
@@ -313,6 +313,7 @@ void Map::setTerrain(char terrain_name, Cell *position) {
     default:
       std::cout << "\n\tWrong terrain type : " << terrain_name << "\n\n";
       exit(EXIT_FAILURE);
+      break;
   }
 
   int random_number;
@@ -355,5 +356,5 @@ void Map::setTerrain(char terrain_name, Cell *position) {
 
   delete [] stars;
   delete [] terrain;
-  if (images_special) delete [] special;
+  delete [] special;
 }

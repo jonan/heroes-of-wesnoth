@@ -101,10 +101,7 @@ bool Battle::win(void) {
 void Battle::init(const int terrain) {
   end_battle = false;
 
-  // Make the hole map visible
-  for (int x=0; x<map_width; x++)
-    for (int y=0; y<map_height; y++)
-      map[x][y].calculateView(1);
+  makeMapVisible();
 
   // Put the hero and his units in the map.
   player->setFacingSide(RIGHT);
