@@ -34,6 +34,12 @@ World::World(const char *map_file) : Map(map_file) {
   softenMap();
   turn = 0;
   end_world = false;
+  // Count the number of enemies
+  number_enemies = 0;
+  for (int x=0; x<map_width; x++)
+    for (int y=0; y<map_height; y++)
+      if (map[x][y].getCreature())
+        number_enemies++;
 }
 
 // Destructor
