@@ -17,20 +17,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 #include "world.hpp"
 
-#include <cstdlib>
-#include <fstream>
-#include <iostream>
-#include <string>
-
 #include "battle.hpp"
 #include "cell.hpp"
 #include "events.hpp"
 #include "hero.hpp"
 
-// std
-using std::cout;
-using std::ifstream;
-using std::string;
 // events_engine
 using events_engine::input;
 using events_engine::keys;
