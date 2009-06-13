@@ -25,16 +25,36 @@ void createMission(const char *map, const int number_allies,
                    const int hero_position_x, const int hero_position_y
                   ) {
    World war(map);
-
-   Hero *player = new Hero(HUMAN);
+   Hero *hero;
    Unit *temp;
+
+   // Adding first hero
+   hero = new Hero(HUMAN);
    // Set the hero's units.
    for (int j=0; j<9; j++) {
       temp = new Unit(SERGEANT, number_allies);
-      player->recruitCreature(temp);
+      hero->recruitCreature(temp);
    }
+   war.setHero(*hero, hero_position_x, hero_position_y);
 
-   war.setHero(*player, hero_position_x, hero_position_y);
+   // Adding second hero
+   hero = new Hero(UNDEAD);
+   // Set the hero's units.
+   for (int j=0; j<9; j++) {
+      temp = new Unit(SKELETON, number_allies);
+      hero->recruitCreature(temp);
+   }
+   war.setHero(*hero, hero_position_x+1, hero_position_y);
+
+   // Adding third hero
+   hero = new Hero(ELF);
+   // Set the hero's units.
+   for (int j=0; j<9; j++) {
+      temp = new Unit(FIGHTER, number_allies);
+      hero->recruitCreature(temp);
+   }
+   war.setHero(*hero, hero_position_x, hero_position_y+1);
+
    war.start();
 }
 
