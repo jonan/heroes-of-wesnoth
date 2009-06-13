@@ -43,7 +43,6 @@ World::World(const char *map_file) : Map(map_file) {
   softenMap();
   turn = 0;
   end_world = false;
-  makeMapVisible();
 }
 
 // Destructor
