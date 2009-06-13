@@ -301,7 +301,6 @@ void Map::moveSelectedCreature(Cell &end_position) {
     selected_unit->getPosition()->setCreature(NULL);
     temp = selected_unit->getPosition()->getConnectedCell(path[i]);
     temp->setCreature(selected_unit);
-    selected_unit->setPosition(*temp);
     draw();
     screen->update();
     SDL_Delay(100);
