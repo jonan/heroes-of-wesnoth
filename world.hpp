@@ -22,7 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #ifndef WORLD_HPP
 #define WORLD_HPP
 
-#include <deque>
+#include <list>
 
 #include "map.hpp"
 
@@ -36,10 +36,10 @@ class World : public Map {
     ~World(void); // Destructor
 
     /// Puts a hero in the map.
-    /// @param[in] player Hero to put in the map.
+    /// @param[in] hero Hero to put in the map.
     /// @param[in] x X coordinate of the hero's position.
     /// @param[in] y Y coordinate of the hero's position.
-    void setHero(Hero &player, const int x, const int y);
+    void setHero(Hero &hero, const int x, const int y);
 
   private:
     // Function to execute when the user left clicks on a cell.
@@ -55,8 +55,7 @@ class World : public Map {
     // it returns true, the loop ends, else it continues.
     virtual bool frame(void);
 
-    std::deque<Hero*> players;
-    unsigned int turn;
+    std::list<Hero*> heroes;
     int number_enemies;
     bool end_world;
 

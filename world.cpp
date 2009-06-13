@@ -32,7 +32,6 @@ using events_engine::NORMAL;
 // Constructor
 World::World(const char *map_file) : Map(map_file) {
   softenMap();
-  turn = 0;
   end_world = false;
   // Count the number of enemies
   number_enemies = 0;
@@ -50,32 +49,41 @@ World::~World(void) {
 }
 
 // Puts a hero in the map.
-void World::setHero(Hero &player, const int x, const int y) {
-  players.push_back(&player);
-  map[x][y].setCreature(&player);
-  map[x][y].calculateView(player.getVisibility());
+void World::setHero(Hero &hero, const int x, const int y) {
+  heroes.push_back(&hero);
+  map[x][y].setCreature(&hero);
+  map[x][y].calculateView(hero.getVisibility());
 }
 
 // Function to execute when the user left clicks on a cell.
 void World::mouseLeftClick(const int x, const int y) {
   if ( selected_unit->getPosition() != &map[x][y] ) {
-    if ( map[x][y].canMoveHere() ) {
+    if ( map[x][y].canMoveHere() || map[x][y].canAttackHere()) {
       moveSelectedCreature(map[x][y]);
-      map[x][y].calculateView(players[turn]->getVisibility());
-      nextTurn();
-    } else if ( map[x][y].canAttackHere() ) {
-      moveSelectedCreature(map[x][y]);
-      map[x][y].calculateView(players[turn]->getVisibility());
+      map[x][y].calculateView(static_cast<Hero*>(selected_unit)->getVisibility());
 
-      // Set the battle information
-      Hero *player = static_cast<Hero*>(selected_unit);
-      char creatureType = map[x][y].getCreature()->getType();
-      char terrain = map[x][y].getTerrain();
-      // Start the battle
-      if ( createBattle(*player, creatureType, terrain) )
-        deleteCreature(map[x][y]);
-      else
-        players[turn] = NULL;
+      if ( selected_unit->getPosition() != &map[x][y] ) {
+        // Set the battle information
+        Hero *selected_hero = static_cast<Hero*>(selected_unit);
+        Cell *selected_hero_position = selected_hero->getPosition();
+        char terrain = map[x][y].getTerrain();
+        bool won_battle;
+        if (!map[x][y].getCreature()->getMaster()) {
+          // Battle against a neutral creature
+          char creature_type = map[x][y].getCreature()->getType();
+          won_battle = createBattle(*selected_hero, creature_type, terrain);
+        } else {
+          // Battle against a hero
+          Hero *enemy_hero = static_cast<Hero*>(map[x][y].getCreature());
+          won_battle = createBattle(*selected_hero, *enemy_hero, terrain);
+        }
+        // Remove losers
+        if (won_battle)
+          deleteCreature(map[x][y]);
+        else
+          heroes.remove(selected_hero);
+          selected_hero_position->setCreature(NULL);
+      }
 
       nextTurn();
     }
@@ -85,12 +93,12 @@ void World::mouseLeftClick(const int x, const int y) {
 // Starts the next turn.
 void World::nextTurn(void) {
   // Check if the battle has ended
-  if (players[0]==NULL || number_enemies == 0) end_world = true;
+  if (heroes.empty() || number_enemies == 0) end_world = true;
   // If the battle hasn't ended continue
   if (!end_world) {
-    turn++;
-    if (turn == players.size()) turn = 0;
-    selected_unit = players[turn];
+    heroes.push_back(heroes.front());
+    heroes.pop_front();
+    selected_unit = *heroes.begin();
     selected_unit->getPosition()->select();
     // Wait until the mouse button is released.
     while (mouse[BUTTON]) input->readInput();
@@ -100,9 +108,13 @@ void World::nextTurn(void) {
 
 // Removes a unit from the world and deletes it.
 void World::deleteCreature(Cell &position) {
-  delete position.getCreature();
+  if (!position.getCreature()->getMaster()) {
+    delete position.getCreature();
+    number_enemies--;
+  } else {
+    heroes.remove(static_cast<Hero*>(position.getCreature()));
+  }
   position.setCreature(NULL);
-  number_enemies--;
 }
 
 // This function is executed in the main loop. If
