@@ -125,7 +125,7 @@ void Cell::getPath(int* &path, int &movements) {
 void Cell::select(void) {
   if (creature!=NULL) {
     selected = true;
-    creatureMovement(creature->getMovement(), NULL, 0);
+    calculateMovement(creature->getMovement(), NULL, 0);
   }
 }
 
@@ -214,17 +214,18 @@ void Cell::draw(SDL_Rect position, const int part) {
 }
 
 // Calculates to what cells can a creature move.
-void Cell::creatureMovement(const int movement, int *path, const int movements) {
+void Cell::calculateMovement(const int creature_movement, int *path, const int movements) {
   if (passable) { // A creature can move here
     if (path == NULL) { // It's the first call to this funtion so the creature is over this cell.
+      can_attack = true;
       for (int i=N; i<=NW; i++) {
         if (connected_cell[i]) {
           int *temp_path = new int[1];
           temp_path[0] = i;
-          connected_cell[i]->creatureMovement(movement, temp_path, 1);
+          connected_cell[i]->calculateMovement(creature_movement, temp_path, 1);
         }
       }
-    } else if (creature) {
+    } else if (creature) { // If there's a creature, move to the cell next to it to attack.
       if (this->path == NULL || this->movements > movements-1) {
         can_attack = true;
         delete [] this->path;
@@ -233,9 +234,9 @@ void Cell::creatureMovement(const int movement, int *path, const int movements) 
         for (int i=0; i<(this->movements); i++)
           this->path[i] = path[i];
         delete [] path;
-      }
-    } else if (movement>0) {
-      if (this->path == NULL || this->movements > movements) { // Need to change path
+      } else delete [] path;
+    } else if (creature_movement>0) {
+      if (this->path == NULL || this->movements > movements) {
         can_move = true;
         delete [] this->path;
         this->path = path;
@@ -246,10 +247,10 @@ void Cell::creatureMovement(const int movement, int *path, const int movements) 
             for (int j=0; j<(this->movements); j++)
               temp_path[j] = this->path[j];
             temp_path[this->movements] = i;
-            connected_cell[i]->creatureMovement(movement-1, temp_path, movements+1);
+            connected_cell[i]->calculateMovement(creature_movement-1, temp_path, movements+1);
           }
         }
-      }
+      } else delete [] path;
     } else delete [] path;
   } else delete [] path;
 }

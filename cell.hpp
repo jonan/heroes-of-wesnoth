@@ -112,7 +112,7 @@ class Cell {
 
   private:
     // Calculates to what cells can a creature move.
-    void creatureMovement(const int movement, int *path, const int movements);
+    void calculateMovement(const int creature_movement, int *path, const int movements);
     // Erases previos calculations about a creatures movement.
     void eraseMovement(void);
 
