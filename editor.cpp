@@ -54,27 +54,39 @@ Editor::~Editor(void) {
 
 // Function to execute when the user left clicks on a cell.
 void Editor::mouseLeftClick(const int x, const int y) {
-  if (editing_type == ITEMS) {
-    if (map[x][y].getItemType() != selected)
-      setItem(selected, map[x][y]);
-  } else if (editing_type == TERRAIN) {
-    if (map[x][y].getTerrain() != selected)
-      setTerrain(selected, &map[x][y]);
-  } else if  (editing_type == UNITS) {
-    delete map[x][y].getCreature();
-    Unit *temp = new Unit(selected, 0);
-    map[x][y].setCreature(temp);
+  switch (editing_type) {
+    case ITEMS:
+      if (map[x][y].getItemType() != selected)
+        setItem(selected, map[x][y]);
+      break;
+    case TERRAIN:
+      if (map[x][y].getTerrain() != selected)
+        setTerrain(selected, &map[x][y]);
+      break;
+    case UNITS:
+      delete map[x][y].getCreature();
+      map[x][y].setCreature( new Unit(selected,0) );
+      break;
+    default:
+      // Impossible case
+      break;
   }
 }
 
 // Function to execute when the user right clicks on a cell.
 void Editor::mouseRightClick(const int x, const int y) {
-  if (editing_type == ITEMS) {
-    if (map[x][y].getItemType() != '-')
-      map[x][y].setItemType('-');
-  } else if  (editing_type == UNITS) {
-    delete map[x][y].getCreature();
-    map[x][y].setCreature(NULL);
+  switch (editing_type) {
+    case ITEMS:
+      if (map[x][y].getItemType() != '-')
+        map[x][y].setItemType('-');
+      break;
+    case UNITS:
+      delete map[x][y].getCreature();
+      map[x][y].setCreature(NULL);
+      break;
+    default:
+      // Nothing to do
+      break;
   }
 }
 
@@ -139,15 +151,22 @@ void Editor::draw(void) {
   position.y=84;
   Cell temp;
   Unit *creature = NULL;
-  if (editing_type == ITEMS) {
-    setTerrain(DESERT_ROAD, &temp);
-    setItem(selected, temp);
-  } else if (editing_type == TERRAIN) {
-    setTerrain(selected, &temp);
-  } else if (editing_type == UNITS) {
-    setTerrain(DESERT_ROAD, &temp);
-    creature = new Unit(selected, 0);
-    temp.setCreature(creature);
+  switch (editing_type) {
+    case ITEMS:
+      setTerrain(DESERT_ROAD, &temp);
+      setItem(selected, temp);
+      break;
+    case TERRAIN:
+      setTerrain(selected, &temp);
+      break;
+    case UNITS:
+      setTerrain(DESERT_ROAD, &temp);
+      creature = new Unit(selected, 0);
+      temp.setCreature(creature);
+      break;
+    default:
+      // Impossible case
+      break;
   }
   temp.calculateView(1);
   temp.draw(position, ::TERRAIN);
