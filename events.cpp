@@ -40,15 +40,16 @@ Events::~Events(void) {
 // Gets the input and stores the information obtained
 // (must be called before any other events function).
 void Events::readInput(void) {
-  SDL_GetMouseState(&mouse[POSITION_X], &mouse[POSITION_Y]);
+  SDL_GetMouseState(&mouse[MOUSE_X], &mouse[MOUSE_Y]);
   while (SDL_PollEvent(event)) {
     switch (event->type) {
       case SDL_MOUSEBUTTONDOWN:
-        mouse[BUTTON] = event->button.button;
+        mouse[MOUSE_BUTTON] = event->button.button;
         break;
       case SDL_MOUSEBUTTONUP:
-        if (mouse[BUTTON] != SDL_BUTTON_WHEELUP && mouse[BUTTON] != SDL_BUTTON_WHEELDOWN)
-          mouse[BUTTON] = 0;
+        if (mouse[MOUSE_BUTTON] != SDL_BUTTON_WHEELUP   &&
+            mouse[MOUSE_BUTTON] != SDL_BUTTON_WHEELDOWN   )
+          mouse[MOUSE_BUTTON] = 0;
         break;
       case SDL_KEYDOWN:
         keys[event->key.keysym.sym] = true;
@@ -70,8 +71,8 @@ void Events::readInput(void) {
 // so it should only be called from graphics.
 void Events::drawMouse(void) {
   if (cursor_type != NO_CURSOR) {
-    mouse_position->x = mouse[POSITION_X];
-    mouse_position->y = mouse[POSITION_Y];
+    mouse_position->x = mouse[MOUSE_X];
+    mouse_position->y = mouse[MOUSE_Y];
     screen->draw(cursor_image[cursor_type], *mouse_position);
   }
 }
@@ -97,13 +98,13 @@ Events::Events(void) {
   mouse_position = new SDL_Rect;
 
   // Set the cursor's images
-  cursor_image[NORMAL] = screen->getImage("cursors/normal");
-  cursor_image[ATTACK] = screen->getImage("cursors/attack");
-  cursor_image[MOVE] = screen->getImage("cursors/move");
-  cursor_image[ILLEGAL] = screen->getImage("cursors/select-illegal");
-  cursor_image[WAIT] = screen->getImage("cursors/wait");
+  cursor_image[NORMAL_CURSOR] = screen->getImage("cursors/normal");
+  cursor_image[ATTACK_CURSOR] = screen->getImage("cursors/attack");
+  cursor_image[MOVE_CURSOR] = screen->getImage("cursors/move");
+  cursor_image[ILLEGAL_CURSOR] = screen->getImage("cursors/select-illegal");
+  cursor_image[WAIT_CURSOR] = screen->getImage("cursors/wait");
 
-  cursor_type = NORMAL;
+  cursor_type = NORMAL_CURSOR;
 }
 
 Events *input = NULL;

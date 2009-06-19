@@ -26,7 +26,6 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 using events_engine::input;
 // video_engine
 using video_engine::screen;
-using video_engine::NONE;
 
 // Loads the engine's global objects.
 void startEngine(const bool fullscreen, const int width, const int height) {
@@ -38,7 +37,7 @@ void startEngine(const bool fullscreen, const int width, const int height) {
 // Loads the images that will be used almost every
 // time the game is executed.
 void loadMainImages(void) {
-  screen->newImage("alpha", 50, NONE, 0);
+  screen->newImage("alpha", 50);
   screen->newImage("button");
   screen->newImage("button-active");
   screen->newImage("button-pressed");

@@ -25,12 +25,12 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 // video_engine
 using video_engine::screen;
-using video_engine::NONE;
+using video_engine::NO_MIRROR;
 
 // If position is NULL, applies the terrain to all the cells in the map.
 void Map::setTerrain(char terrain_name, Cell *position) {
   // Set alpha (for all cells)
-  SDL_Surface *alpha = screen->getImage("alpha", 50, NONE, 0);
+  SDL_Surface *alpha = screen->getImage("alpha", 50, NO_MIRROR, 0);
   // Set stars (for all cells)
   int number_stars = 7;
   SDL_Surface **stars = new SDL_Surface*[number_stars];

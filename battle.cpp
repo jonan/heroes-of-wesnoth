@@ -27,15 +27,17 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 using events_engine::input;
 using events_engine::keys;
 using events_engine::mouse;
-using events_engine::BUTTON;
-using events_engine::NORMAL;
-using events_engine::ATTACK;
-using events_engine::MOVE;
-using events_engine::ILLEGAL;
-using events_engine::WAIT;
+using events_engine::MOUSE_BUTTON;
+using events_engine::ATTACK_CURSOR;
+using events_engine::ILLEGAL_CURSOR;
+using events_engine::MOVE_CURSOR;
+using events_engine::NORMAL_CURSOR;
+using events_engine::WAIT_CURSOR;
 // video_engine
 using video_engine::screen;
-using video_engine::RANDOM;
+using video_engine::RANDOM_EFFECT;
+using video_engine::FACE_LEFT;
+using video_engine::FACE_RIGHT;
 
 // Constructor
 Battle::Battle(Hero &player, Unit **enemies, int num_enemies, const int terrain) : Map(20, 11) {
@@ -50,7 +52,7 @@ Battle::Battle(Hero &player, Unit **enemies, int num_enemies, const int terrain)
     enemy_creatures[j] = NULL;
   // Put the enemy creatures in the map.
   for (int i=0; i<num_enemies; i++) {
-    enemy_creatures[i]->setFacingSide(LEFT);
+    enemy_creatures[i]->setFacingSide(FACE_LEFT);
     map[map_width-3][i+1].setCreature(enemy_creatures[i]);
   }
 
@@ -69,11 +71,11 @@ Battle::Battle(Hero &player, Hero &enemy, const int terrain) : Map(20, 11) {
   this->enemy = &enemy;
 
   // Put the enemy hero and his units in the map.
-  enemy.setFacingSide(LEFT);
+  enemy.setFacingSide(FACE_LEFT);
   map[map_width-2][4].setCreature(&enemy);
   for (int i=0; i<MAX_TEAM_UNITS; i++) {
     if (enemy.getCreature(i))
-      enemy.getCreature(i)->setFacingSide(LEFT);
+      enemy.getCreature(i)->setFacingSide(FACE_LEFT);
     map[map_width-3][i+1].setCreature(enemy.getCreature(i));
   }
 
@@ -87,7 +89,7 @@ Battle::Battle(Hero &player, Hero &enemy, const int terrain) : Map(20, 11) {
 // Starts the battle.
 void Battle::start(void) {
   draw();
-  screen->transitionEffect(RANDOM);
+  screen->transitionEffect(RANDOM_EFFECT);
   Map::start();
 }
 
@@ -104,11 +106,11 @@ void Battle::init(const int terrain) {
   makeMapVisible();
 
   // Put the hero and his units in the map.
-  player->setFacingSide(RIGHT);
+  player->setFacingSide(FACE_RIGHT);
   map[1][4].setCreature(player);
   for (int i=0; i<MAX_TEAM_UNITS; i++) {
     if (player->getCreature(i))
-      player->getCreature(i)->setFacingSide(RIGHT);
+      player->getCreature(i)->setFacingSide(FACE_RIGHT);
     map[2][i+1].setCreature(player->getCreature(i));
   }
 
@@ -154,20 +156,20 @@ void Battle::ai(void) {
 void Battle::mouseOverCell(const int x, const int y) {
   // Set the type of cursor needed
   if (selected_unit->getMaster() == enemy) {
-    input->setCursorType(WAIT);
+    input->setCursorType(WAIT_CURSOR);
   } else if (map[x][y].getCreature()) {
     if (map[x][y].getCreature()->getMaster() != selected_unit->getMaster()) {
       if (map[x][y].canAttackHere() || selected_unit->getProjectiles())
-        input->setCursorType(ATTACK);
+        input->setCursorType(ATTACK_CURSOR);
       else
-        input->setCursorType(ILLEGAL);
+        input->setCursorType(ILLEGAL_CURSOR);
     } else {
-      input->setCursorType(NORMAL);
+      input->setCursorType(NORMAL_CURSOR);
     }
   } else if (map[x][y].canMoveHere()) {
-    input->setCursorType(MOVE);
+    input->setCursorType(MOVE_CURSOR);
   } else {
-    input->setCursorType(NORMAL);
+    input->setCursorType(NORMAL_CURSOR);
   }
 }
 
@@ -295,7 +297,7 @@ void Battle::nextTurn(void) {
     selected_unit->getPosition()->select();
   }
   // If the mouse button is pressed wait until it's released.
-  while (mouse[BUTTON]) input->readInput();
+  while (mouse[MOUSE_BUTTON]) input->readInput();
 }
 
 // Deletes a creature.
@@ -417,7 +419,7 @@ void createDefaultBattle(void) {
     delete player;
 
   // Make sure the cursors's state is normal
-  input->setCursorType(NORMAL);
+  input->setCursorType(NORMAL_CURSOR);
 }
 
 // Creates and starts a battle.
@@ -447,7 +449,7 @@ bool createBattle(Hero &player, const char enemy_type, const char terrain_type) 
     temp->setCreature(NULL);
 
   // Make sure the cursors's state is normal
-  input->setCursorType(NORMAL);
+  input->setCursorType(NORMAL_CURSOR);
 
   return war.win();
 }
@@ -473,7 +475,7 @@ bool createBattle(Hero &player, Hero &enemy, const char terrain_type) {
   }
 
   // Make sure the cursors's state is normal
-  input->setCursorType(NORMAL);
+  input->setCursorType(NORMAL_CURSOR);
 
   return war.win();
 }

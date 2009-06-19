@@ -22,9 +22,9 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 //events_engine
 using events_engine::mouse;
-using events_engine::POSITION_X;
-using events_engine::POSITION_Y;
-using events_engine::BUTTON;
+using events_engine::MOUSE_X;
+using events_engine::MOUSE_Y;
+using events_engine::MOUSE_BUTTON;
 // video_engine
 using video_engine::screen;
 
@@ -125,15 +125,15 @@ void Menu::draw(void) {
 bool Menu::frame(void) {
   bool mouse_over = false; // Indicates if the mouse is over a button
 
-  const int x = mouse[POSITION_X];
-  const int y = mouse[POSITION_Y];
+  const int x = mouse[MOUSE_X];
+  const int y = mouse[MOUSE_Y];
 
   if ( x>position.x && x < ( position.x + position.w ) ) { // Mouse in button's column
     int i = 0; // Buttons counter
     while ( i < static_cast<int>(buttons.size()) && !mouse_over ) {
       if ( y>position.y && y<(position.y+position.h) ) { // Mouse over the button
         mouse_over = true;
-        if (mouse[BUTTON] == SDL_BUTTON_LEFT) {
+        if (mouse[MOUSE_BUTTON] == SDL_BUTTON_LEFT) {
           if (active_button != -1) {
             buttons[active_button]->setState(NORMAL);
             active_button = -1;

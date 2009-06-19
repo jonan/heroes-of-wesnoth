@@ -28,7 +28,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 // events_engine
 using events_engine::keys;
 using events_engine::mouse;
-using events_engine::BUTTON;
+using events_engine::MOUSE_BUTTON;
 // std
 using std::string;
 // video_engine
@@ -39,7 +39,7 @@ Editor::Editor(const int width, const int height, const char *map_file) : Map(wi
   this->map_file = strdup(map_file);
 
   setTerrain(FLAT_GRASS, NULL);
-  editing_type = TERRAIN;
+  editing_type = EDIT_TERRAIN;
   selected = FLAT_GRASS;
   end_editor = false;
 
@@ -55,15 +55,15 @@ Editor::~Editor(void) {
 // Function to execute when the user left clicks on a cell.
 void Editor::mouseLeftClick(const int x, const int y) {
   switch (editing_type) {
-    case ITEMS:
+    case EDIT_ITEMS:
       if (map[x][y].getItemType() != selected)
         setItem(selected, map[x][y]);
       break;
-    case TERRAIN:
+    case EDIT_TERRAIN:
       if (map[x][y].getTerrain() != selected)
         setTerrain(selected, &map[x][y]);
       break;
-    case UNITS:
+    case EDIT_UNITS:
       delete map[x][y].getCreature();
       map[x][y].setCreature( new Unit(selected,0) );
       break;
@@ -76,11 +76,11 @@ void Editor::mouseLeftClick(const int x, const int y) {
 // Function to execute when the user right clicks on a cell.
 void Editor::mouseRightClick(const int x, const int y) {
   switch (editing_type) {
-    case ITEMS:
+    case EDIT_ITEMS:
       if (map[x][y].getItemType() != '-')
         map[x][y].setItemType('-');
       break;
-    case UNITS:
+    case EDIT_UNITS:
       delete map[x][y].getCreature();
       map[x][y].setCreature(NULL);
       break;
@@ -152,14 +152,14 @@ void Editor::draw(void) {
   Cell temp;
   Unit *creature = NULL;
   switch (editing_type) {
-    case ITEMS:
+    case EDIT_ITEMS:
       setTerrain(DESERT_ROAD, &temp);
       setItem(selected, temp);
       break;
-    case TERRAIN:
+    case EDIT_TERRAIN:
       setTerrain(selected, &temp);
       break;
-    case UNITS:
+    case EDIT_UNITS:
       setTerrain(DESERT_ROAD, &temp);
       creature = new Unit(selected, 0);
       temp.setCreature(creature);
@@ -169,9 +169,9 @@ void Editor::draw(void) {
       break;
   }
   temp.calculateView(1);
-  temp.draw(position, ::TERRAIN);
-  temp.draw(position, SPECIAL);
-  temp.draw(position, UNIT);
+  temp.draw(position, DRAW_TERRAIN);
+  temp.draw(position, DRAW_SPECIAL_IMG);
+  temp.draw(position, DRAW_UNIT);
   delete creature;
 }
 
@@ -191,20 +191,20 @@ bool Editor::frame(void) {
       load();
     } else if (keys[SDLK_F3]) { // items
       keys[SDLK_F3] = false;
-      if (editing_type != ITEMS) {
-        editing_type = ITEMS;
+      if (editing_type != EDIT_ITEMS) {
+        editing_type = EDIT_ITEMS;
         selected = FIRE;
       }
     } else if (keys[SDLK_F4]) { // terrain
       keys[SDLK_F4] = false;
-      if (editing_type != TERRAIN) {
-        editing_type = TERRAIN;
+      if (editing_type != EDIT_TERRAIN) {
+        editing_type = EDIT_TERRAIN;
         selected = FLAT_GRASS;
       }
     } else if (keys[SDLK_F5]) { // units
       keys[SDLK_F5] = false;
-      if (editing_type != UNITS) {
-        editing_type = UNITS;
+      if (editing_type != EDIT_UNITS) {
+        editing_type = EDIT_UNITS;
         selected = BAT;
       }
     }
@@ -214,27 +214,27 @@ bool Editor::frame(void) {
       softenMap();
     }
 
-    if (mouse[BUTTON] == SDL_BUTTON_WHEELUP) {
-      mouse[BUTTON] = 0;
+    if (mouse[MOUSE_BUTTON] == SDL_BUTTON_WHEELUP) {
+      mouse[MOUSE_BUTTON] = 0;
       selected++;
       if (selected == '9'+1)
         selected = 'a';
-      else if ( (selected > LAST_ITEM && editing_type == ITEMS) ||
-                (selected > LAST_TERRAIN && editing_type == TERRAIN) ||
-                (selected > LAST_UNIT && editing_type == UNITS)         )
+      else if ( (selected == NUM_ITEMS    && editing_type == EDIT_ITEMS  ) ||
+                (selected == NUM_TERRAINS && editing_type == EDIT_TERRAIN) ||
+                (selected == NUM_UNITS    && editing_type == EDIT_UNITS  )   )
         selected = '0';
-    } else if (mouse[BUTTON] == SDL_BUTTON_WHEELDOWN) {
-      mouse[BUTTON] = 0;
+    } else if (mouse[MOUSE_BUTTON] == SDL_BUTTON_WHEELDOWN) {
+      mouse[MOUSE_BUTTON] = 0;
       selected--;
       if (selected == 'a'-1) {
         selected = '9';
       } else if (selected < '0') {
-        if (editing_type == ITEMS)
-          selected = LAST_ITEM;
-        else if (editing_type == TERRAIN)
-          selected = LAST_TERRAIN;
-        else if (editing_type == UNITS)
-          selected = LAST_UNIT;
+        if (editing_type == EDIT_ITEMS)
+          selected = NUM_ITEMS - 1;
+        else if (editing_type == EDIT_TERRAIN)
+          selected = NUM_TERRAINS - 1;
+        else if (editing_type == EDIT_UNITS)
+          selected = NUM_UNITS - 1;
       }
     }
 

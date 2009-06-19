@@ -54,7 +54,7 @@ enum {CAVE_FLOOR = '0',
       WATER_OCEAN,
       WATER_SNOW,
       WATER_SNOW_HILLS,
-      LAST_TERRAIN = WATER_SNOW_HILLS};
+      NUM_TERRAINS};
 
 /// Types of items.
 enum {ALTAR = '0',
@@ -92,7 +92,7 @@ enum {ALTAR = '0',
       WELL,
       WHIRLPOOL,
       WINDMILL,
-      LAST_ITEM = WINDMILL};
+      NUM_ITEMS};
 
 /// Controls all the attributes of a map.
 /// Basically consist of lots of Cell classes working

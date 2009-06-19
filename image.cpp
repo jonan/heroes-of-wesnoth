@@ -88,9 +88,9 @@ void Graphics::Image::loadImage(void) {
       this->img = image;
     // Add the corresponding modifications to the image
     if (angle != 0) this->img = rotozoomSurface(this->img, angle, 1, SMOOTHING_OFF);
-    if (mirror == X)
+    if (mirror == MIRROR_X)
       this->img = zoomSurface(this->img, -1, 1, SMOOTHING_OFF);
-    else if (mirror == Y)
+    else if (mirror == MIRROR_Y)
       this->img = zoomSurface(this->img, 1, -1, SMOOTHING_OFF);
   }
 }

@@ -35,10 +35,16 @@ union SDL_Event;
 namespace events_engine {
 
 /// Mouse info
-enum {POSITION_X, POSITION_Y, BUTTON};
+enum {MOUSE_X, MOUSE_Y, MOUSE_BUTTON};
 
 /// Types of cursors
-enum {NO_CURSOR, NORMAL, ATTACK, MOVE, ILLEGAL, WAIT, NUMBER_OF_TYPES};
+enum {NO_CURSOR,
+      NORMAL_CURSOR,
+      ATTACK_CURSOR,
+      MOVE_CURSOR,
+      ILLEGAL_CURSOR,
+      WAIT_CURSOR,
+      NUM_CURSORS};
 
 /// Event control.
 /// Tells you when has an event has occurred. This event can be a system event (resize,
@@ -69,7 +75,7 @@ class Events {
     SDL_Event *event;
 
     SDL_Rect *mouse_position;
-    SDL_Surface *cursor_image[NUMBER_OF_TYPES];
+    SDL_Surface *cursor_image[NUM_CURSORS];
     int cursor_type;
 
     DISALLOW_COPY_AND_ASSIGN(Events);

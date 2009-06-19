@@ -23,13 +23,15 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include "graphics.hpp"
 #include "structs.hpp"
 
+// video_engine
 using video_engine::screen;
+using video_engine::FACE_RIGHT;
 
 // Constructor
 Unit::Unit(const char type, const int number) {
   this->number = number;
 
-  facing_side = RIGHT;
+  facing_side = FACE_RIGHT;
   sprite = 0;
   actual_animation = STANDING;
   magic_spell = NULL;
@@ -134,7 +136,7 @@ void Unit::addAnimationImage(const char *imageName, const int animation) {
 void Unit::drawUnit(SDL_Rect &position) {
   // Get closer to the enemy when attacking
   if (actual_animation == ATTACKING) {
-    if (facing_side == RIGHT)
+    if (facing_side == FACE_RIGHT)
       position.x += 10;
     else
       position.x -= 10;

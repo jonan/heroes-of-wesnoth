@@ -26,8 +26,8 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 using events_engine::input;
 using events_engine::keys;
 using events_engine::mouse;
-using events_engine::BUTTON;
-using events_engine::NORMAL;
+using events_engine::MOUSE_BUTTON;
+using events_engine::NORMAL_CURSOR;
 
 // Constructor
 World::World(const char *map_file) : Map(map_file) {
@@ -45,7 +45,7 @@ World::World(const char *map_file) : Map(map_file) {
 World::~World(void) {
   deleteCreatures();
   // Make sure the cursors's type is normal
-  input->setCursorType(NORMAL);
+  input->setCursorType(NORMAL_CURSOR);
 }
 
 // Puts a hero in the map.
@@ -101,7 +101,7 @@ void World::nextTurn(void) {
     selected_unit = *heroes.begin();
     selected_unit->getPosition()->select();
     // Wait until the mouse button is released.
-    while (mouse[BUTTON]) input->readInput();
+    while (mouse[MOUSE_BUTTON]) input->readInput();
     centerView(*selected_unit);
   }
 }

@@ -36,13 +36,13 @@ const int TRANSPARENT = 0;
 // @}
 
 /// Mirror
-enum {NONE, X, Y};
+enum {NO_MIRROR, MIRROR_X, MIRROR_Y};
 
 /// Type of effects
-enum {HORIZONTAL, VERTICAL, NUMBER_OF_EFFECTS, RANDOM};
+enum {HORIZONTAL_EFFECT, VERTICAL_EFFECT, NUM_EFFECTS, RANDOM_EFFECT};
 
 /// Sides to face
-enum {RIGHT, LEFT};
+enum {FACE_RIGHT, FACE_LEFT};
 
 /// Complete screen control.
 /// This class gives you all the control you need over the screen.
@@ -65,7 +65,7 @@ class Graphics {
     /// @param[in] mirror Indicates if the image is a mirror of the original.
     /// @param[in] angle Number of degrees the image is rotated.
     void newImage(const char *image_name, const int alpha = OPAQUE,
-                  const int mirror = NONE, const int angle = 0);
+                  const int mirror = NO_MIRROR, const int angle = 0);
     /// Returns the surface of an image.
     /// Looks for the image in the list of loaded
     /// ones, if it's not there it loads it.
@@ -75,7 +75,7 @@ class Graphics {
     /// @param[in] angle Number of degrees the image is rotated.
     /// @return Surface of the image.
     SDL_Surface* getImage(const char *image_name, const int alpha = OPAQUE,
-                          const int mirror = NONE, const int angle = 0);
+                          const int mirror = NO_MIRROR, const int angle = 0);
     /// Makes an image face the given side.
     /// @param[in] side Side to face (RIGHT or LEFT)
     /// @param[in] image_surface Original image.

@@ -34,9 +34,6 @@ class Hero;
 
 struct SpecialImage;
 
-/// Sides to face
-enum {RIGHT, LEFT};
-
 /// Types of units.
 enum {ARCHER = '0',
       ARMAGEDDON,
@@ -54,7 +51,7 @@ enum {ARCHER = '0',
       SHYDE,
       SKELETON,
       WOLF_RIDER,
-      LAST_UNIT = WOLF_RIDER};
+      NUM_UNITS};
 
 /// Types of projectiles.
 enum {WHITE_MISSILE};

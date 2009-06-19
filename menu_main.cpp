@@ -27,9 +27,9 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 //events_engine
 using events_engine::mouse;
-using events_engine::POSITION_X;
-using events_engine::POSITION_Y;
-using events_engine::BUTTON;
+using events_engine::MOUSE_X;
+using events_engine::MOUSE_Y;
+using events_engine::MOUSE_BUTTON;
 // video_engine
 using video_engine::screen;
 

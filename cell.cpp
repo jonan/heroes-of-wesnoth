@@ -161,14 +161,14 @@ void Cell::draw(SDL_Rect position, const int part) {
   int y = position.y;
   if (visible) {
     switch (part) {
-      case TERRAIN:
+      case DRAW_TERRAIN:
         for (unsigned int i=0; i<terrain_images.size(); i++) {
           screen->draw(terrain_images[i], position);
           position.x = x;
           position.y = y;
         }
         break;
-      case SPECIAL:
+      case DRAW_SPECIAL_IMG:
         if (special_images) {
           position.x += special_images->position.x;
           position.y += special_images->position.y;
@@ -180,7 +180,7 @@ void Cell::draw(SDL_Rect position, const int part) {
             special_images->sprite = 0;
         }
         break;
-      case UNIT:
+      case DRAW_UNIT:
         if (mouse_over) {
           screen->draw(alpha, position);
           position.x = x;

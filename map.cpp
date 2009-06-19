@@ -29,14 +29,16 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 using events_engine::input;
 using events_engine::keys;
 using events_engine::mouse;
-using events_engine::POSITION_X;
-using events_engine::POSITION_Y;
-using events_engine::BUTTON;
-using events_engine::NORMAL;
-using events_engine::ATTACK;
-using events_engine::MOVE;
+using events_engine::MOUSE_X;
+using events_engine::MOUSE_Y;
+using events_engine::MOUSE_BUTTON;
+using events_engine::ATTACK_CURSOR;
+using events_engine::MOVE_CURSOR;
+using events_engine::NORMAL_CURSOR;
 // video_engine
 using video_engine::screen;
+using video_engine::FACE_RIGHT;
+using video_engine::FACE_LEFT;
 
 // Starts the map.
 void Map::start(void) {
@@ -227,7 +229,7 @@ void Map::updateMouse(void) {
   // Find out which cell is the mouse over
   SDL_Rect cellPosition;
   cellPosition.x = first_cell_pos.x;
-  while (mouse[POSITION_X] > cellPosition.x){
+  while (mouse[MOUSE_X] > cellPosition.x){
     cellPosition.x += 54;
     i++;
   }
@@ -236,7 +238,7 @@ void Map::updateMouse(void) {
     cellPosition.y = first_cell_pos.y+36;
   else
     cellPosition.y = first_cell_pos.y;
-  while (mouse[POSITION_Y] > cellPosition.y){
+  while (mouse[MOUSE_Y] > cellPosition.y){
     cellPosition.y += 72;
     j++;
   }
@@ -246,23 +248,23 @@ void Map::updateMouse(void) {
     map[i][j].putMouse();
     mouse_over_cell = &map[i][j];
     mouseOverCell(i,j);
-    if (mouse[BUTTON] == SDL_BUTTON_LEFT) mouseLeftClick(i,j);
-    if (mouse[BUTTON] == SDL_BUTTON_RIGHT) mouseRightClick(i,j);
+    if (mouse[MOUSE_BUTTON] == SDL_BUTTON_LEFT) mouseLeftClick(i,j);
+    if (mouse[MOUSE_BUTTON] == SDL_BUTTON_RIGHT) mouseRightClick(i,j);
   } else {
-    input->setCursorType(NORMAL);
+    input->setCursorType(NORMAL_CURSOR);
   }
 
   // move visible map
-  if ( (mouse[POSITION_X] == 0 || keys[SDLK_LEFT]) &&
+  if ( (mouse[MOUSE_X] == 0 || keys[SDLK_LEFT]) &&
         first_cell_coor.x != 0                        )
     first_cell_coor.x--;
-  else if ( (mouse[POSITION_X] == window_width-1 || keys[SDLK_RIGHT]) &&
+  else if ( (mouse[MOUSE_X] == window_width-1 || keys[SDLK_RIGHT]) &&
              first_cell_coor.x != map_width-window_horizontal_cells      )
     first_cell_coor.x++;
-  if ( (mouse[POSITION_Y] == 0 || keys[SDLK_UP]) &&
+  if ( (mouse[MOUSE_Y] == 0 || keys[SDLK_UP]) &&
         first_cell_coor.y != 0                      )
     first_cell_coor.y--;
-  else if ( (mouse[POSITION_Y] == window_height-1 || keys[SDLK_DOWN]) &&
+  else if ( (mouse[MOUSE_Y] == window_height-1 || keys[SDLK_DOWN]) &&
              first_cell_coor.y != map_height-window_vertical_cells       )
     first_cell_coor.y++;
 }
@@ -270,17 +272,17 @@ void Map::updateMouse(void) {
 // Function to execute when the mouse is over a cell.
 void Map::mouseOverCell(const int x, const int y) {
   if (map[x][y].canAttackHere() && selected_unit->getPosition() != &map[x][y])
-    input->setCursorType(ATTACK);
+    input->setCursorType(ATTACK_CURSOR);
   else if (map[x][y].canMoveHere())
-    input->setCursorType(MOVE);
+    input->setCursorType(MOVE_CURSOR);
   else
-    input->setCursorType(NORMAL);
+    input->setCursorType(NORMAL_CURSOR);
 }
 
 // Function to execute when the user right clicks on a cell.
 void Map::mouseRightClick(const int x, const int y) {
   centerView(map[x][y]);
-  mouse[BUTTON] = 0;
+  mouse[MOUSE_BUTTON] = 0;
 }
 
 // Moves the selected creature to a cell.
@@ -295,8 +297,8 @@ void Map::moveSelectedCreature(Cell &end_position) {
   /// @todo This isn't too elegant
   for (int i=0; i<movements; i++) {
     // Make the creature face the same direction as moving
-    if (path[i] == NE || path[i] == SE) selected_unit->setFacingSide(RIGHT);
-    else if (path[i] == NW || path[i] == SW) selected_unit->setFacingSide(LEFT);
+    if (path[i] == NE || path[i] == SE) selected_unit->setFacingSide(FACE_RIGHT);
+    else if (path[i] == NW || path[i] == SW) selected_unit->setFacingSide(FACE_LEFT);
 
     selected_unit->getPosition()->setCreature(NULL);
     temp = selected_unit->getPosition()->getConnectedCell(path[i]);
@@ -442,7 +444,7 @@ void Map::draw(void) {
 
   screen->erase();
   // Draws the visible cells.
-  for (int i=TERRAIN; i<=UNIT; i++) {
+  for (int i=DRAW_TERRAIN; i<=DRAW_UNIT; i++) {
     // Position of the firts cell (top-left)
     position.x = first_cell_pos.x;
     if ( (first_cell_coor.x%2)==1 )

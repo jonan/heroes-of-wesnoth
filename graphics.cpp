@@ -25,10 +25,10 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include "timer.hpp"
 #include "ttf.hpp"
 
-// std
-using std::cout;
 // events_engine
 using events_engine::input;
+// std
+using std::cout;
 
 namespace video_engine {
 
@@ -104,18 +104,18 @@ SDL_Surface* Graphics::face(const int side, SDL_Surface *image_surface) {
   Image* temp;
 
   temp = images->getImage(image_surface);
-  if (temp->getMirror() == X) {
-    if (side == RIGHT)
+  if (temp->getMirror() == MIRROR_X) {
+    if (side == FACE_RIGHT)
       return getImage(temp->getName(), temp->getAlphaValue(),
-                      NONE, temp->getAngle());
+                      NO_MIRROR, temp->getAngle());
     else
       return image_surface;
   } else {
-    if (side == RIGHT)
+    if (side == FACE_RIGHT)
       return image_surface;
     else
       return getImage(temp->getName(), temp->getAlphaValue(),
-                      X, temp->getAngle());
+                      MIRROR_X, temp->getAngle());
   }
 }
 
@@ -173,18 +173,18 @@ void Graphics::transitionEffect(int effect) {
   /// @todo Add/Improve effects.
   Timer fps;
 
-  if (effect == RANDOM)
-    effect = rand() % NUMBER_OF_EFFECTS;
+  if (effect == RANDOM_EFFECT)
+    effect = rand() % NUM_EFFECTS;
 
   switch (effect) {
-    case HORIZONTAL:
+    case HORIZONTAL_EFFECT:
       for (int x=0; x<width; x+=5) {
         fps.start();
         SDL_UpdateRect(screen, x, 0, 5, height);
         fps.end(10);
       }
       break;
-    case VERTICAL:
+    case VERTICAL_EFFECT:
       for (int y=0; y<height; y+=5) {
         fps.start();
         SDL_UpdateRect(screen, 0, y, width, 5);

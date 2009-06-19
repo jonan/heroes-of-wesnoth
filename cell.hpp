@@ -37,7 +37,7 @@ struct SpecialImage;
 enum {N, NE, SE, S, SW, NW};
 
 /// Parts of the drawing of a cell
-enum {TERRAIN, SPECIAL, UNIT};
+enum {DRAW_TERRAIN, DRAW_SPECIAL_IMG, DRAW_UNIT};
 
 /// Class to control all each independent cell in a map.
 class Cell {
