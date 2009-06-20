@@ -2,8 +2,7 @@
 
 <config_units>
 
-  <unit name="archer">
-    <id>00</id>
+  <unit name="archer" id="00">
     <attributes>
       <live>15</live>
       <movement>3</movement>
@@ -34,8 +33,7 @@
     </images>
   </unit>
 
-  <unit name="armageddon">
-    <id>01</id>
+  <unit name="armageddon" id="01">
     <attributes>
       <live>60</live>
       <movement>1</movement>
@@ -61,8 +59,7 @@
     </images>
   </unit>
 
-  <unit name="bat">
-    <id>02</id>
+  <unit name="bat" id="02">
     <attributes>
       <live>5</live>
       <movement>5</movement>
@@ -85,8 +82,7 @@
     </images>
   </unit>
 
-  <unit name="blade_master">
-    <id>03</id>
+  <unit name="blade_master" id="03">
     <attributes>
       <live>55</live>
       <movement>2</movement>
@@ -112,8 +108,7 @@
     </images>
   </unit>
 
-  <unit name="blood_bat">
-    <id>04</id>
+  <unit name="blood_bat" id="04">
     <attributes>
       <live>15</live>
       <movement>5</movement>
@@ -136,8 +131,7 @@
     </images>
   </unit>
 
-  <unit name="cave_spider">
-    <id>05</id>
+  <unit name="cave_spider" id="05">
     <attributes>
       <live>15</live>
       <movement>2</movement>
@@ -157,8 +151,7 @@
     </images>
   </unit>
 
-  <unit name="champion">
-    <id>06</id>
+  <unit name="champion" id="06">
     <attributes>
       <live>27</live>
       <movement>3</movement>
@@ -181,8 +174,7 @@
     </images>
   </unit>
 
-  <unit name="death_blade">
-    <id>07</id>
+  <unit name="death_blade" id="07">
     <attributes>
       <live>35</live>
       <movement>2</movement>
@@ -215,8 +207,7 @@
     </images>
   </unit>
 
-  <unit name="fighter">
-    <id>08</id>
+  <unit name="fighter" id="08">
     <attributes>
       <live>20</live>
       <movement>3</movement>
@@ -247,8 +238,7 @@
     </images>
   </unit>
 
-  <unit name="flanker">
-    <id>09</id>
+  <unit name="flanker" id="09">
     <attributes>
       <live>8</live>
       <movement>2</movement>
@@ -267,8 +257,7 @@
     </images>
   </unit>
 
-  <unit name="pillager">
-    <id>0a</id>
+  <unit name="pillager" id="0a">
     <attributes>
       <live>17</live>
       <movement>4</movement>
@@ -287,8 +276,7 @@
     </images>
   </unit>
 
-  <unit name="ranger">
-    <id>0b</id>
+  <unit name="ranger" id="0b">
     <attributes>
       <live>35</live>
       <movement>3</movement>
@@ -312,8 +300,7 @@
     </images>
   </unit>
 
-  <unit name="sergeant">
-    <id>0c</id>
+  <unit name="sergeant" id="0c">
     <attributes>
       <live>20</live>
       <movement>3</movement>
@@ -344,8 +331,7 @@
     </images>
   </unit>
 
-  <unit name="shyde">
-    <id>0d</id>
+  <unit name="shyde" id="0d">
     <attributes>
       <live>10</live>
       <movement>4</movement>
@@ -365,8 +351,7 @@
     </images>
   </unit>
 
-  <unit name="skeleton">
-    <id>0e</id>
+  <unit name="skeleton" id="0e">
     <attributes>
       <live>20</live>
       <movement>3</movement>
@@ -399,8 +384,7 @@
     </images>
   </unit>
 
-  <unit name="wolf_rider">
-    <id>0f</id>
+  <unit name="wolf_rider" id="0f">
     <attributes>
       <live>22</live>
       <movement>4</movement>
