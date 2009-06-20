@@ -32,6 +32,10 @@ OBJECTS = battle.o \
           menu.o \
           menu_main.o \
           mission.o \
+          tinyxml_tinystr.o \
+          tinyxml_tinyxml.o \
+          tinyxml_tinyxmlerror.o \
+          tinyxml_tinyxmlparser.o \
           ttf.o \
           unit.o \
           unit_magic.o \
@@ -198,6 +202,18 @@ mission.o : mission.cpp $(MISSION) \
             $(HERO) \
             $(WORLD)
 	$(CC) $(CFLAGS) mission.cpp
+
+tinyxml_tinystr.o :
+	$(CC) $(CFLAGS) tinyxml/tinystr.cpp -o tinyxml_tinystr.o
+
+tinyxml_tinyxml.o :
+	$(CC) $(CFLAGS) tinyxml/tinyxml.cpp -o tinyxml_tinyxml.o
+
+tinyxml_tinyxmlerror.o :
+	$(CC) $(CFLAGS) tinyxml/tinyxmlerror.cpp -o tinyxml_tinyxmlerror.o
+
+tinyxml_tinyxmlparser.o :
+	$(CC) $(CFLAGS) tinyxml/tinyxmlparser.cpp -o tinyxml_tinyxmlparser.o
 
 ttf.o : ttf.cpp $(TTF)
 	$(CC) $(CFLAGS) ttf.cpp
