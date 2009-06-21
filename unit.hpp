@@ -111,7 +111,6 @@ class Unit {
                           const int attack, const int agility,
                           const int projectiles, const int projectiles_type);
     // Sets the creature's attributes acording to his type.
-    // (Implemented in unit_type.cpp)
     virtual void setCreaturesAttributes(void);
 
     // Adds an image to the an animation.

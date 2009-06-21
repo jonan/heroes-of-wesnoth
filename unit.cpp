@@ -19,6 +19,8 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include <cmath>
 
+#include "tinyxml/tinyxml.h"
+
 #include "cell.hpp"
 #include "graphics.hpp"
 #include "structs.hpp"
@@ -125,6 +127,47 @@ void Unit::setAllAttributes(const int live, const int movement,
   this->agility = agility;
   this->projectiles = projectiles;
   this->projectiles_type = projectiles_type;
+}
+
+// Sets the creature's attributes acording to his type.
+void Unit::setCreaturesAttributes(void) {
+  TiXmlDocument document("config/config_units.xml");
+  document.LoadFile();
+
+  TiXmlElement *root = document.RootElement();
+
+  bool found = false;
+  TiXmlElement *temp = root->FirstChildElement();
+  for (; temp && !found; temp = temp->NextSiblingElement()) {
+    if ( type == temp->Attribute("id")[1] )
+      found = true;
+  }
+
+  if (found) {
+    temp = temp->PreviousSibling()->ToElement();
+    // Set the attributes
+    TiXmlNode *attributes = temp->FirstChild("attributes");
+    int live, movement, attack, agility;
+    int projectiles_type, projectiles;
+    live = atoi(attributes->FirstChildElement("live")->GetText());
+    movement = atoi(attributes->FirstChildElement("movement")->GetText());
+    attack = atoi(attributes->FirstChildElement("attack")->GetText());
+    agility = atoi(attributes->FirstChildElement("agility")->GetText());
+    projectiles_type = atoi(attributes->FirstChildElement("projectiles")->FirstChildElement("type")->GetText());
+    projectiles = atoi(attributes->FirstChildElement("projectiles")->FirstChildElement("number")->GetText());
+    setAllAttributes(live, movement, attack, agility, projectiles, projectiles_type);
+    // Set the images
+    TiXmlNode *images = temp->FirstChild("images");
+    TiXmlElement *img;
+    const char *animation_names[] = { "attacking",
+                                      "defending",
+                                      "dying",
+                                      "idle",
+                                      "standing"   };
+    for (int i=0; i<NUM_ANIMATIONS; i++)
+      for (img = images->FirstChildElement(animation_names[i]); img; img = img->NextSiblingElement(animation_names[i]))
+        addAnimationImage(img->GetText(), i);
+  }
 }
 
 // Adds an image to the standing animation.

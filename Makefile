@@ -39,7 +39,6 @@ OBJECTS = battle.o \
           ttf.o \
           unit.o \
           unit_magic.o \
-          unit_type.o \
           world.o
 SDL_LIBS = -lSDL -lSDL_ttf -lSDL_image -lSDL_gfx
 CFLAGS = -c -g -Wall
@@ -228,9 +227,6 @@ unit_magic.o : unit_magic.cpp $(UNIT) \
                $(GRAPHICS) \
                $(STRUCTS)
 	$(CC) $(CFLAGS) unit_magic.cpp
-
-unit_type.o : unit_type.cpp $(UNIT)
-	$(CC) $(CFLAGS) unit_type.cpp
 
 world.o : world.cpp $(WORLD) \
           $(BATTLE) \
