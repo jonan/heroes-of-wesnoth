@@ -40,7 +40,7 @@ Unit::Unit(const char type, const int number) {
 
   if (type != -1) { // It should only be -1 when the unit is a hero.
     this->type = type;
-    setCreaturesAttributes();
+    setCreaturesAttributes("config/config_units.xml");
     master = NULL;
   }
 
@@ -130,8 +130,8 @@ void Unit::setAllAttributes(const int live, const int movement,
 }
 
 // Sets the creature's attributes acording to his type.
-void Unit::setCreaturesAttributes(void) {
-  TiXmlDocument document("config/config_units.xml");
+void Unit::setCreaturesAttributes(const char *xml_file) {
+  TiXmlDocument document(xml_file);
   document.LoadFile();
 
   TiXmlElement *root = document.RootElement();

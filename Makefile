@@ -22,7 +22,6 @@ OBJECTS = battle.o \
           game_loop.o \
           graphics.o \
           hero.o \
-          hero_type.o \
           image.o \
           main.o \
           map.o \
@@ -148,9 +147,6 @@ graphics.o : graphics.cpp $(GRAPHICS) \
 
 hero.o : hero.cpp $(HERO)
 	$(CC) $(CFLAGS) hero.cpp
-
-hero_type.o : hero_type.cpp $(HERO)
-	$(CC) $(CFLAGS) hero_type.cpp
 
 image.o : image.cpp $(IMAGE)
 	$(CC) $(CFLAGS) image.cpp

@@ -21,7 +21,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 Hero::Hero(const int type) : Unit(-1, 1) {
   master = this;
   this->type = type;
-  setCreaturesAttributes();
+  setCreaturesAttributes("config/config_heroes.xml");
   // The hero starts controling no creatures
   for (int i=0; i<MAX_UNITS; i++) {
     creature[i]=NULL;

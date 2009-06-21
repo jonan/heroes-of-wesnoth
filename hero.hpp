@@ -25,7 +25,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include "unit.hpp"
 
 /// Types of heros
-enum {ELF , HUMAN, UNDEAD};
+enum {ELF = '0' , HUMAN, UNDEAD};
 
 /// Stores the hero's attributes.
 class Hero : public Unit {
@@ -51,10 +51,6 @@ class Hero : public Unit {
 
   private:
     static const int MAX_UNITS = 9;
-
-    // Sets the hero's attributes acording to his type.
-    // (Implemented in hero_type.cpp)
-    virtual void setCreaturesAttributes(void);
 
     Unit *creature[MAX_UNITS]; // The creatures a hero controls
 
