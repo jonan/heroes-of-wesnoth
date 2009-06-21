@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config_heroes>
+
+  <hero name="elf" id="00">
+    <attributes>
+      <live>300</live>
+      <movement>5</movement>
+      <attack>45</attack>
+      <agility>5</agility>
+      <projectiles>
+        <type>-1</type>
+        <number>0</number>
+      </projectiles>
+    </attributes>
+    <images>
+      <attacking>units/outrider-melee-1</attacking>
+      <attacking>units/outrider-melee-2</attacking>
+      <defending>units/outrider-defend</defending>
+      <standing>units/outrider</standing>
+    </images>
+  </hero>
+
+  <hero name="human" id="01">
+    <attributes>
+      <live>300</live>
+      <movement>5</movement>
+      <attack>45</attack>
+      <agility>5</agility>
+      <projectiles>
+        <type>-1</type>
+        <number>0</number>
+      </projectiles>
+    </attributes>
+    <images>
+      <attacking>units/grand-knight-attack-sword</attacking>
+      <defending>units/grand-knight-defend</defending>
+      <standing>units/grand-knight</standing>
+    </images>
+  </hero>
+
+  <hero name="undead" id="02">
+    <attributes>
+      <live>300</live>
+      <movement>5</movement>
+      <attack>45</attack>
+      <agility>5</agility>
+      <projectiles>
+        <type>-1</type>
+        <number>0</number>
+      </projectiles>
+    </attributes>
+    <images>
+      <attacking>units/soulless-mounted-attack</attacking>
+      <defending>units/soulless-mounted-defend</defending>
+      <dying>units/soulless-mounted-die-1</dying>
+      <dying>units/soulless-mounted-die-2</dying>
+      <dying>units/soulless-mounted-die-3</dying>
+      <dying>units/soulless-mounted-die-4</dying>
+      <standing>units/soulless-mounted</standing>
+    </images>
+  </hero>
+
+</config_heroes>
