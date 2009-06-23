@@ -136,38 +136,32 @@ void Unit::setCreaturesAttributes(const char *xml_file) {
 
   TiXmlElement *root = document.RootElement();
 
-  bool found = false;
   TiXmlElement *temp = root->FirstChildElement();
-  for (; temp && !found; temp = temp->NextSiblingElement()) {
-    if ( type == temp->Attribute("id")[1] )
-      found = true;
-  }
+  while (type != temp->Attribute("id")[1])
+    temp = temp->NextSiblingElement();
 
-  if (found) {
-    temp = temp->PreviousSibling()->ToElement();
-    // Set the attributes
-    TiXmlNode *attributes = temp->FirstChild("attributes");
-    int live, movement, attack, agility;
-    int projectiles_type, projectiles;
-    live = atoi(attributes->FirstChildElement("live")->GetText());
-    movement = atoi(attributes->FirstChildElement("movement")->GetText());
-    attack = atoi(attributes->FirstChildElement("attack")->GetText());
-    agility = atoi(attributes->FirstChildElement("agility")->GetText());
-    projectiles_type = atoi(attributes->FirstChildElement("projectiles")->FirstChildElement("type")->GetText());
-    projectiles = atoi(attributes->FirstChildElement("projectiles")->FirstChildElement("number")->GetText());
-    setAllAttributes(live, movement, attack, agility, projectiles, projectiles_type);
-    // Set the images
-    TiXmlNode *images = temp->FirstChild("images");
-    TiXmlElement *img;
-    const char *animation_names[] = { "attacking",
-                                      "defending",
-                                      "dying",
-                                      "idle",
-                                      "standing"   };
-    for (int i=0; i<NUM_ANIMATIONS; i++)
-      for (img = images->FirstChildElement(animation_names[i]); img; img = img->NextSiblingElement(animation_names[i]))
-        addAnimationImage(img->GetText(), i);
-  }
+  // Set the attributes
+  TiXmlNode *attributes = temp->FirstChild("attributes");
+  int live, movement, attack, agility;
+  int projectiles_type, projectiles;
+  live = atoi(attributes->FirstChildElement("live")->GetText());
+  movement = atoi(attributes->FirstChildElement("movement")->GetText());
+  attack = atoi(attributes->FirstChildElement("attack")->GetText());
+  agility = atoi(attributes->FirstChildElement("agility")->GetText());
+  projectiles_type = atoi(attributes->FirstChildElement("projectiles")->FirstChildElement("type")->GetText());
+  projectiles = atoi(attributes->FirstChildElement("projectiles")->FirstChildElement("number")->GetText());
+  setAllAttributes(live, movement, attack, agility, projectiles, projectiles_type);
+  // Set the images
+  TiXmlNode *images = temp->FirstChild("images");
+  TiXmlElement *img;
+  const char *animation_names[] = { "attacking",
+                                    "defending",
+                                    "dying",
+                                    "idle",
+                                    "standing"   };
+  for (int i=0; i<NUM_ANIMATIONS; i++)
+    for (img = images->FirstChildElement(animation_names[i]); img; img = img->NextSiblingElement(animation_names[i]))
+      addAnimationImage(img->GetText(), i);
 }
 
 // Adds an image to the standing animation.
