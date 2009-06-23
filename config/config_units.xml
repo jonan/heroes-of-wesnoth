@@ -327,7 +327,7 @@
       <idle>units/sergeant-idle-9</idle>
       <idle>units/sergeant-idle-10</idle>
       <idle>units/sergeant</idle>
-      <standing>units/archer</standing>
+      <standing>units/sergeant</standing>
     </images>
   </unit>
 
