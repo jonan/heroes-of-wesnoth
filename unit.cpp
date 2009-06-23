@@ -30,26 +30,31 @@ using video_engine::screen;
 using video_engine::FACE_RIGHT;
 
 // Constructor
-Unit::Unit(const char type, const int number) {
+Unit::Unit(const char *type, const int number) {
+  master = NULL;
   this->number = number;
 
   facing_side = FACE_RIGHT;
   sprite = 0;
   actual_animation = STANDING;
+  position = NULL;
   magic_spell = NULL;
 
-  if (type != -1) { // It should only be -1 when the unit is a hero.
-    this->type = type;
-    setCreaturesAttributes("config/config_units.xml");
-    master = NULL;
+  if ( strlen(type) > 2 ) {
+    name = const_cast<char*>(type);
+  } else {
+    name = NULL;
+    id = strdup(type);
   }
 
-  position = NULL;
+  if (strcmp(type,"hero"))
+    setCreaturesAttributes("config/config_units.xml");
 }
 
 // Destructor
 Unit::~Unit(void) {
- delete magic_spell;
+  free(id);
+  delete magic_spell;
 }
 
 // Starts a given animation.
@@ -137,8 +142,15 @@ void Unit::setCreaturesAttributes(const char *xml_file) {
   TiXmlElement *root = document.RootElement();
 
   TiXmlElement *temp = root->FirstChildElement();
-  while (type != temp->Attribute("id")[1])
-    temp = temp->NextSiblingElement();
+  if (name) {
+    while( strcmp(temp->Attribute("name"), name) )
+      temp = temp->NextSiblingElement();
+    id = strdup(temp->Attribute("id"));
+    name = NULL;
+  } else {
+    while ( strcmp(temp->Attribute("id"), id) )
+      temp = temp->NextSiblingElement();
+  }
 
   // Set the attributes
   TiXmlNode *attributes = temp->FirstChild("attributes");
@@ -159,9 +171,13 @@ void Unit::setCreaturesAttributes(const char *xml_file) {
                                     "dying",
                                     "idle",
                                     "standing"   };
-  for (int i=0; i<NUM_ANIMATIONS; i++)
-    for (img = images->FirstChildElement(animation_names[i]); img; img = img->NextSiblingElement(animation_names[i]))
+  for (int i=0; i<NUM_ANIMATIONS; i++) {
+    img = images->FirstChildElement(animation_names[i]);
+    while (img) {
       addAnimationImage(img->GetText(), i);
+      img = img->NextSiblingElement(animation_names[i]);
+    }
+  }
 }
 
 // Adds an image to the standing animation.

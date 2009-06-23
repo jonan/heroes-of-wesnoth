@@ -17,17 +17,25 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include "hero.hpp"
 
+#include <string.h>
+
 // Constructor
-Hero::Hero(const int type) : Unit(-1, 1) {
+Hero::Hero(const char *type) : Unit("hero", 1) {
   master = this;
-  this->type = type;
-  setCreaturesAttributes("config/config_heroes.xml");
-  // The hero starts controling no creatures
-  for (int i=0; i<MAX_UNITS; i++) {
-    creature[i]=NULL;
+  visibility = 8;
+
+  if ( strlen(type) > 2 ) {
+    name = const_cast<char*>(type);
+  } else {
+    name = NULL;
+    id = strdup(type);
   }
 
-  visibility = 8;
+  setCreaturesAttributes("config/config_heroes.xml");
+
+  // The hero starts controling no creatures
+  for (int i=0; i<MAX_UNITS; i++)
+    creature[i]=NULL;
 }
 
 // Destructor

@@ -87,7 +87,7 @@ class Battle : public Map {
 // @{
 /// Functions to create and start battles (return true if won)
 void createDefaultBattle(void);
-bool createBattle(Hero &player, const char enemy_type, const char terrain_type);
+bool createBattle(Hero &player, const char *enemy_type, const char terrain_type);
 bool createBattle(Hero &player, Hero &enemy, const char terrain_type);
 // @}
 

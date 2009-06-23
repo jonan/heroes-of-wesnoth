@@ -398,18 +398,18 @@ void createDefaultBattle(void) {
   Unit *temp;
 
   // Create the hero and it's units.
-  player = new Hero(ELF);
+  player = new Hero("elf");
   for (int j=0; j<9; j++) {
-    temp = new Unit(SHYDE, 5);
+    temp = new Unit("shyde", 5);
     player->recruitCreature(temp);
   }
   // Create the enemy creatures.
   /// @todo Free this units.
   for (int i=0; i<5; i++) {
-    creature[i] = new Unit(SKELETON, 3);
+    creature[i] = new Unit("skeleton", 3);
   }
   for (int t=5; t<9; t++) {
-    creature[t] = new Unit(BAT, 10);
+    creature[t] = new Unit("bat", 10);
   }
 
   Battle war(*player, creature, 9, FLAT_GRASS);
@@ -423,7 +423,7 @@ void createDefaultBattle(void) {
 }
 
 // Creates and starts a battle.
-bool createBattle(Hero &player, const char enemy_type, const char terrain_type) {
+bool createBattle(Hero &player, const char *enemy_type, const char terrain_type) {
   Cell *temp;
   Unit *creature[9];
   int num_enemies;

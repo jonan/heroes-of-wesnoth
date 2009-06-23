@@ -70,7 +70,7 @@ void World::mouseLeftClick(const int x, const int y) {
         bool won_battle;
         if (!map[x][y].getCreature()->getMaster()) {
           // Battle against a neutral creature
-          char creature_type = map[x][y].getCreature()->getType();
+          char *creature_type = map[x][y].getCreature()->getType();
           won_battle = createBattle(*selected_hero, creature_type, terrain);
         } else {
           // Battle against a hero

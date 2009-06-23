@@ -30,9 +30,9 @@ enum {ELF = '0' , HUMAN, UNDEAD};
 /// Stores the hero's attributes.
 class Hero : public Unit {
   public:
-    /// @param[in] type Type of hero.
-    Hero(const int type); // Constructor
-    ~Hero(void); // Destructor
+    /// @param[in] type Type of hero (name or id).
+    Hero(const char *type); // Constructor
+    virtual ~Hero(void); // Destructor
 
     // @{
     /// Get functions.

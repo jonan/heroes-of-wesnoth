@@ -65,7 +65,7 @@ void Editor::mouseLeftClick(const int x, const int y) {
       break;
     case EDIT_UNITS:
       delete map[x][y].getCreature();
-      map[x][y].setCreature( new Unit(selected,0) );
+      map[x][y].setCreature( new Unit(&selected,0) );
       break;
     default:
       // Impossible case
@@ -161,7 +161,7 @@ void Editor::draw(void) {
       break;
     case EDIT_UNITS:
       setTerrain(DESERT_ROAD, &temp);
-      creature = new Unit(selected, 0);
+      creature = new Unit(&selected, 0);
       temp.setCreature(creature);
       break;
     default:
@@ -205,7 +205,7 @@ bool Editor::frame(void) {
       keys[SDLK_F5] = false;
       if (editing_type != EDIT_UNITS) {
         editing_type = EDIT_UNITS;
-        selected = BAT;
+        selected = '1'/*BAT*/;
       }
     }
 
@@ -221,7 +221,7 @@ bool Editor::frame(void) {
         selected = 'a';
       else if ( (selected == NUM_ITEMS    && editing_type == EDIT_ITEMS  ) ||
                 (selected == NUM_TERRAINS && editing_type == EDIT_TERRAIN) ||
-                (selected == NUM_UNITS    && editing_type == EDIT_UNITS  )   )
+                (selected == '1'    && editing_type == EDIT_UNITS  )   )
         selected = '0';
     } else if (mouse[MOUSE_BUTTON] == SDL_BUTTON_WHEELDOWN) {
       mouse[MOUSE_BUTTON] = 0;
@@ -234,7 +234,7 @@ bool Editor::frame(void) {
         else if (editing_type == EDIT_TERRAIN)
           selected = NUM_TERRAINS - 1;
         else if (editing_type == EDIT_UNITS)
-          selected = NUM_UNITS - 1;
+          selected = '1' - 1;
       }
     }
 
@@ -247,6 +247,6 @@ bool Editor::frame(void) {
 
 // Starts the editor.
 void startEditor(void) {
-  Editor map(70, 50, "editor");
-  map.start();
+  /*Editor map(70, 50, "editor");
+  map.start();*/
 }

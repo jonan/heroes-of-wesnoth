@@ -34,25 +34,6 @@ class Hero;
 
 struct SpecialImage;
 
-/// Types of units.
-enum {ARCHER = '0',
-      ARMAGEDDON,
-      BAT,
-      BLADE_MASTER,
-      BLOOD_BAT,
-      CAVE_SPIDER,
-      CHAMPION,
-      DEATH_BLADE,
-      FIGHTER,
-      FLANKER,
-      PILLAGER = 'a',
-      RANGER,
-      SERGEANT,
-      SHYDE,
-      SKELETON,
-      WOLF_RIDER,
-      NUM_UNITS};
-
 /// Types of projectiles.
 enum {WHITE_MISSILE};
 
@@ -70,9 +51,9 @@ const int NUM_FRAMES_FOR_SPRITE = 3;
 /// Stores a unit's attributes.
 class Unit {
   public:
-    /// @param[in] type Type of unit.
+    /// @param[in] type Type of unit (name or id).
     /// @param[in] number Number of units.
-    Unit(const char type, const int number); // Constructor
+    Unit(const char *type, const int number); // Constructor
     virtual ~Unit(void); // Destructor
 
     // @{
@@ -91,7 +72,7 @@ class Unit {
     int   getAgility         (void)                {return agility;                     }
     int   getProjectiles     (void)                {return projectiles;                 }
     Cell* getPosition        (void)                {return position;                    }
-    char  getType            (void)                {return type;                        }
+    char* getType            (void)                {return id;                          }
     Hero* getMaster          (void)                {return master;                      }
     int   getNumSprites      (const int animation) {return animations[animation].size();}
     int   getActualAnimation (void)                {return actual_animation;            }
@@ -123,7 +104,8 @@ class Unit {
     // Draws the creature in the given position.
     void drawUnit(SDL_Rect &position);
 
-    char type;
+    char *id;
+    char *name;
 
     int number;      // Number of units
     int facing_side; // Indicates if the creature is facing left or right

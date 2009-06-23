@@ -134,30 +134,28 @@ void Map::loadMapFile(const char *file_name) {
         map[x][y].setCoordinates(x, y);
     connectCells();
 
-    char map_temp, creatures_temp, item_temp;
-    int i = 0;
-    int j = 0;
-    while (j<map_height) {
-      map_file.get(map_temp);
-      creatures_file.get(creatures_temp);
-      items_file.get(item_temp);
-      // All files should have the '/n' in the
-      // same position, so you only need to check one
-      if (map_temp != '\n') {
+    char map_temp, item_temp;
+    char creatures_temp[3];
+    for (int j=0; j<map_height; j++) {
+      for (int i=0; i<map_width; i++) {
+        // Get info from file
+        map_file.get(map_temp);
+        creatures_file.get(creatures_temp, 3);
+        items_file.get(item_temp);
+        // Set the info in the cell
         setTerrain(map_temp, &map[i][j]);
-        if (creatures_temp != '-') {
-          Unit *creature;
-          creature = new Unit(creatures_temp, 0);
+        if ( strcmp(creatures_temp, "--") ) {
+          Unit *creature = new Unit(creatures_temp, 0);
           map[i][j].setCreature(creature);
         }
         if (item_temp != '-')
           setItem(item_temp, map[i][j]);
-        i++;
-      } else {
-        i = 0;
-        j++;
       }
+      map_file.getline(creatures_temp, 3);
+      creatures_file.getline(creatures_temp, 3);
+      items_file.getline(creatures_temp, 3);
     }
+
     map_file.close();
     creatures_file.close();
     items_file.close();
