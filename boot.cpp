@@ -21,6 +21,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include "events.hpp"
 #include "graphics.hpp"
+#include "xml_manager.hpp"
 
 // events_engine
 using events_engine::input;
@@ -50,11 +51,21 @@ void loadMainImages(void) {
   screen->newImage("cursors/wait");
 }
 
+// Loads the XML configuration files.
+void loadXmlFiles(void) {
+  XmlManager* xml = XmlManager::getInstance();
+  xml->loadFile(HEROES_XML_FILE);
+  xml->loadFile(ITEMS_XML_FILE);
+  xml->loadFile(TERRAIN_XML_FILE);
+  xml->loadFile(UNITS_XML_FILE);
+}
+
 // Starts the engine and loads the main images.
 void boot(const bool fullscreen, const int width, const int height) {
   srand( time(NULL) ); // Set seed for random numbers
   startEngine(fullscreen, width, height);
   loadMainImages();
+  loadXmlFiles();
 }
 
 // Exits the game.

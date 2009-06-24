@@ -38,7 +38,8 @@ OBJECTS = battle.o \
           ttf.o \
           unit.o \
           unit_magic.o \
-          world.o
+          world.o \
+          xml_manager.o
 SDL_LIBS = -lSDL -lSDL_ttf -lSDL_image -lSDL_gfx
 CFLAGS = -c -g -Wall
 CC = g++
@@ -98,6 +99,9 @@ UNIT = unit.hpp \
 WORLD = world.hpp \
         $(MAP)
 
+XML_MANAGER = xml_manager.hpp \
+              $(MACROS)
+
 # Build dependencies
 $(EXE) : $(OBJECTS)
 	$(CC) -g -Wall $(SDL_LIBS) -o heroes $(OBJECTS)
@@ -112,7 +116,8 @@ battle.o : battle.cpp $(BATTLE) \
 
 boot.o : boot.cpp $(BOOT) \
          $(EVENTS) \
-         $(GRAPHICS)
+         $(GRAPHICS) \
+         $(XML_MANAGER)
 	$(CC) $(CFLAGS) boot.cpp
 
 cell.o : cell.cpp $(CELL) \
@@ -230,6 +235,9 @@ world.o : world.cpp $(WORLD) \
           $(EVENTS) \
           $(HERO)
 	$(CC) $(CFLAGS) world.cpp
+
+xml_manager.o : xml_manager.cpp $(XML_MANAGER)
+	$(CC) $(CFLAGS) xml_manager.cpp
 
 # Make options
 .PHONY : all clean
