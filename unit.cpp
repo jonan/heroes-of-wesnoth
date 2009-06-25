@@ -24,6 +24,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include "cell.hpp"
 #include "graphics.hpp"
 #include "structs.hpp"
+#include "xml_manager.hpp"
 
 // video_engine
 using video_engine::screen;
@@ -48,7 +49,7 @@ Unit::Unit(const char *type, const int number) {
   }
 
   if (strcmp(type,"hero"))
-    setCreaturesAttributes("config/config_units.xml");
+    setCreaturesAttributes(UNITS_XML_FILE);
 }
 
 // Destructor
@@ -136,10 +137,8 @@ void Unit::setAllAttributes(const int live, const int movement,
 
 // Sets the creature's attributes acording to his type.
 void Unit::setCreaturesAttributes(const char *xml_file) {
-  TiXmlDocument document(xml_file);
-  document.LoadFile();
-
-  TiXmlElement *root = document.RootElement();
+  TiXmlDocument *document = XmlManager::getInstance()->getFile(xml_file);
+  TiXmlElement *root = document->RootElement();
 
   TiXmlElement *temp = root->FirstChildElement();
   if (name) {

@@ -19,6 +19,8 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include <string.h>
 
+#include "xml_manager.hpp"
+
 // Constructor
 Hero::Hero(const char *type) : Unit("hero", 1) {
   master = this;
@@ -31,7 +33,7 @@ Hero::Hero(const char *type) : Unit("hero", 1) {
     id = strdup(type);
   }
 
-  setCreaturesAttributes("config/config_heroes.xml");
+  setCreaturesAttributes(HEROES_XML_FILE);
 
   // The hero starts controling no creatures
   for (int i=0; i<MAX_UNITS; i++)

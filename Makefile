@@ -150,7 +150,8 @@ graphics.o : graphics.cpp $(GRAPHICS) \
              $(TTF)
 	$(CC) $(CFLAGS) graphics.cpp
 
-hero.o : hero.cpp $(HERO)
+hero.o : hero.cpp $(HERO) \
+         $(XML_MANAGER)
 	$(CC) $(CFLAGS) hero.cpp
 
 image.o : image.cpp $(IMAGE)
@@ -221,7 +222,8 @@ ttf.o : ttf.cpp $(TTF)
 unit.o : unit.cpp $(UNIT) \
          $(CELL) \
          $(GRAPHICS) \
-         $(STRUCTS)
+         $(STRUCTS) \
+         $(XML_MANAGER)
 	$(CC) $(CFLAGS) unit.cpp
 
 unit_magic.o : unit_magic.cpp $(UNIT) \
