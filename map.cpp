@@ -134,12 +134,12 @@ void Map::loadMapFile(const char *file_name) {
         map[x][y].setCoordinates(x, y);
     connectCells();
 
-    char map_temp, item_temp;
-    char creatures_temp[3];
+    char item_temp;
+    char map_temp[3], creatures_temp[3];
     for (int j=0; j<map_height; j++) {
       for (int i=0; i<map_width; i++) {
         // Get info from file
-        map_file.get(map_temp);
+        map_file.get(map_temp, 3);
         creatures_file.get(creatures_temp, 3);
         items_file.get(item_temp);
         // Set the info in the cell
@@ -151,7 +151,7 @@ void Map::loadMapFile(const char *file_name) {
         if (item_temp != '-')
           setItem(item_temp, map[i][j]);
       }
-      map_file.getline(creatures_temp, 3);
+      map_file.getline(map_temp, 3);
       creatures_file.getline(creatures_temp, 3);
       items_file.getline(creatures_temp, 3);
     }

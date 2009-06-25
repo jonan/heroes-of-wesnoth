@@ -40,7 +40,7 @@ using video_engine::FACE_LEFT;
 using video_engine::FACE_RIGHT;
 
 // Constructor
-Battle::Battle(Hero &player, Unit **enemies, int num_enemies, const int terrain) : Map(20, 11) {
+Battle::Battle(Hero &player, Unit **enemies, int num_enemies, const char *terrain) : Map(20, 11) {
   // Set the hero
   this->player = &player;
 
@@ -63,7 +63,7 @@ Battle::Battle(Hero &player, Unit **enemies, int num_enemies, const int terrain)
 }
 
 // Constructor
-Battle::Battle(Hero &player, Hero &enemy, const int terrain) : Map(20, 11) {
+Battle::Battle(Hero &player, Hero &enemy, const char *terrain) : Map(20, 11) {
   // Set the hero
   this->player = &player;
 
@@ -100,7 +100,7 @@ bool Battle::win(void) {
 }
 
 // Things to do no matter what constructor was called.
-void Battle::init(const int terrain) {
+void Battle::init(const char *terrain) {
   end_battle = false;
 
   makeMapVisible();
@@ -412,7 +412,7 @@ void createDefaultBattle(void) {
     creature[t] = new Unit("bat", 10);
   }
 
-  Battle war(*player, creature, 9, FLAT_GRASS);
+  Battle war(*player, creature, 9, "flat_grass");
   war.start();
 
   if (war.win())
@@ -423,7 +423,7 @@ void createDefaultBattle(void) {
 }
 
 // Creates and starts a battle.
-bool createBattle(Hero &player, const char *enemy_type, const char terrain_type) {
+bool createBattle(Hero &player, const char *enemy_type, const char *terrain_type) {
   Cell *temp;
   Unit *creature[9];
   int num_enemies;
@@ -455,7 +455,7 @@ bool createBattle(Hero &player, const char *enemy_type, const char terrain_type)
 }
 
 // Creates and starts a battle.
-bool createBattle(Hero &player, Hero &enemy, const char terrain_type) {
+bool createBattle(Hero &player, Hero &enemy, const char *terrain_type) {
   Cell *temp[2];
 
   // Save heroes positions in the world

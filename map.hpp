@@ -111,9 +111,9 @@ class Map : public GameLoop {
     // @}
     virtual ~Map(void); // Destructor
 
-    // If position is NULL, applies the terrain to all the cells in the map.
+    // If cell is NULL, applies the terrain to all the cells in the map.
     // (Implemented in map_terrain.cpp)
-    void setTerrain(char terrain_name, Cell *position);
+    void setTerrain(const char *id, Cell *cell);
     // Puts an item on a cell.
     // (Implemented in map_item.cpp)
     void setItem(char item_name, Cell &position);
@@ -150,7 +150,7 @@ class Map : public GameLoop {
 
     // Softens the map to make it look nicer.
     // (Implemented in map_smooth.cpp)
-    void softenMap(void);
+    void softenMap(void) {}
 
     // Centers the map view in a given cell
     void centerView(Cell& position);
@@ -182,7 +182,7 @@ class Map : public GameLoop {
   private:
     // Softens a type of terrain.
     // (Implemented in map_smooth.cpp)
-    void softenTerrain(const char cell_terrain, char *terrain, const int number_terrains, const int soft_images);
+    void softenTerrain(const char cell_terrain, char *terrain, const int number_terrains, const int soft_images) {}
 
     Coordinates first_cell_coor; // Map coordinates of the top left visible cell.
     Coordinates first_cell_pos;  // Position of the top left visible cell in the screen.

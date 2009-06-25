@@ -33,11 +33,11 @@ class Battle : public Map {
     /// @param[in] enemies Array with all the enemies.
     /// @param[in] num_enemies Number of enemies in the array.
     /// @param[in] terrain Type of terrain.
-    Battle(Hero &player, Unit **enemies, int num_enemies, const int terrain); // Constructor
+    Battle(Hero &player, Unit **enemies, int num_enemies, const char *terrain); // Constructor
     /// @param[in] player The player's hero.
     /// @param[in] enemy The enemy's hero.
     /// @param[in] terrain Type of terrain.
-    Battle(Hero &player, Hero &enemy, const int terrain); // Constructor
+    Battle(Hero &player, Hero &enemy, const char *terrain); // Constructor
 
     /// Starts the battle.
     virtual void start(void);
@@ -52,7 +52,7 @@ class Battle : public Map {
     static const int TURN = 10;              // Agility needed to get a turn
 
     // Things to do no matter what constructor was called.
-    void init(const int terrain);
+    void init(const char *terrain);
 
     // Controls the units not controled by the player.
     void ai(void);
@@ -87,8 +87,8 @@ class Battle : public Map {
 // @{
 /// Functions to create and start battles (return true if won)
 void createDefaultBattle(void);
-bool createBattle(Hero &player, const char *enemy_type, const char terrain_type);
-bool createBattle(Hero &player, Hero &enemy, const char terrain_type);
+bool createBattle(Hero &player, const char *enemy_type, const char *terrain_type);
+bool createBattle(Hero &player, Hero &enemy, const char *terrain_type);
 // @}
 
 #endif // BATTLE_HPP

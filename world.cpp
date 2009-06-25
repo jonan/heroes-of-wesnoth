@@ -66,7 +66,7 @@ void World::mouseLeftClick(const int x, const int y) {
         // Set the battle information
         Hero *selected_hero = static_cast<Hero*>(selected_unit);
         Cell *selected_hero_position = selected_hero->getPosition();
-        char terrain = map[x][y].getTerrain();
+        char *terrain = map[x][y].getTerrain();
         bool won_battle;
         if (!map[x][y].getCreature()->getMaster()) {
           // Battle against a neutral creature

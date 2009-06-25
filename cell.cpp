@@ -25,6 +25,7 @@ using video_engine::screen;
 
 // Constructor
 Cell::Cell(void) {
+  type = NULL;
   special_images = NULL;
 
   creature = NULL;
@@ -47,14 +48,15 @@ Cell::Cell(void) {
 
 // Destructor
 Cell::~Cell(void) {
+  free(type);
   delete map_position;
   delete [] path;
   delete special_images;
 }
 
 // Adds an image to the cell's terrain.
-void Cell::addImage(SDL_Surface &terrain, const char type) {
-  if (type != -1) {
+void Cell::addImage(SDL_Surface &terrain, const char *type) {
+  if ( strcmp(type, "-1") ) {
     // If a new type is assigned, it means the new surface is
     // the main one, so all previous ones need to be deleted.
     terrain_images.clear();
@@ -63,7 +65,7 @@ void Cell::addImage(SDL_Surface &terrain, const char type) {
       delete special_images;
       special_images = NULL;
     }
-    this->type = type;
+    this->type = strdup(type);
   }
   terrain_images.push_back(&terrain);
 }

@@ -540,6 +540,7 @@ void addImages(bool *terrain, Cell &map_cell, SDL_Surface **one, SDL_Surface **t
   }
 }
 
+#if 0
 // Softens a type of terrain.
 void Map::softenTerrain(const char cell_terrain, char *terrain, const int number_terrains, const int soft_images) {
   SDL_Surface *one[6];
@@ -932,3 +933,4 @@ void Map::softenMap(void) {
 
   delete [] terrain;
 }
+#endif

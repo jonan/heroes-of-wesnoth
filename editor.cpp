@@ -38,7 +38,7 @@ using video_engine::screen;
 Editor::Editor(const int width, const int height, const char *map_file) : Map(width, height) {
   this->map_file = strdup(map_file);
 
-  setTerrain(FLAT_GRASS, NULL);
+  setTerrain("flat_grass", NULL);
   editing_type = EDIT_TERRAIN;
   selected = FLAT_GRASS;
   end_editor = false;
@@ -60,8 +60,8 @@ void Editor::mouseLeftClick(const int x, const int y) {
         setItem(selected, map[x][y]);
       break;
     case EDIT_TERRAIN:
-      if (map[x][y].getTerrain() != selected)
-        setTerrain(selected, &map[x][y]);
+      if (/*map[x][y].getTerrain()*/'1' != selected)
+        setTerrain(""/*selected*/, &map[x][y]);
       break;
     case EDIT_UNITS:
       delete map[x][y].getCreature();
@@ -153,14 +153,14 @@ void Editor::draw(void) {
   Unit *creature = NULL;
   switch (editing_type) {
     case EDIT_ITEMS:
-      setTerrain(DESERT_ROAD, &temp);
+      setTerrain("desert_road", &temp);
       setItem(selected, temp);
       break;
     case EDIT_TERRAIN:
-      setTerrain(selected, &temp);
+      setTerrain("1"/*selected*/, &temp);
       break;
     case EDIT_UNITS:
-      setTerrain(DESERT_ROAD, &temp);
+      setTerrain("desert_road", &temp);
       creature = new Unit(&selected, 0);
       temp.setCreature(creature);
       break;
