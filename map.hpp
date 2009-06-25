@@ -112,7 +112,6 @@ class Map : public GameLoop {
     virtual ~Map(void); // Destructor
 
     // If cell is NULL, applies the terrain to all the cells in the map.
-    // (Implemented in map_terrain.cpp)
     void setTerrain(const char *id, Cell *cell);
     // Puts an item on a cell.
     // (Implemented in map_item.cpp)

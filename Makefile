@@ -27,7 +27,6 @@ OBJECTS = battle.o \
           map.o \
           map_item.o \
           map_soft.o \
-          map_terrain.o \
           menu.o \
           menu_main.o \
           mission.o \
@@ -166,7 +165,8 @@ map.o : map.cpp $(MAP) \
         $(CELL) \
         $(EVENTS) \
         $(GRAPHICS) \
-        $(UNIT)
+        $(UNIT) \
+        $(XML_MANAGER)
 	$(CC) $(CFLAGS) map.cpp
 
 map_item.o : map_item.cpp $(MAP) \
@@ -178,11 +178,6 @@ map_soft.o : map_soft.cpp $(MAP) \
              $(CELL) \
              $(GRAPHICS)
 	$(CC) $(CFLAGS) map_soft.cpp
-
-map_terrain.o : map_terrain.cpp $(MAP) \
-                $(CELL) \
-                $(GRAPHICS)
-	$(CC) $(CFLAGS) map_terrain.cpp
 
 menu.o : menu.cpp $(MENU) \
          $(EVENTS) \
