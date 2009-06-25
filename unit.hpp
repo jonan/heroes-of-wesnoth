@@ -105,7 +105,6 @@ class Unit {
     void drawUnit(SDL_Rect &position);
 
     char *id;
-    char *name;
 
     int number;      // Number of units
     int facing_side; // Indicates if the creature is facing left or right

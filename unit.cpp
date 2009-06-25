@@ -41,15 +41,10 @@ Unit::Unit(const char *type, const int number) {
   position = NULL;
   magic_spell = NULL;
 
-  if ( strlen(type) > 2 ) {
-    name = const_cast<char*>(type);
-  } else {
-    name = NULL;
+  if (strcmp(type,"hero")) {
     id = strdup(type);
-  }
-
-  if (strcmp(type,"hero"))
     setCreaturesAttributes(UNITS_XML_FILE);
+  }
 }
 
 // Destructor
@@ -141,11 +136,11 @@ void Unit::setCreaturesAttributes(const char *xml_file) {
   TiXmlElement *root = document->RootElement();
 
   TiXmlElement *temp = root->FirstChildElement();
-  if (name) {
-    while( strcmp(temp->Attribute("name"), name) )
+  if (strlen(id) > 2) {
+    while( strcmp(temp->Attribute("name"), id) )
       temp = temp->NextSiblingElement();
+    free(id);
     id = strdup(temp->Attribute("id"));
-    name = NULL;
   } else {
     while ( strcmp(temp->Attribute("id"), id) )
       temp = temp->NextSiblingElement();

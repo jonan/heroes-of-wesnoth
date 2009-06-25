@@ -26,13 +26,7 @@ Hero::Hero(const char *type) : Unit("hero", 1) {
   master = this;
   visibility = 8;
 
-  if ( strlen(type) > 2 ) {
-    name = const_cast<char*>(type);
-  } else {
-    name = NULL;
-    id = strdup(type);
-  }
-
+  id = strdup(type);
   setCreaturesAttributes(HEROES_XML_FILE);
 
   // The hero starts controling no creatures
