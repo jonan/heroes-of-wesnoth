@@ -2,7 +2,7 @@
 
 <config_heroes>
 
-  <hero name="elf" id="00">
+  <hero name="elf">
     <attributes>
       <live>300</live>
       <movement>5</movement>
@@ -21,7 +21,7 @@
     </images>
   </hero>
 
-  <hero name="human" id="01">
+  <hero name="human">
     <attributes>
       <live>300</live>
       <movement>5</movement>
@@ -39,7 +39,7 @@
     </images>
   </hero>
 
-  <hero name="undead" id="02">
+  <hero name="undead">
     <attributes>
       <live>300</live>
       <movement>5</movement>

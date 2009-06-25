@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config_items>
+
+  <item name="altar">
+    <image id="0">items/altar</image>
+  </item>
+
+  <item name="altar_evil">
+    <image id="0">items/altar-evil</image>
+  </item>
+
+  <item name="bones">
+    <image id="0">items/bones</image>
+  </item>
+
+  <item name="bone_stack">
+    <image id="0">items/bonestack</image>
+  </item>
+
+  <item name="box">
+    <image id="0">items/box</image>
+  </item>
+
+  <item name="brazier">
+    <image id="0">items/brazier</image>
+  </item>
+
+  <item name="brazier_lit">
+    <image id="0">items/brazier-lit1</image>
+    <image id="0">items/brazier-lit2</image>
+    <image id="0">items/brazier-lit3</image>
+    <image id="0">items/brazier-lit4</image>
+    <image id="0">items/brazier-lit5</image>
+    <image id="0">items/brazier-lit6</image>
+    <image id="0">items/brazier-lit7</image>
+    <image id="0">items/brazier-lit8</image>
+  </item>
+
+  <item name="burial">
+    <image id="0">items/burial</image>
+  </item>
+
+  <item name="dragon_statue">
+    <image id="0">items/dragonstatue</image>
+  </item>
+
+  <item name="fire">
+    <image id="0">items/fire1</image>
+    <image id="0">items/fire2</image>
+    <image id="0">items/fire3</image>
+    <image id="0">items/fire4</image>
+    <image id="0">items/fire5</image>
+    <image id="0">items/fire6</image>
+    <image id="0">items/fire7</image>
+    <image id="0">items/fire8</image>
+  </item>
+
+  <item name="icepack">
+    <image id="0">items/icepack-1</image>
+  </item>
+
+  <item name="orcish_flag">
+    <image id="0">items/orcish-flag</image>
+  </item>
+
+  <item name="scarecrow">
+    <image id="0">items/scarecrow</image>
+  </item>
+
+  <item name="signpost">
+    <image id="0">items/signpost</image>
+  </item>
+
+  <item name="straw_bale">
+    <image id="0">items/straw-bale1</image>
+    <image id="1">items/straw-bale2</image>
+  </item>
+
+  <item name="village_cave">
+    <image id="0">items/villages/cave</image>
+    <image id="1">items/villages/cave2</image>
+    <image id="2">items/villages/cave3</image>
+  </item>
+
+  <item name="village_coast">
+    <image id="0">items/villages/coast</image>
+    <image id="1">items/villages/coast2</image>
+    <image id="2">items/villages/coast3</image>
+    <image id="3">items/villages/coast4</image>
+  </item>
+
+  <item name="village_desert">
+    <image id="0">items/villages/desert</image>
+    <image id="1">items/villages/desert2</image>
+    <image id="2">items/villages/desert3</image>
+  </item>
+
+  <item name="village_desert_camp">
+    <image id="0">items/villages/desert-camp</image>
+  </item>
+
+  <item name="village_dwarf">
+    <image id="0">items/villages/dwarven</image>
+    <image id="1">items/villages/dwarven2</image>
+    <image id="2">items/villages/dwarven3</image>
+    <image id="3">items/villages/dwarven4</image>
+  </item>
+
+  <item name="village_elf">
+    <image id="0">items/villages/elven</image>
+    <image id="1">items/villages/elven2</image>
+    <image id="2">items/villages/elven3</image>
+    <image id="3">items/villages/elven4</image>
+  </item>
+
+  <item name="village_elf_snow">
+    <image id="0">items/villages/elven-snow</image>
+    <image id="1">items/villages/elven-snow2</image>
+    <image id="2">items/villages/elven-snow3</image>
+    <image id="3">items/villages/elven-snow4</image>
+  </item>
+
+  <item name="village_human">
+    <image id="0">items/villages/human</image>
+    <image id="1">items/villages/human2</image>
+    <image id="2">items/villages/human3</image>
+    <image id="3">items/villages/human4</image>
+  </item>
+
+  <item name="village_human_burned">
+    <image id="0">items/villages/village-human-burned1</image>
+    <image id="1">items/villages/village-human-burned2</image>
+    <image id="2">items/villages/village-human-burned3</image>
+    <image id="3">items/villages/village-human-burned4</image>
+  </item>
+
+  <item name="village_human_city">
+    <image id="0">items/villages/human-city</image>
+    <image id="1">items/villages/human-city2</image>
+    <image id="2">items/villages/human-city3</image>
+  </item>
+
+  <item name="village_human_hills">
+    <image id="0">items/villages/human-hills</image>
+  </item>
+
+  <item name="village_human_snow">
+    <image id="0">items/villages/human-snow</image>
+    <image id="1">items/villages/human-snow2</image>
+    <image id="2">items/villages/human-snow3</image>
+    <image id="3">items/villages/human-snow4</image>
+  </item>
+
+  <item name="village_human_snow_hills">
+    <image id="0">items/villages/human-snow-hills</image>
+  </item>
+
+  <item name="village_hut">
+    <image id="0">items/villages/hut</image>
+    <image id="1">items/villages/hut2</image>
+  </item>
+
+  <item name="village_hut_snow">
+    <image id="0">items/villages/hut-snow</image>
+    <image id="1">items/villages/hut-snow2</image>
+  </item>
+
+  <item name="village_swamp">
+    <image id="0">items/villages/swampwater</image>
+    <image id="1">items/villages/swampwater2</image>
+  </item>
+
+  <item name="village_tropical">
+    <image id="0">items/villages/tropical-forest</image>
+  </item>
+
+  <item name="well">
+    <image id="0">items/well</image>
+  </item>
+
+  <item name="whirlpool">
+    <image id="0">items/whirlpool</image>
+  </item>
+
+  <item name="windwill">
+    <image id="0">items/windmill-01</image>
+    <image id="0">items/windmill-02</image>
+    <image id="0">items/windmill-03</image>
+    <image id="0">items/windmill-04</image>
+    <image id="0">items/windmill-05</image>
+    <image id="0">items/windmill-06</image>
+    <image id="0">items/windmill-07</image>
+    <image id="0">items/windmill-08</image>
+    <image id="0">items/windmill-09</image>
+    <image id="0">items/windmill-10</image>
+    <image id="0">items/windmill-11</image>
+    <image id="0">items/windmill-12</image>
+    <image id="0">items/windmill-13</image>
+    <image id="0">items/windmill-14</image>
+    <image id="0">items/windmill-15</image>
+    <image id="0">items/windmill-16</image>
+    <image id="0">items/windmill-17</image>
+    <image id="0">items/windmill-18</image>
+  </item>
+
+</config_items>

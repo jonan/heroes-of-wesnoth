@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config_terrain>
+
+  <terrain name="cave_floor" passable="true">
+    <image>terrain/cave/floor</image>
+    <image>terrain/cave/floor2</image>
+    <image>terrain/cave/floor3</image>
+    <image>terrain/cave/floor4</image>
+    <image>terrain/cave/floor5</image>
+    <image>terrain/cave/floor6</image>
+  </terrain>
+
+  <terrain name="cave_hills" passable="false">
+    <image>terrain/cave/hills-variation</image>
+    <image>terrain/cave/hills-variation2</image>
+    <image>terrain/cave/hills-variation3</image>
+  </terrain>
+
+  <terrain name="desert" passable="true">
+    <image>terrain/desert/desert</image>
+    <image>terrain/desert/desert2</image>
+    <image>terrain/desert/desert3</image>
+    <image>terrain/desert/desert4</image>
+    <image>terrain/desert/desert5</image>
+    <image>terrain/desert/desert6</image>
+    <image>terrain/desert/desert7</image>
+    <image>terrain/desert/desert8</image>
+  </terrain>
+
+  <terrain name="desert_hills" passable="false">
+    <image>terrain/desert/desert-hills</image>
+    <image>terrain/desert/desert-hills2</image>
+    <image>terrain/desert/desert-hills3</image>
+  </terrain>
+
+  <terrain name="desert_mountain" passable="false">
+    <image>terrain/desert/desert-mountain-peak1</image>
+    <image>terrain/desert/desert-mountain-peak2</image>
+    <image>terrain/desert/desert-mountain-peak3</image>
+  </terrain>
+
+  <terrain name="desert_road" passable="true">
+    <image>terrain/desert/desert-road</image>
+  </terrain>
+
+  <terrain name="desert_sand" passable="true">
+    <image>terrain/desert/sand</image>
+    <image>terrain/desert/sand2</image>
+    <image>terrain/desert/sand3</image>
+    <image>terrain/desert/sand4</image>
+    <image>terrain/desert/sand5</image>
+    <image>terrain/desert/sand6</image>
+    <image>terrain/desert/sand7</image>
+    <image>terrain/desert/sand8</image>
+    <image>terrain/desert/sand-rock1</image>
+    <image>terrain/desert/sand-rock2</image>
+    <image>terrain/desert/sand-rock3</image>
+  </terrain>
+
+  <terrain name="flat_dirt" passable="true">
+    <image>terrain/flat/dirt</image>
+    <image>terrain/flat/dirt2</image>
+    <image>terrain/flat/dirt3</image>
+    <image>terrain/flat/dirt4</image>
+    <image>terrain/flat/dirt5</image>
+    <image>terrain/flat/dirt6</image>
+    <image>terrain/flat/dirt7</image>
+  </terrain>
+
+  <terrain name="flat_grass" passable="true">
+    <image>terrain/flat/grass-r1</image>
+    <image>terrain/flat/grass-r2</image>
+    <image>terrain/flat/grass-r3</image>
+    <image>terrain/flat/grass-r4</image>
+    <image>terrain/flat/grass-r5</image>
+    <image>terrain/flat/grass-r6</image>
+    <image>terrain/flat/grass-r7</image>
+    <image>terrain/flat/grass-r8</image>
+    <image>terrain/flat/grass-rocks1</image>
+    <image>terrain/flat/grass-rocks2</image>
+  </terrain>
+
+  <terrain name="flat_road" passable="true">
+    <image>terrain/flat/road</image>
+    <image>terrain/flat/road2</image>
+    <image>terrain/flat/road3</image>
+  </terrain>
+
+  <terrain name="flat_savanna" passable="true">
+    <image>terrain/flat/savanna</image>
+    <image>terrain/flat/savanna2</image>
+    <image>terrain/flat/savanna3</image>
+  </terrain>
+
+  <terrain name="flat_stone_path" passable="true">
+    <image>terrain/flat/stone-path</image>
+    <image>terrain/flat/stone-path2</image>
+    <image>terrain/flat/stone-path3</image>
+    <image>terrain/flat/stone-path4</image>
+    <image>terrain/flat/stone-path5</image>
+    <image>terrain/flat/stone-path6</image>
+  </terrain>
+
+  <terrain name="forest_great_tree" passable="true">
+    <base>flat_grass</base>
+    <image>terrain/forest/great-tree1</image>
+    <image>terrain/forest/great-tree2</image>
+    <image>terrain/forest/great-tree3</image>
+  </terrain>
+
+  <terrain name="forest_mushrooms" passable="true">
+    <base>cave_floor</base>
+    <image>terrain/forest/mushrooms</image>
+    <image>terrain/forest/mushrooms-2</image>
+    <image>terrain/forest/mushrooms-3</image>
+    <image>terrain/forest/mushrooms-4</image>
+    <image>terrain/forest/mushrooms-5</image>
+    <image>terrain/forest/mushrooms-small</image>
+  </terrain>
+
+  <terrain name="forest_pine" passable="true">
+    <base>flat_savanna</base>
+    <image>terrain/forest/pine</image>
+    <image>terrain/forest/pine-2</image>
+    <image>terrain/forest/pine-3</image>
+    <image>terrain/forest/pine-4</image>
+    <image>terrain/forest/pine-small</image>
+    <image>terrain/forest/pine-small-2</image>
+  </terrain>
+
+  <terrain name="forest_snow" passable="true">
+    <base>water_snow</base>
+    <image>terrain/forest/snow-forest</image>
+    <image>terrain/forest/snow-forest-2</image>
+    <image>terrain/forest/snow-forest-3</image>
+    <image>terrain/forest/snow-forest-4</image>
+    <image>terrain/forest/snow-forest-small</image>
+  </terrain>
+
+  <terrain name="forest_tropical" passable="false">
+    <base>desert_sand</base>
+    <image>terrain/forest/tropical</image>
+    <image>terrain/forest/tropical-2</image>
+    <image>terrain/forest/tropical-3</image>
+    <image>terrain/forest/tropical-4</image>
+  </terrain>
+
+  <terrain name="hills" passable="false">
+    <image>terrain/hills-variation</image>
+    <image>terrain/hills-variation2</image>
+    <image>terrain/hills-variation3</image>
+  </terrain>
+
+  <terrain name="lava" passable="false">
+    <image>terrain/lava</image>
+    <image>terrain/lava2</image>
+    <image>terrain/lava3</image>
+  </terrain>
+
+  <terrain name="water_coast" passable="false">
+    <image>terrain/water/coast</image>
+    <image>terrain/water/coast2</image>
+    <image>terrain/water/coast3</image>
+  </terrain>
+
+  <terrain name="water_ford" passable="false">
+    <image>terrain/water/ford</image>
+    <image>terrain/water/ford2</image>
+  </terrain>
+
+  <terrain name="water_ocean" passable="false">
+    <image>terrain/water/ocean</image>
+    <image>terrain/water/ocean2</image>
+    <image>terrain/water/ocean3</image>
+  </terrain>
+
+  <terrain name="water_ice" passable="true">
+    <image>terrain/water/ice</image>
+    <image>terrain/water/ice2</image>
+    <image>terrain/water/ice3</image>
+    <image>terrain/water/ice4</image>
+    <image>terrain/water/ice5</image>
+    <image>terrain/water/ice6</image>
+  </terrain>
+
+  <terrain name="water_snow" passable="true">
+    <image>terrain/water/snow</image>
+    <image>terrain/water/snow2</image>
+  </terrain>
+
+  <terrain name="water_snow_hills" passable="false">
+    <image>terrain/water/snow-hills</image>
+    <image>terrain/water/snow-hills2</image>
+    <image>terrain/water/snow-hills3</image>
+  </terrain>
+
+</config_terrain>
