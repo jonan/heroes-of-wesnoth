@@ -23,6 +23,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include "events.hpp"
 #include "graphics.hpp"
 #include "unit.hpp"
+#include "util.hpp"
 #include "xml_manager.hpp"
 
 // events_engine
@@ -209,36 +210,23 @@ bool Editor::frame(void) {
     XmlManager* xml = XmlManager::getInstance();
     if (mouse[MOUSE_BUTTON] == SDL_BUTTON_WHEELUP) {
       mouse[MOUSE_BUTTON] = 0;
-      selected[1]++;
-      if (selected[1] == '9'+1)
-        selected[1] = 'a';
-      else if (selected[1] == 'z'+1)
-        selected[1] = 'A';
-      else if (selected[1] == 'Z'+1) {
-        selected[1] = '0';
-        selected[0]++;
-        if (selected[0] == '9'+1)
-          selected[0] = 'a';
-        else if (selected[0] == 'z'+1)
-          selected[0] = 'A';
-      }
+      increaseId(selected);
       if ( (editing_type == EDIT_ITEMS   && selected == xml->getLastId(ITEMS_XML_FILE)  ) ||
            (editing_type == EDIT_TERRAIN && selected == xml->getLastId(TERRAIN_XML_FILE)) ||
            (editing_type == EDIT_UNITS   && selected == xml->getLastId(UNITS_XML_FILE)  )   )
         selected = "00";
     } else if (mouse[MOUSE_BUTTON] == SDL_BUTTON_WHEELDOWN) {
       mouse[MOUSE_BUTTON] = 0;
-      /*selected--;
-      if (selected == 'a'-1) {
-        selected = '9';
-      } else if (selected < '0') {
+      decreaseId(selected);
+      if (selected[0] < '0') {
         if (editing_type == EDIT_ITEMS)
-          selected = NUM_ITEMS - 1;
+          selected = xml->getLastId(ITEMS_XML_FILE);
         else if (editing_type == EDIT_TERRAIN)
-          selected = NUM_TERRAINS - 1;
+          selected = xml->getLastId(TERRAIN_XML_FILE);
         else if (editing_type == EDIT_UNITS)
-          selected = NUM_UNITS - 1;
-      }*/
+          selected = xml->getLastId(UNITS_XML_FILE);
+        decreaseId(selected);
+      }
     }
 
     updateMouse();

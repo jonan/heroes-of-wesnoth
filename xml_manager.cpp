@@ -19,6 +19,8 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include "tinyxml/tinyxml.h"
 
+#include "util.hpp"
+
 // Singleton pattern constructor
 XmlManager* XmlManager::getInstance(void) {
   static XmlManager instance;
@@ -64,24 +66,11 @@ char* XmlManager::getLastId(const char *file_name) {
 void XmlManager::setIds(TiXmlDocument* file) {
   TiXmlElement *root = file->RootElement();
 
-  char id[3] = "00";
+  std::string id = "00";
   TiXmlElement *temp = root->FirstChildElement();
   for (; temp; temp = temp->NextSiblingElement()) {
-    temp->SetAttribute("id", id);
-    id[1]++;
-    if (id[1] == '9'+1) {
-      id[1] = 'a';
-    } else if (id[1] == 'z'+1) {
-      id[1] = 'A';
-    } else if (id[1] == 'Z'+1) {
-      id[1] = '0';
-      id[0]++;
-      if (id[0] == '9'+1) {
-        id[0] = 'a';
-      } else if (id[0] == 'z'+1) {
-        id[0] = 'A';
-      }
-    }
+    temp->SetAttribute("id", id.c_str());
+    increaseId(id);
   }
-  file->SetUserData(strdup(id));
+  file->SetUserData(strdup(id.c_str()));
 }

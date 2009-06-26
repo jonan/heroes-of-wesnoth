@@ -36,6 +36,7 @@ OBJECTS = battle.o \
           ttf.o \
           unit.o \
           unit_magic.o \
+          util.o \
           world.o \
           xml_manager.o
 SDL_LIBS = -lSDL -lSDL_ttf -lSDL_image -lSDL_gfx
@@ -94,6 +95,8 @@ TTF = ttf.hpp \
 UNIT = unit.hpp \
        $(MACROS)
 
+UTIL = util.hpp
+
 WORLD = world.hpp \
         $(MAP)
 
@@ -129,7 +132,8 @@ editor.o : editor.cpp $(EDITOR) \
            $(CELL) \
            $(EVENTS) \
            $(GRAPHICS) \
-           $(UNIT)
+           $(UNIT) \
+           $(UTIL)
 	$(CC) $(CFLAGS) editor.cpp
 
 events.o : events.cpp $(EVENTS) \
@@ -215,6 +219,9 @@ unit.o : unit.cpp $(UNIT) \
          $(XML_MANAGER)
 	$(CC) $(CFLAGS) unit.cpp
 
+util.o : util.cpp $(UTIL)
+	$(CC) $(CFLAGS) util.cpp
+
 unit_magic.o : unit_magic.cpp $(UNIT) \
                $(GRAPHICS) \
                $(STRUCTS)
@@ -227,7 +234,8 @@ world.o : world.cpp $(WORLD) \
           $(HERO)
 	$(CC) $(CFLAGS) world.cpp
 
-xml_manager.o : xml_manager.cpp $(XML_MANAGER)
+xml_manager.o : xml_manager.cpp $(XML_MANAGER) \
+                $(UTIL)
 	$(CC) $(CFLAGS) xml_manager.cpp
 
 # Make options
