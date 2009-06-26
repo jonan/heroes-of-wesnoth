@@ -28,34 +28,6 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 class Cell;
 class Unit;
 
-/// Types of terrain.
-enum {CAVE_FLOOR = '0',
-      CAVE_HILLS,
-      DESERT,
-      DESERT_HILLS,
-      DESERT_MOUNTAIN,
-      DESERT_ROAD,
-      DESERT_SAND,
-      FLAT_DIRT,
-      FLAT_GRASS,
-      FLAT_ROAD,
-      FLAT_SAVANNA = 'a',
-      FLAT_STONE_PATH,
-      FOREST_GREAT_TREE,
-      FOREST_MUSHROOMS,
-      FOREST_PINE,
-      FOREST_SNOW,
-      FOREST_TROPICAL,
-      HILLS,
-      LAVA,
-      WATER_COAST,
-      WATER_FORD,
-      WATER_ICE,
-      WATER_OCEAN,
-      WATER_SNOW,
-      WATER_SNOW_HILLS,
-      NUM_TERRAINS};
-
 /// Types of items.
 enum {ALTAR = '0',
       ALTAR_EVIL,
