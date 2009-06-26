@@ -15,7 +15,6 @@ You should have received a copy of the GNU General Public License
 along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 */
 
-#if 0
 #include "editor.hpp"
 
 #include <fstream>
@@ -25,6 +24,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include "events.hpp"
 #include "graphics.hpp"
 #include "unit.hpp"
+#include "xml_manager.hpp"
 
 // events_engine
 using events_engine::keys;
@@ -39,9 +39,9 @@ using video_engine::screen;
 Editor::Editor(const int width, const int height, const char *map_file) : Map(width, height) {
   this->map_file = strdup(map_file);
 
-  setTerrain("flat_grass", NULL);
+  setTerrainToAllCells("flat_grass");
   editing_type = EDIT_TERRAIN;
-  selected = FLAT_GRASS;
+  selected = "00";
   end_editor = false;
 
   makeMapVisible();
@@ -58,15 +58,15 @@ void Editor::mouseLeftClick(const int x, const int y) {
   switch (editing_type) {
     case EDIT_ITEMS:
       if (map[x][y].getItemType() != selected)
-        setItem(selected, map[x][y]);
+        map[x][y].setItem(selected.c_str());
       break;
     case EDIT_TERRAIN:
-      if (/*map[x][y].getTerrain()*/'1' != selected)
-        setTerrain(""/*selected*/, &map[x][y]);
+      if (map[x][y].getTerrain() != selected)
+        map[x][y].setTerrain(selected.c_str());
       break;
     case EDIT_UNITS:
       delete map[x][y].getCreature();
-      map[x][y].setCreature( new Unit(&selected,0) );
+      map[x][y].setCreature( new Unit(selected.c_str(),0) );
       break;
     default:
       // Impossible case
@@ -78,8 +78,8 @@ void Editor::mouseLeftClick(const int x, const int y) {
 void Editor::mouseRightClick(const int x, const int y) {
   switch (editing_type) {
     case EDIT_ITEMS:
-      if (map[x][y].getItemType() != '-')
-        map[x][y].setItemType('-');
+      if ( strcmp(map[x][y].getItemType(),"--") )
+        map[x][y].setItem("--");
       break;
     case EDIT_UNITS:
       delete map[x][y].getCreature();
@@ -115,7 +115,7 @@ void Editor::save(void) {
       if (map[x][y].getCreature())
         creatures_file << map[x][y].getCreature()->getType();
       else
-        creatures_file << '-';
+        creatures_file << "--";
       items_file << map[x][y].getItemType();
     }
     map_file << '\n';
@@ -154,15 +154,15 @@ void Editor::draw(void) {
   Unit *creature = NULL;
   switch (editing_type) {
     case EDIT_ITEMS:
-      setTerrain("desert_road", &temp);
-      setItem(selected, temp);
+      temp.setTerrain("desert_road");
+      temp.setItem(selected.c_str());
       break;
     case EDIT_TERRAIN:
-      setTerrain("1"/*selected*/, &temp);
+      temp.setTerrain(selected.c_str());
       break;
     case EDIT_UNITS:
-      setTerrain("desert_road", &temp);
-      creature = new Unit(&selected, 0);
+      temp.setTerrain("desert_road");
+      creature = new Unit(selected.c_str(), 0);
       temp.setCreature(creature);
       break;
     default:
@@ -194,19 +194,19 @@ bool Editor::frame(void) {
       keys[SDLK_F3] = false;
       if (editing_type != EDIT_ITEMS) {
         editing_type = EDIT_ITEMS;
-        selected = FIRE;
+        selected = "00";
       }
     } else if (keys[SDLK_F4]) { // terrain
       keys[SDLK_F4] = false;
       if (editing_type != EDIT_TERRAIN) {
         editing_type = EDIT_TERRAIN;
-        selected = FLAT_GRASS;
+        selected = "00";
       }
     } else if (keys[SDLK_F5]) { // units
       keys[SDLK_F5] = false;
       if (editing_type != EDIT_UNITS) {
         editing_type = EDIT_UNITS;
-        selected = '1'/*BAT*/;
+        selected = "00";
       }
     }
 
@@ -215,18 +215,29 @@ bool Editor::frame(void) {
       softenMap();
     }
 
+    XmlManager* xml = XmlManager::getInstance();
     if (mouse[MOUSE_BUTTON] == SDL_BUTTON_WHEELUP) {
       mouse[MOUSE_BUTTON] = 0;
-      selected++;
-      if (selected == '9'+1)
-        selected = 'a';
-      else if ( (selected == NUM_ITEMS    && editing_type == EDIT_ITEMS  ) ||
-                (selected == NUM_TERRAINS && editing_type == EDIT_TERRAIN) ||
-                (selected == '1'    && editing_type == EDIT_UNITS  )   )
-        selected = '0';
+      selected[1]++;
+      if (selected[1] == '9'+1)
+        selected[1] = 'a';
+      else if (selected[1] == 'z'+1)
+        selected[1] = 'A';
+      else if (selected[1] == 'Z'+1) {
+        selected[1] = '0';
+        selected[0]++;
+        if (selected[0] == '9'+1)
+          selected[0] = 'a';
+        else if (selected[0] == 'z'+1)
+          selected[0] = 'A';
+      }
+      if ( (editing_type == EDIT_ITEMS   && selected == xml->getLastId(ITEMS_XML_FILE)  ) ||
+           (editing_type == EDIT_TERRAIN && selected == xml->getLastId(TERRAIN_XML_FILE)) ||
+           (editing_type == EDIT_UNITS   && selected == xml->getLastId(UNITS_XML_FILE)  )   )
+        selected = "00";
     } else if (mouse[MOUSE_BUTTON] == SDL_BUTTON_WHEELDOWN) {
       mouse[MOUSE_BUTTON] = 0;
-      selected--;
+      /*selected--;
       if (selected == 'a'-1) {
         selected = '9';
       } else if (selected < '0') {
@@ -235,8 +246,8 @@ bool Editor::frame(void) {
         else if (editing_type == EDIT_TERRAIN)
           selected = NUM_TERRAINS - 1;
         else if (editing_type == EDIT_UNITS)
-          selected = '1' - 1;
-      }
+          selected = NUM_UNITS - 1;
+      }*/
     }
 
     updateMouse();
@@ -248,7 +259,6 @@ bool Editor::frame(void) {
 
 // Starts the editor.
 void startEditor(void) {
-  /*Editor map(70, 50, "editor");
-  map.start();*/
+  Editor map(70, 50, "editor");
+  map.start();
 }
-#endif

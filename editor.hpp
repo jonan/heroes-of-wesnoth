@@ -19,9 +19,10 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 /// The Editor class and a function to start it.
 /// @author Jonan
 
-#if 0
 #ifndef EDITOR_HPP
 #define EDITOR_HPP
+
+#include <string>
 
 #include "map.hpp"
 
@@ -57,14 +58,13 @@ class Editor : public Map {
 
     char *map_file;
     char editing_type; // Type of edition selected
-    char selected;     // What is selected to be drawn in the map
+    std::string selected;  // What is selected to draw in the map
     bool end_editor;
 
     DISALLOW_COPY_AND_ASSIGN(Editor);
 };
 
-#endif // EDITOR_HPP
-#endif
-
 /// Starts the editor.
-void startEditor(void) {}
+void startEditor(void);
+
+#endif // EDITOR_HPP
