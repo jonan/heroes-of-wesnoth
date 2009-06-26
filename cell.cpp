@@ -17,9 +17,12 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include "cell.hpp"
 
+#include "tinyxml/tinyxml.h"
+
 #include "graphics.hpp"
 #include "structs.hpp"
 #include "unit.hpp"
+#include "xml_manager.hpp"
 
 using video_engine::screen;
 
@@ -54,31 +57,61 @@ Cell::~Cell(void) {
   delete special_images;
 }
 
-// Adds an image to the cell's terrain.
-void Cell::addImage(SDL_Surface &terrain, const char *type) {
-  if ( strcmp(type, "-1") ) {
-    // If a new type is assigned, it means the new surface is
-    // the main one, so all previous ones need to be deleted.
-    terrain_images.clear();
-    // Erase special image only if it's not an item
-    if (special_images && item == '-') {
-      delete special_images;
-      special_images = NULL;
-    }
-    this->type = strdup(type);
-  }
-  terrain_images.push_back(&terrain);
-}
+// Sets the terrain images of the cell.
+void Cell::setTerrain(const char *id) {
+  TiXmlDocument *document = XmlManager::getInstance()->getFile(TERRAIN_XML_FILE);
+  TiXmlElement *root = document->RootElement();
 
-// Adds a special image to the cell's terrain.
-void Cell::addSpecialImage(SDL_Surface &terrain) {
-  if (!special_images) {
-    special_images = new SpecialImage;
-    special_images->position.x = -(terrain.w-72)/2;
-    special_images->position.y = -(terrain.h-72)/2;
-    special_images->sprite = 0;
+  TiXmlElement *temp = root->FirstChildElement();
+  if (strlen(id) > 2) {
+    while( strcmp(temp->Attribute("name"), id) )
+      temp = temp->NextSiblingElement();
+    id = temp->Attribute("id");
+  } else {
+    while ( strcmp(temp->Attribute("id"), id) )
+      temp = temp->NextSiblingElement();
   }
-  special_images->image_list.push_back(&terrain);
+
+  if ( !type || strcmp(type,id) ) {
+    // Set base terrain
+    bool special_image = false;
+    if (temp->FirstChild("base")) {
+      setTerrain(temp->FirstChildElement("base")->GetText());
+      special_image = true;
+    }
+
+    free(type);
+    type = strdup(id);
+
+    // Set alpha (for all cells)
+    SDL_Surface *alpha = screen->getImage("alpha", 50);
+    // Set stars (for all cells)
+    std::deque<SDL_Surface*> stars_images;
+    stars_images.push_back( screen->getImage("terrain/stars/blue1") );
+    stars_images.push_back( screen->getImage("terrain/stars/blue2") );
+    stars_images.push_back( screen->getImage("terrain/stars/blue3") );
+    stars_images.push_back( screen->getImage("terrain/stars/blue4") );
+    stars_images.push_back( screen->getImage("terrain/stars/blue5") );
+    stars_images.push_back( screen->getImage("terrain/stars/blue6") );
+    stars_images.push_back( screen->getImage("terrain/stars/blue7") );
+    // Set the terrain
+    std::deque<SDL_Surface*> terrain_images;
+    TiXmlElement *temp_img;
+    for (temp_img = temp->FirstChildElement("image"); temp_img; temp_img = temp_img->NextSiblingElement())
+      terrain_images.push_back( screen->getImage(temp_img->GetText()) );
+    bool passable = strcmp(temp->Attribute("passable"), "false");
+
+    int random_number;
+    setAlpha(*alpha);
+    random_number = rand() % stars_images.size();
+    setStars(*stars_images[random_number]);
+    random_number = rand() % terrain_images.size();
+    if (!special_image)
+      addImage(*terrain_images[random_number]);
+    else
+      addSpecialImage(*terrain_images[random_number]);
+    this->passable = passable;
+  }
 }
 
 // Puts a creature in the cell.
@@ -120,6 +153,22 @@ void Cell::getCoordinates(int &x, int &y) {
 void Cell::getPath(int* &path, int &movements) {
   path = this->path;
   movements = this->movements;
+}
+
+// Adds an image to the cell's terrain.
+void Cell::addImage(SDL_Surface &terrain) {
+  terrain_images.push_back(&terrain);
+}
+
+// Adds a special image to the cell's terrain.
+void Cell::addSpecialImage(SDL_Surface &terrain) {
+  if (!special_images) {
+    special_images = new SpecialImage;
+    special_images->position.x = -(terrain.w-72)/2;
+    special_images->position.y = -(terrain.h-72)/2;
+    special_images->sprite = 0;
+  }
+  special_images->image_list.push_back(&terrain);
 }
 
 // The cell is selected and the cells where

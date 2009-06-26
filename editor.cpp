@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 */
 
+#if 0
 #include "editor.hpp"
 
 #include <fstream>
@@ -250,3 +251,4 @@ void startEditor(void) {
   /*Editor map(70, 50, "editor");
   map.start();*/
 }
+#endif

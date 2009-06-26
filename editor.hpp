@@ -19,6 +19,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 /// The Editor class and a function to start it.
 /// @author Jonan
 
+#if 0
 #ifndef EDITOR_HPP
 #define EDITOR_HPP
 
@@ -62,7 +63,8 @@ class Editor : public Map {
     DISALLOW_COPY_AND_ASSIGN(Editor);
 };
 
-/// Starts the editor.
-void startEditor(void);
-
 #endif // EDITOR_HPP
+#endif
+
+/// Starts the editor.
+void startEditor(void) {}

@@ -50,6 +50,7 @@ class Cell {
     void setAlpha       (SDL_Surface &alpha)        {this->alpha = &alpha;     }
     void setStars       (SDL_Surface &stars)        {this->stars = &stars;     }
     void setPassable    (const bool passable)       {this->passable = passable;}
+    void setTerrain     (const char *id);
     void setCreature    (Unit *creature);
     void setItemType    (char type);
     void setCoordinates (const int x, const int y);
@@ -68,7 +69,7 @@ class Cell {
     /// Adds an image to the cell's terrain.
     /// @param[in] terrain Surface of the terrain.
     /// @param[in] type Type of terrain ("-1" to maintain actual type)
-    void addImage(SDL_Surface &terrain, const char *type = "-1");
+    void addImage(SDL_Surface &terrain);
     /// Adds a special image to the cell's terrain.
     /// @param[in] terrain Surface of the terrain.
     void addSpecialImage(SDL_Surface &terrain);

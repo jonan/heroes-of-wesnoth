@@ -122,7 +122,8 @@ boot.o : boot.cpp $(BOOT) \
 cell.o : cell.cpp $(CELL) \
          $(GRAPHICS) \
          $(STRUCTS) \
-         $(UNIT)
+         $(UNIT) \
+         $(XML_MANAGER)
 	$(CC) $(CFLAGS) cell.cpp
 
 editor.o : editor.cpp $(EDITOR) \
@@ -165,8 +166,7 @@ map.o : map.cpp $(MAP) \
         $(CELL) \
         $(EVENTS) \
         $(GRAPHICS) \
-        $(UNIT) \
-        $(XML_MANAGER)
+        $(UNIT)
 	$(CC) $(CFLAGS) map.cpp
 
 map_item.o : map_item.cpp $(MAP) \

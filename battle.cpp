@@ -117,7 +117,7 @@ void Battle::init(const char *terrain) {
   // Put all units' progress to 0
   for (int t=0; t<MAX_BATTLE_UNITS; t++) turn_progress[t] = 0;
 
-  setTerrain(terrain, NULL);
+  setTerrainToAllCells(terrain);
 }
 
 // Controls the units not controled by the player.
