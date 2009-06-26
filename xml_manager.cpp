@@ -29,8 +29,10 @@ XmlManager* XmlManager::getInstance(void) {
 XmlManager::~XmlManager(void) {
   std::list<TiXmlDocument*>::iterator it;
   std::list<TiXmlDocument*>::iterator it_end = xml_files.end();
-  for (it = xml_files.begin(); it != it_end; it++)
+  for (it = xml_files.begin(); it != it_end; it++) {
+    free( (*it)->GetUserData() );
     delete (*it);
+  }
 }
 
 // 
@@ -81,5 +83,5 @@ void XmlManager::setIds(TiXmlDocument* file) {
       }
     }
   }
-  file->SetUserData(id);
+  file->SetUserData(strdup(id));
 }
