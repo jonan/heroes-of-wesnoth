@@ -47,9 +47,6 @@ class Map : public GameLoop {
 
     // Sets the terrain type to all the cells in the map.
     void setTerrainToAllCells(const char *id);
-    // Puts an item on a cell.
-    // (Implemented in map_item.cpp)
-    void setItem(const char *id, Cell &position);
 
     // Loads the terrain, creatures and items of the map from a file.
     void loadMapFile(const char *file_name);

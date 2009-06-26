@@ -122,10 +122,41 @@ void Cell::setCreature(Unit *creature) {
 }
 
 // Puts an item on the cell.
-void Cell::setItemType(const char *id) {
-  if (special_images) {
-    delete special_images;
-    special_images = NULL;
+void Cell::setItem(const char *id) {
+  if ( strcmp(id,"--") ) {
+    if (special_images) {
+      delete special_images;
+      special_images = NULL;
+    }
+
+    TiXmlDocument *document = XmlManager::getInstance()->getFile(ITEMS_XML_FILE);
+    TiXmlElement *root = document->RootElement();
+
+    TiXmlElement *temp = root->FirstChildElement();
+    if (strlen(id) > 2) {
+      while( strcmp(temp->Attribute("name"), id) )
+        temp = temp->NextSiblingElement();
+      id = temp->Attribute("id");
+    } else {
+      while ( strcmp(temp->Attribute("id"), id) )
+        temp = temp->NextSiblingElement();
+    }
+
+    std::deque<SDL_Surface*> item_images;
+    TiXmlElement *temp_img;
+    for (temp_img = temp->FirstChildElement("image"); temp_img; temp_img = temp_img->NextSiblingElement())
+      item_images.push_back( screen->getImage(temp_img->GetText()) );
+
+    int random_number;
+    random_number = rand() % item_images.size();
+    addSpecialImage(*item_images[random_number]);
+  } else {
+    if ( strcmp(item,"--") ) {
+      if (special_images) {
+        delete special_images;
+        special_images = NULL;
+      }
+    }
   }
   free(item);
   item = strdup(id);

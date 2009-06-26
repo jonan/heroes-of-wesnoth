@@ -155,7 +155,7 @@ void Map::loadMapFile(const char *file_name) {
           map[i][j].setCreature(creature);
         }
         if ( strcmp(item_temp, "--") )
-          setItem(item_temp, map[i][j]);
+          map[i][j].setItem(item_temp);
       }
       map_file.getline(map_temp, 3);
       creatures_file.getline(creatures_temp, 3);

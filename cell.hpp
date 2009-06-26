@@ -52,7 +52,7 @@ class Cell {
     void setPassable    (const bool passable)       {this->passable = passable;}
     void setTerrain     (const char *id);
     void setCreature    (Unit *creature);
-    void setItemType    (const char *id);
+    void setItem        (const char *id);
     void setCoordinates (const int x, const int y);
     // @}
 
