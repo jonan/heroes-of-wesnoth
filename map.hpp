@@ -23,7 +23,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #define MAP_HPP
 
 #include "game_loop.hpp"
-#include "structs.hpp"
+#include "util.hpp"
 
 class Cell;
 class Unit;

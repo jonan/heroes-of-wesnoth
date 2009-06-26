@@ -75,7 +75,7 @@ MACROS = macros.hpp
 
 MAP = map.hpp \
       $(GAME_LOOP) \
-      $(STRUCTS)
+      $(UTIL)
 
 MENU = menu.hpp \
        $(GAME_LOOP)
@@ -83,8 +83,6 @@ MENU = menu.hpp \
 MENU_MAIN = menu_main.hpp
 
 MISSION = mission.hpp
-
-STRUCTS = structs.hpp
 
 TIMER = timer.hpp \
         $(MACROS)
@@ -123,8 +121,8 @@ boot.o : boot.cpp $(BOOT) \
 
 cell.o : cell.cpp $(CELL) \
          $(GRAPHICS) \
-         $(STRUCTS) \
          $(UNIT) \
+         $(UTIL) \
          $(XML_MANAGER)
 	$(CC) $(CFLAGS) cell.cpp
 
@@ -215,7 +213,7 @@ ttf.o : ttf.cpp $(TTF)
 unit.o : unit.cpp $(UNIT) \
          $(CELL) \
          $(GRAPHICS) \
-         $(STRUCTS) \
+         $(UTIL) \
          $(XML_MANAGER)
 	$(CC) $(CFLAGS) unit.cpp
 
@@ -224,7 +222,7 @@ util.o : util.cpp $(UTIL)
 
 unit_magic.o : unit_magic.cpp $(UNIT) \
                $(GRAPHICS) \
-               $(STRUCTS)
+               $(UTIL)
 	$(CC) $(CFLAGS) unit_magic.cpp
 
 world.o : world.cpp $(WORLD) \

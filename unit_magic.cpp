@@ -18,7 +18,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include "unit.hpp"
 
 #include "graphics.hpp"
-#include "structs.hpp"
+#include "util.hpp"
 
 using video_engine::screen;
 

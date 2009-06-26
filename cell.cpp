@@ -20,8 +20,8 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include "tinyxml/tinyxml.h"
 
 #include "graphics.hpp"
-#include "structs.hpp"
 #include "unit.hpp"
+#include "util.hpp"
 #include "xml_manager.hpp"
 
 using video_engine::screen;

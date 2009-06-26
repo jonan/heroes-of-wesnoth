@@ -22,7 +22,23 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #ifndef UTIL_HPP
 #define UTIL_HPP
 
+#include <deque>
 #include <string>
+
+class SDL_Surface;
+
+/// Struct to store coordinates.
+struct Coordinates {
+  int x;
+  int y;
+};
+
+/// Stores information of special terrains
+struct SpecialImage {
+  std::deque<SDL_Surface*> image_list;
+  Coordinates position;
+  unsigned int sprite;
+};
 
 /// 
 void increaseId(std::string &id);
