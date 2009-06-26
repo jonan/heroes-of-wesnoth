@@ -138,7 +138,7 @@
     <image>terrain/forest/snow-forest-small</image>
   </terrain>
 
-  <terrain name="forest_tropical" passable="false">
+  <terrain name="forest_tropical" passable="true">
     <base>desert_sand</base>
     <image>terrain/forest/tropical</image>
     <image>terrain/forest/tropical-2</image>
