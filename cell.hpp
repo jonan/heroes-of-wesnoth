@@ -52,14 +52,14 @@ class Cell {
     void setPassable    (const bool passable)       {this->passable = passable;}
     void setTerrain     (const char *id);
     void setCreature    (Unit *creature);
-    void setItemType    (char type);
+    void setItemType    (const char *id);
     void setCoordinates (const int x, const int y);
     // @}
 
     // @{
     /// Get functions.
     char* getTerrain       (void)                        {return type;                 }
-    char  getItemType      (void)                        {return item;                 }
+    char* getItemType      (void)                        {return item;                 }
     Unit* getCreature      (void)                        {return creature;             }
     Cell* getConnectedCell (const int place)             {return connected_cell[place];}
     void  getCoordinates   (int &x, int &y);
@@ -123,7 +123,7 @@ class Cell {
     SDL_Surface *stars, *alpha;
 
     Unit *creature;
-    char item;
+    char *item;
 
     Cell *connected_cell[6]; // The six cells that are next to this one
     Coordinates *map_position; // Map coordinates of the cell

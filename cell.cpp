@@ -32,7 +32,7 @@ Cell::Cell(void) {
   special_images = NULL;
 
   creature = NULL;
-  item = '-';
+  item = strdup("--");
 
   path = NULL;
 
@@ -52,6 +52,7 @@ Cell::Cell(void) {
 // Destructor
 Cell::~Cell(void) {
   free(type);
+  free(item);
   delete map_position;
   delete [] path;
   delete special_images;
@@ -121,12 +122,13 @@ void Cell::setCreature(Unit *creature) {
 }
 
 // Puts an item on the cell.
-void Cell::setItemType(char type) {
+void Cell::setItemType(const char *id) {
   if (special_images) {
     delete special_images;
     special_images = NULL;
   }
-  item = type;
+  free(item);
+  item = strdup(id);
 }
 
 // Sets the cells map coordinates.

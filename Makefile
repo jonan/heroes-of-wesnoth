@@ -171,7 +171,8 @@ map.o : map.cpp $(MAP) \
 
 map_item.o : map_item.cpp $(MAP) \
              $(CELL) \
-             $(GRAPHICS)
+             $(GRAPHICS) \
+             $(XML_MANAGER)
 	$(CC) $(CFLAGS) map_item.cpp
 
 map_soft.o : map_soft.cpp $(MAP) \
