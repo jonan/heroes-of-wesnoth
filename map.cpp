@@ -35,6 +35,8 @@ using events_engine::MOUSE_BUTTON;
 using events_engine::ATTACK_CURSOR;
 using events_engine::MOVE_CURSOR;
 using events_engine::NORMAL_CURSOR;
+// std
+using std::string;
 // video_engine
 using video_engine::screen;
 using video_engine::FACE_RIGHT;
@@ -115,19 +117,12 @@ void Map::setTerrainToAllCells(const char *id) {
 
 // Loads the terrain, creatures and items of the map from a file.
 void Map::loadMapFile(const char *file_name) {
-  using std::string;
   // Load the files
   // Create a string with the fisical location of the map
   // "maps/" + file_name
   string map_dir("maps/");
   map_dir += file_name;
   std::ifstream map_file(map_dir.c_str());
-  // "maps/" + file_name + "_creatures"
-  string map_creatures = map_dir + "_creatures";
-  std::ifstream creatures_file(map_creatures.c_str());
-  // "maps/" + file_name + "_items"
-  string map_items = map_dir + "_items";
-  std::ifstream items_file(map_items.c_str());
 
   // The cells and units haven't been created yet so there's no
   // cell with the mouse over it and there's no unit selected.
@@ -154,8 +149,9 @@ void Map::loadMapFile(const char *file_name) {
     for (int i=0; i<map_width; i++) {
       // Get info from file
       map_file.get(map_temp, 3);
-      creatures_file.get(creatures_temp, 3);
-      items_file.get(item_temp, 3);
+      map_file.get(creatures_temp, 3);
+      map_file.get(item_temp, 3);
+      map_file.get();
       // Set the info in the cell
       map[i][j].setTerrain(map_temp);
       if ( strcmp(creatures_temp, "--") ) {
@@ -166,13 +162,9 @@ void Map::loadMapFile(const char *file_name) {
         map[i][j].setItem(item_temp);
     }
     map_file.getline(map_temp, 3);
-    creatures_file.getline(creatures_temp, 3);
-    items_file.getline(item_temp, 3);
   }
 
   map_file.close();
-  creatures_file.close();
-  items_file.close();
 }
 
 // Makes the hole map visible

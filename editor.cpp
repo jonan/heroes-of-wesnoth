@@ -18,7 +18,6 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include "editor.hpp"
 
 #include <fstream>
-#include <string>
 
 #include "cell.hpp"
 #include "events.hpp"
@@ -98,13 +97,8 @@ void Editor::save(void) {
   // "maps/" + this->map_file
   string map_dir("maps/");
   map_dir += this->map_file;
+  map_dir += "_new";
   std::ofstream map_file(map_dir.c_str());
-  // "maps/" + this->map_file + "_creatures"
-  string map_creatures = map_dir + "_creatures";
-  std::ofstream creatures_file(map_creatures.c_str());
-  // "maps/" + this->map_file + "_items"
-  string map_items = map_dir + "_items";
-  std::ofstream items_file(map_items.c_str());
 
   // Save width and height
   map_file << map_width << "\n" << map_height << "\n";
@@ -113,19 +107,16 @@ void Editor::save(void) {
     for (int x=0; x<map_width; x++) {
       map_file << map[x][y].getTerrain();
       if (map[x][y].getCreature())
-        creatures_file << map[x][y].getCreature()->getType();
+        map_file << map[x][y].getCreature()->getType();
       else
-        creatures_file << "--";
-      items_file << map[x][y].getItemType();
+        map_file << "--";
+      map_file << map[x][y].getItemType();
+      map_file << " ";
     }
     map_file << '\n';
-    creatures_file << '\n';
-    items_file << '\n';
   }
 
   map_file.close();
-  creatures_file.close();
-  items_file.close();
 }
 
 // Loads the map from the file.
