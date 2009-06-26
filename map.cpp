@@ -42,6 +42,15 @@ using video_engine::FACE_LEFT;
 
 // Starts the map.
 void Map::start(void) {
+  // Block movement to the cells in the border of the map
+  for (int x=0; x<map_width; x++) {
+    map[x][0].setPassable(false);
+    map[x][map_height-1].setPassable(false);
+  }
+  for (int y=0; y<map_height; y++) {
+    map[0][y].setPassable(false);
+    map[map_width-1][y].setPassable(false);
+  }
   // Set first turn.
   nextTurn();
   loop();
@@ -120,52 +129,50 @@ void Map::loadMapFile(const char *file_name) {
   string map_items = map_dir + "_items";
   std::ifstream items_file(map_items.c_str());
 
-  if (!map_file.fail() && !creatures_file.fail() && !items_file.fail()) {
-    // The cells and units haven't been created yet so there's no
-    // cell with the mouse over it and there's no unit selected.
-    mouse_over_cell = NULL;
-    selected_unit = NULL;
-    // Detect map's size
-    char temp[4];
-    map_file.getline(temp, 4);
-    map_width = atoi(temp);
-    map_file.getline(temp, 4);
-    map_height = atoi(temp);
-    // Create a new map
-    map = new Cell*[map_width];
-    for (int i=0; i<map_width; i++)
-      map[i] = new Cell[map_height];
-    // Set the coordinates
-    for (int x=0; x<map_width; x++)
-      for (int y=0; y<map_height; y++)
-        map[x][y].setCoordinates(x, y);
-    connectCells();
+  // The cells and units haven't been created yet so there's no
+  // cell with the mouse over it and there's no unit selected.
+  mouse_over_cell = NULL;
+  selected_unit = NULL;
+  // Detect map's size
+  char temp[4];
+  map_file.getline(temp, 4);
+  map_width = atoi(temp);
+  map_file.getline(temp, 4);
+  map_height = atoi(temp);
+  // Create a new map
+  map = new Cell*[map_width];
+  for (int i=0; i<map_width; i++)
+    map[i] = new Cell[map_height];
+  // Set the coordinates
+  for (int x=0; x<map_width; x++)
+    for (int y=0; y<map_height; y++)
+      map[x][y].setCoordinates(x, y);
+  connectCells();
 
-    char map_temp[3], creatures_temp[3], item_temp[3];
-    for (int j=0; j<map_height; j++) {
-      for (int i=0; i<map_width; i++) {
-        // Get info from file
-        map_file.get(map_temp, 3);
-        creatures_file.get(creatures_temp, 3);
-        items_file.get(item_temp, 3);
-        // Set the info in the cell
-        map[i][j].setTerrain(map_temp);
-        if ( strcmp(creatures_temp, "--") ) {
-          Unit *creature = new Unit(creatures_temp, 0);
-          map[i][j].setCreature(creature);
-        }
-        if ( strcmp(item_temp, "--") )
-          map[i][j].setItem(item_temp);
+  char map_temp[3], creatures_temp[3], item_temp[3];
+  for (int j=0; j<map_height; j++) {
+    for (int i=0; i<map_width; i++) {
+      // Get info from file
+      map_file.get(map_temp, 3);
+      creatures_file.get(creatures_temp, 3);
+      items_file.get(item_temp, 3);
+      // Set the info in the cell
+      map[i][j].setTerrain(map_temp);
+      if ( strcmp(creatures_temp, "--") ) {
+        Unit *creature = new Unit(creatures_temp, 0);
+        map[i][j].setCreature(creature);
       }
-      map_file.getline(map_temp, 3);
-      creatures_file.getline(creatures_temp, 3);
-      items_file.getline(item_temp, 3);
+      if ( strcmp(item_temp, "--") )
+        map[i][j].setItem(item_temp);
     }
-
-    map_file.close();
-    creatures_file.close();
-    items_file.close();
+    map_file.getline(map_temp, 3);
+    creatures_file.getline(creatures_temp, 3);
+    items_file.getline(item_temp, 3);
   }
+
+  map_file.close();
+  creatures_file.close();
+  items_file.close();
 }
 
 // Makes the hole map visible
