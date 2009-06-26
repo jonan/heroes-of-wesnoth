@@ -28,44 +28,6 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 class Cell;
 class Unit;
 
-/// Types of items.
-enum {ALTAR = '0',
-      ALTAR_EVIL,
-      BONES,
-      BONE_STACK,
-      BOX,
-      BRAZIER,
-      BRAZIER_LIT,
-      BURIAL,
-      DRAGON_STATUE,
-      FIRE,
-      ICEPACK = 'a',
-      ORCISH_FLAG,
-      SCARECROW,
-      SIGNPOST,
-      STRAW_BALE,
-      VILLAGE_CAVE,
-      VILLAGE_COAST,
-      VILLAGE_DESERT,
-      VILLAGE_DESERT_CAMP,
-      VILLAGE_DWARF,
-      VILLAGE_ELF,
-      VILLAGE_ELF_SNOW,
-      VILLAGE_HUMAN,
-      VILLAGE_HUMAN_BURNED,
-      VILLAGE_HUMAN_CITY,
-      VILLAGE_HUMAN_HILLS,
-      VILLAGE_HUMAN_SNOW,
-      VILLAGE_HUMAN_SNOW_HILLS,
-      VILLAGE_HUT,
-      VILLAGE_HUT_SNOW,
-      VILLAGE_SWAMP,
-      VILLAGE_TROPICAL,
-      WELL,
-      WHIRLPOOL,
-      WINDMILL,
-      NUM_ITEMS};
-
 /// Controls all the attributes of a map.
 /// Basically consist of lots of Cell classes working
 /// together to create a map an to be able to use it.
