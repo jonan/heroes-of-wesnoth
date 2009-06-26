@@ -169,12 +169,6 @@
     <image>terrain/water/ford2</image>
   </terrain>
 
-  <terrain name="water_ocean" passable="false">
-    <image>terrain/water/ocean</image>
-    <image>terrain/water/ocean2</image>
-    <image>terrain/water/ocean3</image>
-  </terrain>
-
   <terrain name="water_ice" passable="true">
     <image>terrain/water/ice</image>
     <image>terrain/water/ice2</image>
@@ -182,6 +176,12 @@
     <image>terrain/water/ice4</image>
     <image>terrain/water/ice5</image>
     <image>terrain/water/ice6</image>
+  </terrain>
+
+  <terrain name="water_ocean" passable="false">
+    <image>terrain/water/ocean</image>
+    <image>terrain/water/ocean2</image>
+    <image>terrain/water/ocean3</image>
   </terrain>
 
   <terrain name="water_snow" passable="true">
