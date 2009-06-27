@@ -32,6 +32,7 @@ const char TERRAIN_XML_FILE[] = "config/config_terrain.xml";
 const char UNITS_XML_FILE[]   = "config/config_units.xml";
 
 class TiXmlDocument;
+class TiXmlElement;
 
 /// 
 class XmlManager {
@@ -43,13 +44,16 @@ class XmlManager {
     void loadFile(const char *file_name);
 
     /// 
-    TiXmlDocument* getFile(const char *file_name);
+    TiXmlElement* getRootElement(const char *file_name);
 
     /// 
     char* getLastId(const char *file_name);
 
   private:
     XmlManager(void) {} // Constructor
+
+    // 
+    TiXmlDocument* getFile(const char *file_name);
 
     // 
     void setIds(TiXmlDocument* file);

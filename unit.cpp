@@ -131,8 +131,7 @@ void Unit::setAllAttributes(const int live, const int movement,
 
 // Sets the creature's attributes acording to his type.
 void Unit::setCreaturesAttributes(const char *xml_file) {
-  TiXmlDocument *document = XmlManager::getInstance()->getFile(xml_file);
-  TiXmlElement *root = document->RootElement();
+  TiXmlElement *root = XmlManager::getInstance()->getRootElement(xml_file);
 
   TiXmlElement *temp = root->FirstChildElement();
   if (type.length() > 2) {

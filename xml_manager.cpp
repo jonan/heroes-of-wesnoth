@@ -46,6 +46,16 @@ void XmlManager::loadFile(const char *file_name) {
 }
 
 // 
+TiXmlElement* XmlManager::getRootElement(const char *file_name) {
+  return getFile(file_name)->RootElement();
+}
+
+// 
+char* XmlManager::getLastId(const char *file_name) {
+  return static_cast<char*>(getFile(file_name)->GetUserData());
+}
+
+// 
 TiXmlDocument* XmlManager::getFile(const char *file_name) {
   bool found = false;
   std::list<TiXmlDocument*>::iterator it;
@@ -55,11 +65,6 @@ TiXmlDocument* XmlManager::getFile(const char *file_name) {
       found = true;
   it--;
   return (*it);
-}
-
-// 
-char* XmlManager::getLastId(const char *file_name) {
-  return static_cast<char*>(getFile(file_name)->GetUserData());
 }
 
 // 

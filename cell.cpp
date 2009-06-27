@@ -57,8 +57,7 @@ Cell::~Cell(void) {
 
 // Sets the terrain images of the cell.
 void Cell::setTerrain(const char *id) {
-  TiXmlDocument *document = XmlManager::getInstance()->getFile(TERRAIN_XML_FILE);
-  TiXmlElement *root = document->RootElement();
+  TiXmlElement *root = XmlManager::getInstance()->getRootElement(TERRAIN_XML_FILE);
 
   TiXmlElement *temp = root->FirstChildElement();
   if (strlen(id) > 2) {
@@ -125,8 +124,7 @@ void Cell::setItem(const char *id) {
       special_images = NULL;
     }
 
-    TiXmlDocument *document = XmlManager::getInstance()->getFile(ITEMS_XML_FILE);
-    TiXmlElement *root = document->RootElement();
+    TiXmlElement *root = XmlManager::getInstance()->getRootElement(ITEMS_XML_FILE);
 
     TiXmlElement *temp = root->FirstChildElement();
     if (strlen(id) > 2) {
