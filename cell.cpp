@@ -138,14 +138,21 @@ void Cell::setItem(const char *id) {
         temp = temp->NextSiblingElement();
     }
 
-    std::deque<SDL_Surface*> item_images;
-    TiXmlElement *temp_img;
-    for (temp_img = temp->FirstChildElement("image"); temp_img; temp_img = temp_img->NextSiblingElement())
-      item_images.push_back( screen->getImage(temp_img->GetText()) );
-
+    // First set the number of different types of this item
+    int num_types;
+    temp->LastChild()->ToElement()->Attribute("id", &num_types);
+    num_types++;
+    // Chose one of them
     int random_number;
-    random_number = rand() % item_images.size();
-    addSpecialImage(*item_images[random_number]);
+    random_number = rand() % num_types;
+    // Get all images of the chosen type
+    TiXmlElement *temp_img;
+    int temp_id;
+    for (temp_img = temp->FirstChildElement("image"); temp_img; temp_img = temp_img->NextSiblingElement()) {
+      temp_img->Attribute("id", &temp_id);
+      if (temp_id == random_number)
+        addSpecialImage( *screen->getImage(temp_img->GetText()) );
+    }
   } else {
     if ( item != "--" ) {
       if (special_images) {
