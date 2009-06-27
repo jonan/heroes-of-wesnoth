@@ -151,7 +151,6 @@ void Map::loadMapFile(const char *file_name) {
       map_file.get(map_temp, 3);
       map_file.get(creatures_temp, 3);
       map_file.get(item_temp, 3);
-      map_file.get();
       // Set the info in the cell
       map[i][j].setTerrain(map_temp);
       if ( strcmp(creatures_temp, "--") ) {

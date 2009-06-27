@@ -17,7 +17,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include "util.hpp"
 
-// 
+// Increases the given ID one unit.
 void increaseId(std::string &id) {
   id[1]++;
   if (id[1] == '9'+1)
@@ -34,7 +34,7 @@ void increaseId(std::string &id) {
   }
 }
 
-// 
+// Decreases the given ID one unit.
 void decreaseId(std::string &id) {
   id[1]--;
   if (id[1] == 'A'-1)

@@ -42,14 +42,13 @@ Unit::Unit(const char *type, const int number) {
   magic_spell = NULL;
 
   if (strcmp(type,"hero")) {
-    id = strdup(type);
+    this->type = type;
     setCreaturesAttributes(UNITS_XML_FILE);
   }
 }
 
 // Destructor
 Unit::~Unit(void) {
-  free(id);
   delete magic_spell;
 }
 
@@ -136,13 +135,12 @@ void Unit::setCreaturesAttributes(const char *xml_file) {
   TiXmlElement *root = document->RootElement();
 
   TiXmlElement *temp = root->FirstChildElement();
-  if (strlen(id) > 2) {
-    while( strcmp(temp->Attribute("name"), id) )
+  if (type.length() > 2) {
+    while( type != temp->Attribute("name") )
       temp = temp->NextSiblingElement();
-    free(id);
-    id = strdup(temp->Attribute("id"));
+    type = temp->Attribute("id");
   } else {
-    while ( strcmp(temp->Attribute("id"), id) )
+    while ( type != temp->Attribute("id") )
       temp = temp->NextSiblingElement();
   }
 

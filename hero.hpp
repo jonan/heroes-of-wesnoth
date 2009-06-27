@@ -24,9 +24,6 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include "unit.hpp"
 
-/// Types of heros
-enum {ELF = '0' , HUMAN, UNDEAD};
-
 /// Stores the hero's attributes.
 class Hero : public Unit {
   public:

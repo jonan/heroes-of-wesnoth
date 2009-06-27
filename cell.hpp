@@ -23,6 +23,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #define CELL_HPP
 
 #include <deque>
+#include <string>
 
 #include <SDL/SDL.h>
 
@@ -58,17 +59,16 @@ class Cell {
 
     // @{
     /// Get functions.
-    char* getTerrain       (void)                        {return type;                 }
-    char* getItemType      (void)                        {return item;                 }
-    Unit* getCreature      (void)                        {return creature;             }
-    Cell* getConnectedCell (const int place)             {return connected_cell[place];}
-    void  getCoordinates   (int &x, int &y);
-    void  getPath          (int* &path, int &movements);
+    const char* getTerrainType   (void)                        {return type.c_str();         }
+    const char* getItemType      (void)                        {return item.c_str();         }
+    Unit*       getCreature      (void)                        {return creature;             }
+    Cell*       getConnectedCell (const int place)             {return connected_cell[place];}
+    void        getCoordinates   (int &x, int &y);
+    void        getPath          (int* &path, int &movements);
     // @}
 
     /// Adds an image to the cell's terrain.
     /// @param[in] terrain Surface of the terrain.
-    /// @param[in] type Type of terrain ("-1" to maintain actual type)
     void addImage(SDL_Surface &terrain);
     /// Adds a special image to the cell's terrain.
     /// @param[in] terrain Surface of the terrain.
@@ -117,13 +117,13 @@ class Cell {
     // Erases previos calculations about a creatures movement.
     void eraseMovement(void);
 
-    char *type; // Type of terrain of the cell
+    std::string type; // Type of terrain of the cell
     std::deque<SDL_Surface*> terrain_images; // Surfaces of the terrain
     SpecialImage *special_images;
     SDL_Surface *stars, *alpha;
 
     Unit *creature;
-    char *item;
+    std::string item;
 
     Cell *connected_cell[6]; // The six cells that are next to this one
     Coordinates *map_position; // Map coordinates of the cell

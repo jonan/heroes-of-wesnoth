@@ -61,7 +61,7 @@ void Editor::mouseLeftClick(const int x, const int y) {
         map[x][y].setItem(selected.c_str());
       break;
     case EDIT_TERRAIN:
-      if (map[x][y].getTerrain() != selected)
+      if (map[x][y].getTerrainType() != selected)
         map[x][y].setTerrain(selected.c_str());
       break;
     case EDIT_UNITS:
@@ -98,7 +98,6 @@ void Editor::save(void) {
   // "maps/" + this->map_file
   string map_dir("maps/");
   map_dir += this->map_file;
-  map_dir += "_new";
   std::ofstream map_file(map_dir.c_str());
 
   // Save width and height
@@ -106,13 +105,12 @@ void Editor::save(void) {
   // Save the map
   for (int y=0; y<map_height; y++) {
     for (int x=0; x<map_width; x++) {
-      map_file << map[x][y].getTerrain();
+      map_file << map[x][y].getTerrainType();
       if (map[x][y].getCreature())
         map_file << map[x][y].getCreature()->getType();
       else
         map_file << "--";
       map_file << map[x][y].getItemType();
-      map_file << " ";
     }
     map_file << '\n';
   }

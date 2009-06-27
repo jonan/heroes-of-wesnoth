@@ -40,8 +40,10 @@ struct SpecialImage {
   unsigned int sprite;
 };
 
-/// 
+// @{
+/// Use this functions when operating width IDs (unit types, terrain types, etc.)
 void increaseId(std::string &id);
 void decreaseId(std::string &id);
+// @}
 
 #endif // UTIL_HPP

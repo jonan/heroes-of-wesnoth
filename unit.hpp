@@ -23,6 +23,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #define UNIT_HPP
 
 #include <deque>
+#include <string>
 
 #include "macros.hpp"
 
@@ -67,15 +68,15 @@ class Unit {
 
     // @{
     /// Get functions.
-    int   getNumber          (void)                {return number;                      }
-    int   getMovement        (void)                {return movement;                    }
-    int   getAgility         (void)                {return agility;                     }
-    int   getProjectiles     (void)                {return projectiles;                 }
-    Cell* getPosition        (void)                {return position;                    }
-    char* getType            (void)                {return id;                          }
-    Hero* getMaster          (void)                {return master;                      }
-    int   getNumSprites      (const int animation) {return animations[animation].size();}
-    int   getActualAnimation (void)                {return actual_animation;            }
+    int         getNumber          (void)                {return number;                      }
+    int         getMovement        (void)                {return movement;                    }
+    int         getAgility         (void)                {return agility;                     }
+    int         getProjectiles     (void)                {return projectiles;                 }
+    Cell*       getPosition        (void)                {return position;                    }
+    const char* getType            (void)                {return type.c_str();                }
+    Hero*       getMaster          (void)                {return master;                      }
+    int         getNumSprites      (const int animation) {return animations[animation].size();}
+    int         getActualAnimation (void)                {return actual_animation;            }
     // @}
 
     /// Attacks a given unit.
@@ -104,7 +105,7 @@ class Unit {
     // Draws the creature in the given position.
     void drawUnit(SDL_Rect &position);
 
-    char *id;
+    std::string type;
 
     int number;      // Number of units
     int facing_side; // Indicates if the creature is facing left or right

@@ -28,11 +28,10 @@ using video_engine::screen;
 
 // Constructor
 Cell::Cell(void) {
-  type = NULL;
   special_images = NULL;
 
   creature = NULL;
-  item = strdup("--");
+  item = "--";
 
   path = NULL;
 
@@ -51,8 +50,6 @@ Cell::Cell(void) {
 
 // Destructor
 Cell::~Cell(void) {
-  free(type);
-  free(item);
   delete map_position;
   delete [] path;
   delete special_images;
@@ -73,7 +70,7 @@ void Cell::setTerrain(const char *id) {
       temp = temp->NextSiblingElement();
   }
 
-  if ( !type || strcmp(type,id) ) {
+  if ( type != id ) {
     // Set base terrain
     bool special_image = false;
     if (temp->FirstChild("base")) {
@@ -81,8 +78,7 @@ void Cell::setTerrain(const char *id) {
       special_image = true;
     }
 
-    free(type);
-    type = strdup(id);
+    type = id;
 
     // Set alpha (for all cells)
     SDL_Surface *alpha = screen->getImage("alpha", 50);
@@ -151,15 +147,14 @@ void Cell::setItem(const char *id) {
     random_number = rand() % item_images.size();
     addSpecialImage(*item_images[random_number]);
   } else {
-    if ( strcmp(item,"--") ) {
+    if ( item != "--" ) {
       if (special_images) {
         delete special_images;
         special_images = NULL;
       }
     }
   }
-  free(item);
-  item = strdup(id);
+  item = id;
 }
 
 // Sets the cells map coordinates.
