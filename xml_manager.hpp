@@ -26,10 +26,12 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include "macros.hpp"
 
-const char HEROES_XML_FILE[]  = "config/config_heroes.xml";
-const char ITEMS_XML_FILE[]   = "config/config_items.xml";
-const char TERRAIN_XML_FILE[] = "config/config_terrain.xml";
-const char UNITS_XML_FILE[]   = "config/config_units.xml";
+const char HEROES_XML_FILE[]        = "config/config_heroes.xml";
+const char ITEMS_XML_FILE[]         = "config/config_items.xml";
+const char SMOOTH_IMAGES_XML_FILE[] = "config/config_smooth_images.xml";
+const char SMOOTH_RULES_XML_FILE[]  = "config/config_smooth_rules.xml";
+const char TERRAIN_XML_FILE[]       = "config/config_terrain.xml";
+const char UNITS_XML_FILE[]         = "config/config_units.xml";
 
 class TiXmlDocument;
 class TiXmlElement;
@@ -45,6 +47,9 @@ class XmlManager {
 
     /// 
     TiXmlElement* getRootElement(const char *file_name);
+
+    /// 
+    const char* getId(const char *name, const char *file);
 
     /// 
     char* getLastId(const char *file_name);

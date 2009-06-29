@@ -56,6 +56,8 @@ void loadXmlFiles(void) {
   XmlManager* xml = XmlManager::getInstance();
   xml->loadFile(HEROES_XML_FILE);
   xml->loadFile(ITEMS_XML_FILE);
+  xml->loadFile(SMOOTH_IMAGES_XML_FILE);
+  xml->loadFile(SMOOTH_RULES_XML_FILE);
   xml->loadFile(TERRAIN_XML_FILE);
   xml->loadFile(UNITS_XML_FILE);
 }

@@ -31,7 +31,7 @@ using events_engine::NORMAL_CURSOR;
 
 // Constructor
 World::World(const char *map_file) : Map(map_file) {
-  softenMap();
+  smoothMap();
   end_world = false;
   // Count the number of enemies
   number_enemies = 0;

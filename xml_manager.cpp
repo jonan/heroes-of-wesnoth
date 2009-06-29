@@ -51,6 +51,14 @@ TiXmlElement* XmlManager::getRootElement(const char *file_name) {
 }
 
 // 
+const char* XmlManager::getId(const char *name, const char *file) {
+  TiXmlElement *temp = getRootElement(file)->FirstChildElement();
+  while ( strcmp(name,temp->Attribute("name")) )
+    temp = temp->NextSiblingElement();
+  return temp->Attribute("id");
+}
+
+// 
 char* XmlManager::getLastId(const char *file_name) {
   return static_cast<char*>(getFile(file_name)->GetUserData());
 }

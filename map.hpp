@@ -79,8 +79,7 @@ class Map : public GameLoop {
     void connectCells(void);
 
     // Softens the map to make it look nicer.
-    // (Implemented in map_smooth.cpp)
-    void softenMap(void) {}
+    void smoothMap(void);
 
     // Centers the map view in a given cell
     void centerView(Cell& position);
@@ -110,9 +109,8 @@ class Map : public GameLoop {
     Cell *mouse_over_cell; // The cell where the mouse is.
 
   private:
-    // Softens a type of terrain.
-    // (Implemented in map_smooth.cpp)
-    void softenTerrain(const char cell_terrain, char *terrain, const int number_terrains, const int soft_images) {}
+    // Adds the corresponding smooth images to the cell.
+    void addSmoothImages(Cell *cell, bool *need_smooth, const char *images_name);
 
     Coordinates first_cell_coor; // Map coordinates of the top left visible cell.
     Coordinates first_cell_pos;  // Position of the top left visible cell in the screen.

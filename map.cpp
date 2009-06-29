@@ -20,10 +20,13 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include <fstream>
 #include <string>
 
+#include "tinyxml/tinyxml.h"
+
 #include "cell.hpp"
 #include "events.hpp"
 #include "graphics.hpp"
 #include "unit.hpp"
+#include "xml_manager.hpp"
 
 // events_engine
 using events_engine::input;
@@ -419,6 +422,48 @@ void Map::connectCells(void) {
   }
 }
 
+// Softens the map to make it look nicer.
+void Map::smoothMap(void) {
+  XmlManager *xml_manager = XmlManager::getInstance();
+  TiXmlElement *root_rule = xml_manager->getRootElement(SMOOTH_RULES_XML_FILE);
+
+  TiXmlElement *rule;
+  TiXmlElement *from;
+  TiXmlElement *to;
+  TiXmlElement *image;
+  std::string type_id;
+  bool need_smooth[6];
+  for (int x=0; x<map_width; x++) {
+    for (int y=0; y<map_height; y++) {
+      type_id = map[x][y].getTerrainType();
+      for (rule = root_rule->FirstChildElement(); rule; rule = rule->NextSiblingElement()) {
+        for (from = rule->FirstChildElement("from"); from; from = from->NextSiblingElement("from")) {
+          if ( type_id == xml_manager->getId(from->GetText(),TERRAIN_XML_FILE) ) {
+            // Check if surrounding cells need smoothing
+            const char *cell_type;
+            for (int i=N; i<=NW; i++) {
+              need_smooth[i] = false;
+              if (map[x][y].getConnectedCell(i)) {
+                cell_type = map[x][y].getConnectedCell(i)->getTerrainType();
+                for (to = rule->FirstChildElement("to"); to; to = to->NextSiblingElement("to"))
+                  need_smooth[i] |= !strcmp(cell_type, xml_manager->getId(to->GetText(),TERRAIN_XML_FILE));
+              }
+            }
+            bool temp[6];
+            for (int t=N; t<=NW; t++)
+              temp[t] = need_smooth[t];
+            for (image = rule->FirstChildElement("image"); image; image = image->NextSiblingElement("image")) {
+              addSmoothImages(&map[x][y], need_smooth, image->GetText());
+              for (int t=N; t<=NW; t++)
+                need_smooth[t] = temp[t];
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 // Centers the map view in a given cell
 void Map::centerView(Cell& position) {
   int x, y;
@@ -484,4 +529,49 @@ void Map::deleteCreatures(void) {
       delete map[x][y].getCreature();
       map[x][y].setCreature(NULL);
     }
+}
+
+// Adds the corresponding smooth images to the cell.
+void Map::addSmoothImages(Cell *cell, bool *need_smooth, const char *images_name) {
+  XmlManager *xml_manager = XmlManager::getInstance();
+  TiXmlElement *root_image = xml_manager->getRootElement(SMOOTH_IMAGES_XML_FILE);
+
+  bool finished = false;
+  for (int t=N; t<=NW; t++)
+    finished |= need_smooth[t];
+  finished = !finished;
+  TiXmlElement *element = root_image->FirstChildElement();
+  while (strcmp(images_name,element->Attribute("name")))
+    element = element->NextSiblingElement();
+  TiXmlElement *temp;
+  while (!finished) {
+    // Look for the best image to add
+    int max_matches = 0;
+    int num_matches;
+    TiXmlElement *max_matches_element;
+    for (temp = element->FirstChildElement(); temp; temp = temp->NextSiblingElement()) {
+      num_matches = 0;
+      if (need_smooth[N ] && temp->Attribute("n" )) num_matches++;
+      if (need_smooth[NE] && temp->Attribute("ne")) num_matches++;
+      if (need_smooth[SE] && temp->Attribute("se")) num_matches++;
+      if (need_smooth[S ] && temp->Attribute("s" )) num_matches++;
+      if (need_smooth[SW] && temp->Attribute("sw")) num_matches++;
+      if (need_smooth[NW] && temp->Attribute("nw")) num_matches++;
+      if (num_matches > max_matches) {
+        max_matches = num_matches;
+        max_matches_element = temp;
+      }
+    }
+    cell->addImage(*screen->getImage(max_matches_element->GetText()));
+    // Check if we need to add more images
+    if (max_matches_element->Attribute("n" )) need_smooth[N ] = false;
+    if (max_matches_element->Attribute("ne")) need_smooth[NE] = false;
+    if (max_matches_element->Attribute("se")) need_smooth[SE] = false;
+    if (max_matches_element->Attribute("s" )) need_smooth[S ] = false;
+    if (max_matches_element->Attribute("sw")) need_smooth[SW] = false;
+    if (max_matches_element->Attribute("nw")) need_smooth[NW] = false;
+    for (int t=N; t<=NW; t++)
+      finished |= need_smooth[t];
+    finished = !finished;
+  }
 }

@@ -202,7 +202,7 @@ bool Editor::frame(void) {
 
     if (keys[SDLK_SPACE]) { // soften map
       keys[SDLK_SPACE] = false;
-      softenMap();
+      smoothMap();
     }
 
     XmlManager* xml = XmlManager::getInstance();
