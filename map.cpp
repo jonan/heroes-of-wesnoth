@@ -536,42 +536,39 @@ void Map::addSmoothImages(Cell *cell, bool *need_smooth, const char *images_name
   XmlManager *xml_manager = XmlManager::getInstance();
   TiXmlElement *root_image = xml_manager->getRootElement(SMOOTH_IMAGES_XML_FILE);
 
-  bool finished = false;
+  int num_smooth_needed = 0;
   for (int t=N; t<=NW; t++)
-    finished |= need_smooth[t];
-  finished = !finished;
+    if (need_smooth[t]) num_smooth_needed++;
+
   TiXmlElement *element = root_image->FirstChildElement();
   while (strcmp(images_name,element->Attribute("name")))
     element = element->NextSiblingElement();
+
+  const char* cardinal_dir[] = {"n","ne","se","s","sw","nw"};
   TiXmlElement *temp;
-  while (!finished) {
+  while (num_smooth_needed) {
     // Look for the best image to add
     int max_matches = 0;
     int num_matches;
     TiXmlElement *max_matches_element;
     for (temp = element->FirstChildElement(); temp; temp = temp->NextSiblingElement()) {
       num_matches = 0;
-      if (need_smooth[N ] && temp->Attribute("n" )) num_matches++;
-      if (need_smooth[NE] && temp->Attribute("ne")) num_matches++;
-      if (need_smooth[SE] && temp->Attribute("se")) num_matches++;
-      if (need_smooth[S ] && temp->Attribute("s" )) num_matches++;
-      if (need_smooth[SW] && temp->Attribute("sw")) num_matches++;
-      if (need_smooth[NW] && temp->Attribute("nw")) num_matches++;
-      if (num_matches > max_matches) {
+      for (int t=N; t<=NW; t++) {
+        if (temp->Attribute(cardinal_dir[t])) {
+          if (need_smooth[t]) num_matches++;
+          else num_matches = -6;
+        }
+      }
+      if ( (num_matches > max_matches) && (num_matches <= num_smooth_needed) ) {
         max_matches = num_matches;
         max_matches_element = temp;
       }
     }
     cell->addImage(*screen->getImage(max_matches_element->GetText()));
-    // Check if we need to add more images
-    if (max_matches_element->Attribute("n" )) need_smooth[N ] = false;
-    if (max_matches_element->Attribute("ne")) need_smooth[NE] = false;
-    if (max_matches_element->Attribute("se")) need_smooth[SE] = false;
-    if (max_matches_element->Attribute("s" )) need_smooth[S ] = false;
-    if (max_matches_element->Attribute("sw")) need_smooth[SW] = false;
-    if (max_matches_element->Attribute("nw")) need_smooth[NW] = false;
-    for (int t=N; t<=NW; t++)
-      finished |= need_smooth[t];
-    finished = !finished;
+    for (int t=N; t<=NW; t++) {
+      if (max_matches_element->Attribute(cardinal_dir[t]))
+        need_smooth[t] = false;
+    }
+    num_smooth_needed -= max_matches;
   }
 }
