@@ -48,14 +48,10 @@ class XmlManager {
 
     /// 
     void setIds(TiXmlDocument *file);
-    /// 
-    void setNumbers(TiXmlNode *node);
 
     /// 
     TiXmlElement* getRootElement(const char *file_name);
 
-    /// 
-    const char* getId(const char *name, const char *file);
     /// 
     const char* getName(const char *id, const char *file);
 

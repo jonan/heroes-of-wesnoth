@@ -63,32 +63,8 @@ void XmlManager::setIds(TiXmlDocument *file) {
 }
 
 // 
-void XmlManager::setNumbers(TiXmlNode *node) {
-  TiXmlElement *temp = node->FirstChildElement();
-  // Set numbers only if it hasn't already have ones
-  if ( !temp->Attribute("num") ) {
-    int num = 0;
-    char text[4];
-    while (temp) {
-      sprintf(text, "%i", num);
-      temp->SetAttribute("num", text);
-      num++;
-      temp = temp->NextSiblingElement();
-    }
-  }
-}
-
-// 
 TiXmlElement* XmlManager::getRootElement(const char *file_name) {
   return getFile(file_name)->RootElement();
-}
-
-// 
-const char* XmlManager::getId(const char *name, const char *file) {
-  TiXmlElement *temp = getRootElement(file)->FirstChildElement();
-  while ( strcmp(name,temp->Attribute("name")) )
-    temp = temp->NextSiblingElement();
-  return temp->Attribute("id");
 }
 
 // 
