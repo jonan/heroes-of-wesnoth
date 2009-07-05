@@ -56,6 +56,8 @@ class XmlManager {
 
     /// 
     const char* getId(const char *name, const char *file);
+    /// 
+    const char* getName(const char *id, const char *file);
 
     /// 
     char* getLastId(const char *file_name);
