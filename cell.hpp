@@ -65,6 +65,7 @@ class Cell {
     Cell*       getConnectedCell (const int place)             {return connected_cell[place];}
     void        getCoordinates   (int &x, int &y);
     void        getPath          (int* &path, int &movements);
+    const char* getBaseTerrain   (void);
     // @}
 
     /// Adds an image to the cell's terrain.

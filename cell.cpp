@@ -188,6 +188,24 @@ void Cell::getPath(int* &path, int &movements) {
   movements = this->movements;
 }
 
+// 
+const char* Cell::getBaseTerrain(void) {
+  XmlManager *xml = XmlManager::getInstance();
+
+  const char *base_terrain;
+  // Get the name of the cell's type
+  base_terrain = xml->getName(type.c_str(), TERRAIN_XML_FILE);
+  // Make sure the type is one of the base terrains
+  TiXmlElement *terrain = xml->getRootElement(TERRAIN_XML_FILE);
+  for (terrain = terrain->FirstChildElement(); terrain; terrain = terrain->NextSiblingElement()) {
+    if ( !strcmp(base_terrain,terrain->Attribute("name")) ) {
+      if (terrain->FirstChild("base"))
+        base_terrain = terrain->FirstChildElement("base")->GetText();
+    }
+  }
+  return base_terrain;
+}
+
 // Adds an image to the cell's terrain.
 void Cell::addImage(SDL_Surface &terrain) {
   terrain_images.push_back(&terrain);

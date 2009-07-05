@@ -424,41 +424,30 @@ void Map::connectCells(void) {
 
 // Softens the map to make it look nicer.
 void Map::smoothMap(void) {
-  XmlManager *xml_manager = XmlManager::getInstance();
-  TiXmlElement *root_rule = xml_manager->getRootElement(SMOOTH_RULES_XML_FILE);
+  XmlManager *xml = XmlManager::getInstance();
+  TiXmlElement *root = xml->getRootElement(SMOOTH_RULES_XML_FILE);
 
-  TiXmlElement *rule;
-  TiXmlElement *from;
-  TiXmlElement *to;
-  TiXmlElement *image;
-  std::string type_id;
+  TiXmlElement *weight;
+  std::string current_cell_type;
+  std::string temp_cell_type;
+  Cell *connected_cell;
   bool need_smooth[6];
   for (int x=0; x<map_width; x++) {
     for (int y=0; y<map_height; y++) {
-      type_id = map[x][y].getTerrainType();
-      for (rule = root_rule->FirstChildElement(); rule; rule = rule->NextSiblingElement()) {
-        for (from = rule->FirstChildElement("from"); from; from = from->NextSiblingElement("from")) {
-          if ( type_id == xml_manager->getId(from->GetText(),TERRAIN_XML_FILE) ) {
-            // Check if surrounding cells need smoothing
-            const char *cell_type;
-            for (int i=N; i<=NW; i++) {
-              need_smooth[i] = false;
-              if (map[x][y].getConnectedCell(i)) {
-                cell_type = map[x][y].getConnectedCell(i)->getTerrainType();
-                for (to = rule->FirstChildElement("to"); to; to = to->NextSiblingElement("to"))
-                  need_smooth[i] |= !strcmp(cell_type, xml_manager->getId(to->GetText(),TERRAIN_XML_FILE));
-              }
-            }
-            bool temp[6];
-            for (int t=N; t<=NW; t++)
-              temp[t] = need_smooth[t];
-            for (image = rule->FirstChildElement("image"); image; image = image->NextSiblingElement("image")) {
-              addSmoothImages(&map[x][y], need_smooth, image->GetText());
-              for (int t=N; t<=NW; t++)
-                need_smooth[t] = temp[t];
-            }
+      current_cell_type = map[x][y].getBaseTerrain();
+      weight = root->FirstChildElement("weight");
+      weight = weight->FirstChildElement();
+      while ( current_cell_type != weight->Attribute("name") ) {
+        for (int i=N; i<=NW; i++) {
+          need_smooth[i] = false;
+          connected_cell = map[x][y].getConnectedCell(i);
+          if (connected_cell) {
+            temp_cell_type = connected_cell->getBaseTerrain();
+            need_smooth[i] = ( temp_cell_type == weight->Attribute("name") );
           }
         }
+        addSmoothImages(&map[x][y], need_smooth, weight->Attribute("name"));
+        weight = weight->NextSiblingElement();
       }
     }
   }

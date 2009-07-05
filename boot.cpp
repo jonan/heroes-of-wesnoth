@@ -19,6 +19,8 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include <ctime>
 
+#include "tinyxml/tinyxml.h"
+
 #include "events.hpp"
 #include "graphics.hpp"
 #include "xml_manager.hpp"
@@ -54,19 +56,21 @@ void loadMainImages(void) {
 // Loads the XML configuration files.
 void loadXmlFiles(void) {
   XmlManager* xml = XmlManager::getInstance();
-  TiXmlDocument *file;
 
+  // Load the XML files that need IDs
   const char* files_with_id[] = { HEROES_XML_FILE,
                                   ITEMS_XML_FILE,
                                   TERRAIN_XML_FILE,
                                   UNITS_XML_FILE    };
   int size = sizeof(files_with_id)/sizeof(files_with_id[0]);
 
+  TiXmlDocument *file;
   for (int i=0; i<size; i++) {
     file = xml->loadFile(files_with_id[i]);
     xml->setIds(file);
   }
 
+  // Load the rest of XML files
   const char* other_files[] = { SMOOTH_IMAGES_XML_FILE,
                                 SMOOTH_RULES_XML_FILE   };
   size = sizeof(other_files)/sizeof(other_files[0]);

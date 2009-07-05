@@ -2,7 +2,7 @@
 
 <config_smooth_images>
 
-  <images name="add_cave_floor">
+  <images name="cave_floor">
     <image n="true">terrain/cave/floor-n</image>
     <image ne="true">terrain/cave/floor-ne</image>
     <image se="true">terrain/cave/floor-se</image>
@@ -18,7 +18,7 @@
     <image nw="true" n="true">terrain/cave/floor-nw-n</image>
   </images>
 
-  <images name="add_cave_hills">
+  <images name="cave_hills">
     <image n="true">terrain/cave/hills-n</image>
     <image ne="true">terrain/cave/hills-ne</image>
     <image se="true">terrain/cave/hills-se</image>
@@ -27,7 +27,7 @@
     <image nw="true">terrain/cave/hills-nw</image>
   </images>
 
-  <images name="add_desert">
+  <images name="desert">
     <image n="true">terrain/desert/desert-n</image>
     <image ne="true">terrain/desert/desert-ne</image>
     <image se="true">terrain/desert/desert-se</image>
@@ -50,7 +50,7 @@
     <image nw="true" n="true" ne="true">terrain/desert/desert-nw-n-ne</image>
   </images>
 
-  <images name="add_desert_hills">
+  <images name="desert_hills">
     <image n="true">terrain/desert/desert-hills-n</image>
     <image ne="true">terrain/desert/desert-hills-ne</image>
     <image se="true">terrain/desert/desert-hills-se</image>
@@ -59,7 +59,7 @@
     <image nw="true">terrain/desert/desert-hills-nw</image>
   </images>
 
-  <images name="add_desert_mountain">
+  <images name="desert_mountain">
     <image n="true">terrain/desert/desert-mountains-n</image>
     <image ne="true">terrain/desert/desert-mountains-ne</image>
     <image se="true">terrain/desert/desert-mountains-se</image>
@@ -68,7 +68,7 @@
     <image nw="true">terrain/desert/desert-mountains-nw</image>
   </images>
 
-  <images name="add_desert_road">
+  <images name="desert_road">
     <image n="true">terrain/desert/desert-road-n</image>
     <image ne="true">terrain/desert/desert-road-ne</image>
     <image se="true">terrain/desert/desert-road-se</image>
@@ -91,7 +91,7 @@
     <image nw="true" n="true" ne="true">terrain/desert/desert-road-nw-n-ne</image>
   </images>
 
-  <images name="add_desert_sand">
+  <images name="desert_sand">
     <image n="true">terrain/desert/sand-n</image>
     <image ne="true">terrain/desert/sand-ne</image>
     <image se="true">terrain/desert/sand-se</image>
@@ -114,7 +114,7 @@
     <image nw="true" n="true" ne="true">terrain/desert/sand-nw-n-ne</image>
   </images>
 
-  <images name="add_flat_dirt">
+  <images name="flat_dirt">
     <image n="true">terrain/flat/dirt-n</image>
     <image ne="true">terrain/flat/dirt-ne</image>
     <image se="true">terrain/flat/dirt-se</image>
@@ -137,7 +137,7 @@
     <image nw="true" n="true" ne="true">terrain/flat/dirt-nw-n-ne</image>
   </images>
 
-  <images name="add_flat_grass">
+  <images name="flat_grass">
     <image n="true">terrain/flat/grass-n</image>
     <image ne="true">terrain/flat/grass-ne</image>
     <image se="true">terrain/flat/grass-se</image>
@@ -160,7 +160,7 @@
     <image nw="true" n="true" ne="true">terrain/flat/grass-nw-n-ne</image>
   </images>
 
-  <images name="add_flat_grass_to_water">
+  <images name="flat_grass_to_water">
     <image n="true">terrain/flat/grass-to-water-n</image>
     <image ne="true">terrain/flat/grass-to-water-ne</image>
     <image se="true">terrain/flat/grass-to-water-se</image>
@@ -190,7 +190,7 @@
     <image nw="true" n="true" ne="true" se="true">terrain/flat/grass-to-water-nw-n-ne-se</image>
   </images>
 
-  <images name="add_flat_road">
+  <images name="flat_road">
     <image n="true">terrain/flat/road-n</image>
     <image ne="true">terrain/flat/road-ne</image>
     <image se="true">terrain/flat/road-se</image>
@@ -206,7 +206,7 @@
     <image nw="true" n="true">terrain/flat/road-nw-n</image>
   </images>
 
-  <images name="add_flat_savanna">
+  <images name="flat_savanna">
     <image n="true">terrain/flat/savanna-n</image>
     <image ne="true">terrain/flat/savanna-ne</image>
     <image se="true">terrain/flat/savanna-se</image>
@@ -229,7 +229,7 @@
     <image nw="true" n="true" ne="true">terrain/flat/savanna-nw-n-ne</image>
   </images>
 
-  <images name="add_flat_savanna_to_water">
+  <images name="flat_savanna_to_water">
     <image n="true">terrain/flat/savanna-to-water-n</image>
     <image ne="true">terrain/flat/savanna-to-water-ne</image>
     <image se="true">terrain/flat/savanna-to-water-se</image>
@@ -252,7 +252,7 @@
     <image nw="true" n="true" ne="true">terrain/flat/savanna-to-water-nw-n-ne</image>
   </images>
 
-  <images name="add_flat_stone_path">
+  <images name="flat_stone_path">
     <image n="true">terrain/flat/stone-path-n</image>
     <image ne="true">terrain/flat/stone-path-ne</image>
     <image se="true">terrain/flat/stone-path-se</image>
@@ -268,7 +268,7 @@
     <image nw="true" n="true">terrain/flat/stone-path-nw-n</image>
   </images>
 
-  <images name="add_hills">
+  <images name="hills">
     <image n="true">terrain/hills-n</image>
     <image ne="true">terrain/hills-ne</image>
     <image se="true">terrain/hills-se</image>
@@ -277,7 +277,7 @@
     <image nw="true">terrain/hills-nw</image>
   </images>
 
-  <images name="add_lava">
+  <images name="lava">
     <image n="true">terrain/lava-n</image>
     <image ne="true">terrain/lava-ne</image>
     <image se="true">terrain/lava-se</image>
@@ -293,7 +293,7 @@
     <image nw="true" n="true">terrain/lava-nw-n</image>
   </images>
 
-  <images name="add_water_coast">
+  <images name="water_coast">
     <image n="true">terrain/water/coast-n</image>
     <image ne="true">terrain/water/coast-ne</image>
     <image se="true">terrain/water/coast-se</image>
@@ -302,7 +302,7 @@
     <image nw="true">terrain/water/coast-nw</image>
   </images>
 
-  <images name="add_water_ford">
+  <images name="water_ford">
     <image n="true">terrain/water/ford-n</image>
     <image ne="true">terrain/water/ford-ne</image>
     <image se="true">terrain/water/ford-se</image>
@@ -311,7 +311,7 @@
     <image nw="true">terrain/water/ford-nw</image>
   </images>
 
-  <images name="add_water_ice">
+  <images name="water_ice">
     <image n="true">terrain/water/ice-n</image>
     <image ne="true">terrain/water/ice-ne</image>
     <image se="true">terrain/water/ice-se</image>
@@ -327,7 +327,7 @@
     <image nw="true" n="true">terrain/water/ice-nw-n</image>
   </images>
 
-  <images name="add_water_ice_to_water">
+  <images name="water_ice_to_water">
     <image n="true">terrain/water/ice-to-water-n</image>
     <image ne="true">terrain/water/ice-to-water-ne</image>
     <image se="true">terrain/water/ice-to-water-se</image>
@@ -343,7 +343,7 @@
     <image nw="true" n="true">terrain/water/ice-to-water-nw-n</image>
   </images>
 
-  <images name="add_water_snow">
+  <images name="water_snow">
     <image n="true">terrain/water/snow-n</image>
     <image ne="true">terrain/water/snow-ne</image>
     <image se="true">terrain/water/snow-se</image>
@@ -373,14 +373,13 @@
     <image nw="true" n="true" ne="true" se="true">terrain/water/snow-nw-n-ne-se</image>
   </images>
 
-  <images name="add_water_snow_to_water">
+  <images name="water_snow_to_water">
     <image n="true">terrain/water/snow-to-water-n</image>
     <image ne="true">terrain/water/snow-to-water-ne</image>
     <image se="true">terrain/water/snow-to-water-se</image>
     <image s="true">terrain/water/snow-to-water-s</image>
     <image sw="true">terrain/water/snow-to-water-sw</image>
     <image nw="true">terrain/water/snow-to-water-nw</image>
-
 
     <image n="true" ne="true">terrain/water/snow-to-water-n-ne</image>
     <image ne="true" se="true">terrain/water/snow-to-water-ne-se</image>
@@ -390,7 +389,7 @@
     <image nw="true" n="true">terrain/water/snow-to-water-nw-n</image>
   </images>
 
-  <images name="add_water_snow_hills">
+  <images name="water_snow_hills">
     <image n="true">terrain/water/snow-hills-n</image>
     <image ne="true">terrain/water/snow-hills-ne</image>
     <image se="true">terrain/water/snow-hills-se</image>
