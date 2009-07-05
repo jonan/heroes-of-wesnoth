@@ -43,7 +43,10 @@ class XmlManager {
     ~XmlManager(void); // Destructor
 
     /// 
-    void loadFile(const char *file_name);
+    TiXmlDocument* loadFile(const char *file_name);
+
+    /// 
+    void setIds(TiXmlDocument* file);
 
     /// 
     TiXmlElement* getRootElement(const char *file_name);
@@ -59,9 +62,6 @@ class XmlManager {
 
     // 
     TiXmlDocument* getFile(const char *file_name);
-
-    // 
-    void setIds(TiXmlDocument* file);
 
     std::list<TiXmlDocument*> xml_files;
 

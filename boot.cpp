@@ -54,12 +54,25 @@ void loadMainImages(void) {
 // Loads the XML configuration files.
 void loadXmlFiles(void) {
   XmlManager* xml = XmlManager::getInstance();
-  xml->loadFile(HEROES_XML_FILE);
-  xml->loadFile(ITEMS_XML_FILE);
-  xml->loadFile(SMOOTH_IMAGES_XML_FILE);
-  xml->loadFile(SMOOTH_RULES_XML_FILE);
-  xml->loadFile(TERRAIN_XML_FILE);
-  xml->loadFile(UNITS_XML_FILE);
+  TiXmlDocument *file;
+
+  const char* files_with_id[] = { HEROES_XML_FILE,
+                                  ITEMS_XML_FILE,
+                                  TERRAIN_XML_FILE,
+                                  UNITS_XML_FILE    };
+  int size = sizeof(files_with_id)/sizeof(files_with_id[0]);
+
+  for (int i=0; i<size; i++) {
+    file = xml->loadFile(files_with_id[i]);
+    xml->setIds(file);
+  }
+
+  const char* other_files[] = { SMOOTH_IMAGES_XML_FILE,
+                                SMOOTH_RULES_XML_FILE   };
+  size = sizeof(other_files)/sizeof(other_files[0]);
+
+  for (int j=0; j<size; j++)
+    xml->loadFile(other_files[j]);
 }
 
 // Starts the engine and loads the main images.

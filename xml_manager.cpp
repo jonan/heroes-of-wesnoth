@@ -38,11 +38,24 @@ XmlManager::~XmlManager(void) {
 }
 
 // 
-void XmlManager::loadFile(const char *file_name) {
+TiXmlDocument* XmlManager::loadFile(const char *file_name) {
   TiXmlDocument *file = new TiXmlDocument(file_name);
   file->LoadFile();
-  setIds(file);
   xml_files.push_back(file);
+  return file;
+}
+
+// 
+void XmlManager::setIds(TiXmlDocument* file) {
+  TiXmlElement *root = file->RootElement();
+
+  std::string id = "00";
+  TiXmlElement *temp = root->FirstChildElement();
+  for (; temp; temp = temp->NextSiblingElement()) {
+    temp->SetAttribute("id", id.c_str());
+    increaseId(id);
+  }
+  file->SetUserData(strdup(id.c_str()));
 }
 
 // 
@@ -73,17 +86,4 @@ TiXmlDocument* XmlManager::getFile(const char *file_name) {
       found = true;
   it--;
   return (*it);
-}
-
-// 
-void XmlManager::setIds(TiXmlDocument* file) {
-  TiXmlElement *root = file->RootElement();
-
-  std::string id = "00";
-  TiXmlElement *temp = root->FirstChildElement();
-  for (; temp; temp = temp->NextSiblingElement()) {
-    temp->SetAttribute("id", id.c_str());
-    increaseId(id);
-  }
-  file->SetUserData(strdup(id.c_str()));
 }
