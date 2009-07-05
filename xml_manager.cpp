@@ -46,16 +46,36 @@ TiXmlDocument* XmlManager::loadFile(const char *file_name) {
 }
 
 // 
-void XmlManager::setIds(TiXmlDocument* file) {
+void XmlManager::setIds(TiXmlDocument *file) {
   TiXmlElement *root = file->RootElement();
 
-  std::string id = "00";
   TiXmlElement *temp = root->FirstChildElement();
-  for (; temp; temp = temp->NextSiblingElement()) {
-    temp->SetAttribute("id", id.c_str());
-    increaseId(id);
+  // Set IDs only if it hasn't already have ones
+  if ( !temp->Attribute("id") ) {
+    std::string id = "00";
+    while (temp) {
+      temp->SetAttribute("id", id.c_str());
+      increaseId(id);
+      temp = temp->NextSiblingElement();
+    }
+    file->SetUserData(strdup(id.c_str()));
   }
-  file->SetUserData(strdup(id.c_str()));
+}
+
+// 
+void XmlManager::setNumbers(TiXmlNode *node) {
+  TiXmlElement *temp = node->FirstChildElement();
+  // Set numbers only if it hasn't already have ones
+  if ( !temp->Attribute("num") ) {
+    int num = 0;
+    char text[4];
+    while (temp) {
+      sprintf(text, "%i", num);
+      temp->SetAttribute("num", text);
+      num++;
+      temp = temp->NextSiblingElement();
+    }
+  }
 }
 
 // 

@@ -35,6 +35,7 @@ const char UNITS_XML_FILE[]         = "config/config_units.xml";
 
 class TiXmlDocument;
 class TiXmlElement;
+class TiXmlNode;
 
 /// 
 class XmlManager {
@@ -46,7 +47,9 @@ class XmlManager {
     TiXmlDocument* loadFile(const char *file_name);
 
     /// 
-    void setIds(TiXmlDocument* file);
+    void setIds(TiXmlDocument *file);
+    /// 
+    void setNumbers(TiXmlNode *node);
 
     /// 
     TiXmlElement* getRootElement(const char *file_name);
