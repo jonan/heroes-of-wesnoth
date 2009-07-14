@@ -19,6 +19,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include <fstream>
 #include <string>
+#include <vector>
 
 #include "tinyxml/tinyxml.h"
 
@@ -521,43 +522,86 @@ void Map::deleteCreatures(void) {
 }
 
 // Adds the corresponding smooth images to the cell.
-void Map::addSmoothImages(Cell *cell, bool *need_smooth, const char *images_name) {
-  XmlManager *xml_manager = XmlManager::getInstance();
-  TiXmlElement *root_image = xml_manager->getRootElement(SMOOTH_IMAGES_XML_FILE);
-
+void Map::addSmoothImages(Cell *cell, bool *need_smooth, const char *terrain) {
   int num_smooth_needed = 0;
   for (int t=N; t<=NW; t++)
     if (need_smooth[t]) num_smooth_needed++;
 
-  TiXmlElement *element = root_image->FirstChildElement();
-  while (strcmp(images_name,element->Attribute("name")))
-    element = element->NextSiblingElement();
+  if (num_smooth_needed) {
+    XmlManager *xml = XmlManager::getInstance();
+    // Create a vector with the names of the images that will be added
+    TiXmlElement *root_rules = xml->getRootElement(SMOOTH_RULES_XML_FILE);
+    std::vector<const char*> images(1, terrain);
 
-  const char* cardinal_dir[] = {"n","ne","se","s","sw","nw"};
-  TiXmlElement *temp;
-  while (num_smooth_needed) {
-    // Look for the best image to add
-    int max_matches = 0;
-    int num_matches;
-    TiXmlElement *max_matches_element;
-    for (temp = element->FirstChildElement(); temp; temp = temp->NextSiblingElement()) {
-      num_matches = 0;
-      for (int t=N; t<=NW; t++) {
-        if (temp->Attribute(cardinal_dir[t])) {
-          if (need_smooth[t]) num_matches++;
-          else num_matches = -6;
+    TiXmlNode *special      = NULL;
+    TiXmlNode *special_to   = NULL;
+    TiXmlNode *special_case = NULL;
+    TiXmlNode *special_img  = NULL;
+    bool found = false;
+    const char *cell_terrain_name;
+    while ( (special = root_rules->IterateChildren("special",special)) ) {
+      while ( (special_to = special->IterateChildren("to",special_to)) ) {
+        cell_terrain_name = xml->getName(cell->getTerrainType(),TERRAIN_XML_FILE);
+        if ( !strcmp(cell_terrain_name,special_to->ToElement()->GetText()) )
+          found = true;
+      }
+      if (found) {
+        found = false;
+        while ( (special_case = special->IterateChildren("case",special_case)) ) {
+          if ( !strcmp(terrain,special_case->ToElement()->Attribute("name")) ) {
+            images.clear();
+            while ( (special_img = special_case->IterateChildren("image",special_img)) )
+              images.push_back(special_img->ToElement()->GetText());
+          }
         }
       }
-      if ( (num_matches > max_matches) && (num_matches <= num_smooth_needed) ) {
-        max_matches = num_matches;
-        max_matches_element = temp;
+    }
+    // Add the images
+    TiXmlElement *root_image = xml->getRootElement(SMOOTH_IMAGES_XML_FILE);
+    int num_images = images.size();
+    std::vector<TiXmlElement*> elements(num_images);
+    TiXmlNode *element = NULL;
+    while ( (element = root_image->IterateChildren(element)) ) {
+      for (int i=0; i<num_images; i++) {
+        if ( !strcmp(images[i],element->ToElement()->Attribute("name")) )
+          elements[i] = element->ToElement();
       }
     }
-    cell->addImage(*screen->getImage(max_matches_element->GetText()));
-    for (int t=N; t<=NW; t++) {
-      if (max_matches_element->Attribute(cardinal_dir[t]))
-        need_smooth[t] = false;
+
+    const char* cardinal_dir[] = {"n","ne","se","s","sw","nw"};
+    int max_matches, num_matches;
+    TiXmlElement *max_matches_element;
+    TiXmlNode *temp_element;
+    // Temporal copies of some variables
+    int temp_num_smooth_needed;
+    bool temp_need_smooth[6];
+    for (int j=0; j<num_images; j++) {
+      temp_num_smooth_needed = num_smooth_needed;
+      for (int t=N; t<=NW; t++) temp_need_smooth[t] = need_smooth[t];
+      while (temp_num_smooth_needed) {
+        // Look for the best image to add
+        max_matches = 0;
+        temp_element = NULL;
+        while ( (temp_element = elements[j]->IterateChildren(temp_element)) ) {
+          num_matches = 0;
+          for (int t=N; t<=NW; t++) {
+            if (temp_element->ToElement()->Attribute(cardinal_dir[t])) {
+              if (temp_need_smooth[t]) num_matches++;
+              else num_matches = -6;
+            }
+          }
+          if (num_matches > max_matches) {
+            max_matches = num_matches;
+            max_matches_element = temp_element->ToElement();
+          }
+        }
+        cell->addImage(*screen->getImage(max_matches_element->GetText()));
+        for (int t=N; t<=NW; t++) {
+          if (max_matches_element->Attribute(cardinal_dir[t]))
+            temp_need_smooth[t] = false;
+        }
+        temp_num_smooth_needed -= max_matches;
+      }
     }
-    num_smooth_needed -= max_matches;
   }
 }

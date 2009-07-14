@@ -110,7 +110,7 @@ class Map : public GameLoop {
 
   private:
     // Adds the corresponding smooth images to the cell.
-    void addSmoothImages(Cell *cell, bool *need_smooth, const char *images_name);
+    void addSmoothImages(Cell *cell, bool *need_smooth, const char *terrain);
 
     Coordinates first_cell_coor; // Map coordinates of the top left visible cell.
     Coordinates first_cell_pos;  // Position of the top left visible cell in the screen.

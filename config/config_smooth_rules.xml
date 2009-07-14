@@ -25,4 +25,25 @@
     <terrain name="water_ocean"      />
   </weight>
 
+  <special>
+    <to>water_coast</to>
+    <to>water_ford</to>
+    <to>water_ocean</to>
+    <case name="flat_grass">
+      <image>flat_grass_to_water</image>
+    </case>
+    <case name="flat_savanna">
+      <image>flat_savanna_to_water</image>
+    </case>
+    <case name="water_ice">
+      <image>water_ice_to_water</image>
+      <image>water_ice</image>
+    </case>
+    <case name="water_snow">
+      <image>water_ice_to_water</image>
+      <image>water_ice</image>
+      <image>water_snow_to_water</image>
+    </case>
+  </special>
+
 </config_smooth_rules>
