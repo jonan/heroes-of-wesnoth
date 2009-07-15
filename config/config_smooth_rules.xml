@@ -35,6 +35,10 @@
     <case name="flat_savanna">
       <image>flat_savanna_to_water</image>
     </case>
+    <case name="hills">
+      <image>flat_grass_to_water</image>
+      <image>hills</image>
+    </case>
     <case name="water_ice">
       <image>water_ice_to_water</image>
       <image>water_ice</image>
