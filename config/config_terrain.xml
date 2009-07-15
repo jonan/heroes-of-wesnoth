@@ -144,6 +144,7 @@
     <image>terrain/forest/tropical-2</image>
     <image>terrain/forest/tropical-3</image>
     <image>terrain/forest/tropical-4</image>
+    <image>terrain/forest/tropical-small</image>
   </terrain>
 
   <terrain name="hills" passable="false">
