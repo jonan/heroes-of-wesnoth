@@ -88,6 +88,10 @@
     <image id="1">items/villages/coast2</image>
     <image id="2">items/villages/coast3</image>
     <image id="3">items/villages/coast4</image>
+    <image id="4">items/villages/coast5-1</image>
+    <image id="4">items/villages/coast5-2</image>
+    <image id="4">items/villages/coast5-3</image>
+    <image id="4">items/villages/coast5-4</image>
   </item>
 
   <item name="village_desert">
