@@ -51,26 +51,26 @@ class Cell {
     void setAlpha       (SDL_Surface &alpha)        {this->alpha = &alpha;     }
     void setStars       (SDL_Surface &stars)        {this->stars = &stars;     }
     void setPassable    (const bool passable)       {this->passable = passable;}
-    void setTerrain     (const char *id);
+    void setTerrain     (const char *type);
     void setCreature    (Unit *creature);
-    void setItem        (const char *id);
+    void setItem        (const char *type);
     void setCoordinates (const int x, const int y);
     // @}
 
     // @{
     /// Get functions.
-    const char* getTerrainType   (void)                        {return type.c_str();         }
-    const char* getItemType      (void)                        {return item.c_str();         }
+    const char* getTerrainId     (void)                        {return type.c_str();         }
+    const char* getBaseTerrain   (void);
+    const char* getItemId        (void)                        {return item.c_str();         }
     Unit*       getCreature      (void)                        {return creature;             }
     Cell*       getConnectedCell (const int place)             {return connected_cell[place];}
     void        getCoordinates   (int &x, int &y);
     void        getPath          (int* &path, int &movements);
-    const char* getBaseTerrain   (void);
     // @}
 
     /// Adds an image to the cell's terrain.
     /// @param[in] terrain Surface of the terrain.
-    void addImage(SDL_Surface &terrain);
+    void addImage(SDL_Surface &terrain) {terrain_images.push_back(&terrain);}
     /// Adds a special image to the cell's terrain.
     /// @param[in] terrain Surface of the terrain.
     void addSpecialImage(SDL_Surface &terrain);

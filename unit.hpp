@@ -73,7 +73,7 @@ class Unit {
     int         getAgility         (void)                {return agility;                     }
     int         getProjectiles     (void)                {return projectiles;                 }
     Cell*       getPosition        (void)                {return position;                    }
-    const char* getType            (void)                {return type.c_str();                }
+    const char* getId              (void)                {return type.c_str();                }
     Hero*       getMaster          (void)                {return master;                      }
     int         getNumSprites      (const int animation) {return animations[animation].size();}
     int         getActualAnimation (void)                {return actual_animation;            }

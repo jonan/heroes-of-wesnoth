@@ -541,7 +541,7 @@ void Map::addSmoothImages(Cell *cell, bool *need_smooth, const char *terrain) {
     const char *cell_terrain_name;
     while ( (special = root_rules->IterateChildren("special",special)) ) {
       while ( (special_to = special->IterateChildren("to",special_to)) ) {
-        cell_terrain_name = xml->getName(cell->getTerrainType(),TERRAIN_XML_FILE);
+        cell_terrain_name = xml->getName(cell->getTerrainId(),TERRAIN_XML_FILE);
         if ( !strcmp(cell_terrain_name,special_to->ToElement()->GetText()) )
           found = true;
       }

@@ -56,20 +56,20 @@ Cell::~Cell(void) {
 }
 
 // Sets the terrain images of the cell.
-void Cell::setTerrain(const char *id) {
+void Cell::setTerrain(const char *type) {
   TiXmlElement *root = XmlManager::getInstance()->getRootElement(TERRAIN_XML_FILE);
 
   TiXmlElement *temp = root->FirstChildElement();
-  if (strlen(id) > 2) {
-    while( strcmp(temp->Attribute("name"), id) )
+  if (strlen(type) > 2) {
+    while( strcmp(temp->Attribute("name"), type) )
       temp = temp->NextSiblingElement();
-    id = temp->Attribute("id");
+    type = temp->Attribute("id");
   } else {
-    while ( strcmp(temp->Attribute("id"), id) )
+    while ( strcmp(temp->Attribute("id"), type) )
       temp = temp->NextSiblingElement();
   }
 
-  if ( type != id ) {
+  if ( this->type != type ) {
     // Set base terrain
     bool special_image = false;
     if (temp->FirstChild("base")) {
@@ -77,7 +77,7 @@ void Cell::setTerrain(const char *id) {
       special_image = true;
     }
 
-    type = id;
+    this->type = type;
 
     // Set alpha (for all cells)
     SDL_Surface *alpha = screen->getImage("alpha", 50);
@@ -92,9 +92,9 @@ void Cell::setTerrain(const char *id) {
     stars_images.push_back( screen->getImage("terrain/stars/blue7") );
     // Set the terrain
     std::deque<SDL_Surface*> terrain_images;
-    TiXmlElement *temp_img;
-    for (temp_img = temp->FirstChildElement("image"); temp_img; temp_img = temp_img->NextSiblingElement())
-      terrain_images.push_back( screen->getImage(temp_img->GetText()) );
+    TiXmlNode *temp_img = NULL;
+    while ( (temp_img = temp->IterateChildren("image",temp_img)) )
+      terrain_images.push_back( screen->getImage(temp_img->ToElement()->GetText()) );
     bool passable = strcmp(temp->Attribute("passable"), "false");
 
     int random_number;
@@ -116,9 +116,9 @@ void Cell::setCreature(Unit *creature) {
   if (creature) creature->setPosition(*this);
 }
 
-// Puts an item on the cell.
-void Cell::setItem(const char *id) {
-  if ( strcmp(id,"--") ) {
+// Puts an item in the cell.
+void Cell::setItem(const char *type) {
+  if ( strcmp(type,"--") ) {
     if (special_images) {
       delete special_images;
       special_images = NULL;
@@ -127,12 +127,12 @@ void Cell::setItem(const char *id) {
     TiXmlElement *root = XmlManager::getInstance()->getRootElement(ITEMS_XML_FILE);
 
     TiXmlElement *temp = root->FirstChildElement();
-    if (strlen(id) > 2) {
-      while( strcmp(temp->Attribute("name"), id) )
+    if (strlen(type) > 2) {
+      while( strcmp(temp->Attribute("name"), type) )
         temp = temp->NextSiblingElement();
-      id = temp->Attribute("id");
+      type = temp->Attribute("id");
     } else {
-      while ( strcmp(temp->Attribute("id"), id) )
+      while ( strcmp(temp->Attribute("id"), type) )
         temp = temp->NextSiblingElement();
     }
 
@@ -141,15 +141,14 @@ void Cell::setItem(const char *id) {
     temp->LastChild()->ToElement()->Attribute("id", &num_types);
     num_types++;
     // Chose one of them
-    int random_number;
-    random_number = rand() % num_types;
+    int random_number = rand() % num_types;
     // Get all images of the chosen type
-    TiXmlElement *temp_img;
+    TiXmlNode *temp_img = NULL;
     int temp_id;
-    for (temp_img = temp->FirstChildElement("image"); temp_img; temp_img = temp_img->NextSiblingElement()) {
-      temp_img->Attribute("id", &temp_id);
+    while ( (temp_img = temp->IterateChildren("image",temp_img)) ) {
+      temp_img->ToElement()->Attribute("id", &temp_id);
       if (temp_id == random_number)
-        addSpecialImage( *screen->getImage(temp_img->GetText()) );
+        addSpecialImage( *screen->getImage(temp_img->ToElement()->GetText()) );
     }
   } else {
     if ( item != "--" ) {
@@ -159,10 +158,10 @@ void Cell::setItem(const char *id) {
       }
     }
   }
-  item = id;
+  item = type;
 }
 
-// Sets the cells map coordinates.
+// Sets the cell's map coordinates.
 void Cell::setCoordinates(const int x, const int y) {
   if (!map_position) {
     map_position = new Coordinates;
@@ -171,24 +170,7 @@ void Cell::setCoordinates(const int x, const int y) {
   }
 }
 
-// Returns the cells map coordinates.
-void Cell::getCoordinates(int &x, int &y) {
-  if (map_position) {
-    x = map_position->x;
-    y = map_position->y;
-  } else {
-    x = y = -1;
-  }
-}
-
-// Returns the path that the unit has to follow to
-// reach this cell and how many movements are needed.
-void Cell::getPath(int* &path, int &movements) {
-  path = this->path;
-  movements = this->movements;
-}
-
-// 
+// Returns the cell's base terrain
 const char* Cell::getBaseTerrain(void) {
   XmlManager *xml = XmlManager::getInstance();
 
@@ -206,9 +188,21 @@ const char* Cell::getBaseTerrain(void) {
   return base_terrain;
 }
 
-// Adds an image to the cell's terrain.
-void Cell::addImage(SDL_Surface &terrain) {
-  terrain_images.push_back(&terrain);
+// Returns the cell's map coordinates.
+void Cell::getCoordinates(int &x, int &y) {
+  if (map_position) {
+    x = map_position->x;
+    y = map_position->y;
+  } else {
+    x = y = -1;
+  }
+}
+
+// Returns the path that the unit has to follow to
+// reach this cell and how many movements are needed.
+void Cell::getPath(int* &path, int &movements) {
+  path = this->path;
+  movements = this->movements;
 }
 
 // Adds a special image to the cell's terrain.

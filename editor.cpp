@@ -57,11 +57,11 @@ Editor::~Editor(void) {
 void Editor::mouseLeftClick(const int x, const int y) {
   switch (editing_type) {
     case EDIT_ITEMS:
-      if (map[x][y].getItemType() != selected)
+      if (map[x][y].getItemId() != selected)
         map[x][y].setItem(selected.c_str());
       break;
     case EDIT_TERRAIN:
-      if (map[x][y].getTerrainType() != selected)
+      if (map[x][y].getTerrainId() != selected)
         map[x][y].setTerrain(selected.c_str());
       break;
     case EDIT_UNITS:
@@ -78,7 +78,7 @@ void Editor::mouseLeftClick(const int x, const int y) {
 void Editor::mouseRightClick(const int x, const int y) {
   switch (editing_type) {
     case EDIT_ITEMS:
-      if ( strcmp(map[x][y].getItemType(),"--") )
+      if ( strcmp(map[x][y].getItemId(),"--") )
         map[x][y].setItem("--");
       break;
     case EDIT_UNITS:
@@ -105,12 +105,12 @@ void Editor::save(void) {
   // Save the map
   for (int y=0; y<map_height; y++) {
     for (int x=0; x<map_width; x++) {
-      map_file << map[x][y].getTerrainType();
+      map_file << map[x][y].getTerrainId();
       if (map[x][y].getCreature())
-        map_file << map[x][y].getCreature()->getType();
+        map_file << map[x][y].getCreature()->getId();
       else
         map_file << "--";
-      map_file << map[x][y].getItemType();
+      map_file << map[x][y].getItemId();
     }
     map_file << '\n';
   }
