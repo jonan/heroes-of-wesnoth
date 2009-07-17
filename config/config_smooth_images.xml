@@ -300,8 +300,10 @@
 
     <image n="true" ne="true" se="true">terrain/lava-n-ne-se</image>
     <image ne="true" se="true" s="true">terrain/lava-ne-se-s</image>
+    <image se="true" s="true" sw="true">terrain/lava-se-s-sw</image>
     <image s="true" sw="true" nw="true">terrain/lava-s-sw-nw</image>
     <image sw="true" nw="true" n="true">terrain/lava-sw-nw-n</image>
+    <image nw="true" n="true" ne="true">terrain/lava-nw-n-ne</image>
 
     <image n="true" ne="true" se="true" s="true">terrain/lava-n-ne-se-s</image>
     <image s="true" sw="true" nw="true" n="true">terrain/lava-s-sw-nw-n</image>
