@@ -156,18 +156,16 @@ void Unit::setCreaturesAttributes(const char *xml_file) {
   setAllAttributes(live, movement, attack, agility, projectiles, projectiles_type);
   // Set the images
   TiXmlNode *images = temp->FirstChild("images");
-  TiXmlElement *img;
+  TiXmlNode *img;
   const char *animation_names[] = { "attacking",
                                     "defending",
                                     "dying",
                                     "idle",
                                     "standing"   };
   for (int i=0; i<NUM_ANIMATIONS; i++) {
-    img = images->FirstChildElement(animation_names[i]);
-    while (img) {
-      addAnimationImage(img->GetText(), i);
-      img = img->NextSiblingElement(animation_names[i]);
-    }
+    img = NULL;
+    while ( (img = images->IterateChildren(animation_names[i], img)) )
+      addAnimationImage(img->ToElement()->GetText(), i);
   }
 }
 
