@@ -21,54 +21,35 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include "world.hpp"
 
 // Creates and starts a mission.
-void createMission(const char *map, const int number_allies,
-                   const int hero_position_x, const int hero_position_y
+void createMission(const char *map, const char *hero_type,
+                   const int hero_position_x, const int hero_position_y,
+                   const char *allies_type, const int number_allies
                   ) {
    World war(map);
-   Hero *hero;
-   Unit *temp;
+   Hero *hero = new Hero(hero_type);
 
-   // Adding first hero
-   hero = new Hero("human");
+   Unit *temp;
    // Set the hero's units.
    for (int j=0; j<9; j++) {
-      temp = new Unit("sergeant", number_allies);
+      temp = new Unit(allies_type, number_allies);
       hero->recruitCreature(temp);
    }
    war.setHero(*hero, hero_position_x, hero_position_y);
-
-   // Adding second hero
-   hero = new Hero("undead");
-   // Set the hero's units.
-   for (int j=0; j<9; j++) {
-      temp = new Unit("skeleton", number_allies);
-      hero->recruitCreature(temp);
-   }
-   war.setHero(*hero, hero_position_x+1, hero_position_y);
-
-   // Adding third hero
-   hero = new Hero("elf");
-   // Set the hero's units.
-   for (int j=0; j<9; j++) {
-      temp = new Unit("fighter", number_allies);
-      hero->recruitCreature(temp);
-   }
-   war.setHero(*hero, hero_position_x, hero_position_y+1);
 
    war.start();
 }
 
 // Create and start mission 1.
 void mission1(void) {
-   createMission("mission1", 10, 2, 2);
+   createMission("mission1", "undead", 2, 2, "skeleton", 10);
 }
 
 // Create and start mission 2.
 void mission2(void) {
-   createMission("mission2", 15, 3, 6);
+   createMission("mission2", "elf", 3, 6, "fighter", 15);
 }
 
 // Create and start mission 3.
 void mission3(void) {
-   createMission("mission3", 25, 4, 9);
+   createMission("mission3", "human", 4, 9, "sergeant", 25);
 }
