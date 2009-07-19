@@ -25,7 +25,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include <deque>
 #include <string>
 
-#include "macros.hpp"
+#include "util.hpp"
 
 struct SDL_Rect;
 struct SDL_Surface;

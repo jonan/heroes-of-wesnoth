@@ -27,7 +27,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include <SDL/SDL.h>
 
-#include "macros.hpp"
+#include "util.hpp"
 
 class Unit;
 

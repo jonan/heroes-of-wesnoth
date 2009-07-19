@@ -50,27 +50,25 @@ BATTLE = battle.hpp \
 BOOT = boot.hpp
 
 CELL = cell.hpp \
-       $(MACROS)
+       $(UTIL)
 
 EDITOR = editor.hpp \
          $(MAP)
 
 EVENTS = events.hpp \
-         $(MACROS)
+         $(UTIL)
 
 GAME_LOOP = game_loop.hpp \
-            $(MACROS)
+            $(UTIL)
 
 GRAPHICS = graphics.hpp \
-           $(MACROS)
+           $(UTIL)
 
 HERO = hero.hpp \
        $(UNIT)
 
 IMAGE = image.hpp \
         $(GRAPHICS)
-
-MACROS = macros.hpp
 
 MAP = map.hpp \
       $(GAME_LOOP) \
@@ -84,13 +82,13 @@ MENU_MAIN = menu_main.hpp
 MISSION = mission.hpp
 
 TIMER = timer.hpp \
-        $(MACROS)
+        $(UTIL)
 
 TTF = ttf.hpp \
       $(GRAPHICS)
 
 UNIT = unit.hpp \
-       $(MACROS)
+       $(UTIL)
 
 UTIL = util.hpp
 
@@ -98,7 +96,7 @@ WORLD = world.hpp \
         $(MAP)
 
 XML_MANAGER = xml_manager.hpp \
-              $(MACROS)
+              $(UTIL)
 
 # Build dependencies
 $(EXE) : $(OBJECTS)

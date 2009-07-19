@@ -16,7 +16,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// 
+/// General utilities.
 /// @author Jonan
 
 #ifndef UTIL_HPP
@@ -26,6 +26,11 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include <string>
 
 class SDL_Surface;
+
+/// A macro to disallow the copy constructor and operator= functions.
+#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
+  TypeName(const TypeName&);               \
+  void operator=(const TypeName&)
 
 /// Struct to store coordinates.
 struct Coordinates {

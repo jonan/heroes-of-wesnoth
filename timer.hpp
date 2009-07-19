@@ -24,7 +24,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include <SDL/SDL.h>
 
-#include "macros.hpp"
+#include "util.hpp"
 
 /// Controls the game's speed.
 /// This class alows you to control the time

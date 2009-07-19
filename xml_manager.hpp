@@ -24,7 +24,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include <list>
 
-#include "macros.hpp"
+#include "util.hpp"
 
 const char HEROES_XML_FILE[]        = "config/config_heroes.xml";
 const char ITEMS_XML_FILE[]         = "config/config_items.xml";

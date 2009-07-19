@@ -17,36 +17,34 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include "util.hpp"
 
+// Increases the given char one unit.
+void increaseChar(char &ch) {
+  ch++;
+  if (ch == '9'+1) ch = 'a';
+  else if (ch == 'z'+1) ch = 'A';
+}
+
+// Decreases the given char one unit.
+void decreaseChar(char &ch) {
+  ch--;
+  if (ch == 'A'-1) ch = 'z';
+  else if (ch == 'a'-1) ch = '9';
+}
+
 // Increases the given ID one unit.
 void increaseId(std::string &id) {
-  id[1]++;
-  if (id[1] == '9'+1)
-    id[1] = 'a';
-  else if (id[1] == 'z'+1)
-    id[1] = 'A';
-  else if (id[1] == 'Z'+1) {
+  increaseChar(id[1]);
+  if (id[1] == 'Z'+1) {
     id[1] = '0';
-    id[0]++;
-    if (id[0] == '9'+1)
-      id[0] = 'a';
-    else if (id[0] == 'z'+1)
-      id[0] = 'A';
+    increaseChar(id[0]);
   }
 }
 
 // Decreases the given ID one unit.
 void decreaseId(std::string &id) {
-  id[1]--;
-  if (id[1] == 'A'-1)
-    id[1] = 'z';
-  else if (id[1] == 'a'-1)
-    id[1] = '9';
-  else if (id[1] == '0'-1) {
+  decreaseChar(id[1]);
+  if (id[1] == '0'-1) {
     id[1] = 'Z';
-    id[0]--;
-    if (id[0] == 'A'-1)
-      id[0] = 'z';
-    else if (id[0] == 'a'-1)
-      id[1] = '9';
+    decreaseChar(id[0]);
   }
 }

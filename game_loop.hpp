@@ -22,7 +22,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #ifndef GAME_LOOP_HPP
 #define GAME_LOOP_HPP
 
-#include "macros.hpp"
+#include "util.hpp"
 
 class Timer;
 

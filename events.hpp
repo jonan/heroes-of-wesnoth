@@ -25,7 +25,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include <SDL/SDL_keysym.h>
 #include <SDL/SDL_mouse.h>
 
-#include "macros.hpp"
+#include "util.hpp"
 
 struct SDL_Rect;
 struct SDL_Surface;
