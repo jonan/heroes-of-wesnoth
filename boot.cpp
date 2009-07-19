@@ -63,20 +63,15 @@ void loadXmlFiles(void) {
                                   TERRAIN_XML_FILE,
                                   UNITS_XML_FILE    };
   int size = sizeof(files_with_id)/sizeof(files_with_id[0]);
-
-  TiXmlDocument *file;
-  for (int i=0; i<size; i++) {
-    file = xml->loadFile(files_with_id[i]);
-    xml->setIds(file);
-  }
+  for (int i=0; i<size; i++)
+    xml->loadFile(files_with_id[i], true);
 
   // Load the rest of XML files
   const char* other_files[] = { SMOOTH_IMAGES_XML_FILE,
                                 SMOOTH_RULES_XML_FILE   };
   size = sizeof(other_files)/sizeof(other_files[0]);
-
   for (int j=0; j<size; j++)
-    xml->loadFile(other_files[j]);
+    xml->loadFile(other_files[j], false);
 }
 
 // Starts the engine and loads the main images.

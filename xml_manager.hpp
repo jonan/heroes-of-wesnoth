@@ -16,7 +16,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 */
 
 /// @file
-/// 
+/// XmlManager class.
 /// @author Jonan
 
 #ifndef XML_MANAGER_HPP
@@ -26,43 +26,46 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include "util.hpp"
 
+// @{
+/// All XML files.
 const char HEROES_XML_FILE[]        = "config/config_heroes.xml";
 const char ITEMS_XML_FILE[]         = "config/config_items.xml";
 const char SMOOTH_IMAGES_XML_FILE[] = "config/config_smooth_images.xml";
 const char SMOOTH_RULES_XML_FILE[]  = "config/config_smooth_rules.xml";
 const char TERRAIN_XML_FILE[]       = "config/config_terrain.xml";
 const char UNITS_XML_FILE[]         = "config/config_units.xml";
+// @}
 
 class TiXmlDocument;
 class TiXmlElement;
 class TiXmlNode;
 
-/// 
+/// Manages all XML files.
 class XmlManager {
   public:
     static XmlManager* getInstance(void); // Singleton pattern constructor
     ~XmlManager(void); // Destructor
 
-    /// 
-    TiXmlDocument* loadFile(const char *file_name);
+    /// Loads a given file.
+    /// @param[in] file_name File to load.
+    /// @param[in] ids True if the file needs IDs set.
+    void loadFile(const char *file_name, bool ids);
 
-    /// 
-    void setIds(TiXmlDocument *file);
-
-    /// 
-    TiXmlElement* getRootElement(const char *file_name);
-
-    /// 
-    const char* getName(const char *id, const char *file);
-
-    /// 
-    char* getLastId(const char *file_name);
+    // @{
+    /// Get functions.
+    TiXmlElement* getRootElement (const char *file_name);
+    const char*   getName        (const char *id, const char *file);
+    char*         getLastId      (const char *file_name);
+    // @}
 
   private:
     XmlManager(void) {} // Constructor
 
-    // 
+    // Returns a pointer to a file.
     TiXmlDocument* getFile(const char *file_name);
+
+    // Sets IDs to the elements of a file.
+    void setIds(TiXmlDocument *file);
 
     std::list<TiXmlDocument*> xml_files;
 

@@ -37,15 +37,46 @@ XmlManager::~XmlManager(void) {
   }
 }
 
-// 
-TiXmlDocument* XmlManager::loadFile(const char *file_name) {
+// Loads a given file.
+void XmlManager::loadFile(const char *file_name, bool ids) {
   TiXmlDocument *file = new TiXmlDocument(file_name);
   file->LoadFile();
   xml_files.push_back(file);
-  return file;
+  if (ids)
+    setIds(file);
 }
 
-// 
+// Returns the root element of a file
+TiXmlElement* XmlManager::getRootElement(const char *file_name) {
+  return getFile(file_name)->RootElement();
+}
+
+// Returns the name associated to the given ID.
+const char* XmlManager::getName(const char *id, const char *file) {
+  TiXmlElement *temp = getRootElement(file)->FirstChildElement();
+  while ( strcmp(id,temp->Attribute("id")) )
+    temp = temp->NextSiblingElement();
+  return temp->Attribute("name");
+}
+
+// Returns the last ID of a file.
+char* XmlManager::getLastId(const char *file_name) {
+  return static_cast<char*>(getFile(file_name)->GetUserData());
+}
+
+// Returns a pointer to a file.
+TiXmlDocument* XmlManager::getFile(const char *file_name) {
+  bool found = false;
+  std::list<TiXmlDocument*>::iterator it;
+  std::list<TiXmlDocument*>::iterator it_end = xml_files.end();
+  for (it = xml_files.begin(); it != it_end && !found; it++)
+    if (!strcmp(file_name, (*it)->Value()))
+      found = true;
+  it--;
+  return (*it);
+}
+
+// Sets IDs to the elements of a file.
 void XmlManager::setIds(TiXmlDocument *file) {
   TiXmlElement *root = file->RootElement();
 
@@ -60,34 +91,4 @@ void XmlManager::setIds(TiXmlDocument *file) {
     }
     file->SetUserData(strdup(id.c_str()));
   }
-}
-
-// 
-TiXmlElement* XmlManager::getRootElement(const char *file_name) {
-  return getFile(file_name)->RootElement();
-}
-
-// 
-const char* XmlManager::getName(const char *id, const char *file) {
-  TiXmlElement *temp = getRootElement(file)->FirstChildElement();
-  while ( strcmp(id,temp->Attribute("id")) )
-    temp = temp->NextSiblingElement();
-  return temp->Attribute("name");
-}
-
-// 
-char* XmlManager::getLastId(const char *file_name) {
-  return static_cast<char*>(getFile(file_name)->GetUserData());
-}
-
-// 
-TiXmlDocument* XmlManager::getFile(const char *file_name) {
-  bool found = false;
-  std::list<TiXmlDocument*>::iterator it;
-  std::list<TiXmlDocument*>::iterator it_end = xml_files.end();
-  for (it = xml_files.begin(); it != it_end && !found; it++)
-    if (!strcmp(file_name, (*it)->Value()))
-      found = true;
-  it--;
-  return (*it);
 }
