@@ -34,7 +34,6 @@ OBJECTS = battle.o \
           tinyxml_tinyxmlparser.o \
           ttf.o \
           unit.o \
-          unit_magic.o \
           util.o \
           world.o \
           xml_manager.o
@@ -212,11 +211,6 @@ unit.o : unit.cpp $(UNIT) \
 
 util.o : util.cpp $(UTIL)
 	$(CC) $(CFLAGS) util.cpp
-
-unit_magic.o : unit_magic.cpp $(UNIT) \
-               $(GRAPHICS) \
-               $(UTIL)
-	$(CC) $(CFLAGS) unit_magic.cpp
 
 world.o : world.cpp $(WORLD) \
           $(BATTLE) \

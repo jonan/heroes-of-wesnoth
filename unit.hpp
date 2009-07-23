@@ -99,7 +99,6 @@ class Unit {
     void addAnimationImage(const char *image_name, const int animation);
 
     // Adds a magic animation.
-    // (Implemented in unit_magic.cpp)
     void addMagicAnimation(const int spell);
 
     // Draws the creature in the given position.
