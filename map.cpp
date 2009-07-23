@@ -461,10 +461,15 @@ void Map::centerView(Cell& position) {
 
   x -= window_horizontal_cells/2;
   y -= window_vertical_cells/2;
-  if (x<0) x=0;
-  if (y<0) y=0;
-  if (map_width-x < window_horizontal_cells) x -= window_horizontal_cells-(map_width-x);
-  if (map_height-y < window_vertical_cells) y -= window_vertical_cells-(map_height-y);
+
+  if (x<0)
+    x=0;
+  if (y<0)
+    y=0;
+  if (map_width-x < window_horizontal_cells)
+    x -= window_horizontal_cells-(map_width-x);
+  if (map_height-y < window_vertical_cells)
+    y -= window_vertical_cells-(map_height-y);
 
   first_cell_coor.x = x;
   first_cell_coor.y = y;
