@@ -65,7 +65,6 @@ void World::mouseLeftClick(const int x, const int y) {
       if ( selected_unit->getPosition() != &map[x][y] ) {
         // Set the battle information
         Hero *selected_hero = static_cast<Hero*>(selected_unit);
-        Cell *selected_hero_position = selected_hero->getPosition();
         const char *terrain = map[x][y].getTerrainId();
         bool won_battle;
         if (!map[x][y].getCreature()->getMaster()) {
@@ -82,7 +81,6 @@ void World::mouseLeftClick(const int x, const int y) {
           deleteCreature(map[x][y]);
         else
           heroes.remove(selected_hero);
-          selected_hero_position->setCreature(NULL);
       }
 
       nextTurn();
