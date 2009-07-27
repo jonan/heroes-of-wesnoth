@@ -34,6 +34,7 @@ OBJECTS = battle.o \
           tinyxml_tinyxmlparser.o \
           ttf.o \
           unit.o \
+          unit_animation.o \
           util.o \
           world.o \
           xml_manager.o
@@ -87,7 +88,11 @@ TTF = ttf.hpp \
       $(GRAPHICS)
 
 UNIT = unit.hpp \
+       $(GRAPHICS) \
        $(UTIL)
+
+UNIT_ANIMATION = unit_animation.hpp \
+                 $(UTIL)
 
 UTIL = util.hpp
 
@@ -164,6 +169,7 @@ map.o : map.cpp $(MAP) \
         $(EVENTS) \
         $(GRAPHICS) \
         $(UNIT) \
+        $(UNIT_ANIMATION) \
         $(XML_MANAGER)
 	$(CC) $(CFLAGS) map.cpp
 
@@ -204,10 +210,14 @@ ttf.o : ttf.cpp $(TTF)
 
 unit.o : unit.cpp $(UNIT) \
          $(CELL) \
-         $(GRAPHICS) \
          $(UTIL) \
          $(XML_MANAGER)
 	$(CC) $(CFLAGS) unit.cpp
+
+unit_animation.o : unit_animation.cpp $(UNIT_ANIMATION) \
+                   $(CELL) \
+                   $(UNIT)
+	$(CC) $(CFLAGS) unit_animation.cpp
 
 util.o : util.cpp $(UTIL)
 	$(CC) $(CFLAGS) util.cpp
@@ -216,7 +226,8 @@ world.o : world.cpp $(WORLD) \
           $(BATTLE) \
           $(CELL) \
           $(EVENTS) \
-          $(HERO)
+          $(HERO) \
+          $(UNIT_ANIMATION)
 	$(CC) $(CFLAGS) world.cpp
 
 xml_manager.o : xml_manager.cpp $(XML_MANAGER) \

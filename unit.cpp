@@ -22,7 +22,6 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include "tinyxml/tinyxml.h"
 
 #include "cell.hpp"
-#include "graphics.hpp"
 #include "util.hpp"
 #include "xml_manager.hpp"
 

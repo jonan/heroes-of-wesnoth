@@ -21,6 +21,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include "cell.hpp"
 #include "events.hpp"
 #include "hero.hpp"
+#include "unit_animation.hpp"
 
 // events_engine
 using events_engine::input;
@@ -60,30 +61,6 @@ void World::mouseLeftClick(const int x, const int y) {
   if ( selected_unit->getPosition() != &map[x][y] ) {
     if ( map[x][y].canMoveHere() || map[x][y].canAttackHere()) {
       moveSelectedCreature(map[x][y]);
-      map[x][y].calculateView(static_cast<Hero*>(selected_unit)->getVisibility());
-
-      if ( selected_unit->getPosition() != &map[x][y] ) {
-        // Set the battle information
-        Hero *selected_hero = static_cast<Hero*>(selected_unit);
-        const char *terrain = map[x][y].getTerrainId();
-        bool won_battle;
-        if (!map[x][y].getCreature()->getMaster()) {
-          // Battle against a neutral creature
-          const char *creature_type = map[x][y].getCreature()->getId();
-          won_battle = createBattle(*selected_hero, creature_type, terrain);
-        } else {
-          // Battle against a hero
-          Hero *enemy_hero = static_cast<Hero*>(map[x][y].getCreature());
-          won_battle = createBattle(*selected_hero, *enemy_hero, terrain);
-        }
-        // Remove losers
-        if (won_battle)
-          deleteCreature(map[x][y]);
-        else
-          heroes.remove(selected_hero);
-      }
-
-      nextTurn();
     }
   }
 }
@@ -118,14 +95,56 @@ void World::deleteCreature(Cell &position) {
 // This function is executed in the main loop. If
 // it returns true, the loop ends, else it continues.
 bool World::frame(void) {
-  adjustVisibleMap();
   if (keys[SDLK_ESCAPE]) {
     keys[SDLK_ESCAPE] = false;
     end_world = true;
   } else if (!end_world) {
+    // Center the view
     if (keys[SDLK_c]) centerView(*selected_unit);
+
+    // Check if there's an animation in progress
+    if (animation) {
+      if (animation->hasEnded()) {
+        selected_unit->getPosition()->calculateView(static_cast<Hero*>(selected_unit)->getVisibility());
+
+        Cell *temp = animation->getFinalPosition();
+        if ( selected_unit->getPosition() != temp ) {
+          // Set the battle information
+          Hero *selected_hero = static_cast<Hero*>(selected_unit);
+          Cell *selected_hero_position = selected_hero->getPosition();
+          const char *terrain = temp->getTerrainId();
+          bool won_battle;
+          if (!temp->getCreature()->getMaster()) {
+            // Battle against a neutral creature
+            const char *creature_type = temp->getCreature()->getId();
+            won_battle = createBattle(*selected_hero, creature_type, terrain);
+          } else {
+            // Battle against a hero
+            Hero *enemy_hero = static_cast<Hero*>(temp->getCreature());
+            won_battle = createBattle(*selected_hero, *enemy_hero, terrain);
+          }
+          // Remove losers
+          if (won_battle)
+            deleteCreature(*temp);
+          else
+            heroes.remove(selected_hero);
+        }
+
+        nextTurn();
+
+        delete animation;
+        animation = NULL;
+      } else {
+        animation->frame();
+      }
+    } else {
+      updateMouse();
+    }
+
+    // Draw the map
+    adjustVisibleMap();
     draw();
-    updateMouse();
   }
+
   return end_world;
 }

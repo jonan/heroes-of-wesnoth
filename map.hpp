@@ -27,6 +27,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 class Cell;
 class Unit;
+class UnitAnimation;
 
 /// Controls all the attributes of a map.
 /// Basically consist of lots of Cell classes working
@@ -105,10 +106,14 @@ class Map : public GameLoop {
     Cell **map;
 
     Unit *selected_unit; // The unit that's selected.
+    UnitAnimation *animation;
 
     Cell *mouse_over_cell; // The cell where the mouse is.
 
   private:
+    // 
+    void init(void);
+
     // Adds the corresponding smooth images to the cell.
     void addSmoothImages(Cell *cell, bool *need_smooth, const char *terrain);
 

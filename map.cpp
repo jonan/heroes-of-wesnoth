@@ -27,6 +27,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include "events.hpp"
 #include "graphics.hpp"
 #include "unit.hpp"
+#include "unit_animation.hpp"
 #include "xml_manager.hpp"
 
 // events_engine
@@ -43,8 +44,6 @@ using events_engine::NORMAL_CURSOR;
 using std::string;
 // video_engine
 using video_engine::screen;
-using video_engine::FACE_RIGHT;
-using video_engine::FACE_LEFT;
 
 // Starts the map.
 void Map::start(void) {
@@ -78,33 +77,13 @@ Map::Map(const int width, const int height) {
   // Connect the cells
   connectCells();
 
-  selected_unit = NULL;
-  mouse_over_cell = NULL;
-
-  first_cell_coor.x = 0;
-  first_cell_coor.y = 0;
-  // Adjust the first cell's coordinates
-  first_cell_pos.x = -53;
-  first_cell_pos.y = -72;
-
-  // Calculate the size of the map's window
-  window_width = window_height = 0;
-  adjustVisibleMap();
+  init();
 }
 
 // Constructor
 Map::Map(const char *map_file) {
   loadMapFile(map_file);
-
-  first_cell_coor.x = 0;
-  first_cell_coor.y = 0;
-  // Adjust the first cell's coordinates
-  first_cell_pos.x = -53;
-  first_cell_pos.y = -72;
-
-  // Calculate the size of the map's window
-  window_width = window_height = 0;
-  adjustVisibleMap();
+  init();
 }
 
 // Destructor
@@ -293,28 +272,7 @@ void Map::mouseRightClick(const int x, const int y) {
 
 // Moves the selected creature to a cell.
 void Map::moveSelectedCreature(Cell &end_position) {
-  int *path;
-  int movements;
-  Cell *temp;
-
-  Cell* actual_position = selected_unit->getPosition();
-  end_position.getPath(path, movements);
-
-  /// @todo This isn't too elegant
-  for (int i=0; i<movements; i++) {
-    // Make the creature face the same direction as moving
-    if (path[i] == NE || path[i] == SE) selected_unit->setFacingSide(FACE_RIGHT);
-    else if (path[i] == NW || path[i] == SW) selected_unit->setFacingSide(FACE_LEFT);
-
-    selected_unit->getPosition()->setCreature(NULL);
-    temp = selected_unit->getPosition()->getConnectedCell(path[i]);
-    temp->setCreature(selected_unit);
-    draw();
-    screen->update();
-    SDL_Delay(100);
-  }
-
-  actual_position->unselect();
+  animation = new UnitAnimation(*selected_unit, end_position, MOVEMENT);
 }
 
 // Connects all the cells in the map.
@@ -524,6 +482,23 @@ void Map::deleteCreatures(void) {
       delete map[x][y].getCreature();
       map[x][y].setCreature(NULL);
     }
+}
+
+// 
+void Map::init(void) {
+  animation       = NULL;
+  selected_unit   = NULL;
+  mouse_over_cell = NULL;
+
+  first_cell_coor.x = 0;
+  first_cell_coor.y = 0;
+  // Adjust the first cell's coordinates
+  first_cell_pos.x = -53;
+  first_cell_pos.y = -72;
+
+  // Calculate the size of the map's window
+  window_width = window_height = 0;
+  adjustVisibleMap();
 }
 
 // Adds the corresponding smooth images to the cell.

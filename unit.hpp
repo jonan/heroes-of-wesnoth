@@ -25,6 +25,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include <deque>
 #include <string>
 
+#include "graphics.hpp"
 #include "util.hpp"
 
 struct SDL_Rect;
