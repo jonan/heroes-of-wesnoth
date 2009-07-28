@@ -56,7 +56,7 @@ void World::setHero(Hero &hero, const int x, const int y) {
   map[x][y].calculateView(hero.getVisibility());
 }
 
-// 
+// Make the selected hero attack the unit of the given cell.
 void World::attack(Cell *cell) {
   // Set the battle information
   Hero *selected_hero = static_cast<Hero*>(selected_unit);

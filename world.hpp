@@ -42,7 +42,7 @@ class World : public Map {
     void setHero(Hero &hero, const int x, const int y);
 
   private:
-    // 
+    // Make the selected hero attack the unit of the given cell.
     void attack(Cell *cell);
 
     // Function to execute when the user left clicks on a cell.
