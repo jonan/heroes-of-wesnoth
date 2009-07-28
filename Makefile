@@ -216,6 +216,7 @@ unit.o : unit.cpp $(UNIT) \
 
 unit_animation.o : unit_animation.cpp $(UNIT_ANIMATION) \
                    $(CELL) \
+                   $(EVENTS) \
                    $(UNIT)
 	$(CC) $(CFLAGS) unit_animation.cpp
 

@@ -17,9 +17,14 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 
 #include "unit_animation.hpp"
 
+#include "events.hpp"
 #include "cell.hpp"
 #include "unit.hpp"
 
+// events_engine
+using events_engine::input;
+using events_engine::NORMAL_CURSOR;
+using events_engine::WAIT_CURSOR;
 // video_engine
 using video_engine::FACE_RIGHT;
 using video_engine::FACE_LEFT;
@@ -33,6 +38,7 @@ UnitAnimation::UnitAnimation(Unit &unit, Cell &cell, int type) {
   cell.getPath(path, movements);
   ended = false;
   frames = 0;
+  input->setCursorType(WAIT_CURSOR);
 }
 
 // 
@@ -44,6 +50,7 @@ void UnitAnimation::frame(void) {
       ended = true;
       temp = 0;
       initial_position->unselect();
+      input->setCursorType(NORMAL_CURSOR);
     } else {
       if (!(frames%FRAMES_PER_MOVE)) {
         // Make the unit face the same direction as moving
