@@ -80,11 +80,9 @@ void World::attack(Cell *cell) {
 
 // Function to execute when the user left clicks on a cell.
 void World::mouseLeftClick(const int x, const int y) {
-  if ( selected_unit->getPosition() != &map[x][y] ) {
-    if ( map[x][y].canMoveHere() || map[x][y].canAttackHere()) {
+  if ( selected_unit->getPosition() != &map[x][y] )
+    if ( map[x][y].canMoveHere() || map[x][y].canAttackHere())
       moveSelectedCreature(map[x][y]);
-    }
-  }
 }
 
 // Starts the next turn.
@@ -121,9 +119,6 @@ bool World::frame(void) {
     keys[SDLK_ESCAPE] = false;
     end_world = true;
   } else if (!end_world) {
-    // Center the view
-    if (keys[SDLK_c]) centerView(*selected_unit);
-
     // Check if there's an animation in progress
     if (animation) {
       if (animation->hasEnded()) {
@@ -141,6 +136,8 @@ bool World::frame(void) {
         animation->frame();
       }
     } else {
+      // If there's no animation do normal stuff
+      if (keys[SDLK_c]) centerView(*selected_unit);
       updateMouse();
     }
 
