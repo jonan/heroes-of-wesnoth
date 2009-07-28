@@ -56,6 +56,28 @@ void World::setHero(Hero &hero, const int x, const int y) {
   map[x][y].calculateView(hero.getVisibility());
 }
 
+// 
+void World::attack(Cell *cell) {
+  // Set the battle information
+  Hero *selected_hero = static_cast<Hero*>(selected_unit);
+  const char *terrain = cell->getTerrainId();
+  bool won_battle;
+  if (!cell->getCreature()->getMaster()) {
+    // Battle against a neutral creature
+    const char *creature_type = cell->getCreature()->getId();
+    won_battle = createBattle(*selected_hero, creature_type, terrain);
+  } else {
+    // Battle against a hero
+    Hero *enemy_hero = static_cast<Hero*>(cell->getCreature());
+    won_battle = createBattle(*selected_hero, *enemy_hero, terrain);
+  }
+  // Remove losers
+  if (won_battle)
+    deleteCreature(*cell);
+  else
+    heroes.remove(selected_hero);
+}
+
 // Function to execute when the user left clicks on a cell.
 void World::mouseLeftClick(const int x, const int y) {
   if ( selected_unit->getPosition() != &map[x][y] ) {
@@ -108,27 +130,8 @@ bool World::frame(void) {
         selected_unit->getPosition()->calculateView(static_cast<Hero*>(selected_unit)->getVisibility());
 
         Cell *temp = animation->getFinalPosition();
-        if ( selected_unit->getPosition() != temp ) {
-          // Set the battle information
-          Hero *selected_hero = static_cast<Hero*>(selected_unit);
-          Cell *selected_hero_position = selected_hero->getPosition();
-          const char *terrain = temp->getTerrainId();
-          bool won_battle;
-          if (!temp->getCreature()->getMaster()) {
-            // Battle against a neutral creature
-            const char *creature_type = temp->getCreature()->getId();
-            won_battle = createBattle(*selected_hero, creature_type, terrain);
-          } else {
-            // Battle against a hero
-            Hero *enemy_hero = static_cast<Hero*>(temp->getCreature());
-            won_battle = createBattle(*selected_hero, *enemy_hero, terrain);
-          }
-          // Remove losers
-          if (won_battle)
-            deleteCreature(*temp);
-          else
-            heroes.remove(selected_hero);
-        }
+        if ( selected_unit->getPosition() != temp )
+          attack(temp);
 
         nextTurn();
 

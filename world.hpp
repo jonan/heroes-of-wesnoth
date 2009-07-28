@@ -42,6 +42,9 @@ class World : public Map {
     void setHero(Hero &hero, const int x, const int y);
 
   private:
+    // 
+    void attack(Cell *cell);
+
     // Function to execute when the user left clicks on a cell.
     virtual void mouseLeftClick(const int x, const int y);
 
