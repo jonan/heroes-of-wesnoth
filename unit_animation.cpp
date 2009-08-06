@@ -36,9 +36,14 @@ void UnitAnimation::startNewAnimation(Unit &unit, Cell &cell, int type) {
   initial_position = unit.getPosition();
   final_position = &cell;
 
+  /*bool cells_connected = false;
+  for (int i=N; i<=NW; i++)
+    cells_connected |= initial_position->getConnectedCell(i) == final_position;*/
+
   if (type == MOVE || !unit.getProjectiles()) {
     state = MOVE;
     cell.getPath(path, movements);
+    actual_move = 0;
   }
 
   frames = 0;
@@ -48,28 +53,32 @@ void UnitAnimation::startNewAnimation(Unit &unit, Cell &cell, int type) {
 
 // 
 bool UnitAnimation::frame(void) {
-  if (animation_in_progress) {
-    static int temp = 0;
-    if (temp >= movements) {
-      animation_in_progress = false;
-      temp = 0;
-      initial_position->unselect();
-      input->setCursorType(NORMAL_CURSOR);
-    } else {
-      if (!(frames%FRAMES_PER_MOVE)) {
-        // Make the unit face the same direction as moving
-        if (path[temp] == NE || path[temp] == SE)
-          unit->setFacingSide(FACE_RIGHT);
-        else if (path[temp] == NW || path[temp] == SW)
-          unit->setFacingSide(FACE_LEFT);
+  if (animation_in_progress)
+    switch (state) {
+      case MOVE:
+        if (actual_move >= movements) {
+          animation_in_progress = false;
+          initial_position->unselect();
+          input->setCursorType(NORMAL_CURSOR);
+        } else {
+          if (!(frames%FRAMES_PER_MOVE)) {
+            // Make the unit face the same direction as moving
+            if (path[actual_move] == NE || path[actual_move] == SE)
+              unit->setFacingSide(FACE_RIGHT);
+            else if (path[actual_move] == NW || path[actual_move] == SW)
+              unit->setFacingSide(FACE_LEFT);
 
-        unit->getPosition()->setCreature(NULL);
-        unit->getPosition()->getConnectedCell(path[temp])->setCreature(unit);
-        temp++;
-      }
-      frames++;
+            unit->getPosition()->setCreature(NULL);
+            unit->getPosition()->getConnectedCell(path[actual_move])->setCreature(unit);
+            actual_move++;
+          }
+          frames++;
+        }
+        break;
+      default:
+        // Nothing to do
+        break;
     }
-  }
 
   return !animation_in_progress;
 }

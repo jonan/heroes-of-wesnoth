@@ -63,7 +63,7 @@ class UnitAnimation {
 
     // To move the unit
     int *path;
-    int movements;
+    int movements, actual_move;
 
     DISALLOW_COPY_AND_ASSIGN(UnitAnimation);
 };
