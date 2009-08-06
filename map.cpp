@@ -88,6 +88,7 @@ Map::Map(const char *map_file) {
 
 // Destructor
 Map::~Map(void) {
+  delete animation;
   deleteCells();
 }
 
