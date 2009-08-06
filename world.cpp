@@ -120,8 +120,8 @@ bool World::frame(void) {
     end_world = true;
   } else if (!end_world) {
     // Check if there's an animation in progress
-    if (animation) {
-      if (animation->hasEnded()) {
+    if (animation->animationInProgress()) {
+      if (animation->frame()) {
         selected_unit->getPosition()->calculateView(static_cast<Hero*>(selected_unit)->getVisibility());
 
         Cell *temp = animation->getFinalPosition();
@@ -129,11 +129,6 @@ bool World::frame(void) {
           attack(temp);
 
         nextTurn();
-
-        delete animation;
-        animation = NULL;
-      } else {
-        animation->frame();
       }
     } else {
       // If there's no animation do normal stuff

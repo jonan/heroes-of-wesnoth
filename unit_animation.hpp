@@ -25,7 +25,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include "util.hpp"
 
 // Types of animations
-enum {MOVEMENT};
+enum {ATTACK, MOVE};
 
 class Cell;
 class Unit;
@@ -33,31 +33,33 @@ class Unit;
 /// 
 class UnitAnimation {
   public:
-    UnitAnimation(Unit &unit, Cell &cell, int type); // Constructor
+    UnitAnimation(void) : animation_in_progress(false) {} // Constructor
     virtual ~UnitAnimation(void) {} // Destructor
 
-    /// 
-    bool hasEnded(void) {return ended;}
-
     // @{
-    /// 
+    ///
     int   getType          (void) {return type;          }
     Cell* getFinalPosition (void) {return final_position;}
     // @}
 
     /// 
-    void frame(void);
+    void startNewAnimation(Unit &unit, Cell &cell, int type);
+
+    /// 
+    bool animationInProgress(void) {return animation_in_progress;}
+
+    /// 
+    bool frame(void);
 
   private:
     static const int FRAMES_PER_MOVE = 4;
 
-    int frames;
-
     Unit *unit;
     Cell *initial_position, *final_position;
 
-    int type;
-    bool ended; // Indicates if the animation has ended
+    int frames;
+    int type, state;
+    bool animation_in_progress;
 
     // To move the unit
     int *path;

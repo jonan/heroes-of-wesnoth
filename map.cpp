@@ -272,7 +272,7 @@ void Map::mouseRightClick(const int x, const int y) {
 
 // Moves the selected creature to a cell.
 void Map::moveSelectedCreature(Cell &end_position) {
-  animation = new UnitAnimation(*selected_unit, end_position, MOVEMENT);
+  animation->startNewAnimation(*selected_unit, end_position, MOVE);
 }
 
 // Connects all the cells in the map.
@@ -486,9 +486,10 @@ void Map::deleteCreatures(void) {
 
 // 
 void Map::init(void) {
-  animation       = NULL;
   selected_unit   = NULL;
   mouse_over_cell = NULL;
+
+  animation = new UnitAnimation();
 
   first_cell_coor.x = 0;
   first_cell_coor.y = 0;

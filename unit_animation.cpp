@@ -29,25 +29,29 @@ using events_engine::WAIT_CURSOR;
 using video_engine::FACE_RIGHT;
 using video_engine::FACE_LEFT;
 
-// Constructor
-UnitAnimation::UnitAnimation(Unit &unit, Cell &cell, int type) {
+// 
+void UnitAnimation::startNewAnimation(Unit &unit, Cell &cell, int type) {
   this->type = type;
   this->unit = &unit;
   initial_position = unit.getPosition();
-  this->final_position = &cell;
-  cell.getPath(path, movements);
-  ended = false;
+  final_position = &cell;
+
+  if (type == MOVE || !unit.getProjectiles()) {
+    state = MOVE;
+    cell.getPath(path, movements);
+  }
+
   frames = 0;
+  animation_in_progress = true;
   input->setCursorType(WAIT_CURSOR);
 }
 
 // 
-void UnitAnimation::frame(void) {
-  if (!ended) {
+bool UnitAnimation::frame(void) {
+  if (animation_in_progress) {
     static int temp = 0;
-
     if (temp >= movements) {
-      ended = true;
+      animation_in_progress = false;
       temp = 0;
       initial_position->unselect();
       input->setCursorType(NORMAL_CURSOR);
@@ -66,4 +70,6 @@ void UnitAnimation::frame(void) {
       frames++;
     }
   }
+
+  return !animation_in_progress;
 }
