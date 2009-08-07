@@ -57,9 +57,13 @@ bool UnitAnimation::frame(void) {
     switch (state) {
       case MOVE:
         if (actual_move >= movements) {
-          animation_in_progress = false;
-          initial_position->unselect();
-          input->setCursorType(NORMAL_CURSOR);
+          if (type == ATTACK) {
+            state = ATTACK;
+          } else {
+            animation_in_progress = false;
+            initial_position->unselect();
+            input->setCursorType(NORMAL_CURSOR);
+          }
         } else {
           if (!(frames%FRAMES_PER_MOVE)) {
             // Make the unit face the same direction as moving
@@ -74,6 +78,9 @@ bool UnitAnimation::frame(void) {
           }
           frames++;
         }
+        break;
+      case ATTACK:
+        animation_in_progress = false;
         break;
       default:
         // Nothing to do
