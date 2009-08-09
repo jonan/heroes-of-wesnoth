@@ -272,8 +272,8 @@ void Map::mouseRightClick(const int x, const int y) {
 }
 
 // Moves the selected creature to a cell.
-void Map::moveSelectedCreature(Cell &end_position) {
-  animation->startNewAnimation(*selected_unit, end_position, MOVE);
+void Map::move(Cell &cell) {
+  animation->startNewAnimation(MOVE, *selected_unit, &cell);
 }
 
 // Connects all the cells in the map.
@@ -485,7 +485,7 @@ void Map::deleteCreatures(void) {
     }
 }
 
-// 
+// Initialize all the variables.
 void Map::init(void) {
   selected_unit   = NULL;
   mouse_over_cell = NULL;

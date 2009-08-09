@@ -25,7 +25,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include "util.hpp"
 
 // Types of animations
-enum {ATTACK, MOVE};
+enum {ATTACK, DIE, MOVE};
 
 class Cell;
 class Unit;
@@ -39,11 +39,12 @@ class UnitAnimation {
     // @{
     ///
     int   getType          (void) {return type;          }
+    Unit* getUnit          (void) {return unit;          }
     Cell* getFinalPosition (void) {return final_position;}
     // @}
 
     /// 
-    void startNewAnimation(Unit &unit, Cell &cell, int type);
+    void startNewAnimation(int type, Unit &unit, Cell *cell = NULL);
 
     /// 
     bool animationInProgress(void) {return animation_in_progress;}

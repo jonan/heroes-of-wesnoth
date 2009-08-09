@@ -93,6 +93,7 @@ void Unit::attackCreature(Unit &creature) {
     creature.live = creature.live_max+creature.live;
     creature.number--;
   }
+  /**
   // Check if it's a close or distant attack
   bool is_close_attack = false;
   for (int i=N; i<=NW && !is_close_attack; i++)
@@ -101,6 +102,7 @@ void Unit::attackCreature(Unit &creature) {
   setAnimation(ATTACKING);
   if (!is_close_attack) creature.addMagicAnimation(projectiles_type);
   creature.setAnimation(DEFENDING);
+  */
 }
 
 // Draws the creature in the given position.

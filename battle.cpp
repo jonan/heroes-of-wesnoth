@@ -21,7 +21,7 @@ along with Heroes of Wesnoth. If not, see <http://www.gnu.org/licenses/>
 #include "events.hpp"
 #include "graphics.hpp"
 #include "hero.hpp"
-#include "timer.hpp"
+#include "unit_animation.hpp"
 
 //events_engine
 using events_engine::input;
@@ -41,11 +41,7 @@ using video_engine::FACE_RIGHT;
 
 // Constructor
 Battle::Battle(Hero &player, Unit **enemies, int num_enemies, const char *terrain) : Map(20, 11) {
-  // Set the hero
-  this->player = &player;
-
   // Set the enemies
-  if (num_enemies > MAX_TEAM_UNITS) num_enemies = MAX_TEAM_UNITS;
   for (int i=0; i<num_enemies; i++)
     enemy_creatures[i] = enemies[i];
   for (int j=num_enemies; j<MAX_TEAM_UNITS; j++)
@@ -59,31 +55,18 @@ Battle::Battle(Hero &player, Unit **enemies, int num_enemies, const char *terrai
   // No enemy hero
   enemy = NULL;
 
-  init(terrain);
+  init(player, terrain);
 }
 
 // Constructor
 Battle::Battle(Hero &player, Hero &enemy, const char *terrain) : Map(20, 11) {
-  // Set the hero
-  this->player = &player;
-
-  // Set the enemy
-  this->enemy = &enemy;
-
-  // Put the enemy hero and his units in the map.
-  enemy.setFacingSide(FACE_LEFT);
-  map[map_width-2][4].setCreature(&enemy);
-  for (int i=0; i<MAX_TEAM_UNITS; i++) {
-    if (enemy.getCreature(i))
-      enemy.getCreature(i)->setFacingSide(FACE_LEFT);
-    map[map_width-3][i+1].setCreature(enemy.getCreature(i));
-  }
+  setHero(enemy, FACE_LEFT);
 
   // No enemy creatures
   for (int i = 0; i<MAX_TEAM_UNITS; i++)
     enemy_creatures[i] = NULL;
 
-  init(terrain);
+  init(player, terrain);
 }
 
 // Starts the battle.
@@ -93,26 +76,11 @@ void Battle::start(void) {
   Map::start();
 }
 
-// Return_progress true if the battle was won.
-bool Battle::win(void) {
-  if (player) return true;
-  else return false;
-}
-
 // Things to do no matter what constructor was called.
-void Battle::init(const char *terrain) {
-  end_battle = false;
-
+void Battle::init(Hero &player_hero, const char *terrain) {
+  setHero(player_hero, FACE_RIGHT);
   makeMapVisible();
-
-  // Put the hero and his units in the map.
-  player->setFacingSide(FACE_RIGHT);
-  map[1][4].setCreature(player);
-  for (int i=0; i<MAX_TEAM_UNITS; i++) {
-    if (player->getCreature(i))
-      player->getCreature(i)->setFacingSide(FACE_RIGHT);
-    map[2][i+1].setCreature(player->getCreature(i));
-  }
+  end_battle = false;
 
   // Put all units' progress to 0
   for (int t=0; t<MAX_BATTLE_UNITS; t++) turn_progress[t] = 0;
@@ -120,44 +88,58 @@ void Battle::init(const char *terrain) {
   setTerrainToAllCells(terrain);
 }
 
+// Put a hero and his units in the map.
+void Battle::setHero(Hero &hero, const int facing_side) {
+  int hero_pos_x;
+  int creatures_pos_x;
+
+  if (facing_side == FACE_RIGHT) {
+    player = &hero;
+    hero_pos_x = 1;
+    creatures_pos_x = 2;
+  } else {
+    enemy = &hero;
+    hero_pos_x = map_width-2;
+    creatures_pos_x = map_width-3;
+  }
+
+  hero.setFacingSide(facing_side);
+  map[hero_pos_x][4].setCreature(&hero);
+  for (int i=0; i<MAX_TEAM_UNITS; i++) {
+    if (hero.getCreature(i))
+      hero.getCreature(i)->setFacingSide(facing_side);
+    map[creatures_pos_x][i+1].setCreature(hero.getCreature(i));
+  }
+}
+
 // Controls the units not controled by the player.
 void Battle::ai(void) {
   Cell *temp = getAttackCell();
 
   if (temp) { // Attack a unit
-    moveSelectedCreature(*temp);
-    selected_unit->attackCreature( *temp->getCreature() );
-    animation(selected_unit->getNumSprites(ATTACKING)); // The attacking animation
-    if ( temp->getCreature()->getNumber() == 0 ) {
-      // Start the dying animation
-      temp->getCreature()->setAnimation(DYING);
-      animation(temp->getCreature()->getNumSprites(DYING));
-      // delete the creature
-      deleteCreature( *temp->getCreature() );
-      temp->setCreature(NULL);
-    }
-    nextTurn();
+    attack(*temp);
   } else { // Move the unit
     int x, y;
     selected_unit->getPosition()->getCoordinates(x, y);
     x=0;
-    while(!map[x][y].canMoveHere() && x<map_width-1) x++;
-    if (x!=map_width-1) {
-      moveSelectedCreature(map[x][y]);
-      nextTurn();
-    } else {
+    while(!map[x][y].canMoveHere() && x<map_width-1)
+      x++;
+    if (x!=map_width-1)
+      move(map[x][y]);
+    else
       selected_unit->getPosition()->unselect();
-      nextTurn();
-    }
   }
+}
+
+// Makes the selected creature attack the unit in the given cell.
+void Battle::attack(Cell &cell) {
+  animation->startNewAnimation(ATTACK, *selected_unit, &cell);
 }
 
 // Function to execute when the mouse is over a cell.
 void Battle::mouseOverCell(const int x, const int y) {
   // Set the type of cursor needed
-  if (selected_unit->getMaster() == enemy) {
-    input->setCursorType(WAIT_CURSOR);
-  } else if (map[x][y].getCreature()) {
+  if (map[x][y].getCreature()) {
     if (map[x][y].getCreature()->getMaster() != selected_unit->getMaster()) {
       if (map[x][y].canAttackHere() || selected_unit->getProjectiles())
         input->setCursorType(ATTACK_CURSOR);
@@ -177,41 +159,26 @@ void Battle::mouseOverCell(const int x, const int y) {
 void Battle::mouseLeftClick(const int x, const int y) {
   if ( selected_unit->getPosition() != &map[x][y] ) {
     if ( map[x][y].canMoveHere() ) {
-      moveSelectedCreature(map[x][y]);
-      nextTurn();
+      move(map[x][y]);
     } else if (map[x][y].getCreature() && selected_unit->getProjectiles()) { // Distant attack
-      if ( map[x][y].getCreature()->getMaster() != selected_unit->getMaster() ) {
+      /**if ( map[x][y].getCreature()->getMaster() != selected_unit->getMaster() ) {
         selected_unit->getPosition()->unselect();
         selected_unit->attackCreature( *map[x][y].getCreature() );
-        animation(selected_unit->getNumSprites(ATTACKING));
+        createAnimation(selected_unit->getNumSprites(ATTACKING));
         // Check if the creatures is dead.
         if ( map[x][y].getCreature()->getNumber() == 0 ) {
           // Start the dying animation
           map[x][y].getCreature()->setAnimation(DYING);
-          animation(map[x][y].getCreature()->getNumSprites(DYING));
+          createAnimation(map[x][y].getCreature()->getNumSprites(DYING));
           // delete the creature
           deleteCreature(*map[x][y].getCreature());
           map[x][y].setCreature(NULL);
         }
         nextTurn();
-      }
+      }*/
     } else if ( map[x][y].canAttackHere() ) { // Close attack
-      if ( map[x][y].getCreature()->getMaster() != selected_unit->getMaster() ) {
-        moveSelectedCreature(map[x][y]);
-        selected_unit->attackCreature( *map[x][y].getCreature() );
-        //creature_animation_active = true;
-        animation(selected_unit->getNumSprites(ATTACKING)); // The attacking animation
-        // Check if the creatures is dead.
-        if ( map[x][y].getCreature()->getNumber() == 0 ) {
-          // Start the dying animation
-          map[x][y].getCreature()->setAnimation(DYING);
-          animation(map[x][y].getCreature()->getNumSprites(DYING));
-          // delete the creature
-          deleteCreature(*map[x][y].getCreature());
-          map[x][y].setCreature(NULL);
-        }
-        nextTurn();
-      }
+      if ( map[x][y].getCreature()->getMaster() != selected_unit->getMaster() )
+        attack(map[x][y]);
     }
   }
 }
@@ -349,42 +316,48 @@ void Battle::deleteCreature(Unit &creature) {
   delete &creature;
 }
 
-// Function to call whenever there is an animation.
-void Battle::animation(const int sprites) {
-  /// @todo Use the loop function in game_loop.hpp
-  int frame = 0;
-  Timer fps;
-
-  while (frame/NUM_FRAMES_FOR_SPRITE < sprites) {
-    fps.start();
-    input->readInput();
-    draw();
-    screen->update();
-    fps.end(30);
-    frame++;
-  }
-}
-
 // This function is executed in the main loop. If
 // it return_progress true, the loop ends, else it continues.
 bool Battle::frame(void) {
-  adjustVisibleMap();
   if (keys[SDLK_ESCAPE]) {
     keys[SDLK_ESCAPE] = false;
     deleteCreature(*player);
     end_battle = true;
   } else if (!end_battle) { // If the battle wasn't ended continue.
-    if (selected_unit->getMaster() == enemy) {
-      ai();
-    } else {
-      // This controls only work when a friendly creature is moving
-      if (keys[SDLK_SPACE]) {
-        keys[SDLK_SPACE] = false;
-        selected_unit->getPosition()->unselect();
-        nextTurn();
+    // Check if there's an animation in progress
+    if (animation->animationInProgress()) {
+      if (animation->frame()) {
+        if (animation->getType() == ATTACK) {
+          Unit *enemy_creature = animation->getFinalPosition()->getCreature();
+          selected_unit->attackCreature(*enemy_creature);
+          if ( enemy_creature->getNumber() == 0 )
+            animation->startNewAnimation(DIE, *enemy_creature);
+          else
+            nextTurn();
+        } else if (animation->getType() == DIE) {
+          animation->getUnit()->getPosition()->setCreature(NULL);
+          deleteCreature(*animation->getUnit());
+          nextTurn();
+        } else if (animation->getType() == MOVE) {
+          nextTurn();
+        }
       }
-      updateMouse();
+    } else {
+      // If there's no animation do normal stuff
+      if (selected_unit->getMaster() == enemy) {
+        ai();
+      } else {
+        // This controls only work when a friendly creature is moving
+        if (keys[SDLK_SPACE]) {
+          keys[SDLK_SPACE] = false;
+          selected_unit->getPosition()->unselect();
+          nextTurn();
+        }
+        updateMouse();
+      }
     }
+    // Draw the map
+    adjustVisibleMap();
     draw();
   }
 

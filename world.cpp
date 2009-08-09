@@ -56,24 +56,24 @@ void World::setHero(Hero &hero, const int x, const int y) {
   map[x][y].calculateView(hero.getVisibility());
 }
 
-// Make the selected hero attack the unit of the given cell.
-void World::attack(Cell *cell) {
+// Makes the selected hero attack the unit in the given cell.
+void World::attack(Cell &cell) {
   // Set the battle information
   Hero *selected_hero = static_cast<Hero*>(selected_unit);
-  const char *terrain = cell->getTerrainId();
+  const char *terrain = cell.getTerrainId();
   bool won_battle;
-  if (!cell->getCreature()->getMaster()) {
+  if (!cell.getCreature()->getMaster()) {
     // Battle against a neutral creature
-    const char *creature_type = cell->getCreature()->getId();
+    const char *creature_type = cell.getCreature()->getId();
     won_battle = createBattle(*selected_hero, creature_type, terrain);
   } else {
     // Battle against a hero
-    Hero *enemy_hero = static_cast<Hero*>(cell->getCreature());
+    Hero *enemy_hero = static_cast<Hero*>(cell.getCreature());
     won_battle = createBattle(*selected_hero, *enemy_hero, terrain);
   }
   // Remove losers
   if (won_battle)
-    deleteCreature(*cell);
+    deleteCreature(cell);
   else
     heroes.remove(selected_hero);
 }
@@ -82,7 +82,7 @@ void World::attack(Cell *cell) {
 void World::mouseLeftClick(const int x, const int y) {
   if ( selected_unit->getPosition() != &map[x][y] )
     if ( map[x][y].canMoveHere() || map[x][y].canAttackHere())
-      moveSelectedCreature(map[x][y]);
+      move(map[x][y]);
 }
 
 // Starts the next turn.
@@ -126,7 +126,7 @@ bool World::frame(void) {
 
         Cell *temp = animation->getFinalPosition();
         if ( selected_unit->getPosition() != temp )
-          attack(temp);
+          attack(*temp);
 
         nextTurn();
       }

@@ -30,20 +30,23 @@ using video_engine::FACE_RIGHT;
 using video_engine::FACE_LEFT;
 
 // 
-void UnitAnimation::startNewAnimation(Unit &unit, Cell &cell, int type) {
+void UnitAnimation::startNewAnimation(int type, Unit &unit, Cell *cell) {
   this->type = type;
   this->unit = &unit;
   initial_position = unit.getPosition();
-  final_position = &cell;
+  final_position = cell;
 
   /*bool cells_connected = false;
   for (int i=N; i<=NW; i++)
     cells_connected |= initial_position->getConnectedCell(i) == final_position;*/
 
-  if (type == MOVE || !unit.getProjectiles()) {
+  if ( type == MOVE || (type == ATTACK && !unit.getProjectiles()) ) {
     state = MOVE;
-    cell.getPath(path, movements);
+    if (cell)
+      cell->getPath(path, movements);
     actual_move = 0;
+  } else {
+    state = type;
   }
 
   frames = 0;
@@ -55,13 +58,19 @@ void UnitAnimation::startNewAnimation(Unit &unit, Cell &cell, int type) {
 bool UnitAnimation::frame(void) {
   if (animation_in_progress)
     switch (state) {
+      case ATTACK:
+        animation_in_progress = false;
+        break;
+      case DIE:
+        animation_in_progress = false;
+        break;
       case MOVE:
         if (actual_move >= movements) {
+          initial_position->unselect();
           if (type == ATTACK) {
             state = ATTACK;
           } else {
             animation_in_progress = false;
-            initial_position->unselect();
             input->setCursorType(NORMAL_CURSOR);
           }
         } else {
@@ -78,9 +87,6 @@ bool UnitAnimation::frame(void) {
           }
           frames++;
         }
-        break;
-      case ATTACK:
-        animation_in_progress = false;
         break;
       default:
         // Nothing to do

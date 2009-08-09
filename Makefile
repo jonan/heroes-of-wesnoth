@@ -111,7 +111,7 @@ battle.o : battle.cpp $(BATTLE) \
            $(EVENTS) \
            $(GRAPHICS) \
            $(HERO) \
-           $(TIMER)
+           $(UNIT_ANIMATION)
 	$(CC) $(CFLAGS) battle.cpp
 
 boot.o : boot.cpp $(BOOT) \

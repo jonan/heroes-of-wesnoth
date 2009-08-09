@@ -44,7 +44,7 @@ class Battle : public Map {
 
     /// Returns true if the battle was won.
     /// @return true if the battle was won, false if it wasn't.
-    bool win(void);
+    bool win(void) {return player;}
 
   private:
     static const int MAX_TEAM_UNITS = 9;     // Not counting the hero.
@@ -52,10 +52,16 @@ class Battle : public Map {
     static const int TURN = 10;              // Agility needed to get a turn
 
     // Things to do no matter what constructor was called.
-    void init(const char *terrain);
+    void init(Hero &player_hero, const char *terrain);
+
+    // Put a hero and his units in the map.
+    void setHero(Hero &hero, const int facing_side);
 
     // Controls the units not controled by the player.
     void ai(void);
+
+    // Makes the selected creature attack the unit in the given cell.
+    virtual void attack(Cell &cell);
 
     // Function to execute when the mouse is over a cell.
     virtual void mouseOverCell(const int x, const int y);
@@ -67,9 +73,6 @@ class Battle : public Map {
 
     // Deletes a creature.
     void deleteCreature(Unit &creature);
-
-    // Function to call whenever there is an animation.
-    void animation(const int sprites);
 
     // This function is executed in the main loop. If
     // it returns true, the loop ends, else it continues.

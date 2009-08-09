@@ -74,7 +74,9 @@ class Map : public GameLoop {
     virtual void nextTurn(void) {}
 
     // Moves the selected creature to a cell.
-    void moveSelectedCreature(Cell &end_position);
+    void move(Cell &cell);
+    // Makes the selected creature attack the unit in the given cell.
+    virtual void attack(Cell &cell) {}
 
     // Connects all the cells in the map.
     void connectCells(void);
@@ -111,7 +113,7 @@ class Map : public GameLoop {
     Cell *mouse_over_cell; // The cell where the mouse is.
 
   private:
-    // 
+    // Initialize all the variables.
     void init(void);
 
     // Adds the corresponding smooth images to the cell.
