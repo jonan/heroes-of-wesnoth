@@ -37,7 +37,7 @@ class UnitAnimation {
     virtual ~UnitAnimation(void) {} // Destructor
 
     // @{
-    ///
+    /// Get functions.
     int   getType          (void) {return type;          }
     Unit* getUnit          (void) {return unit;          }
     Cell* getFinalPosition (void) {return final_position;}
@@ -54,6 +54,9 @@ class UnitAnimation {
 
   private:
     static const int FRAMES_PER_MOVE = 4;
+
+    // 
+    void startAnimation(int type);
 
     Unit *unit;
     Cell *initial_position, *final_position;

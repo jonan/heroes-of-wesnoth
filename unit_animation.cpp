@@ -36,6 +36,8 @@ void UnitAnimation::startNewAnimation(int type, Unit &unit, Cell *cell) {
   initial_position = unit.getPosition();
   final_position = cell;
 
+  frames = 0;
+
   /*bool cells_connected = false;
   for (int i=N; i<=NW; i++)
     cells_connected |= initial_position->getConnectedCell(i) == final_position;*/
@@ -46,10 +48,9 @@ void UnitAnimation::startNewAnimation(int type, Unit &unit, Cell *cell) {
       cell->getPath(path, movements);
     actual_move = 0;
   } else {
-    state = type;
+    startAnimation(type);
   }
 
-  frames = 0;
   animation_in_progress = true;
   input->setCursorType(WAIT_CURSOR);
 }
@@ -59,16 +60,16 @@ bool UnitAnimation::frame(void) {
   if (animation_in_progress)
     switch (state) {
       case ATTACK:
-        animation_in_progress = false;
-        break;
       case DIE:
-        animation_in_progress = false;
+        frames--;
+        if (!frames)
+          animation_in_progress = false;
         break;
       case MOVE:
         if (actual_move >= movements) {
           initial_position->unselect();
           if (type == ATTACK) {
-            state = ATTACK;
+            startAnimation(ATTACK);
           } else {
             animation_in_progress = false;
             input->setCursorType(NORMAL_CURSOR);
@@ -89,9 +90,28 @@ bool UnitAnimation::frame(void) {
         }
         break;
       default:
-        // Nothing to do
+        // Impossible case
         break;
     }
 
   return !animation_in_progress;
+}
+
+// 
+void UnitAnimation::startAnimation(int type) {
+  state = type;
+  switch (type) {
+    case ATTACK:
+      unit->setAnimation(ATTACKING);
+      final_position->getCreature()->setAnimation(DEFENDING);
+      frames = unit->getNumSprites(ATTACKING)*NUM_FRAMES_FOR_SPRITE;
+      break;
+    case DIE:
+      unit->setAnimation(DYING);
+      frames = unit->getNumSprites(DYING)*NUM_FRAMES_FOR_SPRITE;
+      break;
+    default:
+      // Nothing to do
+      break;
+  }
 }
