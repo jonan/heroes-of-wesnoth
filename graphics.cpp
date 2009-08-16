@@ -191,7 +191,9 @@ void Graphics::transitionEffect(int effect) {
         fps.end(10);
       }
       break;
-    default: {} // Imposible case
+    default:
+      // Imposible case
+      break;
   }
 }
 
@@ -206,7 +208,7 @@ Graphics::Graphics(void) {
 // Initializes SDL and SDL_ttf.
 void Graphics::init(void) {
   cout << "Starting SDL...\t\t\t";
-  if ( SDL_Init (SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0 ) { // SDL_INIT_AUDIO not yet needed
+  if ( SDL_Init (SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0 ) {
     cout << "[fail]\n\n" << SDL_GetError() << "\n\n";
     exit(EXIT_FAILURE);
   }
