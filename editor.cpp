@@ -169,7 +169,7 @@ void Editor::draw(void) {
 // it returns true, the loop ends, else it continues.
 bool Editor::frame(void) {
   adjustVisibleMap();
-  if (Map::frame()) { // If the editor is not ended.
+  if (!Map::frame()) { // If the editor is not ended.
     if (keys[SDLK_F1]) { // save
       keys[SDLK_F1] = false;
       save();
