@@ -58,6 +58,7 @@ void setPositions(void) {
 void drawBackground(void) {
   screen->draw("wesnoth", background_pos);
   screen->draw("heroes-logo", logo_pos);
+  screen->write("Development Version", 860, 740);
 }
 
 // Creates the menu.
