@@ -33,7 +33,6 @@ using events_engine::NORMAL_CURSOR;
 // Constructor
 World::World(const char *map_file) : Map(map_file) {
   smoothMap();
-  end_world = false;
   // Count the number of enemies
   number_enemies = 0;
   for (int x=0; x<map_width; x++)
@@ -88,9 +87,9 @@ void World::mouseLeftClick(const int x, const int y) {
 // Starts the next turn.
 void World::nextTurn(void) {
   // Check if the battle has ended
-  if (heroes.empty() || number_enemies == 0) end_world = true;
+  if (heroes.empty() || number_enemies == 0) end_map = true;
   // If the battle hasn't ended continue
-  if (!end_world) {
+  if (!end_map) {
     heroes.push_back(heroes.front());
     heroes.pop_front();
     selected_unit = *heroes.begin();
@@ -115,10 +114,7 @@ void World::deleteCreature(Cell &position) {
 // This function is executed in the main loop. If
 // it returns true, the loop ends, else it continues.
 bool World::frame(void) {
-  if (keys[SDLK_ESCAPE]) {
-    keys[SDLK_ESCAPE] = false;
-    end_world = true;
-  } else if (!end_world) {
+  if (!Map::frame()) {
     // Check if there's an animation in progress
     if (animation->animationInProgress()) {
       if (animation->frame()) {
@@ -141,5 +137,5 @@ bool World::frame(void) {
     draw();
   }
 
-  return end_world;
+  return end_map;
 }

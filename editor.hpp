@@ -59,7 +59,6 @@ class Editor : public Map {
     char *map_file;
     char editing_type; // Type of edition selected
     std::string selected;  // What is selected to draw in the map
-    bool end_editor;
 
     DISALLOW_COPY_AND_ASSIGN(Editor);
 };

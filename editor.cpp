@@ -42,7 +42,6 @@ Editor::Editor(const int width, const int height, const char *map_file) : Map(wi
   setTerrainToAllCells("flat_grass");
   editing_type = EDIT_TERRAIN;
   selected = "00";
-  end_editor = false;
 
   makeMapVisible();
 }
@@ -170,10 +169,7 @@ void Editor::draw(void) {
 // it returns true, the loop ends, else it continues.
 bool Editor::frame(void) {
   adjustVisibleMap();
-  if (keys[SDLK_ESCAPE]) {
-    keys[SDLK_ESCAPE] = false;
-    end_editor = true;
-  } else { // If the editor is not ended.
+  if (Map::frame()) { // If the editor is not ended.
     if (keys[SDLK_F1]) { // save
       keys[SDLK_F1] = false;
       save();
@@ -231,7 +227,7 @@ bool Editor::frame(void) {
     draw();
   }
 
-  return end_editor;
+  return end_map;
 }
 
 // Starts the editor.

@@ -60,7 +60,6 @@ class World : public Map {
 
     std::list<Hero*> heroes;
     int number_enemies;
-    bool end_world;
 
     DISALLOW_COPY_AND_ASSIGN(World);
 };

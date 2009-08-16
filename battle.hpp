@@ -82,7 +82,6 @@ class Battle : public Map {
     Unit *enemy_creatures[MAX_TEAM_UNITS];
     int turn_progress[MAX_BATTLE_UNITS];
     int turn;
-    bool end_battle;
 
     DISALLOW_COPY_AND_ASSIGN(Battle);
 };

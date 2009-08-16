@@ -80,7 +80,6 @@ void Battle::start(void) {
 void Battle::init(Hero &player_hero, const char *terrain) {
   setHero(player_hero, FACE_RIGHT);
   makeMapVisible();
-  end_battle = false;
 
   // Put all units' progress to 0
   for (int t=0; t<MAX_BATTLE_UNITS; t++) turn_progress[t] = 0;
@@ -188,16 +187,16 @@ void Battle::nextTurn(void) {
   // Check if the battle has ended
 
   // Check if the hero is dead
-  if (player == NULL) end_battle = true;
+  if (player == NULL) end_map = true;
   // Calculate number of dead creatures
   int counter = 0;
   for (int i = 0; i<MAX_TEAM_UNITS; i++)
     if (enemy_creatures[i] == NULL) counter++;
   // Check if there are no enemies
-  if (counter == MAX_TEAM_UNITS && !enemy) end_battle = true;
+  if (counter == MAX_TEAM_UNITS && !enemy) end_map = true;
 
   // If the battle hasn't ended continue
-  if (!end_battle) {
+  if (!end_map) {
     bool done = false;
     Unit* creature = NULL;
     // Search for the next creature
@@ -319,11 +318,7 @@ void Battle::deleteCreature(Unit &creature) {
 // This function is executed in the main loop. If
 // it return_progress true, the loop ends, else it continues.
 bool Battle::frame(void) {
-  if (keys[SDLK_ESCAPE]) {
-    keys[SDLK_ESCAPE] = false;
-    deleteCreature(*player);
-    end_battle = true;
-  } else if (!end_battle) { // If the battle wasn't ended continue.
+  if (!Map::frame()) { // If the battle wasn't ended continue.
     // Check if there's an animation in progress
     if (animation->animationInProgress()) {
       if (animation->frame()) {
@@ -361,7 +356,7 @@ bool Battle::frame(void) {
     draw();
   }
 
-  return end_battle;
+  return end_map;
 }
 
 // Creates and starts the default battle.

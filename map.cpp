@@ -469,6 +469,16 @@ void Map::draw(void) {
   }
 }
 
+// This function is executed in the main loop. If
+// it returns true, the loop ends, else it continues.
+bool Map::frame(void) {
+  if (keys[SDLK_ESCAPE]) {
+    keys[SDLK_ESCAPE] = false;
+    end_map = true;
+  }
+  return end_map;
+}
+
 // Delete all the cells of the map
 void Map::deleteCells(void) {
   for (int i=0; i<map_width; i++)
@@ -489,6 +499,8 @@ void Map::deleteCreatures(void) {
 void Map::init(void) {
   selected_unit   = NULL;
   mouse_over_cell = NULL;
+
+  end_map = false;
 
   animation = new UnitAnimation();
 

@@ -94,7 +94,7 @@ class Map : public GameLoop {
 
     // This function is executed in the main loop. If
     // it returns true, the loop ends, else it continues.
-    virtual bool frame(void) = 0;
+    virtual bool frame(void);
 
     // @{
     // Functions to delete parts of the map.
@@ -111,6 +111,8 @@ class Map : public GameLoop {
     UnitAnimation *animation;
 
     Cell *mouse_over_cell; // The cell where the mouse is.
+
+    bool end_map;
 
   private:
     // Initialize all the variables.
