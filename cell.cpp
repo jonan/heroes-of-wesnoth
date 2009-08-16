@@ -80,7 +80,7 @@ void Cell::setTerrain(const char *type) {
     this->type = type;
 
     // Set alpha (for all cells)
-    SDL_Surface *alpha = screen->getImage("alpha", 50);
+    alpha = screen->getImage("alpha", 50);
     // Set stars (for all cells)
     std::deque<SDL_Surface*> stars_images;
     stars_images.push_back( screen->getImage("terrain/stars/blue1") );
@@ -98,9 +98,8 @@ void Cell::setTerrain(const char *type) {
     bool passable = strcmp(temp->Attribute("passable"), "false");
 
     int random_number;
-    setAlpha(*alpha);
     random_number = rand() % stars_images.size();
-    setStars(*stars_images[random_number]);
+    stars = stars_images[random_number];
     random_number = rand() % terrain_images.size();
     if (!special_image)
       addImage(*terrain_images[random_number]);
@@ -268,11 +267,11 @@ void Cell::draw(SDL_Rect position, const int part) {
         if (special_images) {
           position.x += special_images->position.x;
           position.y += special_images->position.y;
-          screen->draw(special_images->image_list[special_images->sprite/NUM_FRAMES_FOR_SPRITE], position);
+          screen->draw(special_images->image_list[special_images->sprite/3], position);
           position.x = x;
           position.y = y;
           special_images->sprite++;
-          if (special_images->sprite/NUM_FRAMES_FOR_SPRITE == special_images->image_list.size())
+          if (special_images->sprite/3 == special_images->image_list.size())
             special_images->sprite = 0;
         }
         break;

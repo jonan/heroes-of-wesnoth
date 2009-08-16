@@ -104,11 +104,11 @@ void UnitAnimation::startAnimation(int type) {
     case ATTACK:
       unit->setAnimation(ATTACKING);
       final_position->getCreature()->setAnimation(DEFENDING);
-      frames = unit->getNumSprites(ATTACKING)*NUM_FRAMES_FOR_SPRITE;
+      frames = unit->getNumFrames(ATTACKING);
       break;
     case DIE:
       unit->setAnimation(DYING);
-      frames = unit->getNumSprites(DYING)*NUM_FRAMES_FOR_SPRITE;
+      frames = unit->getNumFrames(DYING);
       break;
     default:
       // Nothing to do

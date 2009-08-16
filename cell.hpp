@@ -48,8 +48,6 @@ class Cell {
 
     // @{
     /// Set functions.
-    void setAlpha       (SDL_Surface &alpha)        {this->alpha = &alpha;     }
-    void setStars       (SDL_Surface &stars)        {this->stars = &stars;     }
     void setPassable    (const bool passable)       {this->passable = passable;}
     void setTerrain     (const char *type);
     void setCreature    (Unit *creature);

@@ -47,9 +47,6 @@ enum {ATTACKING,
       STANDING,
       NUM_ANIMATIONS};
 
-/// Number of frames to wait before changing to the next sprite.
-const int NUM_FRAMES_FOR_SPRITE = 3;
-
 /// Stores a unit's attributes.
 class Unit {
   public:
@@ -69,43 +66,47 @@ class Unit {
 
     // @{
     /// Get functions.
-    int         getNumber          (void)                {return number;                      }
-    int         getMovement        (void)                {return movement;                    }
-    int         getAgility         (void)                {return agility;                     }
-    int         getProjectiles     (void)                {return projectiles;                 }
-    Cell*       getPosition        (void)                {return position;                    }
-    const char* getId              (void)                {return type.c_str();                }
-    Hero*       getMaster          (void)                {return master;                      }
-    int         getNumSprites      (const int animation) {return animations[animation].size();}
-    int         getActualAnimation (void)                {return actual_animation;            }
+    int         getNumber          (void)                 {return number;          }
+    int         getMovement        (void)                 {return movement;        }
+    int         getAgility         (void)                 {return agility;         }
+    int         getProjectiles     (void)                 {return projectiles;     }
+    Cell*       getPosition        (void)                 {return position;        }
+    const char* getId              (void)                 {return type.c_str();    }
+    Hero*       getMaster          (void)                 {return master;          }
+    int         getActualAnimation (void)                 {return actual_animation;}
+    int         getNumFrames       (const int animation);
     // @}
 
-    /// Attacks a given unit.
-    /// @param[in] creature Unit to attack.
-    void attackCreature(Unit &creature);
+    /// Makes this creature inflict damage to another creature.
+    /// @param[in] creature Creature to damage.
+    void damageCreature(Unit &creature);
 
     /// Draws the creature in the given position.
     /// @param[in] position The position where the creature should be drawn.
     virtual void draw(SDL_Rect &position);
 
   protected:
-    // Sets all the unit's attributes.
-    void setAllAttributes(const int live, const int movement,
-                          const int attack, const int agility,
-                          const int projectiles, const int projectiles_type);
     // Sets the creature's attributes acording to his type.
     void setCreaturesAttributes(const char *xml_file);
-
-    // Adds an image to the an animation.
-    void addAnimationImage(const char *image_name, const int animation);
-
-    // Adds a magic animation.
-    void addMagicAnimation(const int spell);
 
     // Draws the creature in the given position.
     void drawUnit(SDL_Rect &position);
 
     std::string type;
+
+    Hero *master;   // The hero that controls the unit.
+
+  private:
+    // Sets all the unit's attributes.
+    void setAllAttributes(const int live, const int movement,
+                          const int attack, const int agility,
+                          const int projectiles, const int projectiles_type);
+
+    // Adds an image to a given animation.
+    void addAnimationImage(const char *image_name, const int animation);
+
+    // Adds a magic animation.
+    void addMagicAnimation(const int spell);
 
     int number;      // Number of units
     int facing_side; // Indicates if the creature is facing left or right
@@ -116,6 +117,7 @@ class Unit {
     int projectiles;               // Number of projectiles a unit can shoot.
     int projectiles_type;
 
+    int num_frames_per_sprite;
     std::deque<SDL_Surface*> animations[NUM_ANIMATIONS];
     int actual_animation;
     SpecialImage *magic_spell;
@@ -123,9 +125,7 @@ class Unit {
     int sprite; // Last sprite drawn
 
     Cell *position; // The cell where the unit is
-    Hero *master;   // The hero that controls the unit.
 
-  private:
     DISALLOW_COPY_AND_ASSIGN(Unit);
 };
 

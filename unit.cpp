@@ -36,6 +36,7 @@ Unit::Unit(const char *type, const int number) {
 
   facing_side = FACE_RIGHT;
   sprite = 0;
+  num_frames_per_sprite = 3;
   actual_animation = STANDING;
   position = NULL;
   magic_spell = NULL;
@@ -56,7 +57,7 @@ void Unit::setAnimation(const int animation) {
   actual_animation = animation;
   /* If this unit has no sprite for the given animation
     go back to STANDING (ATTACKING has a default animation). */
-  if (animations[actual_animation].size() > 0 || actual_animation == ATTACKING)
+  if (!animations[actual_animation].empty() || actual_animation == ATTACKING)
     sprite = 0;
   else
     actual_animation = STANDING;
@@ -83,8 +84,13 @@ void Unit::setFacingSide(const int facing_side) {
   }
 }
 
-// Attacks a given unit.
-void Unit::attackCreature(Unit &creature) {
+// Returns the number of frames needed to perform the animation.
+int Unit::getNumFrames(const int animation) {
+  return animations[animation].size()*num_frames_per_sprite;
+}
+
+// Makes this creature inflict damage to another creature.
+void Unit::damageCreature(Unit &creature) {
   // Calculate the damage
   double damage = (attack*(log(number)+1));
   creature.live -= damage;
@@ -114,20 +120,6 @@ void Unit::draw(SDL_Rect &position) {
     sprintf(text, "%i", number);
     screen->write(text, position.x+17, position.y+52);
   }
-}
-
-// Sets all the unit's attributes.
-void Unit::setAllAttributes(const int live, const int movement,
-                            const int attack, const int agility,
-                            const int projectiles, const int projectiles_type
-                           ) {
-  this->live = live;
-  live_max = live;
-  this->movement = movement;
-  this->attack = attack;
-  this->agility = agility;
-  this->projectiles = projectiles;
-  this->projectiles_type = projectiles_type;
 }
 
 // Sets the creature's attributes acording to his type.
@@ -170,7 +162,67 @@ void Unit::setCreaturesAttributes(const char *xml_file) {
   }
 }
 
-// Adds an image to the standing animation.
+// Draws the creature in the given position.
+void Unit::drawUnit(SDL_Rect &position) {
+  // Get closer to the enemy when attacking
+  if (actual_animation == ATTACKING) {
+    if (facing_side == FACE_RIGHT)
+      position.x += 10;
+    else
+      position.x -= 10;
+  } else if (actual_animation == STANDING) { // Might start idle animation
+    int random_number = rand() % 1000;
+    if (random_number == 0) setAnimation(IDLE);
+  }
+
+  if (!animations[actual_animation].empty()) {
+    // Draw the corresponding sprite.
+    screen->draw(animations[actual_animation][sprite/num_frames_per_sprite], position);
+    sprite++;
+    // Check if this was the last sprite and go back to standing if it was.
+    if ( (sprite/num_frames_per_sprite) == static_cast<int>(animations[actual_animation].size()) ) {
+      sprite = 0;
+      actual_animation = STANDING;
+    }
+    // Draw a spell if it's needed.
+    if (magic_spell) {
+      position.x += magic_spell->position.x;
+      position.y += magic_spell->position.y;
+      screen->draw(magic_spell->image_list[magic_spell->sprite/num_frames_per_sprite], position);
+      position.x -= magic_spell->position.x;
+      position.y -= magic_spell->position.y;
+      magic_spell->sprite++;
+      if (magic_spell->sprite/num_frames_per_sprite == magic_spell->image_list.size()) {
+        delete magic_spell;
+        magic_spell = NULL;
+      }
+    }
+  } else { // The animation is ATTACKING
+    // If there's no animation for attack simply get the creature closer to the enemy
+    screen->draw(animations[STANDING][0], position);
+    sprite++;
+    if (sprite == num_frames_per_sprite) {
+      sprite = 0;
+      actual_animation = STANDING;
+    }
+  }
+}
+
+// Sets all the unit's attributes.
+void Unit::setAllAttributes(const int live, const int movement,
+                            const int attack, const int agility,
+                            const int projectiles, const int projectiles_type
+                           ) {
+  this->live = live;
+  live_max = live;
+  this->movement = movement;
+  this->attack = attack;
+  this->agility = agility;
+  this->projectiles = projectiles;
+  this->projectiles_type = projectiles_type;
+}
+
+// Adds an image to a given animation.
 void Unit::addAnimationImage(const char *imageName, const int animation) {
   animations[animation].push_back( screen->getImage(imageName) );
 }
@@ -201,50 +253,4 @@ void Unit::addMagicAnimation(const int spell) {
 
   magic_spell->position.x = -(magic_spell->image_list[0]->w-72)/2;
   magic_spell->position.y = -(magic_spell->image_list[0]->h-72)/2;
-}
-
-// Draws the creature in the given position.
-void Unit::drawUnit(SDL_Rect &position) {
-  // Get closer to the enemy when attacking
-  if (actual_animation == ATTACKING) {
-    if (facing_side == FACE_RIGHT)
-      position.x += 10;
-    else
-      position.x -= 10;
-  } else if (actual_animation == STANDING) { // Might start idle animation
-    int random_number = rand() % 1000;
-    if (random_number == 0) setAnimation(IDLE);
-  }
-
-  if (animations[actual_animation].size() > 0) {
-    // Draw the corresponding sprite.
-    screen->draw(animations[actual_animation][sprite/NUM_FRAMES_FOR_SPRITE], position);
-    sprite++;
-    // Check if this was the last sprite and go back to standing if it was.
-    if ( (sprite/NUM_FRAMES_FOR_SPRITE) == static_cast<int>(animations[actual_animation].size()) ) {
-      sprite = 0;
-      actual_animation = STANDING;
-    }
-    // Draw a spell if it's needed.
-    if (magic_spell) {
-      position.x += magic_spell->position.x;
-      position.y += magic_spell->position.y;
-      screen->draw(magic_spell->image_list[magic_spell->sprite/NUM_FRAMES_FOR_SPRITE], position);
-      position.x -= magic_spell->position.x;
-      position.y -= magic_spell->position.y;
-      magic_spell->sprite++;
-      if (magic_spell->sprite/NUM_FRAMES_FOR_SPRITE == magic_spell->image_list.size()) {
-        delete magic_spell;
-        magic_spell = NULL;
-      }
-    }
-  } else { // The animation is ATTACKING
-    // If there's no animation for attack simply get the creature closer to the enemy
-    screen->draw(animations[STANDING][0], position);
-    sprite++;
-    if (sprite == NUM_FRAMES_FOR_SPRITE) {
-      sprite = 0;
-      actual_animation = STANDING;
-    }
-  }
 }

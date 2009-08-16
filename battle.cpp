@@ -329,7 +329,7 @@ bool Battle::frame(void) {
       if (animation->frame()) {
         if (animation->getType() == ATTACK) {
           Unit *enemy_creature = animation->getFinalPosition()->getCreature();
-          selected_unit->attackCreature(*enemy_creature);
+          selected_unit->damageCreature(*enemy_creature);
           if ( enemy_creature->getNumber() == 0 )
             animation->startNewAnimation(DIE, *enemy_creature);
           else
