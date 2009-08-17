@@ -210,7 +210,8 @@ void Cell::addSpecialImage(SDL_Surface &terrain) {
     special_images = new SpecialImage;
     special_images->position.x = -(terrain.w-72)/2;
     special_images->position.y = -(terrain.h-72)/2;
-    special_images->sprite = 0;
+    special_images->frame = 0;
+    special_images->num_frames_per_sprite = 3;
   }
   special_images->image_list.push_back(&terrain);
 }
@@ -267,12 +268,15 @@ void Cell::draw(SDL_Rect position, const int part) {
         if (special_images) {
           position.x += special_images->position.x;
           position.y += special_images->position.y;
-          screen->draw(special_images->image_list[special_images->sprite/3], position);
+          unsigned int sprite = special_images->frame/special_images->num_frames_per_sprite;
+          if (sprite == special_images->image_list.size()) {
+            special_images->frame = 0;
+            sprite = 0;
+          }
+          screen->draw(special_images->image_list[sprite], position);
           position.x = x;
           position.y = y;
-          special_images->sprite++;
-          if (special_images->sprite/3 == special_images->image_list.size())
-            special_images->sprite = 0;
+          special_images->frame++;
         }
         break;
       case DRAW_UNIT:

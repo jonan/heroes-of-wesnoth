@@ -42,7 +42,8 @@ struct Coordinates {
 struct SpecialImage {
   std::deque<SDL_Surface*> image_list;
   Coordinates position;
-  unsigned int sprite;
+  unsigned int frame;
+  int num_frames_per_sprite;
 };
 
 // @{

@@ -188,13 +188,15 @@ void Unit::drawUnit(SDL_Rect &position) {
     if (magic_spell) {
       position.x += magic_spell->position.x;
       position.y += magic_spell->position.y;
-      screen->draw(magic_spell->image_list[magic_spell->sprite/num_frames_per_sprite], position);
-      position.x -= magic_spell->position.x;
-      position.y -= magic_spell->position.y;
-      magic_spell->sprite++;
-      if (magic_spell->sprite/num_frames_per_sprite == magic_spell->image_list.size()) {
+      unsigned int sprite = magic_spell->frame/magic_spell->num_frames_per_sprite;
+      if (sprite == magic_spell->image_list.size()) {
         delete magic_spell;
         magic_spell = NULL;
+      } else {
+        screen->draw(magic_spell->image_list[sprite], position);
+        position.x -= magic_spell->position.x;
+        position.y -= magic_spell->position.y;
+        magic_spell->frame++;
       }
     }
   } else { // The animation is ATTACKING
@@ -230,7 +232,8 @@ void Unit::addAnimationImage(const char *imageName, const int animation) {
 // Adds a magic animation.
 void Unit::addMagicAnimation(const int spell) {
   magic_spell = new SpecialImage;
-  magic_spell->sprite = 0;
+  magic_spell->frame = 0;
+  magic_spell->num_frames_per_sprite = 3;
   magic_spell->position.x = 0;
   magic_spell->position.y = 0;
 
