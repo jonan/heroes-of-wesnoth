@@ -318,7 +318,9 @@ void Battle::deleteCreature(Unit &creature) {
 // This function is executed in the main loop. If
 // it return_progress true, the loop ends, else it continues.
 bool Battle::frame(void) {
-  if (!Map::frame()) { // If the battle wasn't ended continue.
+  if (Map::frame()) {
+    deleteCreature(*player);
+  } else { // If the battle wasn't ended continue.
     // Check if there's an animation in progress
     if (animation->animationInProgress()) {
       if (animation->frame()) {
