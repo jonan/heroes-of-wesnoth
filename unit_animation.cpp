@@ -109,8 +109,8 @@ void UnitAnimation::startAnimation(int type) {
       if ( unit->getProjectiles() && !cells_connected)
         final_position->getCreature()->addMagicAnimation( unit->getProjectilesType() );
       frames = unit->getNumFrames(ATTACKING);
-      if (frames < unit->getNumFrames(DEFENDING))
-        frames = unit->getNumFrames(DEFENDING);
+      if (frames < final_position->getCreature()->getNumFrames(DEFENDING))
+        frames = final_position->getCreature()->getNumFrames(DEFENDING);
       if (!frames) frames = 1;
       break;
     case DIE:
