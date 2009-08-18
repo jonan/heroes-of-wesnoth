@@ -86,7 +86,15 @@ void Unit::setFacingSide(const int facing_side) {
 
 // Returns the number of frames needed to perform the animation.
 int Unit::getNumFrames(const int animation) {
-  return animations[animation].size()*num_frames_per_sprite;
+  int frames = animations[animation].size()*num_frames_per_sprite;
+  if (!frames && animation == ATTACKING)
+    frames = num_frames_per_sprite;
+  if (magic_spell) {
+    int magic_frames = magic_spell->image_list.size()*magic_spell->num_frames_per_sprite;
+    if (frames < magic_frames)
+      frames = magic_frames;
+  }
+  return frames;
 }
 
 // Makes this creature inflict damage to another creature.
@@ -99,16 +107,6 @@ void Unit::damageCreature(Unit &creature) {
     creature.live = creature.live_max+creature.live;
     creature.number--;
   }
-  /**
-  // Check if it's a close or distant attack
-  bool is_close_attack = false;
-  for (int i=N; i<=NW && !is_close_attack; i++)
-    is_close_attack = is_close_attack || (position->getConnectedCell(i)->getCreature() == &creature);
-  // Set the animations
-  setAnimation(ATTACKING);
-  if (!is_close_attack) creature.addMagicAnimation(projectiles_type);
-  creature.setAnimation(DEFENDING);
-  */
 }
 
 // Adds a magic animation.
@@ -201,7 +199,7 @@ void Unit::drawUnit(SDL_Rect &position) {
       position.x -= 10;
   } else if (actual_animation == STANDING) { // Might start idle animation
     int random_number = rand() % 1000;
-    if (random_number == 0) setAnimation(IDLE);
+    if (!random_number) setAnimation(IDLE);
   }
 
   if (!animations[actual_animation].empty()) {
@@ -216,16 +214,15 @@ void Unit::drawUnit(SDL_Rect &position) {
     // Draw a spell if it's needed.
     if (magic_spell) {
       unsigned int sprite = magic_spell->frame/magic_spell->num_frames_per_sprite;
-      if (sprite == magic_spell->image_list.size()) {
+      position.x += magic_spell->position.x;
+      position.y += magic_spell->position.y;
+      screen->draw(magic_spell->image_list[sprite], position);
+      position.x -= magic_spell->position.x;
+      position.y -= magic_spell->position.y;
+      magic_spell->frame++;
+      if (magic_spell->frame/magic_spell->num_frames_per_sprite == magic_spell->image_list.size()) {
         delete magic_spell;
         magic_spell = NULL;
-      } else {
-        position.x += magic_spell->position.x;
-        position.y += magic_spell->position.y;
-        screen->draw(magic_spell->image_list[sprite], position);
-        position.x -= magic_spell->position.x;
-        position.y -= magic_spell->position.y;
-        magic_spell->frame++;
       }
     }
   } else { // The animation is ATTACKING
