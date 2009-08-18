@@ -38,9 +38,9 @@ void UnitAnimation::startNewAnimation(int type, Unit &unit, Cell *cell) {
 
   frames = 0;
 
-  /*bool cells_connected = false;
-  for (int i=N; i<=NW; i++)
-    cells_connected |= initial_position->getConnectedCell(i) == final_position;*/
+  cells_connected = false;
+  for (int i=N; i<=NW && !cells_connected; i++)
+    cells_connected |= initial_position->getConnectedCell(i) == final_position;
 
   if ( type == MOVE || (type == ATTACK && !unit.getProjectiles()) ) {
     state = MOVE;
@@ -62,8 +62,10 @@ bool UnitAnimation::frame(void) {
       case ATTACK:
       case DIE:
         frames--;
-        if (!frames)
+        if (!frames) {
+          initial_position->unselect();
           animation_in_progress = false;
+        }
         break;
       case MOVE:
         if (actual_move >= movements) {
@@ -104,7 +106,11 @@ void UnitAnimation::startAnimation(int type) {
     case ATTACK:
       unit->setAnimation(ATTACKING);
       final_position->getCreature()->setAnimation(DEFENDING);
+      if ( unit->getProjectiles() && !cells_connected)
+        final_position->getCreature()->addMagicAnimation( unit->getProjectilesType() );
       frames = unit->getNumFrames(ATTACKING);
+      if (frames < unit->getNumFrames(DEFENDING))
+        frames = unit->getNumFrames(DEFENDING);
       if (!frames) frames = 1;
       break;
     case DIE:

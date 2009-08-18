@@ -60,6 +60,7 @@ class UnitAnimation {
 
     Unit *unit;
     Cell *initial_position, *final_position;
+    bool cells_connected;
 
     int frames;
     int type, state;

@@ -57,7 +57,6 @@ class Unit {
 
     // @{
     /// Set functions.
-    void setNumber     (const int number)       {this->number = number;     }
     void setPosition   (Cell &position)         {this->position = &position;}
     void setMaster     (Hero *master)           {this->master = master;     }
     void setAnimation  (const int animation);
@@ -70,16 +69,19 @@ class Unit {
     int         getMovement        (void)                 {return movement;        }
     int         getAgility         (void)                 {return agility;         }
     int         getProjectiles     (void)                 {return projectiles;     }
+    int         getProjectilesType (void)                 {return projectiles_type;}
     Cell*       getPosition        (void)                 {return position;        }
     const char* getId              (void)                 {return type.c_str();    }
     Hero*       getMaster          (void)                 {return master;          }
-    int         getActualAnimation (void)                 {return actual_animation;}
     int         getNumFrames       (const int animation);
     // @}
 
     /// Makes this creature inflict damage to another creature.
     /// @param[in] creature Creature to damage.
     void damageCreature(Unit &creature);
+
+    // Adds a magic animation.
+    void addMagicAnimation(const int spell);
 
     /// Draws the creature in the given position.
     /// @param[in] position The position where the creature should be drawn.
@@ -104,9 +106,6 @@ class Unit {
 
     // Adds an image to a given animation.
     void addAnimationImage(const char *image_name, const int animation);
-
-    // Adds a magic animation.
-    void addMagicAnimation(const int spell);
 
     int number;      // Number of units
     int facing_side; // Indicates if the creature is facing left or right

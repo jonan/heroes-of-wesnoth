@@ -111,6 +111,35 @@ void Unit::damageCreature(Unit &creature) {
   */
 }
 
+// Adds a magic animation.
+void Unit::addMagicAnimation(const int spell) {
+  magic_spell = new SpecialImage;
+  magic_spell->frame = 0;
+  magic_spell->num_frames_per_sprite = 3;
+  magic_spell->position.x = 0;
+  magic_spell->position.y = 0;
+
+  // Set the varibles depending of the tipe of item.
+  switch (spell) {
+    case WHITE_MISSILE:
+      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-1"));
+      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-2"));
+      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-3"));
+      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-4"));
+      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-5"));
+      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-6"));
+      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-7"));
+      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-8"));
+      break;
+    default:
+      // Imposible case
+      break;
+  }
+
+  magic_spell->position.x = -(magic_spell->image_list[0]->w-72)/2;
+  magic_spell->position.y = -(magic_spell->image_list[0]->h-72)/2;
+}
+
 // Draws the creature in the given position.
 void Unit::draw(SDL_Rect &position) {
   drawUnit(position);
@@ -227,33 +256,4 @@ void Unit::setAllAttributes(const int live, const int movement,
 // Adds an image to a given animation.
 void Unit::addAnimationImage(const char *imageName, const int animation) {
   animations[animation].push_back( screen->getImage(imageName) );
-}
-
-// Adds a magic animation.
-void Unit::addMagicAnimation(const int spell) {
-  magic_spell = new SpecialImage;
-  magic_spell->frame = 0;
-  magic_spell->num_frames_per_sprite = 3;
-  magic_spell->position.x = 0;
-  magic_spell->position.y = 0;
-
-  // Set the varibles depending of the tipe of item.
-  switch (spell) {
-    case WHITE_MISSILE:
-      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-1"));
-      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-2"));
-      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-3"));
-      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-4"));
-      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-5"));
-      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-6"));
-      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-7"));
-      magic_spell->image_list.push_back(screen->getImage("projectiles/whitemissile-impact-8"));
-      break;
-    default:
-      // Imposible case
-      break;
-  }
-
-  magic_spell->position.x = -(magic_spell->image_list[0]->w-72)/2;
-  magic_spell->position.y = -(magic_spell->image_list[0]->h-72)/2;
 }

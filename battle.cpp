@@ -157,27 +157,17 @@ void Battle::mouseOverCell(const int x, const int y) {
 // Function to execute when the user left clicks on a cell.
 void Battle::mouseLeftClick(const int x, const int y) {
   if ( selected_unit->getPosition() != &map[x][y] ) {
-    if ( map[x][y].canMoveHere() ) {
+    if (map[x][y].getCreature()) {
+      if (map[x][y].getCreature()->getMaster() != selected_unit->getMaster() ) {
+        // Check close attack
+        bool can_attack = map[x][y].canAttackHere();
+        // Check distant attack
+        can_attack |= map[x][y].getCreature() && selected_unit->getProjectiles();
+        if (can_attack)
+          attack(map[x][y]);
+      }
+    } else if ( map[x][y].canMoveHere() ) {
       move(map[x][y]);
-    } else if (map[x][y].getCreature() && selected_unit->getProjectiles()) { // Distant attack
-      /**if ( map[x][y].getCreature()->getMaster() != selected_unit->getMaster() ) {
-        selected_unit->getPosition()->unselect();
-        selected_unit->attackCreature( *map[x][y].getCreature() );
-        createAnimation(selected_unit->getNumSprites(ATTACKING));
-        // Check if the creatures is dead.
-        if ( map[x][y].getCreature()->getNumber() == 0 ) {
-          // Start the dying animation
-          map[x][y].getCreature()->setAnimation(DYING);
-          createAnimation(map[x][y].getCreature()->getNumSprites(DYING));
-          // delete the creature
-          deleteCreature(*map[x][y].getCreature());
-          map[x][y].setCreature(NULL);
-        }
-        nextTurn();
-      }*/
-    } else if ( map[x][y].canAttackHere() ) { // Close attack
-      if ( map[x][y].getCreature()->getMaster() != selected_unit->getMaster() )
-        attack(map[x][y]);
     }
   }
 }
