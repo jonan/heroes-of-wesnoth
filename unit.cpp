@@ -213,12 +213,14 @@ void Unit::drawUnit(SDL_Rect &position) {
     }
     // Draw a spell if it's needed.
     if (magic_spell) {
+      int x = position.x;
+      int y = position.y;
       unsigned int sprite = magic_spell->frame/magic_spell->num_frames_per_sprite;
       position.x += magic_spell->position.x;
       position.y += magic_spell->position.y;
       screen->draw(magic_spell->image_list[sprite], position);
-      position.x -= magic_spell->position.x;
-      position.y -= magic_spell->position.y;
+      position.x = x;
+      position.y = y;
       magic_spell->frame++;
       if (magic_spell->frame/magic_spell->num_frames_per_sprite == magic_spell->image_list.size()) {
         delete magic_spell;
