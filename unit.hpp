@@ -80,7 +80,8 @@ class Unit {
     /// @param[in] creature Creature to damage.
     void damageCreature(Unit &creature);
 
-    // Adds a magic animation.
+    /// Adds a magic animation.
+    /// @param[in] spell Type of magic spell.
     void addMagicAnimation(const int spell);
 
     /// Draws the creature in the given position.

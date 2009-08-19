@@ -34,7 +34,7 @@ class Unit;
 class UnitAnimation {
   public:
     UnitAnimation(void) : animation_in_progress(false) {} // Constructor
-    virtual ~UnitAnimation(void) {} // Destructor
+    ~UnitAnimation(void) {} // Destructor
 
     // @{
     /// Get functions.
@@ -43,27 +43,33 @@ class UnitAnimation {
     Cell* getFinalPosition (void) {return final_position;}
     // @}
 
-    /// 
-    void startNewAnimation(int type, Unit &unit, Cell *cell = NULL);
-
-    /// 
+    /// Returns true if there's an animation in progress.
+    /// @return True if there's an animation in progress.
     bool animationInProgress(void) {return animation_in_progress;}
 
-    /// 
+    /// Starts a new animation.
+    /// @param[in] type Type of animation.
+    /// @param[in] unit Unit to animate.
+    /// @param[in] cell Some types of animations need to specify a cell.
+    void startNewAnimation(int type, Unit &unit, Cell *cell = NULL);
+
+    /// Performs all needed actions in a frame of the animation.
+    /// @return True if this was the last frame of the animation.
     bool frame(void);
 
   private:
     static const int FRAMES_PER_MOVE = 4;
 
-    // 
+    // Starts a given animation.
     void startAnimation(int type);
 
     Unit *unit;
     Cell *initial_position, *final_position;
     bool cells_connected;
 
-    int frames;
     int type, state;
+    int frames;
+
     bool animation_in_progress;
 
     // To move the unit

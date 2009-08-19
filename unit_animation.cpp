@@ -29,7 +29,7 @@ using events_engine::WAIT_CURSOR;
 using video_engine::FACE_RIGHT;
 using video_engine::FACE_LEFT;
 
-// 
+// Starts a new animation.
 void UnitAnimation::startNewAnimation(int type, Unit &unit, Cell *cell) {
   this->type = type;
   this->unit = &unit;
@@ -55,7 +55,7 @@ void UnitAnimation::startNewAnimation(int type, Unit &unit, Cell *cell) {
   input->setCursorType(WAIT_CURSOR);
 }
 
-// 
+// Performs all needed actions in a frame of the animation.
 bool UnitAnimation::frame(void) {
   if (animation_in_progress)
     switch (state) {
@@ -99,7 +99,7 @@ bool UnitAnimation::frame(void) {
   return !animation_in_progress;
 }
 
-// 
+// Starts a given animation.
 void UnitAnimation::startAnimation(int type) {
   state = type;
   switch (type) {
