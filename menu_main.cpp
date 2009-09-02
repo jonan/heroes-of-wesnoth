@@ -38,8 +38,8 @@ Menu *main_menu;
 
 // Set's all the position variables that the menu needs.
 void setPositions(void) {
-  menu_pos.x = 465;
-  menu_pos.y = 500;
+  menu_pos.x = 700;
+  menu_pos.y = 450;
   menu_pos.w = 108;
   menu_pos.h = 22;
 
@@ -49,7 +49,7 @@ void setPositions(void) {
   background_pos.h = 768;
 
   logo_pos.x = 120;
-  logo_pos.y = 70;
+  logo_pos.y = 15;
   logo_pos.w = 777;
   logo_pos.h = 385;
 }
@@ -58,7 +58,9 @@ void setPositions(void) {
 void drawBackground(void) {
   screen->draw("wesnoth", background_pos);
   screen->draw("heroes-logo", logo_pos);
-  screen->write("Development Version", 860, 740);
+  screen->write("v0.1.2", 965, 735);
+  screen->write("Dedicated to Patricia Ruiz for being next to me all this time.", 200, 500);
+  screen->write("I will never be able to thank you enough.", 200, 520);
 }
 
 // Creates the menu.
