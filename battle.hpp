@@ -44,12 +44,15 @@ class Battle : public Map {
 
     /// Returns true if the battle was won.
     /// @return true if the battle was won, false if it wasn't.
-    bool win(void) {return player;}
+    bool win(void) {return creatures[PLAYER];}
 
   private:
     static const int MAX_TEAM_UNITS = 9;     // Not counting the hero.
     static const int MAX_BATTLE_UNITS = 20;
     static const int TURN = 10;              // Agility needed to get a turn
+
+    static const int PLAYER =  0;
+    static const int ENEMY  = 10;
 
     // Things to do no matter what constructor was called.
     void init(Hero &player_hero, const char *terrain);
@@ -78,10 +81,8 @@ class Battle : public Map {
     // it returns true, the loop ends, else it continues.
     virtual bool frame(void);
 
-    Hero *player, *enemy;
-    Unit *enemy_creatures[MAX_TEAM_UNITS];
+    Unit *creatures[MAX_BATTLE_UNITS];
     int turn_progress[MAX_BATTLE_UNITS];
-    int turn;
 
     DISALLOW_COPY_AND_ASSIGN(Battle);
 };

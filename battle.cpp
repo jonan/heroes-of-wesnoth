@@ -43,17 +43,17 @@ using video_engine::FACE_RIGHT;
 Battle::Battle(Hero &player, Unit **enemies, int num_enemies, const char *terrain) : Map(20, 11) {
   // Set the enemies
   for (int i=0; i<num_enemies; i++)
-    enemy_creatures[i] = enemies[i];
+    creatures[ENEMY+1+i] = enemies[i];
   for (int j=num_enemies; j<MAX_TEAM_UNITS; j++)
-    enemy_creatures[j] = NULL;
+    creatures[ENEMY+1+j] = NULL;
   // Put the enemy creatures in the map.
   for (int i=0; i<num_enemies; i++) {
-    enemy_creatures[i]->setFacingSide(FACE_LEFT);
-    map[map_width-3][i+1].setCreature(enemy_creatures[i]);
+    creatures[ENEMY+1+i]->setFacingSide(FACE_LEFT);
+    map[map_width-3][i+1].setCreature(creatures[ENEMY+1+i]);
   }
 
   // No enemy hero
-  enemy = NULL;
+  creatures[ENEMY] = NULL;
 
   init(player, terrain);
 }
@@ -61,11 +61,6 @@ Battle::Battle(Hero &player, Unit **enemies, int num_enemies, const char *terrai
 // Constructor
 Battle::Battle(Hero &player, Hero &enemy, const char *terrain) : Map(20, 11) {
   setHero(enemy, FACE_LEFT);
-
-  // No enemy creatures
-  for (int i = 0; i<MAX_TEAM_UNITS; i++)
-    enemy_creatures[i] = NULL;
-
   init(player, terrain);
 }
 
@@ -82,7 +77,8 @@ void Battle::init(Hero &player_hero, const char *terrain) {
   makeMapVisible();
 
   // Put all units' progress to 0
-  for (int t=0; t<MAX_BATTLE_UNITS; t++) turn_progress[t] = 0;
+  for (int t=0; t<MAX_BATTLE_UNITS; t++)
+    turn_progress[t] = 0;
 
   setTerrainToAllCells(terrain);
 }
@@ -91,23 +87,29 @@ void Battle::init(Hero &player_hero, const char *terrain) {
 void Battle::setHero(Hero &hero, const int facing_side) {
   int hero_pos_x;
   int creatures_pos_x;
+  int side;
 
   if (facing_side == FACE_RIGHT) {
-    player = &hero;
+    side = PLAYER;
     hero_pos_x = 1;
     creatures_pos_x = 2;
   } else {
-    enemy = &hero;
+    side = ENEMY;
     hero_pos_x = map_width-2;
     creatures_pos_x = map_width-3;
   }
 
+  // Set hero
+  creatures[side] = &hero;
   hero.setFacingSide(facing_side);
   map[hero_pos_x][4].setCreature(&hero);
+  // Set units
   for (int i=0; i<MAX_TEAM_UNITS; i++) {
-    if (hero.getCreature(i))
-      hero.getCreature(i)->setFacingSide(facing_side);
-    map[creatures_pos_x][i+1].setCreature(hero.getCreature(i));
+    creatures[side+1+i] = hero.getCreature(i);
+    if (creatures[side+1+i]) {
+      creatures[side+1+i]->setFacingSide(facing_side);
+      map[creatures_pos_x][i+1].setCreature(creatures[side+1+i]);
+    }
   }
 }
 
@@ -175,81 +177,42 @@ void Battle::mouseLeftClick(const int x, const int y) {
 // Starts the next turn.
 void Battle::nextTurn(void) {
   // Check if the battle has ended
-
   // Check if the hero is dead
-  if (player == NULL) end_map = true;
+  if (creatures[PLAYER] == NULL)
+    end_map = true;
   // Calculate number of dead creatures
   int counter = 0;
-  for (int i = 0; i<MAX_TEAM_UNITS; i++)
-    if (enemy_creatures[i] == NULL) counter++;
+  for (int i=0; i<MAX_TEAM_UNITS; i++) {
+    if (creatures[ENEMY+1+i] == NULL)
+      counter++;
+  }
   // Check if there are no enemies
-  if (counter == MAX_TEAM_UNITS && !enemy) end_map = true;
+  if (counter == MAX_TEAM_UNITS && !creatures[ENEMY])
+    end_map = true;
 
   // If the battle hasn't ended continue
   if (!end_map) {
     bool done = false;
-    Unit* creature = NULL;
+    int turn;
     // Search for the next creature
     while (!done) {
       // Look if it's someones turn
-      for (int i=0; i<MAX_BATTLE_UNITS && !done; i++)
-        if (turn_progress[i]>=TURN) {
+      for (int i=0; i<MAX_BATTLE_UNITS && !done; i++) {
+        if (turn_progress[i] >= TURN) {
           turn_progress[i] -= TURN;
-          if (i==0) {
-              done = true;
-              turn = 0;
-              creature = player;
-          } else if (i<MAX_TEAM_UNITS+1) {
-            if (player->getCreature(i-1)) {
-              done = true;
-              turn = i;
-              creature = player->getCreature(i-1);
-            }
-          } else if (i==10) {
-            if (enemy) {
-              done = true;
-              turn = 10;
-              creature = enemy;
-            }
-          } else if ( i<MAX_BATTLE_UNITS ) {
-            if (enemy) {
-              if (enemy->getCreature(i-MAX_TEAM_UNITS-2)) {
-                done = true;
-                turn = i;
-                creature = enemy->getCreature(i-MAX_TEAM_UNITS-2);
-              }
-            } else {
-              if (enemy_creatures[i-MAX_TEAM_UNITS-2]) {
-                done = true;
-                turn = i;
-                creature = enemy_creatures[i-MAX_TEAM_UNITS-2];
-              }
-            }
-          }
-        }
-      // If it's no one's turn, increase all the turn_progress
-      for (int j=0; j<MAX_BATTLE_UNITS && !done; j++) {
-        if (j==0) {
-          turn_progress[j] += player->getAgility();
-        } else if (j<MAX_TEAM_UNITS+1) {
-          if (player->getCreature(j-1))
-            turn_progress[j] += player->getCreature(j-1)->getAgility();
-        } else if (j==10) {
-          if (enemy) {
-            turn_progress[j] += enemy->getAgility();
-          }
-        } else if ( j<MAX_BATTLE_UNITS ) {
-          if (enemy) {
-            if (enemy->getCreature(j-MAX_TEAM_UNITS-2))
-              turn_progress[j] += enemy->getCreature(j-MAX_TEAM_UNITS-2)->getAgility();
-          } else {
-            if (enemy_creatures[j-MAX_TEAM_UNITS-2])
-              turn_progress[j] += enemy_creatures[j-MAX_TEAM_UNITS-2]->getAgility();
+          if (creatures[i]) {
+            done = true;
+            turn = i;
           }
         }
       }
+      // If it's no one's turn, increase all the turn_progress
+      for (int j=0; j<MAX_BATTLE_UNITS && !done; j++) {
+        if (creatures[j])
+          turn_progress[j] += creatures[j]->getAgility();
+      }
     }
-    selected_unit = creature;
+    selected_unit = creatures[turn];
     selected_unit->getPosition()->select();
   }
   // If the mouse button is pressed wait until it's released.
@@ -258,58 +221,45 @@ void Battle::nextTurn(void) {
 
 // Deletes a creature.
 void Battle::deleteCreature(Unit &creature) {
-  bool found = false;
-
-  for (int i=0; i<MAX_BATTLE_UNITS && !found; i++) {
-    if (i==0) {
-      if (player == &creature) {
-        // Remove the hero's units from the battle
-        for (int j=0; j<MAX_TEAM_UNITS; j++) {
-          if (player->getCreature(j))
-            player->getCreature(j)->getPosition()->setCreature(NULL);
-        }
-        player = NULL;
-        found = true;
-      }
-    } else if (i<MAX_TEAM_UNITS+1) {
-      if (player->getCreature(i-1) == &creature) {
+  if (&creature == creatures[PLAYER] || &creature == creatures[ENEMY]) {
+    Hero *hero = static_cast<Hero*>(&creature);
+    // Remove the hero's units from the battle
+    for (int j=0; j<MAX_TEAM_UNITS; j++) {
+      if (hero->getCreature(j))
+        hero->getCreature(j)->getPosition()->setCreature(NULL);
+    }
+    delete &creature;
+    if (&creature == creatures[PLAYER]) {
+      creatures[PLAYER] = NULL;
+    } else {
+      creatures[ENEMY] = NULL;
+    }
+  } else {
+    bool found = false;
+    for (int i=0; i<MAX_TEAM_UNITS && !found; i++) {
+      if (creatures[PLAYER+1+i] == &creature) {
         /// @todo Do the same without recruitCreature(unit*, int)
-        player->recruitCreature(NULL, i-1);
+        static_cast<Hero*>(creatures[PLAYER])->recruitCreature(NULL, i);
+        creatures[PLAYER+1+i] = NULL;
         found = true;
-      }
-    } else if (i==10) {
-      if (enemy == &creature) {
-        // Remove the hero's units from the battle
-        for (int j=0; j<MAX_TEAM_UNITS; j++) {
-          if (enemy->getCreature(j))
-            enemy->getCreature(j)->getPosition()->setCreature(NULL);
-        }
-        enemy = NULL;
-        found = true;
-      }
-    } else { // i<MAX_BATTLE_UNITS
-      if (enemy) {
-        if (enemy->getCreature(i-MAX_TEAM_UNITS-2) == &creature) {
+      } else if (creatures[ENEMY+1+i] == &creature) {
+        if (creatures[ENEMY]) {
           /// @todo Do the same without recruitCreature(unit*, int)
-          enemy->recruitCreature(NULL, i-MAX_TEAM_UNITS-2);
-          found = true;
+          static_cast<Hero*>(creatures[ENEMY])->recruitCreature(NULL, i);
         }
-      } else {
-        if (enemy_creatures[i-MAX_TEAM_UNITS-2] == &creature) {
-          enemy_creatures[i-MAX_TEAM_UNITS-2] = NULL;
-          found = true;
-        }
+        creatures[ENEMY+1+i] = NULL;
+        found = true;
       }
     }
+    delete &creature;
   }
-  delete &creature;
 }
 
 // This function is executed in the main loop. If
 // it return_progress true, the loop ends, else it continues.
 bool Battle::frame(void) {
   if (Map::frame()) {
-    deleteCreature(*player);
+    deleteCreature(*creatures[PLAYER]);
   } else { // If the battle wasn't ended continue.
     // Check if there's an animation in progress
     if (animation->animationInProgress()) {
@@ -331,7 +281,7 @@ bool Battle::frame(void) {
       }
     } else {
       // If there's no animation do normal stuff
-      if (selected_unit->getMaster() == enemy) {
+      if (selected_unit->getMaster() == creatures[ENEMY]) {
         ai();
       } else {
         // This controls only work when a friendly creature is moving
